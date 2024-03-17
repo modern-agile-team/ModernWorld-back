@@ -3,7 +3,7 @@ name: Issue template
 about: This is an Issue template
 title: ''
 labels: ''
-assignees: Contingency1
+assignees: ''
 
 ---
 
