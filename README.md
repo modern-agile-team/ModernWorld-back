@@ -72,7 +72,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
-# **7term-mini-back**
+# **7-TERM-MAIN-BACK**
 
 #### 7기 메인프로젝트 백 저장소
 
