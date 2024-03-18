@@ -91,6 +91,12 @@ Nest is [MIT licensed](LICENSE).
 
 ### Branch Example
 
+- feature/#issueNo/title
+
+예시
+
+- feature/#10/create_user_board
+
 ## Commit Convention
 
 ### Commit Example
