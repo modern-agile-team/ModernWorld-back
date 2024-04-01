@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,171 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model achievement {
+  no          Int               @id @default(autoincrement()) @db.UnsignedInt
+  name        String            @db.VarChar(20)
+  description String            @db.VarChar(100)
+  title       String            @db.VarChar(20)
+  font_color  String            @db.VarChar(10)
+  level       achievement_level
+  point       Int               @db.UnsignedInt
+}
+
+model character {
+  no          Int    @id @default(autoincrement()) @db.UnsignedInt
+  name        String @db.VarChar(15)
+  description String @db.VarChar(100)
+  image       String @db.VarChar(200)
+  species     String @db.VarChar(10)
+}
+
+model character_locker {
+  no           Int     @id @default(autoincrement()) @db.UnsignedInt
+  character_no Int     @db.UnsignedInt
+  user_no      Int     @db.UnsignedInt
+  status       Boolean @default(false)
+
+  @@index([character_no], map: "character_no")
+  @@index([user_no], map: "user_no")
+}
+
+model comment {
+  no          Int       @id @default(autoincrement()) @db.UnsignedInt
+  receiver_no Int       @db.UnsignedInt
+  sender_no   Int       @db.UnsignedInt
+  content     String    @db.VarChar(300)
+  created_at  DateTime  @default(now()) @db.DateTime(0)
+  deleted_at  DateTime? @db.DateTime(0)
+
+  @@index([receiver_no], map: "receiver_no")
+  @@index([sender_no], map: "sender_no")
+}
+
+model inventory {
+  no         Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_no    Int      @db.UnsignedInt
+  item_no    Int      @db.UnsignedInt
+  created_at DateTime @default(now()) @db.DateTime(0)
+  status     Boolean  @default(false)
+
+  @@index([item_no], map: "item_no")
+  @@index([user_no], map: "user_no")
+}
+
+model item {
+  no          Int    @id @default(autoincrement()) @db.UnsignedInt
+  name        String @db.VarChar(15)
+  description String @db.VarChar(150)
+  iamge       String @db.VarChar(200)
+  theme       String @db.VarChar(10)
+  type        String @db.VarChar(20)
+  price       Int    @db.UnsignedInt
+}
+
+model legend {
+  user_no          Int @id @db.UnsignedInt
+  attendance_count Int @default(0) @db.UnsignedInt
+  commet_count     Int @default(0) @db.UnsignedInt
+  item_count       Int @default(0) @db.UnsignedInt
+  present_count    Int @default(0) @db.UnsignedInt
+  like_count       Int @default(0) @db.UnsignedInt
+}
+
+model like {
+  no          Int @id @default(autoincrement()) @db.UnsignedInt
+  receiver_no Int @db.UnsignedInt
+  sender_no   Int @db.UnsignedInt
+
+  @@index([receiver_no], map: "receiver_no")
+  @@index([sender_no], map: "sender_no")
+}
+
+model neighbor {
+  no          Int      @id @default(autoincrement()) @db.UnsignedInt
+  sender_no   Int      @db.UnsignedInt
+  receiver_no Int      @db.UnsignedInt
+  status      Boolean  @default(false)
+  created     DateTime @default(now()) @db.DateTime(0)
+
+  @@index([receiver_no], map: "receiver_no")
+  @@index([sender_no], map: "sender_no")
+}
+
+model post {
+  no              Int      @id @default(autoincrement()) @db.UnsignedInt
+  sender_no       Int      @db.UnsignedInt
+  receiver_no     Int      @db.UnsignedInt
+  content         String   @db.VarChar(150)
+  created_at      DateTime @default(now()) @db.DateTime(0)
+  check           Boolean  @default(false)
+  sender_delete   Boolean  @default(false)
+  receiver_delete Boolean  @default(false)
+
+  @@index([receiver_no], map: "receiver_no")
+  @@index([sender_no], map: "sender_no")
+}
+
+model present {
+  no              Int            @id @default(autoincrement()) @db.UnsignedInt
+  item_no         Int            @db.UnsignedInt
+  sender_no       Int            @db.UnsignedInt
+  receiver_no     Int            @db.UnsignedInt
+  created_at      DateTime       @default(now()) @db.DateTime(0)
+  status          present_status @default(unread)
+  sender_delete   Boolean        @default(false)
+  receiver_delete Boolean        @default(false)
+
+  @@index([receiver_no], map: "receiver_no")
+  @@index([sender_no], map: "sender_no")
+}
+
+model reply {
+  no         Int       @id @default(autoincrement()) @db.UnsignedInt
+  comment_no Int       @db.UnsignedInt
+  user_no    Int       @db.UnsignedInt
+  content    String    @db.VarChar(300)
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  deleted_at DateTime? @db.DateTime(0)
+
+  @@index([comment_no], map: "comment_no")
+  @@index([user_no], map: "user_no")
+}
+
+model user {
+  no                 Int       @id @default(autoincrement()) @db.UnsignedInt
+  nickname           String    @unique(map: "nickname") @db.VarChar(10)
+  current_point      Int       @default(0) @db.UnsignedInt
+  accumulation_point Int       @default(0) @db.UnsignedInt
+  description        String?   @db.VarChar(150)
+  attendance         Json
+  status             Boolean
+  unique_identifier  String    @db.VarChar(300)
+  like               Int       @default(0) @db.UnsignedInt
+  created_at         DateTime  @default(now()) @db.DateTime(0)
+  deleted_at         DateTime? @db.DateTime(0)
+  admin              Boolean   @default(false)
+}
+
+model user_achievement {
+  no             Int @id @default(autoincrement()) @db.UnsignedInt
+  user_no        Int @db.UnsignedInt
+  achievement_no Int @db.UnsignedInt
+
+  @@index([achievement_no], map: "achievement_no")
+  @@index([user_no], map: "user_no")
+}
+
+enum achievement_level {
+  one
+  two
+  three
+}
+
+enum present_status {
+  unread
+  read
+  accept
+  reject
 }
