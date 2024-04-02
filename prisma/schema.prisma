@@ -8,40 +8,47 @@ datasource db {
 }
 
 model achievement {
-  no          Int               @id @default(autoincrement()) @db.UnsignedInt
-  name        String            @db.VarChar(20)
-  description String            @db.VarChar(100)
-  title       String            @db.VarChar(20)
-  font_color  String            @db.VarChar(10)
-  level       achievement_level
-  point       Int               @db.UnsignedInt
+  no               Int                @id @default(autoincrement()) @db.UnsignedInt
+  name             String             @db.VarChar(20)
+  description      String             @db.VarChar(100)
+  title            String             @db.VarChar(20)
+  font_color       String             @db.VarChar(10)
+  level            achievement_level
+  point            Int                @db.UnsignedInt
+  user_achievement user_achievement[]
 }
 
 model character {
-  no          Int    @id @default(autoincrement()) @db.UnsignedInt
-  name        String @db.VarChar(15)
-  description String @db.VarChar(100)
-  image       String @db.VarChar(200)
-  species     String @db.VarChar(10)
+  no               Int                @id @default(autoincrement()) @db.UnsignedInt
+  name             String             @db.VarChar(15)
+  description      String             @db.VarChar(100)
+  image            String             @db.VarChar(200)
+  species          String             @db.VarChar(10)
+  character_locker character_locker[]
 }
 
 model character_locker {
-  no           Int     @id @default(autoincrement()) @db.UnsignedInt
-  character_no Int     @db.UnsignedInt
-  user_no      Int     @db.UnsignedInt
-  status       Boolean @default(false)
+  no           Int       @id @default(autoincrement()) @db.UnsignedInt
+  character_no Int       @db.UnsignedInt
+  user_no      Int       @db.UnsignedInt
+  status       Boolean   @default(false)
+  character    character @relation(fields: [character_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "character_locker_ibfk_1")
+  user         user      @relation(fields: [user_no], references: [no], onDelete: Cascade, onUpdate: NoAction, map: "character_locker_ibfk_2")
 
   @@index([character_no], map: "character_no")
   @@index([user_no], map: "user_no")
 }
 
 model comment {
-  no          Int       @id @default(autoincrement()) @db.UnsignedInt
-  receiver_no Int       @db.UnsignedInt
-  sender_no   Int       @db.UnsignedInt
-  content     String    @db.VarChar(300)
-  created_at  DateTime  @default(now()) @db.DateTime(0)
-  deleted_at  DateTime? @db.DateTime(0)
+  no                             Int       @id @default(autoincrement()) @db.UnsignedInt
+  receiver_no                    Int       @db.UnsignedInt
+  sender_no                      Int       @db.UnsignedInt
+  content                        String    @db.VarChar(300)
+  created_at                     DateTime  @default(now()) @db.DateTime(0)
+  deleted_at                     DateTime? @db.DateTime(0)
+  user_comment_sender_noTouser   user      @relation("comment_sender_noTouser", fields: [sender_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_1")
+  user_comment_receiver_noTouser user      @relation("comment_receiver_noTouser", fields: [receiver_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "comment_ibfk_2")
+  reply                          reply[]
 
   @@index([receiver_no], map: "receiver_no")
   @@index([sender_no], map: "sender_no")
@@ -53,74 +60,89 @@ model inventory {
   item_no    Int      @db.UnsignedInt
   created_at DateTime @default(now()) @db.DateTime(0)
   status     Boolean  @default(false)
+  user       user     @relation(fields: [user_no], references: [no], onDelete: Cascade, onUpdate: NoAction, map: "inventory_ibfk_1")
+  item       item     @relation(fields: [item_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "inventory_ibfk_2")
 
   @@index([item_no], map: "item_no")
   @@index([user_no], map: "user_no")
 }
 
 model item {
-  no          Int    @id @default(autoincrement()) @db.UnsignedInt
-  name        String @db.VarChar(15)
-  description String @db.VarChar(150)
-  iamge       String @db.VarChar(200)
-  theme       String @db.VarChar(10)
-  type        String @db.VarChar(20)
-  price       Int    @db.UnsignedInt
+  no          Int         @id @default(autoincrement()) @db.UnsignedInt
+  name        String      @db.VarChar(15)
+  description String      @db.VarChar(150)
+  iamge       String      @db.VarChar(200)
+  theme       String      @db.VarChar(10)
+  type        String      @db.VarChar(20)
+  price       Int         @db.UnsignedInt
+  inventory   inventory[]
+  present     present[]
 }
 
 model legend {
-  user_no          Int @id @db.UnsignedInt
-  attendance_count Int @default(0) @db.UnsignedInt
-  commet_count     Int @default(0) @db.UnsignedInt
-  item_count       Int @default(0) @db.UnsignedInt
-  present_count    Int @default(0) @db.UnsignedInt
-  like_count       Int @default(0) @db.UnsignedInt
+  user_no          Int  @id @db.UnsignedInt
+  attendance_count Int  @default(0) @db.UnsignedInt
+  commet_count     Int  @default(0) @db.UnsignedInt
+  item_count       Int  @default(0) @db.UnsignedInt
+  present_count    Int  @default(0) @db.UnsignedInt
+  like_count       Int  @default(0) @db.UnsignedInt
+  user             user @relation(fields: [user_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "legend_ibfk_1")
 }
 
 model like {
-  no          Int @id @default(autoincrement()) @db.UnsignedInt
-  receiver_no Int @db.UnsignedInt
-  sender_no   Int @db.UnsignedInt
+  no                          Int  @id @default(autoincrement()) @db.UnsignedInt
+  receiver_no                 Int  @db.UnsignedInt
+  sender_no                   Int  @db.UnsignedInt
+  user_like_sender_noTouser   user @relation("like_sender_noTouser", fields: [sender_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "like_ibfk_1")
+  user_like_receiver_noTouser user @relation("like_receiver_noTouser", fields: [receiver_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "like_ibfk_2")
 
   @@index([receiver_no], map: "receiver_no")
   @@index([sender_no], map: "sender_no")
 }
 
 model neighbor {
-  no          Int      @id @default(autoincrement()) @db.UnsignedInt
-  sender_no   Int      @db.UnsignedInt
-  receiver_no Int      @db.UnsignedInt
-  status      Boolean  @default(false)
-  created     DateTime @default(now()) @db.DateTime(0)
+  no                              Int      @id @default(autoincrement()) @db.UnsignedInt
+  sender_no                       Int      @db.UnsignedInt
+  receiver_no                     Int      @db.UnsignedInt
+  status                          Boolean  @default(false)
+  created_at                      DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @db.DateTime(0)
+  user_neighbor_sender_noTouser   user     @relation("neighbor_sender_noTouser", fields: [sender_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "neighbor_ibfk_1")
+  user_neighbor_receiver_noTouser user     @relation("neighbor_receiver_noTouser", fields: [receiver_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "neighbor_ibfk_2")
 
   @@index([receiver_no], map: "receiver_no")
   @@index([sender_no], map: "sender_no")
 }
 
 model post {
-  no              Int      @id @default(autoincrement()) @db.UnsignedInt
-  sender_no       Int      @db.UnsignedInt
-  receiver_no     Int      @db.UnsignedInt
-  content         String   @db.VarChar(150)
-  created_at      DateTime @default(now()) @db.DateTime(0)
-  check           Boolean  @default(false)
-  sender_delete   Boolean  @default(false)
-  receiver_delete Boolean  @default(false)
+  no                          Int      @id @default(autoincrement()) @db.UnsignedInt
+  sender_no                   Int      @db.UnsignedInt
+  receiver_no                 Int      @db.UnsignedInt
+  content                     String   @db.VarChar(150)
+  created_at                  DateTime @default(now()) @db.DateTime(0)
+  check                       Boolean  @default(false)
+  sender_delete               Boolean  @default(false)
+  receiver_delete             Boolean  @default(false)
+  user_post_sender_noTouser   user     @relation("post_sender_noTouser", fields: [sender_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_1")
+  user_post_receiver_noTouser user     @relation("post_receiver_noTouser", fields: [receiver_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "post_ibfk_2")
 
   @@index([receiver_no], map: "receiver_no")
   @@index([sender_no], map: "sender_no")
 }
 
 model present {
-  no              Int            @id @default(autoincrement()) @db.UnsignedInt
-  item_no         Int            @db.UnsignedInt
-  sender_no       Int            @db.UnsignedInt
-  receiver_no     Int            @db.UnsignedInt
-  created_at      DateTime       @default(now()) @db.DateTime(0)
-  status          present_status @default(unread)
-  sender_delete   Boolean        @default(false)
-  receiver_delete Boolean        @default(false)
+  no                             Int            @id @default(autoincrement()) @db.UnsignedInt
+  item_no                        Int            @db.UnsignedInt
+  sender_no                      Int            @db.UnsignedInt
+  receiver_no                    Int            @db.UnsignedInt
+  created_at                     DateTime       @default(now()) @db.DateTime(0)
+  status                         present_status @default(unread)
+  sender_delete                  Boolean        @default(false)
+  receiver_delete                Boolean        @default(false)
+  item                           item           @relation(fields: [item_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "present_ibfk_1")
+  user_present_sender_noTouser   user           @relation("present_sender_noTouser", fields: [sender_no], references: [no], onDelete: Cascade, onUpdate: NoAction, map: "present_ibfk_2")
+  user_present_receiver_noTouser user           @relation("present_receiver_noTouser", fields: [receiver_no], references: [no], onDelete: Cascade, onUpdate: NoAction, map: "present_ibfk_3")
 
+  @@index([item_no], map: "item_no")
   @@index([receiver_no], map: "receiver_no")
   @@index([sender_no], map: "sender_no")
 }
@@ -132,30 +154,49 @@ model reply {
   content    String    @db.VarChar(300)
   created_at DateTime  @default(now()) @db.DateTime(0)
   deleted_at DateTime? @db.DateTime(0)
+  user       user      @relation(fields: [user_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "reply_ibfk_1")
+  comment    comment   @relation(fields: [comment_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "reply_ibfk_2")
 
   @@index([comment_no], map: "comment_no")
   @@index([user_no], map: "user_no")
 }
 
 model user {
-  no                 Int       @id @default(autoincrement()) @db.UnsignedInt
-  nickname           String    @unique(map: "nickname") @db.VarChar(10)
-  current_point      Int       @default(0) @db.UnsignedInt
-  accumulation_point Int       @default(0) @db.UnsignedInt
-  description        String?   @db.VarChar(150)
-  attendance         Json
-  status             Boolean
-  unique_identifier  String    @db.VarChar(300)
-  like               Int       @default(0) @db.UnsignedInt
-  created_at         DateTime  @default(now()) @db.DateTime(0)
-  deleted_at         DateTime? @db.DateTime(0)
-  admin              Boolean   @default(false)
+  no                                  Int                @id @default(autoincrement()) @db.UnsignedInt
+  nickname                            String             @unique(map: "nickname") @db.VarChar(10)
+  current_point                       Int                @default(0) @db.UnsignedInt
+  accumulation_point                  Int                @default(0) @db.UnsignedInt
+  description                         String?            @db.VarChar(150)
+  attendance                          Json
+  status                              Boolean
+  unique_identifier                   String             @db.VarChar(300)
+  like                                Int                @default(0) @db.UnsignedInt
+  created_at                          DateTime           @default(now()) @db.DateTime(0)
+  deleted_at                          DateTime?          @db.DateTime(0)
+  admin                               Boolean            @default(false)
+  character_locker                    character_locker[]
+  comment_comment_sender_noTouser     comment[]          @relation("comment_sender_noTouser")
+  comment_comment_receiver_noTouser   comment[]          @relation("comment_receiver_noTouser")
+  inventory                           inventory[]
+  legend                              legend?
+  like_like_sender_noTouser           like[]             @relation("like_sender_noTouser")
+  like_like_receiver_noTouser         like[]             @relation("like_receiver_noTouser")
+  neighbor_neighbor_sender_noTouser   neighbor[]         @relation("neighbor_sender_noTouser")
+  neighbor_neighbor_receiver_noTouser neighbor[]         @relation("neighbor_receiver_noTouser")
+  post_post_sender_noTouser           post[]             @relation("post_sender_noTouser")
+  post_post_receiver_noTouser         post[]             @relation("post_receiver_noTouser")
+  present_present_sender_noTouser     present[]          @relation("present_sender_noTouser")
+  present_present_receiver_noTouser   present[]          @relation("present_receiver_noTouser")
+  reply                               reply[]
+  user_achievement                    user_achievement[]
 }
 
 model user_achievement {
-  no             Int @id @default(autoincrement()) @db.UnsignedInt
-  user_no        Int @db.UnsignedInt
-  achievement_no Int @db.UnsignedInt
+  no             Int         @id @default(autoincrement()) @db.UnsignedInt
+  user_no        Int         @db.UnsignedInt
+  achievement_no Int         @db.UnsignedInt
+  user           user        @relation(fields: [user_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "user_achievement_ibfk_1")
+  achievement    achievement @relation(fields: [achievement_no], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "user_achievement_ibfk_2")
 
   @@index([achievement_no], map: "achievement_no")
   @@index([user_no], map: "user_no")
