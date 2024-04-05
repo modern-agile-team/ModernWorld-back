@@ -8,157 +8,200 @@ datasource db {
 }
 
 model achievement {
-  no          Int               @id @default(autoincrement()) @db.UnsignedInt
-  name        String            @db.VarChar(20)
-  description String            @db.VarChar(100)
-  title       String            @db.VarChar(20)
-  font_color  String            @db.VarChar(10)
-  level       achievement_level
-  point       Int               @db.UnsignedInt
+  no               Int               @id @default(autoincrement()) @db.UnsignedInt
+  name             String            @db.VarChar(20)
+  description      String            @db.VarChar(100)
+  title            String            @db.VarChar(20)
+  fontColor        String            @map("font_color") @db.VarChar(10)
+  level            achievement_level
+  point            Int               @db.UnsignedInt
+  user_achievement userAchievement[]
 }
 
 model character {
-  no          Int    @id @default(autoincrement()) @db.UnsignedInt
-  name        String @db.VarChar(15)
-  description String @db.VarChar(100)
-  image       String @db.VarChar(200)
-  species     String @db.VarChar(10)
+  no               Int               @id @default(autoincrement()) @db.UnsignedInt
+  name             String            @db.VarChar(15)
+  description      String            @db.VarChar(100)
+  image            String            @db.VarChar(400)
+  species          String            @db.VarChar(10)
+  character_locker characterLocker[]
 }
 
-model character_locker {
-  no           Int     @id @default(autoincrement()) @db.UnsignedInt
-  character_no Int     @db.UnsignedInt
-  user_no      Int     @db.UnsignedInt
-  status       Boolean @default(false)
+model characterLocker {
+  no          Int       @id @default(autoincrement()) @db.UnsignedInt
+  characterNo Int       @map("character_no") @db.UnsignedInt
+  userNo      Int       @map("user_no") @db.UnsignedInt
+  status      Boolean   @default(false)
+  character   character @relation(fields: [characterNo], references: [no], onDelete: Cascade, map: "character_locker_ibfk_1")
+  user        user      @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "character_locker_ibfk_2")
 
-  @@index([character_no], map: "character_no")
-  @@index([user_no], map: "user_no")
+  @@index([characterNo], map: "character_no")
+  @@index([userNo], map: "user_no")
+  @@map("character_locker")
 }
 
 model comment {
-  no          Int       @id @default(autoincrement()) @db.UnsignedInt
-  receiver_no Int       @db.UnsignedInt
-  sender_no   Int       @db.UnsignedInt
-  content     String    @db.VarChar(300)
-  created_at  DateTime  @default(now()) @db.DateTime(0)
-  deleted_at  DateTime? @db.DateTime(0)
+  no                             Int       @id @default(autoincrement()) @db.UnsignedInt
+  receiverNo                     Int?      @map("receiver_no") @db.UnsignedInt
+  senderNo                       Int?      @map("sender_no") @db.UnsignedInt
+  content                        String    @db.VarChar(300)
+  createdAt                      DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt                      DateTime? @map("deleted_at") @db.DateTime(0)
+  user_comment_sender_noTouser   user?     @relation("comment_sender_noTouser", fields: [senderNo], references: [no], map: "comment_ibfk_1")
+  user_comment_receiver_noTouser user?     @relation("comment_receiver_noTouser", fields: [receiverNo], references: [no], map: "comment_ibfk_2")
+  reply                          reply[]
 
-  @@index([receiver_no], map: "receiver_no")
-  @@index([sender_no], map: "sender_no")
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
 }
 
 model inventory {
-  no         Int      @id @default(autoincrement()) @db.UnsignedInt
-  user_no    Int      @db.UnsignedInt
-  item_no    Int      @db.UnsignedInt
-  created_at DateTime @default(now()) @db.DateTime(0)
-  status     Boolean  @default(false)
+  no        Int      @id @default(autoincrement()) @db.UnsignedInt
+  userNo    Int      @map("user_no") @db.UnsignedInt
+  itemNo    Int      @map("item_no") @db.UnsignedInt
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  status    Boolean  @default(false)
+  user      user     @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "inventory_ibfk_1")
+  item      item     @relation(fields: [itemNo], references: [no], onDelete: Cascade, map: "inventory_ibfk_2")
 
-  @@index([item_no], map: "item_no")
-  @@index([user_no], map: "user_no")
+  @@index([itemNo], map: "item_no")
+  @@index([userNo], map: "user_no")
 }
 
 model item {
-  no          Int    @id @default(autoincrement()) @db.UnsignedInt
-  name        String @db.VarChar(15)
-  description String @db.VarChar(150)
-  iamge       String @db.VarChar(200)
-  theme       String @db.VarChar(10)
-  type        String @db.VarChar(20)
-  price       Int    @db.UnsignedInt
+  no          Int         @id @default(autoincrement()) @db.UnsignedInt
+  name        String      @db.VarChar(15)
+  description String      @db.VarChar(150)
+  image       String      @db.VarChar(400)
+  theme       String      @db.VarChar(10)
+  type        String      @db.VarChar(20)
+  price       Int         @db.UnsignedInt
+  inventory   inventory[]
+  present     present[]
 }
 
 model legend {
-  user_no          Int @id @db.UnsignedInt
-  attendance_count Int @default(0) @db.UnsignedInt
-  commet_count     Int @default(0) @db.UnsignedInt
-  item_count       Int @default(0) @db.UnsignedInt
-  present_count    Int @default(0) @db.UnsignedInt
-  like_count       Int @default(0) @db.UnsignedInt
+  userNo          Int  @id @map("user_no") @db.UnsignedInt
+  attendanceCount Int  @default(0) @map("attendance_count") @db.UnsignedInt
+  commetCount     Int  @default(0) @map("commet_count") @db.UnsignedInt
+  itemCount       Int  @default(0) @map("item_count") @db.UnsignedInt
+  presentCount    Int  @default(0) @map("present_count") @db.UnsignedInt
+  likeCount       Int  @default(0) @map("like_count") @db.UnsignedInt
+  user            user @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "legend_ibfk_1")
 }
 
 model like {
-  no          Int @id @default(autoincrement()) @db.UnsignedInt
-  receiver_no Int @db.UnsignedInt
-  sender_no   Int @db.UnsignedInt
+  no                          Int  @id @default(autoincrement()) @db.UnsignedInt
+  receiverNo                  Int  @map("receiver_no") @db.UnsignedInt
+  senderNo                    Int  @map("sender_no") @db.UnsignedInt
+  user_like_sender_noTouser   user @relation("like_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "like_ibfk_1")
+  user_like_receiver_noTouser user @relation("like_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "like_ibfk_2")
 
-  @@index([receiver_no], map: "receiver_no")
-  @@index([sender_no], map: "sender_no")
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
 }
 
 model neighbor {
-  no          Int      @id @default(autoincrement()) @db.UnsignedInt
-  sender_no   Int      @db.UnsignedInt
-  receiver_no Int      @db.UnsignedInt
-  status      Boolean  @default(false)
-  created     DateTime @default(now()) @db.DateTime(0)
+  no                              Int      @id @default(autoincrement()) @db.UnsignedInt
+  senderNo                        Int      @map("sender_no") @db.UnsignedInt
+  receiverNo                      Int      @map("receiver_no") @db.UnsignedInt
+  status                          Boolean  @default(false)
+  createdAt                       DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @map("created_at") @db.DateTime(0)
+  user_neighbor_sender_noTouser   user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
+  user_neighbor_receiver_noTouser user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
 
-  @@index([receiver_no], map: "receiver_no")
-  @@index([sender_no], map: "sender_no")
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
 }
 
 model post {
-  no              Int      @id @default(autoincrement()) @db.UnsignedInt
-  sender_no       Int      @db.UnsignedInt
-  receiver_no     Int      @db.UnsignedInt
-  content         String   @db.VarChar(150)
-  created_at      DateTime @default(now()) @db.DateTime(0)
-  check           Boolean  @default(false)
-  sender_delete   Boolean  @default(false)
-  receiver_delete Boolean  @default(false)
+  no                          Int      @id @default(autoincrement()) @db.UnsignedInt
+  senderNo                    Int?     @map("sender_no") @db.UnsignedInt
+  receiverNo                  Int?     @map("receiver_no") @db.UnsignedInt
+  content                     String   @db.VarChar(150)
+  createdAt                   DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  check                       Boolean  @default(false)
+  senderDelete                Boolean  @default(false) @map("sender_delete")
+  receiverDelete              Boolean  @default(false) @map("receiver_delete")
+  user_post_sender_noTouser   user?    @relation("post_sender_noTouser", fields: [senderNo], references: [no], map: "post_ibfk_1")
+  user_post_receiver_noTouser user?    @relation("post_receiver_noTouser", fields: [receiverNo], references: [no], map: "post_ibfk_2")
 
-  @@index([receiver_no], map: "receiver_no")
-  @@index([sender_no], map: "sender_no")
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
 }
 
 model present {
-  no              Int            @id @default(autoincrement()) @db.UnsignedInt
-  item_no         Int            @db.UnsignedInt
-  sender_no       Int            @db.UnsignedInt
-  receiver_no     Int            @db.UnsignedInt
-  created_at      DateTime       @default(now()) @db.DateTime(0)
-  status          present_status @default(unread)
-  sender_delete   Boolean        @default(false)
-  receiver_delete Boolean        @default(false)
+  no                             Int            @id @default(autoincrement()) @db.UnsignedInt
+  itemNo                         Int            @map("item_no") @db.UnsignedInt
+  senderNo                       Int?           @map("sender_no") @db.UnsignedInt
+  receiverNo                     Int?           @map("receiver_no") @db.UnsignedInt
+  createdAt                      DateTime       @default(now()) @map("created_at") @db.DateTime(0)
+  status                         present_status @default(unread)
+  senderDelete                   Boolean        @default(false) @map("sender_delete")
+  receiverDelete                 Boolean        @default(false) @map("receiver_delete")
+  item                           item           @relation(fields: [itemNo], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "present_ibfk_1")
+  user_present_sender_noTouser   user?          @relation("present_sender_noTouser", fields: [senderNo], references: [no], map: "present_ibfk_2")
+  user_present_receiver_noTouser user?          @relation("present_receiver_noTouser", fields: [receiverNo], references: [no], map: "present_ibfk_3")
 
-  @@index([receiver_no], map: "receiver_no")
-  @@index([sender_no], map: "sender_no")
+  @@index([itemNo], map: "item_no")
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
 }
 
 model reply {
-  no         Int       @id @default(autoincrement()) @db.UnsignedInt
-  comment_no Int       @db.UnsignedInt
-  user_no    Int       @db.UnsignedInt
-  content    String    @db.VarChar(300)
-  created_at DateTime  @default(now()) @db.DateTime(0)
-  deleted_at DateTime? @db.DateTime(0)
+  no        Int       @id @default(autoincrement()) @db.UnsignedInt
+  commentNo Int       @map("comment_no") @db.UnsignedInt
+  userNo    Int?      @map("user_no") @db.UnsignedInt
+  content   String    @db.VarChar(300)
+  createdAt DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt DateTime? @map("deleted_at") @db.DateTime(0)
+  user      user?     @relation(fields: [userNo], references: [no], map: "reply_ibfk_1")
+  comment   comment   @relation(fields: [commentNo], references: [no], onDelete: Cascade, map: "reply_ibfk_2")
 
-  @@index([comment_no], map: "comment_no")
-  @@index([user_no], map: "user_no")
+  @@index([commentNo], map: "comment_no")
+  @@index([userNo], map: "user_no")
 }
 
 model user {
-  no                 Int       @id @default(autoincrement()) @db.UnsignedInt
-  nickname           String    @unique(map: "nickname") @db.VarChar(10)
-  current_point      Int       @default(0) @db.UnsignedInt
-  accumulation_point Int       @default(0) @db.UnsignedInt
-  description        String?   @db.VarChar(150)
-  attendance         Json
-  status             Boolean
-  unique_identifier  String    @db.VarChar(300)
-  like               Int       @default(0) @db.UnsignedInt
-  created_at         DateTime  @default(now()) @db.DateTime(0)
-  deleted_at         DateTime? @db.DateTime(0)
-  admin              Boolean   @default(false)
+  no                                  Int               @id @default(autoincrement()) @db.UnsignedInt
+  nickname                            String            @unique(map: "nickname") @db.VarChar(10)
+  currentPoint                        Int               @default(0) @map("current_point") @db.UnsignedInt
+  accumulationPoint                   Int               @default(0) @map("accumulation_point") @db.UnsignedInt
+  description                         String?           @db.VarChar(150)
+  attendance                          Json
+  status                              Boolean
+  uniqueIdentifier                    String            @unique(map: "unique_identifier") @map("unique_identifier") @db.VarChar(300)
+  like                                Int               @default(0) @db.UnsignedInt
+  createdAt                           DateTime          @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt                           DateTime?         @map("deleted_at") @db.DateTime(0)
+  admin                               Boolean           @default(false)
+  character_locker                    characterLocker[]
+  comment_comment_sender_noTouser     comment[]         @relation("comment_sender_noTouser")
+  comment_comment_receiver_noTouser   comment[]         @relation("comment_receiver_noTouser")
+  inventory                           inventory[]
+  legend                              legend?
+  like_like_sender_noTouser           like[]            @relation("like_sender_noTouser")
+  like_like_receiver_noTouser         like[]            @relation("like_receiver_noTouser")
+  neighbor_neighbor_sender_noTouser   neighbor[]        @relation("neighbor_sender_noTouser")
+  neighbor_neighbor_receiver_noTouser neighbor[]        @relation("neighbor_receiver_noTouser")
+  post_post_sender_noTouser           post[]            @relation("post_sender_noTouser")
+  post_post_receiver_noTouser         post[]            @relation("post_receiver_noTouser")
+  present_present_sender_noTouser     present[]         @relation("present_sender_noTouser")
+  present_present_receiver_noTouser   present[]         @relation("present_receiver_noTouser")
+  reply                               reply[]
+  user_achievement                    userAchievement[]
 }
 
-model user_achievement {
-  no             Int @id @default(autoincrement()) @db.UnsignedInt
-  user_no        Int @db.UnsignedInt
-  achievement_no Int @db.UnsignedInt
+model userAchievement {
+  no            Int         @id @default(autoincrement()) @db.UnsignedInt
+  userNo        Int         @map("user_no") @db.UnsignedInt
+  achievementNo Int         @map("achievement_no") @db.UnsignedInt
+  user          user        @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_1")
+  achievement   achievement @relation(fields: [achievementNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_2")
 
-  @@index([achievement_no], map: "achievement_no")
-  @@index([user_no], map: "user_no")
+  @@index([achievementNo], map: "achievement_no")
+  @@index([userNo], map: "user_no")
+  @@map("user_achievement")
 }
 
 enum achievement_level {
