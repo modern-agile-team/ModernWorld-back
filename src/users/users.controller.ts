@@ -6,9 +6,11 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get(":no")
-  async getOneUserWithNameAndPointAndAchievementTitle(
+  getOneUserWithNameAndPointAndAchievementTitle(
     @Param("no", ParseIntPipe) no: number,
   ) {
-    return this.userService.getUserNameAndCurrentPointAndAccumulatinPoint(no);
+    return this.userService.getUserNameAndCurrentPointAndAccumulatinPointAndTitle(
+      no,
+    );
   }
 }
