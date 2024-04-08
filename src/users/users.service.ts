@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class UsersService {
+  constructor(private prisma: PrismaService) {}
   async getUserNameAndCurrentPointAndAccumulatinPointAndTitle(no: number) {
-    const prisma = new PrismaClient();
-    const result = await prisma.user.findUnique({
+    const result = await this.prisma.user.findUnique({
       where: {
         no,
       },
