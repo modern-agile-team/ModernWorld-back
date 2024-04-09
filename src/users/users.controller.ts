@@ -1,4 +1,12 @@
-import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseBoolPipe,
+  ParseIntPipe,
+  Post,
+} from "@nestjs/common";
 import { UsersService } from "./users.service";
 
 @Controller("users")
@@ -12,5 +20,23 @@ export class UsersController {
     return this.userService.getUserNameAndCurrentPointAndAccumulatinPointAndTitle(
       no,
     );
+  }
+
+  @Post()
+  createUser(
+    @Body("desciption") description: string,
+    @Body("nickname") nickname: string,
+    @Body("status", ParseBoolPipe) status: boolean,
+    @Body("uniqueIdentifier") uniqueIdentifier: string,
+  ) {
+    const attendance = {};
+
+    return this.userService.createUser({
+      description,
+      nickname,
+      status,
+      attendance,
+      uniqueIdentifier,
+    });
   }
 }

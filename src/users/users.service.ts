@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma.service";
+import { CreateUserDto } from "./dtos/create-user-dto";
 
 @Injectable()
 export class UsersService {
@@ -30,5 +31,17 @@ export class UsersService {
       title: result.userAchievement[0].achievement.title,
       fontColor: result.userAchievement[0].achievement.fontColor,
     };
+  }
+
+  async createUser(data: CreateUserDto) {
+    const result = await this.prisma.user.create({
+      data: {
+        nickname: data.nickname,
+        description: data.description,
+        attendance: data.attendance,
+        status: data.status,
+        uniqueIdentifier: data.uniqueIdentifier,
+      },
+    });
   }
 }
