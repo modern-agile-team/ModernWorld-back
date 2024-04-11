@@ -6,6 +6,7 @@ import {
   ParseBoolPipe,
   ParseIntPipe,
   Post,
+  Put,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 
@@ -38,5 +39,10 @@ export class UsersController {
       attendance,
       uniqueIdentifier,
     });
+  }
+
+  @Put()
+  updateUser(@Param("no") no: number) {
+    return this.userService.updateUser(no);
   }
 }

@@ -44,4 +44,8 @@ export class UsersService {
       },
     });
   }
+
+  async updateUser(no: number) {
+    // const result = await this.prisma.user.update();
+  }
 }
