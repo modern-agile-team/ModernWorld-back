@@ -1,7 +1,7 @@
 export class CreateUserDto {
   nickname: string;
 
-  description: string;
+  description?: string;
 
   attendance: object;
 

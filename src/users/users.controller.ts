@@ -41,8 +41,11 @@ export class UsersController {
     });
   }
 
-  @Put()
-  updateUser(@Param("no") no: number) {
-    return this.userService.updateUser(no);
+  @Put(":no")
+  updateUser(
+    @Param("no", ParseIntPipe) no: number,
+    @Body("description") description: string,
+  ) {
+    return this.userService.updateUser({ no, description });
   }
 }
