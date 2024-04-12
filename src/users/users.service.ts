@@ -44,6 +44,8 @@ export class UsersService {
         uniqueIdentifier: data.uniqueIdentifier,
       },
     });
+
+    return result;
   }
 
   async updateUser(data: UpdateUserDto) {
@@ -54,5 +56,49 @@ export class UsersService {
         description: data.description,
       },
     });
+
+    return result;
+  }
+
+  async showUsersByAnimal(
+    pageNo: number,
+    take: number,
+    orderField: string,
+    animal: string,
+  ) {
+    const skip = (pageNo - 1) * take;
+
+    const result = await this.prisma.user.findMany({
+      take: take,
+      skip: skip,
+      select: {
+        nickname: true,
+        description: true,
+        createdAt: true,
+        like: true,
+        userAchievement: {
+          where: { status: true },
+          select: {
+            status: true,
+            achievement: { select: { name: true, fontColor: true } },
+          },
+        },
+        characterLocker: {
+          where: { status: true },
+          select: {
+            status: true,
+            character: { select: { image: true, species: true } },
+          },
+        },
+      },
+
+      where: {
+        characterLocker: {
+          some: { status: true, character: { species: animal } },
+        },
+      },
+      orderBy: [{ [orderField]: "desc" }, { createdAt: "desc" }],
+    });
+    return result;
   }
 }
