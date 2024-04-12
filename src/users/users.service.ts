@@ -67,6 +67,9 @@ export class UsersService {
     animal: string,
   ) {
     const skip = (pageNo - 1) * take;
+    let sort = "asc";
+
+    orderField === "createdAt" ? true : (sort = "desc");
 
     const result = await this.prisma.user.findMany({
       take: take,
@@ -75,7 +78,9 @@ export class UsersService {
         nickname: true,
         description: true,
         createdAt: true,
+        accumulationPoint: true,
         like: true,
+
         userAchievement: {
           where: { status: true },
           select: {
@@ -97,7 +102,7 @@ export class UsersService {
           some: { status: true, character: { species: animal } },
         },
       },
-      orderBy: [{ [orderField]: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ [orderField]: sort }, { createdAt: "desc" }],
     });
     return result;
   }
