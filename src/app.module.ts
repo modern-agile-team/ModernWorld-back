@@ -4,7 +4,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ItemsService } from "./items/items.service";
-import { ItemsController } from "./items/item.controller";
+import { ItemsController } from "./items/items.controller";
 import { ItemsModule } from "./items/items.module";
 @Module({
   imports: [
