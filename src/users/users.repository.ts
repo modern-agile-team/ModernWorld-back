@@ -6,9 +6,16 @@ export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   modifyUserPoint(userNo: number, point: number) {
-    const result = this.prisma.user.update({
+    return this.prisma.user.update({
       where: { no: userNo },
       data: { currentPoint: { decrement: point } },
+    });
+  }
+
+  findUserPoint(userNo: number) {
+    return this.prisma.user.findFirst({
+      where: { no: userNo },
+      select: { nickname: true, currentPoint: true },
     });
   }
 }
