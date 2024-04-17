@@ -163,18 +163,22 @@ model reply {
 }
 
 model user {
-  no                 Int               @id @default(autoincrement()) @db.UnsignedInt
-  nickname           String            @unique(map: "nickname") @db.VarChar(10)
-  currentPoint       Int               @default(0) @map("current_point") @db.UnsignedInt
-  accumulationPoint  Int               @default(0) @map("accumulation_point") @db.UnsignedInt
-  description        String?           @db.VarChar(150)
-  attendance         Json
-  status             Boolean
-  uniqueIdentifier   String            @unique(map: "unique_identifier") @map("unique_identifier") @db.VarChar(300)
-  like               Int               @default(0) @db.UnsignedInt
-  createdAt          DateTime          @default(now()) @map("created_at") @db.DateTime(0)
-  deletedAt          DateTime?         @map("deleted_at") @db.DateTime(0)
-  admin              Boolean           @default(false)
+  no                Int         @id @default(autoincrement()) @db.UnsignedInt
+  nickname          String?     @unique(map: "nickname") @db.VarChar(10)
+  currentPoint      Int         @default(0) @map("current_point") @db.UnsignedInt
+  accumulationPoint Int         @default(0) @map("accumulation_point") @db.UnsignedInt
+  description       String?     @db.VarChar(150)
+  attendance        Json?
+  status            Boolean     @default(false)
+  like              Int         @default(0) @db.UnsignedInt
+  createdAt         DateTime    @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt         DateTime?   @map("deleted_at") @db.DateTime(0)
+  admin             Boolean     @default(false)
+  uniqueIdentifier  String      @unique(map: "unique_identifier") @map("unique_identifier") @db.VarChar(300)
+  socialName        String      @map("social_name") @db.VarChar(200)
+  image             String?     @default("https://wang0514.s3.ap-northeast-2.amazonaws.com/page/BaseProfileImage/pngwing.com.png") @db.VarChar(300)
+  domain            user_domain
+
   characterLocker    characterLocker[]
   commentSenderNo    comment[]         @relation("comment_sender_noTouser")
   commentReceiverNo  comment[]         @relation("comment_receiver_noTouser")
@@ -216,4 +220,10 @@ enum present_status {
   read
   accept
   reject
+}
+
+enum user_domain {
+  naver
+  kakao
+  google
 }
