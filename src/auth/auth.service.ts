@@ -46,6 +46,7 @@ export class AuthService {
         })
       ).data;
       console.log(userInfo);
+      //id 값이 존재하면 유저 키값 가져와서 최신화 존재하지 않으면 db상에 저장
     } catch (error) {
       // 에러 처리
     }
