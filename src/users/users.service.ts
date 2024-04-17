@@ -2,10 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dtos/create-user-dto";
 import { UpdateUserDto } from "./dtos/update-user-dto";
+import { UserRepository } from "./users.repository";
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userRepository: UserRepository,
+  ) {}
+
   async getUserNameAndCurrentPointAndAccumulatinPointAndTitle(no: number) {
     const result = await this.prisma.user.findUnique({
       where: {
