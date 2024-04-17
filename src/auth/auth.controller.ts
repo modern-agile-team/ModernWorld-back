@@ -11,13 +11,26 @@ export class AuthController {
   // @Get()
   // @UseGuards(AuthGuard("google"))
   // async googleAuth(@Req() req) {}
-
-  @Get("google/login")
   // @UseGuards(AuthGuard(""))
+  @Get("google/login")
   googleLogin(@Query("code") code: string) {
     if (!code) {
       throw new Error("인가 코드가 없습니다.");
     }
-    return this.authService.login(code, UserProvider.Google);
+    // return this.authService.googleLogin(code);
+  }
+  @Get("naver/login")
+  naverLogin(@Query("code") code: string) {
+    if (!code) {
+      throw new Error("인가 코드가 없습니다.");
+    }
+    return this.authService.naverLogin(code);
+  }
+  @Get("kakao/login")
+  kakaoLogin(@Query("code") code: string) {
+    if (!code) {
+      throw new Error("인가 코드가 없습니다.");
+    }
+    // return this.authService.kakaoLogin(code);
   }
 }
