@@ -17,12 +17,12 @@ export class UsersController {
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
   constructor(private readonly userService: UsersService) {}
   @Get("show")
-  showUsersByAnimal(
+  getUsersByAnimal(
     @Query("pageNo", ParseIntPipe) pageNo: number,
     @Query("take", ParseIntPipe) take: number,
     @Query("animal")
     animal: string,
-    @Query("orderField") orderField: string,
+    @Query("orderByField") orderByField: string,
   ) {
     /**
      * pageNo는 페이지의 번호
@@ -31,16 +31,19 @@ export class UsersController {
      * orderField는 어떤 식으로 정렬할것인지에 대한 정보
      */
     //VALIDATION !!!!!! orderField의 값은 정해져있어야함, like, created_at, accumulationPoint 이 세개로 한정해야함
-    return this.userService.showUsersByAnimal(pageNo, take, orderField, animal);
+    return this.userService.getUsersByAnimal({
+      pageNo,
+      take,
+      animal,
+      orderByField,
+    });
   }
 
   @Get(":no")
-  getOneUserWithNameAndPointAndAchievementTitle(
+  getOneUserWithNamePointAchievementTitle(
     @Param("no", ParseIntPipe) no: number,
   ) {
-    return this.userService.getUserNameAndCurrentPointAndAccumulatinPointAndTitle(
-      no,
-    );
+    return this.userService.getUserNameCurrentPointAccumulationPointTitle(no);
   }
 
   @Post()

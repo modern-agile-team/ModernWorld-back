@@ -3,6 +3,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dtos/create-user-dto";
 import { UpdateUserDto } from "./dtos/update-user-dto";
 import { UserRepository } from "./users.repository";
+import { GetUsersByAnimalDto } from "./dtos/get-usersByanimal-dto";
 
 @Injectable()
 export class UsersService {
@@ -11,24 +12,11 @@ export class UsersService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async getUserNameAndCurrentPointAndAccumulatinPointAndTitle(no: number) {
-    const result = await this.prisma.user.findUnique({
-      where: {
+  async getUserNameCurrentPointAccumulationPointTitle(no: number) {
+    const result =
+      await this.userRepository.getUserNameCurrentPointAccumulationPointTitle(
         no,
-      },
-
-      select: {
-        nickname: true,
-        currentPoint: true,
-        accumulationPoint: true,
-        userAchievement: {
-          where: { status: true },
-          select: {
-            achievement: { select: { title: true, fontColor: true } },
-          },
-        },
-      },
-    });
+      );
 
     return {
       nickname: result.nickname,
@@ -39,76 +27,45 @@ export class UsersService {
     };
   }
 
-  async createUser(data: CreateUserDto) {
-    const result = await this.prisma.user.create({
-      data: {
-        nickname: data.nickname,
-        description: data.description,
-        attendance: data.attendance,
-        status: data.status,
-        uniqueIdentifier: data.uniqueIdentifier,
-      },
-    });
+  async createUser(createUserDto: CreateUserDto) {
+    const result = await this.userRepository.createUser(createUserDto);
 
     return result;
   }
 
-  async updateUser(data: UpdateUserDto) {
+  async updateUser(UpdateUserDto: UpdateUserDto) {
     // const result = await this.prisma.user.update();
     const result = await this.prisma.user.update({
-      where: { no: data.no },
+      where: { no: UpdateUserDto.no },
       data: {
-        description: data.description,
+        description: UpdateUserDto.description,
       },
     });
 
     return result;
   }
 
-  async showUsersByAnimal(
-    pageNo: number,
-    take: number,
-    orderField: string,
-    animal: string,
-  ) {
+  async getUsersByAnimal(getUsersByAnimal: GetUsersByAnimalDto) {
+    const { pageNo, take, animal, orderByField } = getUsersByAnimal;
+
     const skip = (pageNo - 1) * take;
-    let sort = "asc";
+    const sort = orderByField === "createdAt" ? "asc" : "desc";
 
-    orderField === "createdAt" ? true : (sort = "desc");
+    const result = await this.userRepository.getUsersByAnimal(
+      take,
+      orderByField,
+      animal,
+      skip,
+      sort,
+    );
 
-    const result = await this.prisma.user.findMany({
-      take: take,
-      skip: skip,
-      select: {
-        nickname: true,
-        description: true,
-        createdAt: true,
-        accumulationPoint: true,
-        like: true,
+    console.log(result);
 
-        userAchievement: {
-          where: { status: true },
-          select: {
-            status: true,
-            achievement: { select: { name: true, fontColor: true } },
-          },
-        },
-        characterLocker: {
-          where: { status: true },
-          select: {
-            status: true,
-            character: { select: { image: true, species: true } },
-          },
-        },
-      },
-
-      where: {
-        characterLocker: {
-          some: { status: true, character: { species: animal } },
-        },
-      },
-      orderBy: [{ [orderField]: sort }, { createdAt: "desc" }],
+    result.map((obj) => {
+      let object = {};
+      // object[obj.characterLocker] = obj.userAchievement;
     });
+
     return result;
   }
 }
