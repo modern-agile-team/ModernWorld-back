@@ -7,7 +7,7 @@ export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   findUserUniqueIndetifier(uniqueIdentifier: string) {
-    return this.prisma.user.findFirst({
+    return this.prisma.user.findUnique({
       select: { no: true, nickname: true, uniqueIdentifier: true },
       where: { uniqueIdentifier: uniqueIdentifier },
     });
