@@ -28,6 +28,18 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
+    const attendance = {
+      1: [false, 100],
+      2: [false, 200],
+      3: [false, 300],
+      4: [false, 400],
+      5: [false, 500],
+      6: [false, 600],
+      7: [false, 700],
+    };
+
+    createUserDto.attendance = attendance;
+
     const result = await this.userRepository.createUser(createUserDto);
 
     return result;

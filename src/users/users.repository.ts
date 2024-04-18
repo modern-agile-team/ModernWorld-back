@@ -48,13 +48,32 @@ export class UserRepository {
   }
 
   createUser(createUserDto: CreateUserDto) {
+    const {
+      nickname,
+      description,
+      attendance,
+      status,
+      uniqueIdentifier,
+      socialName,
+      image,
+      domain,
+    } = createUserDto;
+
     return this.prisma.user.create({
       data: {
-        nickname: createUserDto.nickname,
-        description: createUserDto.description,
-        attendance: createUserDto.attendance,
-        status: createUserDto.status,
-        uniqueIdentifier: createUserDto.uniqueIdentifier,
+        nickname,
+        description,
+        attendance,
+        status,
+        uniqueIdentifier,
+        socialName,
+        image,
+        domain:
+          domain === "naver"
+            ? "naver"
+            : domain === "google"
+              ? "google"
+              : "kakao",
       },
     });
   }

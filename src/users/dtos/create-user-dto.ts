@@ -8,4 +8,10 @@ export class CreateUserDto {
   status: boolean;
 
   uniqueIdentifier: string;
+
+  socialName: string;
+
+  image?: string;
+
+  domain: string;
 }
