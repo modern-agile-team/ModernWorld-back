@@ -14,12 +14,13 @@ import { stat } from "fs";
 
 @Controller("users")
 export class UsersController {
+  constructor(private readonly userService: UsersService) {}
+
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
-  constructor(private readonly userService: UsersService) {}
-  @Get("show")
+  @Get("show/:pageNo")
   getUsersByAnimal(
-    @Query("pageNo", ParseIntPipe) pageNo: number,
+    @Param("pageNo", ParseIntPipe) pageNo: number,
     @Query("take", ParseIntPipe) take: number,
     @Query("animal")
     animal: string,
@@ -31,7 +32,7 @@ export class UsersController {
      * animal은 그 사람이 현재 사용중인 동물, 어차피 개 고양이밖에 없음
      * orderField는 어떤 식으로 정렬할것인지에 대한 정보
      */
-    //VALIDATION !!!!!! orderField의 값은 정해져있어야함, like, created_at, accumulationPoint 이 세개로 한정해야함
+    //VALIDATION !!!!!! orderByField의 값은 정해져있어야함, like, created_at, accumulationPoint 이 세개로 한정해야함
     return this.userService.getUsersByAnimal({
       pageNo,
       take,
