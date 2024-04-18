@@ -57,13 +57,11 @@ export class UsersController {
     @Body("image") image: string,
     @Body("domain") domain: string,
   ) {
-    const attendance = {};
-
     return this.userService.createUser({
       description,
       nickname,
       status,
-      attendance,
+      attendance: {},
       uniqueIdentifier,
       socialName,
       image,
