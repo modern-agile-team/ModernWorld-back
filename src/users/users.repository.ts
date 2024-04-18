@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CreateUserDto } from "./dtos/create-user-dto";
 
 @Injectable()
 export class UserRepository {
@@ -10,6 +9,27 @@ export class UserRepository {
     return this.prisma.user.findUnique({
       select: { no: true, nickname: true, uniqueIdentifier: true },
       where: { uniqueIdentifier: uniqueIdentifier },
+    });
+  }
+
+  createUser(
+    uniqueIdentifier: string,
+    socialName: string,
+    image: string,
+    domain: string,
+  ) {
+    return this.prisma.user.create({
+      data: {
+        uniqueIdentifier,
+        socialName,
+        image,
+        domain:
+          domain === "naver"
+            ? "naver"
+            : domain === "google"
+              ? "google"
+              : "kakao",
+      },
     });
   }
 
@@ -43,37 +63,6 @@ export class UserRepository {
             achievement: { select: { title: true, fontColor: true } },
           },
         },
-      },
-    });
-  }
-
-  createUser(createUserDto: CreateUserDto) {
-    const {
-      nickname,
-      description,
-      attendance,
-      status,
-      uniqueIdentifier,
-      socialName,
-      image,
-      domain,
-    } = createUserDto;
-
-    return this.prisma.user.create({
-      data: {
-        nickname,
-        description,
-        attendance,
-        status,
-        uniqueIdentifier,
-        socialName,
-        image,
-        domain:
-          domain === "naver"
-            ? "naver"
-            : domain === "google"
-              ? "google"
-              : "kakao",
       },
     });
   }

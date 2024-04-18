@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CreateUserDto } from "./dtos/create-user-dto";
 import { UpdateUserDto } from "./dtos/update-user-dto";
 import { UserRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-usersByanimal-dto";
@@ -27,23 +26,17 @@ export class UsersService {
     };
   }
 
-  async createUser(createUserDto: CreateUserDto) {
-    const attendance = {
-      1: [false, 100],
-      2: [false, 200],
-      3: [false, 300],
-      4: [false, 400],
-      5: [false, 500],
-      6: [false, 600],
-      7: [false, 700],
-    };
+  // async createUser(
+  //   uniqueIndentifier,
+  //   socialName,
+  //   image,
+  //   uniqueIdentifier,
+  //   domain,
+  // ) {
+  //   const result = await this.userRepository.createUser(createUserDto);
 
-    createUserDto.attendance = attendance;
-
-    const result = await this.userRepository.createUser(createUserDto);
-
-    return result;
-  }
+  //   return result;
+  // }
 
   async updateUser(UpdateUserDto: UpdateUserDto) {
     // const result = await this.prisma.user.update();
