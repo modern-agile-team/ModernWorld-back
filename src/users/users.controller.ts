@@ -64,9 +64,16 @@ export class UsersController {
 
   @Put(":no")
   updateUser(
-    @Param("no", ParseIntPipe) no: number,
+    @Param("userNo", ParseIntPipe) no: number,
+    @Body("nickname") nickname: string,
+    @Body("characterNo", ParseIntPipe) characterNo: number,
     @Body("description") description: string,
   ) {
-    return this.userService.updateUser({ no, description });
+    return this.userService.updateUserNicknameDescriptionAttendanceCharacter(
+      no,
+      characterNo,
+      nickname,
+      description,
+    );
   }
 }

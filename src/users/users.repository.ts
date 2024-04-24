@@ -54,6 +54,21 @@ export class UserRepository {
     });
   }
 
+  updateUserNicknameDesriptionAttendance(
+    userNo: number,
+    nickname: string,
+    description: string,
+  ) {
+    return this.prisma.user.update({
+      data: {
+        nickname,
+        description,
+        attendance: {},
+      },
+      where: { no: userNo },
+    });
+  }
+
   getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
     return this.prisma.user.findUnique({
       select: {

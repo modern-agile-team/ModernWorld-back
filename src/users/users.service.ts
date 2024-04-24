@@ -6,10 +6,7 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async getUserNameCurrentPointAccumulationPointTitle(no: number) {
     const result =
@@ -47,14 +44,21 @@ export class UsersService {
     return result;
   }
 
-  async updateUser(UpdateUserDto: UpdateUserDto) {
-    // const result = await this.prisma.user.update();
-    const result = await this.prisma.user.update({
-      where: { no: UpdateUserDto.no },
-      data: {
-        description: UpdateUserDto.description,
-      },
-    });
+  async updateUserNicknameDescriptionAttendanceCharacter(
+    userNo: number,
+    characterNo: number,
+    nickname: string,
+    description: string,
+  ) {
+    //이곳에 트랜잭션으로 캐릭터보관함에 캐릭터 넣는것까지 같이 할것.
+    console.log(characterNo);
+
+    const result =
+      await this.userRepository.updateUserNicknameDesriptionAttendance(
+        userNo,
+        nickname,
+        description,
+      );
 
     return result;
   }
