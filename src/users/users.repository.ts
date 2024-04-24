@@ -5,7 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findUserUniqueIndentifier(uniqueIdentifier: string) {
+  findUserByUniqueIndentifier(uniqueIdentifier: string) {
     return this.prisma.user.findUnique({
       select: { no: true, nickname: true, uniqueIdentifier: true },
       where: { uniqueIdentifier },
@@ -33,17 +33,17 @@ export class UserRepository {
     });
   }
 
-  modifyUserPoint(userNo: number, point: number) {
+  modifyUserPoint(userNo: number, incrementalPoint: number) {
     return this.prisma.user.update({
+      data: { currentPoint: { decrement: incrementalPoint } },
       where: { no: userNo },
-      data: { currentPoint: { decrement: point } },
     });
   }
 
   findUserPoint(userNo: number) {
-    return this.prisma.user.findFirst({
-      where: { no: userNo },
+    return this.prisma.user.findUnique({
       select: { nickname: true, currentPoint: true },
+      where: { no: userNo },
     });
   }
 
@@ -54,12 +54,8 @@ export class UserRepository {
     });
   }
 
-  getUserNameCurrentPointAccumulationPointTitle(no: number) {
+  getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
     return this.prisma.user.findUnique({
-      where: {
-        no,
-      },
-
       select: {
         nickname: true,
         currentPoint: true,
@@ -71,6 +67,8 @@ export class UserRepository {
           },
         },
       },
+
+      where: { no: userNo },
     });
   }
 
