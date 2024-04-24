@@ -41,6 +41,12 @@ export class UsersService {
   //   return result;
   // }
 
+  async getUserAttendance(no: number) {
+    const result = await this.userRepository.getUserAttendance(no);
+
+    return result;
+  }
+
   async updateUser(UpdateUserDto: UpdateUserDto) {
     // const result = await this.prisma.user.update();
     const result = await this.prisma.user.update({

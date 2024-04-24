@@ -5,7 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findUserUniqueIndetifier(uniqueIdentifier: string) {
+  findUserUniqueIndentifier(uniqueIdentifier: string) {
     return this.prisma.user.findUnique({
       select: { no: true, nickname: true, uniqueIdentifier: true },
       where: { uniqueIdentifier },
@@ -44,6 +44,13 @@ export class UserRepository {
     return this.prisma.user.findFirst({
       where: { no: userNo },
       select: { nickname: true, currentPoint: true },
+    });
+  }
+
+  getUserAttendance(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { nickname: true, attendance: true },
+      where: { no: userNo },
     });
   }
 

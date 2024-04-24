@@ -41,6 +41,11 @@ export class UsersController {
     return this.userService.getUserNameCurrentPointAccumulationPointTitle(no);
   }
 
+  @Get(":no/attendance")
+  getOneUserAttendance(@Param("no", ParseIntPipe) no: number) {
+    return this.userService.getUserAttendance(no);
+  }
+
   //사실 createUser는 회원가입할 때 같이 불러올 api임 따라서 Controller가 필요 없다. Service만 auth에서 사용하면 그만이다.
   // @Post()
   // createUser(
