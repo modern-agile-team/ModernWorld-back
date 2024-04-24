@@ -87,15 +87,15 @@ export class UserRepository {
         userAchievement: {
           where: { status: true },
           select: {
-            status: true,
-            achievement: { select: { name: true, fontColor: true } },
+            achievement: {
+              select: { fontColor: true, title: true },
+            },
           },
         },
         characterLocker: {
           where: { status: true },
           select: {
-            status: true,
-            character: { select: { image: true, species: true } },
+            character: { select: { image: true } },
           },
         },
       },

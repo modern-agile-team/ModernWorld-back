@@ -64,13 +64,22 @@ export class UsersService {
       sort,
     );
 
-    console.log(result);
-
-    result.map((obj) => {
-      let object = {};
-      // object[obj.characterLocker] = obj.userAchievement;
-    });
-
-    return result;
+    //가공
+    return result.map((obj) => ({
+      nickname: obj.nickname,
+      description: obj.description,
+      createdAt: obj.createdAt,
+      like: obj.like,
+      accumulationPoint: obj.accumulationPoint,
+      achievementTitle: obj.userAchievement[0]
+        ? obj.userAchievement[0].achievement.title
+        : null,
+      achievementFontColor: obj.userAchievement[0]
+        ? obj.userAchievement[0].achievement.fontColor
+        : null,
+      characterImage: obj.characterLocker[0]
+        ? obj.characterLocker[0].character.image
+        : null,
+    }));
   }
 }
