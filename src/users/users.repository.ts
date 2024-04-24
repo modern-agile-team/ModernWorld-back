@@ -8,7 +8,7 @@ export class UserRepository {
   findUserUniqueIndetifier(uniqueIdentifier: string) {
     return this.prisma.user.findUnique({
       select: { no: true, nickname: true, uniqueIdentifier: true },
-      where: { uniqueIdentifier: uniqueIdentifier },
+      where: { uniqueIdentifier },
     });
   }
 
