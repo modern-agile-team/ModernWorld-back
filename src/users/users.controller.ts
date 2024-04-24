@@ -3,9 +3,11 @@ import {
   Controller,
   Get,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Put,
   Query,
+  Post,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
@@ -42,24 +44,17 @@ export class UsersController {
   //사실 createUser는 회원가입할 때 같이 불러올 api임 따라서 Controller가 필요 없다. Service만 auth에서 사용하면 그만이다.
   // @Post()
   // createUser(
-  //   @Body("desciption") description: string,
-  //   @Body("nickname") nickname: string,
-  //   @Body("status", ParseBoolPipe) status: boolean,
   //   @Body("uniqueIdentifier") uniqueIdentifier: string,
   //   @Body("socialName") socialName: string,
   //   @Body("image") image: string,
   //   @Body("domain") domain: string,
   // ) {
-  //   return this.userService.createUser({
-  //     description,
-  //     nickname,
-  //     status,
-  //     attendance: {},
+  //   return this.userService.createUser(
   //     uniqueIdentifier,
   //     socialName,
   //     image,
   //     domain,
-  //   });
+  //   );
   // }
 
   @Put(":no")

@@ -27,14 +27,17 @@ export class UsersService {
   }
 
   // async createUser(
-  //   uniqueIndentifier,
-  //   socialName,
-  //   image,
-  //   uniqueIdentifier,
-  //   domain,
+  //   uniqueIdentifier: string,
+  //   socialName: string,
+  //   image: string,
+  //   domain: string,
   // ) {
-  //   const result = await this.userRepository.createUser(createUserDto);
-
+  //   const result = await this.userRepository.createUser(
+  //     uniqueIdentifier,
+  //     socialName,
+  //     image,
+  //     domain,
+  //   );
   //   return result;
   // }
 
