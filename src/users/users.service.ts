@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserDto } from "./dtos/update-user-dto";
 import { UserRepository } from "./users.repository";
-import { GetUsersByAnimalDto } from "./dtos/get-usersByanimal-dto";
+import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 
 @Injectable()
 export class UsersService {
@@ -50,8 +50,8 @@ export class UsersService {
     return result;
   }
 
-  async getUsersByAnimal(getUsersByAnimal: GetUsersByAnimalDto) {
-    const { pageNo, take, animal, orderByField } = getUsersByAnimal;
+  async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
+    const { take, animal, orderByField } = queryParams;
 
     const skip = (pageNo - 1) * take;
     const sort = orderByField === "createdAt" ? "asc" : "desc";

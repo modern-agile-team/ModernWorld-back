@@ -74,6 +74,16 @@ export class UserRepository {
     skip: number,
     sort: string,
   ) {
+    let where = {};
+
+    if (animal) {
+      where = {
+        characterLocker: {
+          some: { status: true, character: { species: animal } },
+        },
+      };
+    }
+
     return this.prisma.user.findMany({
       take: take,
       skip: skip,
@@ -92,6 +102,7 @@ export class UserRepository {
             },
           },
         },
+
         characterLocker: {
           where: { status: true },
           select: {
@@ -100,11 +111,8 @@ export class UserRepository {
         },
       },
 
-      where: {
-        characterLocker: {
-          some: { status: true, character: { species: animal } },
-        },
-      },
+      where,
+
       orderBy: [{ [orderByField]: sort }, { createdAt: "desc" }],
     });
   }

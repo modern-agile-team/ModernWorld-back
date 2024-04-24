@@ -3,14 +3,12 @@ import {
   Controller,
   Get,
   Param,
-  ParseBoolPipe,
   ParseIntPipe,
-  Post,
   Put,
   Query,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { stat } from "fs";
+import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 
 @Controller("users")
 export class UsersController {
@@ -21,24 +19,17 @@ export class UsersController {
   @Get("show/:pageNo")
   getUsersByAnimal(
     @Param("pageNo", ParseIntPipe) pageNo: number,
-    @Query("take", ParseIntPipe) take: number,
-    @Query("animal")
-    animal: string,
-    @Query("orderByField") orderByField: string,
+    @Query() queryParams: GetUsersByAnimalDto,
   ) {
     /**
      * pageNo는 페이지의 번호
      * take는 몇개씩 가져올것인가
-     * animal은 그 사람이 현재 사용중인 동물, 어차피 개 고양이밖에 없음
-     * orderField는 어떤 식으로 정렬할것인지에 대한 정보
+     * animal은 그 사람이 현재 사용중인 동물, 어차피 개 고양이밖에 없음 만약 주지않는다면 모든 유저를 불러옴
+     * orderByField는 어떤 식으로 정렬할것인지에 대한 정보
      */
-    //VALIDATION !!!!!! orderByField의 값은 정해져있어야함, like, created_at, accumulationPoint 이 세개로 한정해야함
-    return this.userService.getUsersByAnimal({
-      pageNo,
-      take,
-      animal,
-      orderByField,
-    });
+
+    //VALIDATION !!!!!! orderByField의 값은 정해져있어야함, like, createdAt, accumulationPoint 이 세개로 한정해야함
+    return this.userService.getUsersByAnimal(pageNo, queryParams);
   }
 
   @Get(":no")
