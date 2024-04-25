@@ -33,9 +33,26 @@ export class UserRepository {
     });
   }
 
-  modifyUserPoint(userNo: number, incrementalPoint: number) {
+  modifyUserCurrentPoint(userNo: number, incrementalPoint: number) {
     return this.prisma.user.update({
-      data: { currentPoint: { decrement: incrementalPoint } },
+      select: { nickname: true, currentPoint: true, accumulationPoint: true },
+      data: {
+        currentPoint: { increment: incrementalPoint },
+      },
+      where: { no: userNo },
+    });
+  }
+
+  modifyUserCurrentPointAccumulationPoint(
+    userNo: number,
+    incrementalPoint: number,
+  ) {
+    return this.prisma.user.update({
+      select: { nickname: true, currentPoint: true, accumulationPoint: true },
+      data: {
+        currentPoint: { increment: incrementalPoint },
+        accumulationPoint: { increment: incrementalPoint },
+      },
       where: { no: userNo },
     });
   }
