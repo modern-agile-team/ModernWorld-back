@@ -1,4 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { JsonValue } from "@prisma/client/runtime/library";
+import { error } from "console";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -68,6 +70,16 @@ export class UserRepository {
     return this.prisma.user.findUnique({
       select: { nickname: true, attendance: true },
       where: { no: userNo },
+    });
+  }
+
+  updateUserAttendance(userNo: number, attendance: JsonValue) {
+    return this.prisma.user.update({
+      select: { nickname: true, attendance: true },
+      data: { attendance },
+      where: {
+        no: userNo,
+      },
     });
   }
 
