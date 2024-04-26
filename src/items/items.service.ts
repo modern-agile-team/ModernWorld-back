@@ -5,14 +5,16 @@ import { ItemsRepository } from "./items.repository";
 export class ItemsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly itmesRepository: ItemsRepository,
+    private readonly itemsRepository: ItemsRepository,
   ) {}
   async showItems(theme: string) {
     /**
-     * 자기가 보유하고 있는것도 표시해주면 좋을듯
+     * 반환할때 자기가 보유하고 있는지에 대한 여부도 표시해주면 좋을듯
+     * 1. 해당 테마의 모든 아이템을 반환한다.
+     *
      *
      */
-    const result = await this.itmesRepository.showItems(theme);
+    const result = await this.itemsRepository.showItems(theme);
 
     return result;
   }
@@ -30,7 +32,7 @@ export class ItemsService {
      * 4. 물건 추가 (inventoryRepository)
      *
      */
-    const item = await this.itmesRepository.findOneItem(itemNo);
+    const item = await this.itemsRepository.findOneItem(itemNo);
 
     console.log(item);
 
