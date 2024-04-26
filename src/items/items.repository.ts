@@ -4,7 +4,7 @@ export class ItemsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   findOneItem(itemNo: number) {
-    return this.prisma.item.findFirst({
+    return this.prisma.item.findUnique({
       where: {
         no: itemNo,
       },
