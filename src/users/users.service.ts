@@ -6,11 +6,13 @@ import {
 import { UserRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { UsersInventoryRepository } from "./user.inventory.repository";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly usersInventoryRepository: UsersInventoryRepository,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -111,6 +113,10 @@ export class UsersService {
       );
 
     return result;
+  }
+
+  async getUserRoom(userNo: number) {
+    return await this.usersInventoryRepository.getUserRoom(userNo);
   }
 
   async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {

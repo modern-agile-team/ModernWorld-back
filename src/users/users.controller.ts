@@ -91,7 +91,9 @@ export class UsersController {
 
   //유저 방 조회
   @Get(":userNo/room")
-  showUserRoom(@Param("userNo") userNo: number) {}
+  showUserRoom(@Param("userNo") userNo: number) {
+    return this.userService.getUserRoom(userNo);
+  }
 
   //특정 유저 아이템 테마별로 불러오기(인벤토리(아이템) 불러오기)
   @Get(":userNo/items")
@@ -99,8 +101,4 @@ export class UsersController {
     @Param("userNo") userNo: number,
     @Query("theme") theme: string,
   ) {}
-
-  //특정 아이템 사기
-  @Post("users/:userNo/items/:itemNo/buy")
-  buyItme() {}
 }
