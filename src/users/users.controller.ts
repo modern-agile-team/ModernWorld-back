@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   Post,
+  Patch,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
@@ -46,7 +47,7 @@ export class UsersController {
     return this.userService.getUserAttendance(no);
   }
 
-  @Put(":no/attendance")
+  @Patch(":no/attendance")
   markUserAttendance(@Param("no", ParseIntPipe) no: number) {
     return this.userService.markUserAttendance(no);
   }
@@ -66,7 +67,7 @@ export class UsersController {
   //     domain,
   //   );
   // }
-  @Put(":no")
+  @Patch(":no")
   updateUser(
     @Param("userNo", ParseIntPipe) no: number,
     @Body("nickname") nickname: string,
