@@ -5,7 +5,6 @@ import {
 } from "@nestjs/common";
 import { UserRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
-import { PrismaClient } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -15,10 +14,10 @@ export class UsersService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async getUserNameCurrentPointAccumulationPointTitle(no: number) {
+  async getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
     const result =
       await this.userRepository.getUserNameCurrentPointAccumulationPointTitle(
-        no,
+        userNo,
       );
 
     return {
@@ -45,13 +44,13 @@ export class UsersService {
   //   return result;
   // }
 
-  async getUserAttendance(no: number) {
-    const result = await this.userRepository.getUserAttendance(no);
+  async getUserAttendance(userNo: number) {
+    const result = await this.userRepository.getUserAttendance(userNo);
 
     return result;
   }
 
-  async markUserAttendance(no: number) {
+  async markUserAttendance(userNo: number) {
     /**
      * 일주일 출석부 가져와서 월, 화, 수, 목, 금, 토, 일
      * 즉, 요일에 따라 출석부가 갱신되어야함, 근데 한국시간 기준으로 만들어야함
@@ -69,7 +68,7 @@ export class UsersService {
     const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms)
     const day = today.getUTCDay(); //getDay()는 현재 로컬환경시각인 +9를 더해주는 바람에 안됨(뇌피셜)
 
-    let attendance = (await this.userRepository.getUserAttendance(no))
+    let attendance = (await this.userRepository.getUserAttendance(userNo))
       .attendance;
 
     if (attendance[day][0]) {
@@ -80,10 +79,10 @@ export class UsersService {
 
     try {
       const [user, point] = await this.prisma.$transaction([
-        this.userRepository.updateUserAttendance(no, attendance),
+        this.userRepository.updateUserAttendance(userNo, attendance),
 
         this.userRepository.modifyUserCurrentPointAccumulationPoint(
-          no,
+          userNo,
           attendance[day][1],
         ),
       ]);
