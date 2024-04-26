@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
+import { ItemsRepository } from "./items.repository";
 @Injectable()
 export class ItemsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly itmesRepository: ItemsRepository,
+  ) {}
   async showItems(theme: string) {
-    const result = await this.prisma.item.findMany({
-      where: { theme: theme },
-    });
+    const result = this.itmesRepository.showItems(theme);
 
     return result;
   }
