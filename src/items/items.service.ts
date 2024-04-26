@@ -8,15 +8,13 @@ export class ItemsService {
     private readonly itmesRepository: ItemsRepository,
   ) {}
   async showItems(theme: string) {
-    const result = this.itmesRepository.showItems(theme);
+    const result = await this.itmesRepository.showItems(theme);
 
     return result;
   }
 
-  async buyItem(userNo: number, ItemNo: number) {
-    const item = await this.prisma.item.findFirstOrThrow({
-      where: { no: ItemNo },
-    });
+  async buyItem(userNo: number, itemNo: number) {
+    const item = await this.itmesRepository.findOneItem(itemNo);
 
     console.log(item);
 
@@ -26,7 +24,7 @@ export class ItemsService {
     });
 
     const result = await this.prisma.inventory.create({
-      data: { userNo: userNo, itemNo: ItemNo },
+      data: { userNo: userNo, itemNo: itemNo },
     });
 
     return result;
