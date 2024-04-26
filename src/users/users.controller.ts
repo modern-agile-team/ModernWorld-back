@@ -73,7 +73,7 @@ export class UsersController {
   //   );
   // }
 
-  //유저 출석부 조회
+  //유저 닉네임, 자기소개, 출석부, 캐릭터 업데이트
   @Patch(":userNo")
   updateUser(
     @Param("userNo", ParseIntPipe) userNo: number,
@@ -89,9 +89,18 @@ export class UsersController {
     );
   }
 
-  @Get(":userNo/items")
-  showItemsBytheme() {}
+  //유저 방 조회
+  @Get(":userNo/room")
+  showUserRoom(@Param("userNo") userNo: number) {}
 
+  //특정 유저 아이템 테마별로 불러오기(인벤토리(아이템) 불러오기)
+  @Get(":userNo/items")
+  showItemsBytheme(
+    @Param("userNo") userNo: number,
+    @Query("theme") theme: string,
+  ) {}
+
+  //특정 아이템 사기
   @Post("users/:userNo/items/:itemNo/buy")
   buyItme() {}
 }
