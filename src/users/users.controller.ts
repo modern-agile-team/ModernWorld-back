@@ -35,6 +35,7 @@ export class UsersController {
     return this.userService.getUsersByAnimal(pageNo, queryParams);
   }
 
+  //유저 마이페이지
   @Get(":no")
   getOneUserWithNamePointAchievementTitle(
     @Param("no", ParseIntPipe) no: number,
@@ -42,11 +43,13 @@ export class UsersController {
     return this.userService.getUserNameCurrentPointAccumulationPointTitle(no);
   }
 
+  //유저 출석부 조회
   @Get(":no/attendance")
   getOneUserAttendance(@Param("no", ParseIntPipe) no: number) {
     return this.userService.getUserAttendance(no);
   }
 
+  //유저 출석부 체크
   @Patch(":no/attendance")
   markUserAttendance(@Param("no", ParseIntPipe) no: number) {
     return this.userService.markUserAttendance(no);
@@ -67,6 +70,8 @@ export class UsersController {
   //     domain,
   //   );
   // }
+
+  //유저 출석부 조회
   @Patch(":no")
   updateUser(
     @Param("userNo", ParseIntPipe) no: number,
