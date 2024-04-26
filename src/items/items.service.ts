@@ -13,6 +13,7 @@ export class ItemsService {
      * 1. 해당 테마의 모든 아이템을 반환한다.
      *
      *
+     *
      */
     const result = await this.itemsRepository.showItems(theme);
 
@@ -27,10 +28,13 @@ export class ItemsService {
      *
      * 2. 아이템을 이미 보유하고있는지 확인하는 로직 추가 있다면 구매불가 (inventoryRepository)
      *
-     * 3. 포인트가 부족하면 구매불가 (usersRepository)
+     * 3. 포인트가 아이템 가격보다 높은지 확인 (usersRepository)
      *
      * 4. 물건 추가 (inventoryRepository)
      *
+     * 5. 포인트 감소 (usersRepository)
+     *
+     * 4번 5번의 과정은 트랜잭션을 한번에 묶자.
      */
     const item = await this.itemsRepository.findOneItem(itemNo);
 
