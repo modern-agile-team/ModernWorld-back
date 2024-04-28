@@ -10,4 +10,13 @@ export class InventoryRepository {
       where: { userNo, itemNo },
     });
   }
+
+  addItemToInventory(userNo: number, itemNo: number) {
+    return this.prisma.inventory.create({
+      data: {
+        userNo,
+        itemNo,
+      },
+    });
+  }
 }
