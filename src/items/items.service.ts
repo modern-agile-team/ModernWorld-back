@@ -38,8 +38,6 @@ export class ItemsService {
      */
     const item = await this.itemsRepository.findOneItem(itemNo);
 
-    console.log(item);
-
     const pay = await this.prisma.user.update({
       where: { no: userNo },
       data: { currentPoint: { decrement: -10 } },
