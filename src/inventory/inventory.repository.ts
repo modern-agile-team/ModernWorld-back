@@ -19,4 +19,14 @@ export class InventoryRepository {
       },
     });
   }
+
+  getUserRoom(userNo: number) {
+    return this.prisma.inventory.findMany({
+      select: {
+        status: true,
+        item: { select: { name: true, image: true } },
+      },
+      where: { userNo: userNo, status: true },
+    });
+  }
 }
