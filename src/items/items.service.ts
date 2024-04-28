@@ -1,11 +1,17 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ItemsRepository } from "./items.repository";
+import { InventoryRepository } from "src/inventory/inventory.repository";
 @Injectable()
 export class ItemsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly itemsRepository: ItemsRepository,
+    private readonly inventoryRepository: InventoryRepository,
   ) {}
   async showItems(theme: string) {
     /**
@@ -36,10 +42,18 @@ export class ItemsService {
      *
      * 4번 5번의 과정은 트랜잭션을 한번에 묶자.
      */
+
     const item = await this.itemsRepository.findOneItem(itemNo);
 
     if (!item) {
       throw new NotFoundException("Item doesn't exist");
+    }
+
+    const checkInventoryItem =
+      await this.inventoryRepository.checkInventoryItem(userNo, itemNo);
+
+    if (!checkInventoryItem) {
+      throw new ConflictException("User already owns the item.");
     }
 
     const pay = await this.prisma.user.update({
