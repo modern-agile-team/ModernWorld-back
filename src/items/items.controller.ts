@@ -12,8 +12,8 @@ import { ItemsService } from "./items.service";
 @Controller("items")
 export class ItemsController {
   constructor(private readonly itemService: ItemsService) {}
-  @Get(":theme")
-  showItems(@Param("theme") theme: string) {
+  @Get("")
+  showItems(@Query("theme") theme: string) {
     return this.itemService.showItems(theme);
   }
 
