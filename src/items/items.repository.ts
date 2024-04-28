@@ -16,4 +16,11 @@ export class ItemsRepository {
   showItems(theme: string) {
     return this.prisma.item.findMany({ where: { theme: theme } });
   }
+
+  getItemType(itemNo: number) {
+    return this.prisma.item.findUnique({
+      select: { type: true },
+      where: { no: itemNo },
+    });
+  }
 }

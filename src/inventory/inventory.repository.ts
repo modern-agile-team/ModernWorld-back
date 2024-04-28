@@ -29,4 +29,20 @@ export class InventoryRepository {
       where: { userNo: userNo, status: true },
     });
   }
+
+  useItem(userNo: number, itemNo: number) {
+    return this.prisma.inventory.updateMany({
+      data: {
+        status: true,
+      },
+      where: { userNo, itemNo },
+    });
+  }
+
+  discardItem(userNo: number, itemType: string) {
+    return this.prisma.inventory.updateMany({
+      data: { status: false },
+      where: { userNo, item: { type: itemType } },
+    });
+  }
 }

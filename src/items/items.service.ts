@@ -78,4 +78,28 @@ export class ItemsService {
 
     return result;
   }
+
+  async useItem(userNo: number, itemNo: number) {
+    /**
+     * user가 이미 같은 타입의 아이템을 사용하고 있다면 자동으로 바꿔줘야함
+     * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
+     * 이것 역시 트랜잭션을 이용할것
+     */
+    const haveItem = await this.inventoryRepository.checkInventoryItem(
+      userNo,
+      itemNo,
+    );
+
+    if (!haveItem) {
+      throw new NotFoundException("User doesn't have the item");
+    }
+
+    const { type } = await this.itemsRepository.getItemType(itemNo);
+
+    await this.inventoryRepository.discardItem(userNo, type);
+
+    await this.inventoryRepository.useItem(userNo, itemNo);
+
+    return "success";
+  }
 }

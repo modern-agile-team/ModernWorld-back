@@ -3,6 +3,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
 } from "@nestjs/common";
@@ -15,9 +16,17 @@ export class ItemsController {
   showItems(@Param("theme") theme: string) {
     return this.itemService.showItems(theme);
   }
-  @Post("/:itemNo/buy")
-  buyitems(@Param("itemNo", ParseIntPipe) itemNo: number) {
+
+  @Post(":itemNo/buy")
+  buyitem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     const userNo = 1;
     return this.itemService.buyItem(userNo, itemNo);
+  }
+
+  @Patch(":itemNo")
+  useItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
+    const userNo = 1;
+
+    return this.itemService.useItem(userNo, itemNo);
   }
 }
