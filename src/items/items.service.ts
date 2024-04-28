@@ -1,17 +1,20 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ItemsRepository } from "./items.repository";
 import { InventoryRepository } from "src/inventory/inventory.repository";
+import { UserRepository } from "src/users/users.repository";
 @Injectable()
 export class ItemsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly itemsRepository: ItemsRepository,
     private readonly inventoryRepository: InventoryRepository,
+    private readonly usersRepository: UserRepository,
   ) {}
   async showItems(theme: string) {
     /**
@@ -52,14 +55,21 @@ export class ItemsService {
     const checkInventoryItem =
       await this.inventoryRepository.checkInventoryItem(userNo, itemNo);
 
-    if (!checkInventoryItem) {
+    if (checkInventoryItem) {
       throw new ConflictException("User already owns the item.");
     }
 
-    const pay = await this.prisma.user.update({
-      where: { no: userNo },
-      data: { currentPoint: { decrement: -10 } },
-    });
+    const { nickname, currentPoint } =
+      await this.usersRepository.findUserPoint(userNo);
+
+    if (currentPoint < item.price) {
+      throw new ForbiddenException("User doesn't have enough point.");
+    }
+
+    const pay = await this.usersRepository.modifyUserCurrentPoint(
+      userNo,
+      -item.price,
+    );
 
     const result = await this.inventoryRepository.addItemToInventory(
       userNo,
