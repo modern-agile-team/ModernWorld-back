@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ItemsRepository } from "./items.repository";
 @Injectable()
@@ -37,6 +37,10 @@ export class ItemsService {
      * 4번 5번의 과정은 트랜잭션을 한번에 묶자.
      */
     const item = await this.itemsRepository.findOneItem(itemNo);
+
+    if (!item) {
+      throw new NotFoundException("Item doesn't exist");
+    }
 
     const pay = await this.prisma.user.update({
       where: { no: userNo },

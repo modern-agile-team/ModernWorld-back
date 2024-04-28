@@ -15,11 +15,9 @@ export class ItemsController {
   showItems(@Param("theme") theme: string) {
     return this.itemService.showItems(theme);
   }
-  @Post("buy")
-  buyitems(
-    @Param("userNo", ParseIntPipe) userNo: number,
-    @Query("itemNo", ParseIntPipe) itemNo: number,
-  ) {
+  @Post("/:itemNo/buy")
+  buyitems(@Param("itemNo", ParseIntPipe) itemNo: number) {
+    const userNo = 1;
     return this.itemService.buyItem(userNo, itemNo);
   }
 }
