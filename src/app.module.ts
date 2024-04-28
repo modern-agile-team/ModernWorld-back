@@ -4,11 +4,13 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ItemsModule } from "./items/items.module";
+import { InventoryModule } from "./inventory/inventory.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     ItemsModule,
+    InventoryModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
