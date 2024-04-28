@@ -3,22 +3,15 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
-<<<<<<< HEAD
 import { ItemsModule } from "./items/items.module";
 import { InventoryModule } from "./inventory/inventory.module";
-=======
-import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
->>>>>>> e75030b03033fc19e298cc1f680ec289ff29d733
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
-<<<<<<< HEAD
     ItemsModule,
-=======
     UsersModule,
->>>>>>> e75030b03033fc19e298cc1f680ec289ff29d733
     InventoryModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
