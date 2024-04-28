@@ -30,9 +30,9 @@ export class ItemsService {
     /**
      * 아이템을 사는 로직
      *
-     * 1. 그 아이템이 실제로 아이템 테이블에 존재하는 지 확인 (itemsRepository)
+     * 1. 그 아이템이 실제로 아이템 테이블에 존재하는 지 확인 (itemsRepository)ㅇ
      *
-     * 2. 아이템을 이미 보유하고있는지 확인하는 로직 추가 있다면 구매불가 (inventoryRepository)
+     * 2. 아이템을 이미 보유하고있는지 확인하는 로직 추가 있다면 구매불가 (inventoryRepository)ㅇ
      *
      * 3. 포인트가 아이템 가격보다 높은지 확인 (usersRepository)
      *
@@ -61,9 +61,10 @@ export class ItemsService {
       data: { currentPoint: { decrement: -10 } },
     });
 
-    const result = await this.prisma.inventory.create({
-      data: { userNo: userNo, itemNo: itemNo },
-    });
+    const result = await this.inventoryRepository.addItemToInventory(
+      userNo,
+      itemNo,
+    );
 
     return result;
   }
