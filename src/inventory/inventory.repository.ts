@@ -24,7 +24,7 @@ export class InventoryRepository {
     return this.prisma.inventory.findMany({
       select: {
         status: true,
-        item: { select: { name: true, image: true } },
+        item: { select: { name: true, image: true, type: true } },
       },
       where: { userNo: userNo, status: true },
     });
