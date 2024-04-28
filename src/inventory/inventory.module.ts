@@ -4,5 +4,6 @@ import { InventoryRepository } from "./inventory.repository";
 
 @Module({
   providers: [InventoryService, InventoryRepository],
+  exports: [InventoryRepository],
 })
 export class InventoryModule {}
