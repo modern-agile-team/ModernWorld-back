@@ -6,14 +6,14 @@ import {
 import { UserRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { UsersInventoryRepository } from "./user.inventory.repository";
+import { InventoryRepository } from "src/inventory/inventory.repository";
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly usersInventoryRepository: UsersInventoryRepository,
     private readonly prisma: PrismaService,
+    private readonly userRepository: UserRepository,
+    private readonly inventoryRepository: InventoryRepository,
   ) {}
 
   async getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
@@ -121,7 +121,14 @@ export class UsersService {
   }
 
   async getUserRoom(userNo: number) {
-    return await this.usersInventoryRepository.getUserRoom(userNo);
+    const result = await this.inventoryRepository.getUserRoom(userNo);
+
+    return result.map((obj) => ({
+      status: obj.status,
+      itemName: obj.item.name,
+      itemImage: obj.item.image,
+      itemType: obj.item.type,
+    }));
   }
 
   async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
