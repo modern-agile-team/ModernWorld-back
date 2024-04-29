@@ -5,7 +5,7 @@ import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
 import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
-import { PresentsModule } from './presents/presents.module';
+import { PresentsModule } from "./presents/presents.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
