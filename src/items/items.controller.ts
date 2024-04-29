@@ -30,7 +30,8 @@ export class ItemsController {
     @Param("receiverNo", ParseIntPipe) receiverNo: number,
   ) {
     const userNo = 1;
-    console.log(itemNo, receiverNo);
+
+    return this.itemService.presentItem(userNo, itemNo, receiverNo);
   }
 
   @Patch(":itemNo")

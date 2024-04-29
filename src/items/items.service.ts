@@ -29,15 +29,56 @@ export class ItemsService {
     return result;
   }
 
+  async presentItem(userNo: number, itemNo: number, receiverNo: number) {
+    /**
+     * 아이템을 특정유저에게 선물하는 로직
+     *
+     * 1. 그 아이템이 실제로 아이템 테이블에 존재하는 지 확인 (itemsRepository)
+     *
+     * 2. 포인트가 아이템 가격보다 높은지 확인 (usersRepository)
+     *
+     * 3. 선물 받을 유저가 진짜 존재하는지 확인 (usersRepository)
+     *
+     * 4. present 에 추가 및 포인트 감소(presentsRepository) 트랜잭션으로 묶을것
+     */
+
+    const item = await this.itemsRepository.findOneItem(itemNo);
+
+    if (!item) {
+      throw new NotFoundException("Item doesn't exist.");
+    }
+
+    const { currentPoint } = await this.usersRepository.findUserPoint(userNo);
+
+    if (currentPoint < item.price) {
+      throw new ForbiddenException("User doesn't have enough point.");
+    }
+
+    const isUser = await this.usersRepository.findUserPoint(receiverNo);
+
+    if (!isUser) {
+      throw new NotFoundException("Couldn't find receiver.");
+    }
+
+    //4번 과정 마저 할것.
+    const pay = await this.usersRepository.modifyUserCurrentPoint(
+      userNo,
+      -item.price,
+    );
+    // const gift = await this
+
+    return 0;
+  }
+
   async buyItem(userNo: number, itemNo: number) {
     /**
      * 아이템을 사는 로직
      *
      * 1. 그 아이템이 실제로 아이템 테이블에 존재하는 지 확인 (itemsRepository)ㅇ
      *
-     * 2. 아이템을 이미 보유하고있는지 확인하는 로직 추가 있다면 구매불가 (inventoryRepository)ㅇ
+     * 2. 포인트가 아이템 가격보다 높은지 확인 (usersRepository)
      *
-     * 3. 포인트가 아이템 가격보다 높은지 확인 (usersRepository)
+     * 3. 아이템을 이미 보유하고있는지 확인하는 로직 추가 있다면 구매불가 (inventoryRepository)ㅇ
      *
      * 4. 물건 추가 (inventoryRepository)
      *
@@ -49,7 +90,13 @@ export class ItemsService {
     const item = await this.itemsRepository.findOneItem(itemNo);
 
     if (!item) {
-      throw new NotFoundException("Item doesn't exist");
+      throw new NotFoundException("Item doesn't exist.");
+    }
+
+    const { currentPoint } = await this.usersRepository.findUserPoint(userNo);
+
+    if (currentPoint < item.price) {
+      throw new ForbiddenException("User doesn't have enough point.");
     }
 
     const checkInventoryItem =
@@ -57,13 +104,6 @@ export class ItemsService {
 
     if (checkInventoryItem) {
       throw new ConflictException("User already owns the item.");
-    }
-
-    const { nickname, currentPoint } =
-      await this.usersRepository.findUserPoint(userNo);
-
-    if (currentPoint < item.price) {
-      throw new ForbiddenException("User doesn't have enough point.");
     }
 
     const pay = await this.usersRepository.modifyUserCurrentPoint(
