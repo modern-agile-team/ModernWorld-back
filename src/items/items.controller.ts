@@ -17,7 +17,7 @@ export class ItemsController {
     return this.itemService.showItems(theme);
   }
 
-  @Post(":itemNo/buy")
+  @Post(":itemNo")
   buyitem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     const userNo = 1;
     return this.itemService.buyItem(userNo, itemNo);
