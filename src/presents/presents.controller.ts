@@ -29,16 +29,20 @@ export class PresentsController {
     return this.presentsService.getOutboxPresents(userNo);
   }
 
+  @Get("inbox/:presentNo")
+  getInboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log("Get /inbox/:presentNo", presentNo);
+
+    const userNo = 1;
+
+    return this.presentsService.getInboxOnePresent(userNo, presentNo);
+  }
+
   @Get("outbox/:presentNo")
   getOutboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log("Get /outbox/:presentNo", presentNo);
 
-    return 0;
-  }
-
-  @Get("inbox/:presentNo")
-  getInboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("Get /inbox/:presentNo", presentNo);
+    const userNo = 1;
 
     return 0;
   }

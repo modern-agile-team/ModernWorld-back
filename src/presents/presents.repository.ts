@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { read } from "fs";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -10,8 +11,8 @@ export class PresentsRepository {
         no: true,
         status: true,
         createdAt: true,
-        userPresentSenderNo: { select: { nickname: true } },
         item: { select: { name: true } },
+        userPresentSenderNo: { select: { nickname: true } },
       },
       where: { receiverNo: userNo },
     });
@@ -23,10 +24,30 @@ export class PresentsRepository {
         no: true,
         status: true,
         createdAt: true,
-        userPresentReceiverNo: { select: { nickname: true } },
         item: { select: { name: true } },
+        userPresentReceiverNo: { select: { nickname: true } },
       },
       where: { senderNo: userNo },
+    });
+  }
+
+  getInboxOnePresentByUserNoPresentNo(userNo: number, presentNo: number) {
+    return this.prisma.present.findUnique({
+      select: {
+        no: true,
+        status: true,
+        createdAt: true,
+        item: { select: { name: true, image: true, description: true } },
+        userPresentSenderNo: { select: { nickname: true } },
+      },
+      where: { receiverNo: userNo, no: presentNo, receiverDelete: false },
+    });
+  }
+
+  updateOnePresentStatusFromUnreadToRead(presentNo: number) {
+    return this.prisma.present.update({
+      data: { status: "read" },
+      where: { no: presentNo, status: "unread" },
     });
   }
 }
