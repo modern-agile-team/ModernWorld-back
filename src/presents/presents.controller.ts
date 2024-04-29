@@ -1,31 +1,66 @@
-import { Controller, Get, Param, ParseIntPipe } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+} from "@nestjs/common";
 
 @Controller("presents")
 export class PresentsController {
-  @Get("sent")
-  getSentPresents() {
+  @Get("inbox")
+  getInboxPresents() {
     console.log("asd");
 
     return 0;
   }
 
-  @Get("received")
-  getReceivedPresents() {
+  @Get("outbox")
+  getOutboxPresents() {
     console.log("dd");
 
     return 0;
   }
 
-  @Get("sent/:presentNo")
-  getSentPresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("sent", presentNo);
+  @Get("outbox/:presentNo")
+  getOutboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log("outbox", presentNo);
 
     return 0;
   }
 
-  @Get("received/:presentNo")
-  getReceivedPresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("received", presentNo);
+  @Get("inbox/:presentNo")
+  getInboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log("inbox", presentNo);
+
+    return 0;
+  }
+
+  @Patch("inbox/:presentNo/accept")
+  acceptOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log("inbox/:prensentNo/accept", presentNo);
+
+    return 0;
+  }
+
+  @Patch("inbox/:presentNo/reject")
+  rejectOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log("inbox/:prensentNo/reject", presentNo);
+
+    return 0;
+  }
+
+  @Delete("outbox/:presentNo")
+  deleteOutboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
+    console.log("outbox/:presentNo", prensentNo);
+
+    return 0;
+  }
+
+  @Delete("inbox/:presentNo")
+  deleteInboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
+    console.log("inbox/:presentNo", prensentNo);
 
     return 0;
   }
