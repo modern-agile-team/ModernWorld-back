@@ -6,61 +6,67 @@ import {
   ParseIntPipe,
   Patch,
 } from "@nestjs/common";
+import { PresentsService } from "./presents.service";
 
 @Controller("presents")
 export class PresentsController {
+  constructor(private readonly presentsService: PresentsService) {}
   @Get("inbox")
   getInboxPresents() {
-    console.log("asd");
+    console.log("Get /presents/inbox");
 
-    return 0;
+    const userNo = 1;
+
+    return this.presentsService.getInboxPresents(userNo);
   }
 
   @Get("outbox")
   getOutboxPresents() {
-    console.log("dd");
+    console.log("Get /presents/outbox");
 
-    return 0;
+    const userNo = 2;
+
+    return this.presentsService.getOutboxPresents(userNo);
   }
 
   @Get("outbox/:presentNo")
   getOutboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("outbox", presentNo);
+    console.log("Get /outbox/:presentNo", presentNo);
 
     return 0;
   }
 
   @Get("inbox/:presentNo")
   getInboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("inbox", presentNo);
+    console.log("Get /inbox/:presentNo", presentNo);
 
     return 0;
   }
 
   @Patch("inbox/:presentNo/accept")
   acceptOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("inbox/:prensentNo/accept", presentNo);
+    console.log("Patch /inbox/:prensentNo/accept", presentNo);
 
     return 0;
   }
 
   @Patch("inbox/:presentNo/reject")
   rejectOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("inbox/:prensentNo/reject", presentNo);
+    console.log("Patch /inbox/:prensentNo/reject", presentNo);
 
     return 0;
   }
 
   @Delete("outbox/:presentNo")
   deleteOutboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
-    console.log("outbox/:presentNo", prensentNo);
+    console.log("Delete /outbox/:presentNo", prensentNo);
 
     return 0;
   }
 
   @Delete("inbox/:presentNo")
   deleteInboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
-    console.log("inbox/:presentNo", prensentNo);
+    console.log("Delete /inbox/:presentNo", prensentNo);
 
     return 0;
   }
