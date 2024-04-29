@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { ItemsService } from "./items.service";
 
@@ -21,6 +22,15 @@ export class ItemsController {
   buyitem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     const userNo = 1;
     return this.itemService.buyItem(userNo, itemNo);
+  }
+
+  @Post(":itemNo/present/:receiverNo")
+  presentItem(
+    @Param("itemNo", ParseIntPipe) itemNo: number,
+    @Param("receiverNo", ParseIntPipe) receiverNo: number,
+  ) {
+    const userNo = 1;
+    console.log(itemNo, receiverNo);
   }
 
   @Patch(":itemNo")
