@@ -19,6 +19,13 @@ export class PresentsRepository {
 
   getOutboxPresentsByUserNo(userNo: number) {
     return this.prisma.present.findMany({
+      select: {
+        no: true,
+        status: true,
+        createdAt: true,
+        userPresentReceiverNo: { select: { nickname: true } },
+        item: { select: { name: true } },
+      },
       where: { senderNo: userNo },
     });
   }
