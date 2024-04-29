@@ -41,4 +41,14 @@ export class PresentsService {
 
     return result;
   }
+
+  async getOutboxOnePresent(userNo: number, presentNo: number) {
+    const result =
+      await this.presentRepository.getOutboxOnePresentByUserNoPresentNo(
+        userNo,
+        presentNo,
+      );
+
+    return result;
+  }
 }

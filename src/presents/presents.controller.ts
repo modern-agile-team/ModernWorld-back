@@ -42,9 +42,9 @@ export class PresentsController {
   getOutboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log("Get /outbox/:presentNo", presentNo);
 
-    const userNo = 1;
+    const userNo = 2;
 
-    return 0;
+    return this.presentsService.getOutboxOnePresent(userNo, presentNo);
   }
 
   @Patch("inbox/:presentNo/accept")

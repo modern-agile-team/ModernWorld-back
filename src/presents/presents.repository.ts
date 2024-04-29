@@ -44,6 +44,23 @@ export class PresentsRepository {
     });
   }
 
+  getOutboxOnePresentByUserNoPresentNo(userNo: number, presentNo: number) {
+    return this.prisma.present.findUnique({
+      select: {
+        no: true,
+        status: true,
+        createdAt: true,
+        item: { select: { name: true, image: true, description: true } },
+        userPresentReceiverNo: { select: { nickname: true } },
+      },
+      where: {
+        senderNo: userNo,
+        no: presentNo,
+        senderDelete: false,
+      },
+    });
+  }
+
   updateOnePresentStatusFromUnreadToRead(presentNo: number) {
     return this.prisma.present.update({
       data: { status: "read" },
