@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { read } from "fs";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PresentStatus } from "./enum/present-status-enum";
 
 @Injectable()
 export class PresentsRepository {
@@ -68,12 +69,18 @@ export class PresentsRepository {
     });
   }
 
-  getInboxPresentStatus(userNo: number, presentNo: number) {
+  getInboxPresentStatusItemNo(userNo: number, presentNo: number) {
     return this.prisma.present.findFirst({
-      select: { status: true },
+      select: { status: true, itemNo: true },
+
       where: { no: presentNo, receiverNo: userNo },
     });
   }
 
-  updateInboxOnePresentStatus(presentNo: number) {}
+  updateOnePresentStatus(presentNo: number, status: PresentStatus) {
+    return this.prisma.present.update({
+      data: { status },
+      where: { no: presentNo },
+    });
+  }
 }
