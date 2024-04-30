@@ -5,46 +5,36 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Query,
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
 
 @Controller("presents")
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
-  @Get("inbox")
-  getInboxPresents() {
-    console.log("Get /presents/inbox");
+
+  @Get("")
+  getPresentsByBox(@Query("where") where: string) {
+    console.log("Get /presents/?where={where}");
+    const userNo = 1;
+
+    return this.presentsService.getOneOrManyPresentsByBox(userNo, where);
+  }
+
+  @Get(":presentNo")
+  getOnePresentByBox(
+    @Param("presentNo", ParseIntPipe) presentNo: number,
+    @Query("where") where: string,
+  ) {
+    console.log("Get /presents/:presentNo/?where={where}");
 
     const userNo = 1;
 
-    return this.presentsService.getInboxPresents(userNo);
-  }
-
-  @Get("outbox")
-  getOutboxPresents() {
-    console.log("Get /presents/outbox");
-
-    const userNo = 2;
-
-    return this.presentsService.getOutboxPresents(userNo);
-  }
-
-  @Get("inbox/:presentNo")
-  getInboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("Get /inbox/:presentNo", presentNo);
-
-    const userNo = 1;
-
-    return this.presentsService.getInboxOnePresent(userNo, presentNo);
-  }
-
-  @Get("outbox/:presentNo")
-  getOutboxOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("Get /outbox/:presentNo", presentNo);
-
-    const userNo = 2;
-
-    return this.presentsService.getOutboxOnePresent(userNo, presentNo);
+    return this.presentsService.getOneOrManyPresentsByBox(
+      userNo,
+      where,
+      presentNo,
+    );
   }
 
   @Patch("inbox/:presentNo/accept")
