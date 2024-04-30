@@ -1,9 +1,18 @@
-import { Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { PresentsRepository } from "./presents.repository";
+import { NotFoundError } from "rxjs";
+import { InventoryRepository } from "src/inventory/inventory.repository";
 
 @Injectable()
 export class PresentsService {
-  constructor(private readonly presentRepository: PresentsRepository) {}
+  constructor(
+    private readonly presentRepository: PresentsRepository,
+    private readonly inventoryRepository: InventoryRepository,
+  ) {}
 
   async getInboxPresents(userNo: number) {
     const result =
@@ -50,5 +59,28 @@ export class PresentsService {
       );
 
     return result;
+  }
+
+  async acceptOnePresent(userNo: number, presentNo: number) {
+    /**
+     * 아이템의 status상태가 read인 놈을 accept로 바꾸고
+     *
+     * inventory에 해당 아이템의 번호를 넣음
+     *
+     * 트랜잭션으로 한번에 넣을것.
+     *
+     *
+     */
+    const { status } = await this.presentRepository.getInboxPresentStatus(
+      userNo,
+      presentNo,
+    );
+
+    console.log(status);
+
+    if (status === "unread" || "accept" || "reject") {
+      throw new ForbiddenException("Present is already processed");
+    }
+    //여기부터 작업-----------------------------------------------------------------------------------
   }
 }

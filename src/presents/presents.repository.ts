@@ -67,4 +67,13 @@ export class PresentsRepository {
       where: { no: presentNo, status: "unread" },
     });
   }
+
+  getInboxPresentStatus(userNo: number, presentNo: number) {
+    return this.prisma.present.findFirst({
+      select: { status: true },
+      where: { no: presentNo, receiverNo: userNo },
+    });
+  }
+
+  updateInboxOnePresentStatus(presentNo: number) {}
 }

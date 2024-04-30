@@ -51,7 +51,9 @@ export class PresentsController {
   acceptOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log("Patch /inbox/:prensentNo/accept", presentNo);
 
-    return 0;
+    const userNo = 1;
+
+    return this.presentsService.acceptOnePresent(userNo, presentNo);
   }
 
   @Patch("inbox/:presentNo/reject")
