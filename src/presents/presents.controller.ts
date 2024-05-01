@@ -18,10 +18,10 @@ export class PresentsController {
 
   @Get("")
   getPresentsByBox(
-    @Query("where", new ParseEnumPipe(SenderReceiverNoField))
+    @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
     senderReceiverNoField: SenderReceiverNoField,
   ) {
-    console.log("Get /presents/?where={where}");
+    console.log("Get /presents/?senderReceiverNoField=");
     const userNo = 1;
 
     return this.presentsService.getOneOrManyPresentsByBox(
@@ -36,7 +36,7 @@ export class PresentsController {
     @Query("senderReceiverNoFieldw", new ParseEnumPipe(SenderReceiverNoField))
     senderReceiverNoField: SenderReceiverNoField,
   ) {
-    console.log("Get /presents/:presentNo/?where={where}");
+    console.log("Get /presents/:presentNo/?senderReceiverNoField=");
 
     const userNo = 1;
 
