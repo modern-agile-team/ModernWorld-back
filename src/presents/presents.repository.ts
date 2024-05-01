@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PresentStatus } from "./enum/present-status-enum";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Injectable()
 export class PresentsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getPresentsByBox(userNo: number, box: string, deletion: string) {
+  getPresentsByBox(userNo: number, inOut: string, deletion: string) {
     return this.prisma.present.findMany({
       select: {
         no: true,
@@ -15,15 +16,15 @@ export class PresentsRepository {
         item: { select: { name: true } },
         userPresentSenderNo: { select: { nickname: true } },
       },
-      where: { [box]: userNo, [deletion]: false },
+      where: { [inOut]: userNo, [deletion]: false },
     });
   }
 
   getOnePresentByBox(
     userNo: number,
-    box: string,
+    senderReceiverNoField: string,
     presentNo: number,
-    deletion: string,
+    senderReceiverDeleteField: string,
   ) {
     return this.prisma.present.findUnique({
       select: {
@@ -33,7 +34,11 @@ export class PresentsRepository {
         item: { select: { name: true, image: true, description: true } },
         userPresentSenderNo: { select: { nickname: true } },
       },
-      where: { [box]: userNo, no: presentNo, [deletion]: false },
+      where: {
+        [senderReceiverNoField]: userNo,
+        no: presentNo,
+        [senderReceiverDeleteField]: false,
+      },
     });
   }
 
@@ -56,6 +61,21 @@ export class PresentsRepository {
     return this.prisma.present.update({
       data: { status },
       where: { no: presentNo },
+    });
+  }
+
+  updateOnePresentStatusToDeleteBySenderReceiver(
+    userNo: number,
+    senderReceiverNoField: SenderReceiverNoField,
+    presentNo: number,
+    senderReceiverDeleteField: string,
+  ) {
+    return this.prisma.present.update({
+      data: { [senderReceiverDeleteField]: true },
+      where: {
+        no: presentNo,
+        [senderReceiverNoField]: userNo,
+      },
     });
   }
 }

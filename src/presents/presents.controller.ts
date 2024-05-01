@@ -1,13 +1,16 @@
 import {
+  BadRequestException,
   Controller,
   Delete,
   Get,
   Param,
+  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Query,
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Controller("presents")
 export class PresentsController {
@@ -53,17 +56,43 @@ export class PresentsController {
     return 0;
   }
 
-  @Delete("outbox/:presentNo")
-  deleteOutboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
-    console.log("Delete /outbox/:presentNo", prensentNo);
+  @Delete(":presentNo")
+  deleteOnePresent(
+    @Param("presentNo", ParseIntPipe) presentNo: number,
+    @Query(
+      "senderReceiverNoField",
+      new ParseEnumPipe(SenderReceiverNoField, {
+        exceptionFactory() {
+          return new BadRequestException(
+            "Validation failed (enum: senderNo,receiverNo)",
+          );
+        },
+      }),
+    )
+    senderReceiverNoField: SenderReceiverNoField,
+  ) {
+    console.log("Delete /:presentNo?where=");
 
-    return 0;
+    const userNo = 1;
+
+    return this.presentsService.updateOnePresentTodelete(
+      userNo,
+      senderReceiverNoField,
+      presentNo,
+    );
   }
 
-  @Delete("inbox/:presentNo")
-  deleteInboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
-    console.log("Delete /inbox/:presentNo", prensentNo);
+  // @Delete("outbox/:presentNo")
+  // deleteOutboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
+  //   console.log("Delete /outbox/:presentNo", prensentNo);
 
-    return 0;
-  }
+  //   return 0;
+  // }
+
+  // @Delete("inbox/:presentNo")
+  // deleteInboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
+  //   console.log("Delete /inbox/:presentNo", prensentNo);
+
+  //   return 0;
+  // }
 }

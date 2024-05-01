@@ -8,6 +8,7 @@ import { PresentsRepository } from "./presents.repository";
 import { NotFoundError } from "rxjs";
 import { InventoryRepository } from "src/inventory/inventory.repository";
 import { PresentStatus } from "./enum/present-status-enum";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Injectable()
 export class PresentsService {
@@ -92,5 +93,46 @@ export class PresentsService {
     await this.inventoryRepository.addItemToInventory(userNo, itemNo);
 
     // 마저 작업할것
+  }
+
+  async updateOnePresentTodelete(
+    userNo: number,
+    senderReceiverNoField: SenderReceiverNoField,
+    presentNo: number,
+  ) {
+    /**
+     * 매개변수에 해당하는 선물이 실제로 존재하는지 확인하고
+     *
+     * 존재하지 않거나 이미 발신/수신자 입장에서 삭제처리 되어있으면 에러 때리고
+     *
+     * 존재한다면 수/발신자 삭제 필드 에 따라 true로 설정
+     *
+     */
+
+    const senderReceiverDeleteField =
+      senderReceiverNoField === "receiverNo"
+        ? "receiverDelete"
+        : "senderDelete";
+
+    const hasPresent = await this.presentRepository.getOnePresentByBox(
+      userNo,
+      senderReceiverNoField,
+      presentNo,
+      senderReceiverDeleteField,
+    );
+
+    if (!hasPresent) {
+      throw new NotFoundException("already deleted or couldn't find");
+    }
+
+    const result =
+      await this.presentRepository.updateOnePresentStatusToDeleteBySenderReceiver(
+        userNo,
+        senderReceiverNoField,
+        presentNo,
+        senderReceiverDeleteField,
+      );
+
+    return result;
   }
 }
