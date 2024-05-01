@@ -29,7 +29,7 @@ export class PresentsRepository {
 
   getOnePresentByBox(
     userNo: number,
-    senderReceiverNoField: string,
+    senderReceiverNoField: SenderReceiverNoField,
     presentNo: number,
     senderReceiverDeleteField: string,
   ) {
