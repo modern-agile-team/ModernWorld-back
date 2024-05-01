@@ -4,3 +4,8 @@ export enum PresentStatus {
   ACCEPT = "accept",
   REJECT = "reject",
 }
+
+export enum AcceptReject {
+  ACCEPT = "accept",
+  REJECT = "reject",
+}

@@ -7,7 +7,7 @@ import {
 import { PresentsRepository } from "./presents.repository";
 import { NotFoundError } from "rxjs";
 import { InventoryRepository } from "src/inventory/inventory.repository";
-import { PresentStatus } from "./enum/present-status-enum";
+import { AcceptReject, PresentStatus } from "./enum/present-status-enum";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Injectable()
@@ -65,41 +65,56 @@ export class PresentsService {
     return result;
   }
 
-  async acceptOnePresent(userNo: number, presentNo: number) {
+  async acceptOrRejectOnePresent(
+    userNo: number,
+    presentNo: number,
+    acceptReject: AcceptReject,
+  ) {
     /**
-     * 아이템의 status상태가 read인 놈을 accept로 바꾸고
+     * 1. 선물의 수신자가 해당 인물이 맞는지 확인 (present) ㅇ
+     *    -다르면 에러
      *
-     * inventory에 해당 아이템이 이미 있는 아이템인지 확인
+     * 2. 맞으면 아이템의 status상태가 read인 놈을 accept로 바꿈(present) ㅇ
      *
-     * 이미 있다면 그 값어치의 50%만큼만 가져오고 없다면 아이템 생성
+     * 3. inventory에 해당 아이템이 이미 있는 아이템인지 확인 (inventory) ㅇ
+     *    - 있으면 해당 아이템 값의 50% 포인트 up (user)
      *
-     * inventory에 해당 아이템의 번호를 넣음
+     * 4. 없다면 인벤토리 테이블에 해당 아이템 추가 (inventory)
      *
-     * 트랜잭션으로 한번에 넣을것.
-     *
+     * 2, 3, 4의 과정은 한번에 이루어져야 할듯 트랜잭션으로 묶기
      *
      */
-    const { status, itemNo } =
-      await this.presentRepository.getInboxPresentStatusItemNo(
-        userNo,
-        presentNo,
-      );
 
-    console.log(status, itemNo);
-    console.log(typeof status);
+    const { receiverNo, status, itemNo } =
+      await this.presentRepository.getOnePresent(presentNo);
 
-    //인벤토리에 해당 아이템이 이미 있는 아이템인지 확인할것. 아직 추가못함----------------------------
+    if (userNo !== receiverNo) {
+      throw new NotFoundException("receiverNo doesn't match userNo");
+    }
 
-    if (status === "unread" || "accept" || "reject") {
-      throw new ForbiddenException("Present has already been processed");
+    if (status !== "read") {
+      throw new ForbiddenException("Present's status must be 'read'");
     }
 
     await this.presentRepository.updateOnePresentStatus(
       presentNo,
-      PresentStatus.ACCEPT,
+      acceptReject,
     );
 
+    if (acceptReject === "accept") {
+      const existItem = await this.inventoryRepository.checkInventoryItem(
+        userNo,
+        itemNo,
+      );
+      if (existItem) {
+        //포인트 넣어주는 로직 추가할것-------------------------------------
+        return 0;
+      }
+    }
+
     await this.inventoryRepository.addItemToInventory(userNo, itemNo);
+
+    return 0;
 
     // 마저 작업할것
   }

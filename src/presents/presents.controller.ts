@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { AcceptReject } from "./enum/present-status-enum";
 
 @Controller("presents")
 export class PresentsController {
@@ -33,7 +34,7 @@ export class PresentsController {
   @Get(":presentNo")
   getOnePresentByBox(
     @Param("presentNo", ParseIntPipe) presentNo: number,
-    @Query("senderReceiverNoFieldw", new ParseEnumPipe(SenderReceiverNoField))
+    @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
     senderReceiverNoField: SenderReceiverNoField,
   ) {
     console.log("Get /presents/:presentNo/?senderReceiverNoField=");
@@ -47,20 +48,23 @@ export class PresentsController {
     );
   }
 
-  @Patch("inbox/:presentNo/accept")
-  acceptOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("Patch /inbox/:prensentNo/accept", presentNo);
-
+  @Patch(":presentNo")
+  updatePresentStatus(
+    @Param("presentNo", ParseIntPipe) presentNo: number,
+    @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
+    senderReceiverNoField: SenderReceiverNoField,
+    @Query("acceptReject", new ParseEnumPipe(AcceptReject))
+    acceptReject: AcceptReject,
+  ) {
     const userNo = 1;
 
-    return this.presentsService.acceptOnePresent(userNo, presentNo);
-  }
+    console.log(userNo, presentNo, senderReceiverNoField, acceptReject);
 
-  @Patch("inbox/:presentNo/reject")
-  rejectOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("Patch /inbox/:prensentNo/reject", presentNo);
-
-    return 0;
+    return this.presentsService.acceptOrRejectOnePresent(
+      userNo,
+      presentNo,
+      acceptReject,
+    );
   }
 
   @Delete(":presentNo")

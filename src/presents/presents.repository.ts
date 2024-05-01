@@ -1,11 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { PresentStatus } from "./enum/present-status-enum";
+import { AcceptReject, PresentStatus } from "./enum/present-status-enum";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Injectable()
 export class PresentsRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  getOnePresent(presentNo: number) {
+    return this.prisma.present.findUnique({
+      where: { no: presentNo },
+    });
+  }
 
   getPresentsByBox(
     userNo: number,
@@ -64,7 +70,10 @@ export class PresentsRepository {
     });
   }
 
-  updateOnePresentStatus(presentNo: number, status: PresentStatus) {
+  updateOnePresentStatus(
+    presentNo: number,
+    status: PresentStatus | AcceptReject,
+  ) {
     return this.prisma.present.update({
       data: { status },
       where: { no: presentNo },
