@@ -7,7 +7,11 @@ import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 export class PresentsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getPresentsByBox(userNo: number, inOut: string, deletion: string) {
+  getPresentsByBox(
+    userNo: number,
+    senderReceiverNoField: SenderReceiverNoField,
+    senderReceiverDeleteField: string,
+  ) {
     return this.prisma.present.findMany({
       select: {
         no: true,
@@ -16,7 +20,10 @@ export class PresentsRepository {
         item: { select: { name: true } },
         userPresentSenderNo: { select: { nickname: true } },
       },
-      where: { [inOut]: userNo, [deletion]: false },
+      where: {
+        [senderReceiverNoField]: userNo,
+        [senderReceiverDeleteField]: false,
+      },
     });
   }
 

@@ -17,17 +17,24 @@ export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
 
   @Get("")
-  getPresentsByBox(@Query("where") where: string) {
+  getPresentsByBox(
+    @Query("where", new ParseEnumPipe(SenderReceiverNoField))
+    senderReceiverNoField: SenderReceiverNoField,
+  ) {
     console.log("Get /presents/?where={where}");
     const userNo = 1;
 
-    return this.presentsService.getOneOrManyPresentsByBox(userNo, where);
+    return this.presentsService.getOneOrManyPresentsByBox(
+      userNo,
+      senderReceiverNoField,
+    );
   }
 
   @Get(":presentNo")
   getOnePresentByBox(
     @Param("presentNo", ParseIntPipe) presentNo: number,
-    @Query("where") where: string,
+    @Query("senderReceiverNoFieldw", new ParseEnumPipe(SenderReceiverNoField))
+    senderReceiverNoField: SenderReceiverNoField,
   ) {
     console.log("Get /presents/:presentNo/?where={where}");
 
@@ -35,7 +42,7 @@ export class PresentsController {
 
     return this.presentsService.getOneOrManyPresentsByBox(
       userNo,
-      where,
+      senderReceiverNoField,
       presentNo,
     );
   }
@@ -81,18 +88,4 @@ export class PresentsController {
       presentNo,
     );
   }
-
-  // @Delete("outbox/:presentNo")
-  // deleteOutboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
-  //   console.log("Delete /outbox/:presentNo", prensentNo);
-
-  //   return 0;
-  // }
-
-  // @Delete("inbox/:presentNo")
-  // deleteInboxOnePresent(@Param("presentNo", ParseIntPipe) prensentNo: number) {
-  //   console.log("Delete /inbox/:presentNo", prensentNo);
-
-  //   return 0;
-  // }
 }

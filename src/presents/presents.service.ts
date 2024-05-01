@@ -19,26 +19,35 @@ export class PresentsService {
 
   async getOneOrManyPresentsByBox(
     userNo: number,
-    where: string,
+    senderReceiverNoField: SenderReceiverNoField,
     presentNo?: number,
   ) {
-    if (where !== "receiverNo" && where !== "senderNo") {
+    if (
+      senderReceiverNoField !== "receiverNo" &&
+      senderReceiverNoField !== "senderNo"
+    ) {
       throw new BadRequestException(
         "where has two options : receiverNo, senderNo",
       );
     }
 
-    const deletion = where === "receiverNo" ? "receiverDelete" : "senderDelete";
+    const senderReceiverDeleteField =
+      senderReceiverNoField === "receiverNo"
+        ? "receiverDelete"
+        : "senderDelete";
 
     if (presentNo) {
       const result = await this.presentRepository.getOnePresentByBox(
         userNo,
-        where,
+        senderReceiverNoField,
         presentNo,
-        deletion,
+        senderReceiverDeleteField,
       );
 
-      if (where === "receiverNo" && result.status === "unread") {
+      if (
+        senderReceiverNoField === "receiverNo" &&
+        result.status === "unread"
+      ) {
         await this.presentRepository.updateOnePresentStatusFromUnreadToRead(
           result.no,
         );
@@ -49,8 +58,8 @@ export class PresentsService {
 
     const result = await this.presentRepository.getPresentsByBox(
       userNo,
-      where,
-      deletion,
+      senderReceiverNoField,
+      senderReceiverDeleteField,
     );
 
     return result;
