@@ -24,6 +24,7 @@ model character {
   description     String            @db.VarChar(100)
   image           String            @db.VarChar(400)
   species         String            @db.VarChar(10)
+  price           Int               @db.UnsignedInt
   characterLocker characterLocker[]
 }
 
