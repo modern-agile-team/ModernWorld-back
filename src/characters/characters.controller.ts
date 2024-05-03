@@ -20,7 +20,11 @@ export class CharactersController {
   }
 
   @Post(":characterNo")
-  createCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {}
+  createCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
+    const userNo = 1;
+
+    return this.charactersServcie.buyOneCharacter(userNo, characterNo);
+  }
 
   @Patch("characterNo")
   updateCharacterStatus(

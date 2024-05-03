@@ -1,14 +1,56 @@
-import { Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CharactersRepository } from "./characters.repository";
+import { UserRepository } from "src/users/users.repository";
+import { CharacterLockerRepository } from "./charactersLocker.repository";
 
 @Injectable()
 export class CharactersService {
-  constructor(private readonly charactersRepository: CharactersRepository) {}
+  constructor(
+    private readonly charactersRepository: CharactersRepository,
+    private readonly userRepository: UserRepository,
+    private readonly characterLocker: CharacterLockerRepository,
+  ) {}
 
   async getCharactersBySpeices(species: string) {
     const result =
       await this.charactersRepository.getChraractersBySpecies(species);
 
     return result;
+  }
+
+  async buyOneCharacter(userNo: number, characterNo: number) {
+    /**
+     * 유저가 캐릭터를 사는 로직
+     * 1. 해당번호의 캐릭터가 캐릭터 테이블에 실제로 존재하는지 확인
+     *
+     * 2. 유저가 캐릭터를 살만큼 충분한 포인트를 가지고 있는지 확인
+     *
+     * 3. 캐릭터 보관함의 캐릭터추가
+     *
+     * 4. 유저 포인트 감소
+     */
+
+    const character =
+      await this.charactersRepository.getOneCharacter(characterNo);
+
+    if (!character) {
+      throw new NotFoundException("There is no such character.");
+    }
+
+    const { currentPoint } = await this.userRepository.findUserPoint(userNo);
+
+    if (currentPoint < character.price) {
+      throw new ForbiddenException("User doesn't have enough point.");
+    }
+
+    await this.characterLocker.addOneCharacter(characterNo, userNo);
+
+    await this.userRepository.modifyUserCurrentPoint(userNo, -character.price);
+
+    return true;
   }
 }
