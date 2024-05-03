@@ -20,7 +20,7 @@ export class InventoryRepository {
     });
   }
 
-  addItemToInventory(userNo: number, itemNo: number) {
+  addOneItem(userNo: number, itemNo: number) {
     return this.prisma.inventory.create({
       data: {
         userNo,
