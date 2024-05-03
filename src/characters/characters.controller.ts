@@ -19,6 +19,11 @@ export class CharactersController {
     return this.charactersServcie.getCharactersBySpeices(species);
   }
 
+  @Get("")
+  getOneCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
+    return this.charactersServcie.getOneCharacter(characterNo);
+  }
+
   @Post(":characterNo")
   createCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
     const userNo = 1;

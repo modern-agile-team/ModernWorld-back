@@ -53,4 +53,11 @@ export class CharactersService {
 
     return true;
   }
+
+  async getOneCharacter(characterNo: number) {
+    const character =
+      await this.charactersRepository.getOneCharacter(characterNo);
+
+    return character;
+  }
 }
