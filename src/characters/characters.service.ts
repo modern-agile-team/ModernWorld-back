@@ -40,6 +40,8 @@ export class CharactersService {
      * 4. 캐릭터 보관함에 캐릭터추가
      *
      * 5. 유저 포인트 감소
+     *
+     * 4, 5 트랜잭션으로 묶을것...
      */
 
     const character =
