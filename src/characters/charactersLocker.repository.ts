@@ -21,7 +21,7 @@ export class CharacterLockerRepository {
   unUseOtherCharacters(characterNo: number, userNo: number) {
     return this.prisma.characterLocker.updateMany({
       data: { status: false },
-      where: { userNo, NOT: { characterNo } },
+      where: { userNo, characterNo: { not: characterNo } },
     });
   }
 
