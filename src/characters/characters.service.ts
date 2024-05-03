@@ -91,6 +91,7 @@ export class CharactersService {
       throw new NotFoundException("user doesn't have that character.");
     }
 
+    // 트랜잭션으로 묶어놓을것.
     const result = await this.characterLocker.useOneCharacter(
       userNo,
       characterNo,
