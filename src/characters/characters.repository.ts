@@ -13,7 +13,7 @@ export class CharactersRepository {
     });
   }
 
-  getChraractersBySpecies(species: string) {
+  getCharactersBySpecies(species: string) {
     return this.prisma.character.findMany({ where: { species } });
   }
 }

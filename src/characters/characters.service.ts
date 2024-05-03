@@ -17,7 +17,7 @@ export class CharactersService {
 
   async getCharactersBySpeices(species: string) {
     const result =
-      await this.charactersRepository.getChraractersBySpecies(species);
+      await this.charactersRepository.getCharactersBySpecies(species);
 
     return result;
   }
