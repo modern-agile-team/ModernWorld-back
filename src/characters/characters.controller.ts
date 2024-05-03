@@ -19,7 +19,7 @@ export class CharactersController {
     return this.charactersServcie.getCharactersBySpeices(species);
   }
 
-  @Get("")
+  @Get(":characterNo")
   getOneCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
     return this.charactersServcie.getOneCharacter(characterNo);
   }
