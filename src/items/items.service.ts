@@ -79,7 +79,7 @@ export class ItemsService {
     );
     // const gift = await this
 
-    return 0;
+    return true;
   }
 
   async buyOneItem(userNo: number, itemNo: number) {
