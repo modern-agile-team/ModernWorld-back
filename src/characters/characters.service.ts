@@ -15,11 +15,17 @@ export class CharactersService {
     private readonly characterLocker: CharacterLockerRepository,
   ) {}
 
-  async getCharactersBySpeices(species: string) {
-    const result =
+  async getCharactersBySpeices(userNo: number, species: string) {
+    const userHas = (
+      await this.characterLocker.getUserAllCharactersBySpecies(userNo, species)
+    ).map((obj) => {
+      return obj.characterNo;
+    });
+
+    const allCharacters =
       await this.charactersRepository.getCharactersBySpecies(species);
 
-    return result;
+    return { userHas, allCharacters };
   }
 
   async buyOneCharacter(userNo: number, characterNo: number) {

@@ -16,7 +16,9 @@ export class CharactersController {
   @Get("")
   getAllCharactersBySpeices(@Query("species") species: string) {
     //요놈 type, User에서 만든 animal enum 나중에 써라
-    return this.charactersServcie.getCharactersBySpeices(species);
+    const userNo = 1;
+
+    return this.charactersServcie.getCharactersBySpeices(userNo, species);
   }
 
   @Get(":characterNo")

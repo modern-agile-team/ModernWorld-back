@@ -25,9 +25,9 @@ export class CharacterLockerRepository {
     });
   }
 
-  getUserAllCharacters(userNo: number) {
+  getUserAllCharactersBySpecies(userNo: number, species: string) {
     return this.prisma.characterLocker.findMany({
-      where: { userNo },
+      where: { userNo, character: { species } },
     });
   }
 
