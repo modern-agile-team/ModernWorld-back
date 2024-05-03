@@ -22,10 +22,10 @@ export class CharactersService {
       return obj.characterNo;
     });
 
-    const allCharacters =
+    const allCharactersBySpecies =
       await this.charactersRepository.getCharactersBySpecies(species);
 
-    return { userHas, allCharacters };
+    return { userHas, allCharactersBySpecies };
   }
 
   async buyOneCharacter(userNo: number, characterNo: number) {
