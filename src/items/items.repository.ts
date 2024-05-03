@@ -5,7 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class ItemsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findOneItem(itemNo: number) {
+  getOneItem(itemNo: number) {
     return this.prisma.item.findUnique({
       where: {
         no: itemNo,

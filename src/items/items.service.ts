@@ -14,6 +14,12 @@ export class ItemsService {
     private readonly inventoryRepository: InventoryRepository,
     private readonly usersRepository: UserRepository,
   ) {}
+
+  async getOneItem(itemNo: number) {
+    const result = this.itemsRepository.getOneItem(itemNo);
+    return result;
+  }
+
   async getUserAllItemsByTheme(userNo: number, theme: string) {
     /**
      * 반환할때 자기가 보유하고 있는지에 대한 여부도 표시해주면 좋을듯
@@ -48,7 +54,7 @@ export class ItemsService {
      * 4. present 에 추가 및 포인트 감소(presentsRepository) 트랜잭션으로 묶을것
      */
 
-    const item = await this.itemsRepository.findOneItem(itemNo);
+    const item = await this.itemsRepository.getOneItem(itemNo);
 
     if (!item) {
       throw new NotFoundException("Item doesn't exist.");
@@ -76,7 +82,7 @@ export class ItemsService {
     return 0;
   }
 
-  async buyItem(userNo: number, itemNo: number) {
+  async buyOneItem(userNo: number, itemNo: number) {
     /**
      * 아이템을 사는 로직
      *
@@ -93,7 +99,7 @@ export class ItemsService {
      * 4번 5번의 과정은 트랜잭션을 한번에 묶자.
      */
 
-    const item = await this.itemsRepository.findOneItem(itemNo);
+    const item = await this.itemsRepository.getOneItem(itemNo);
 
     if (!item) {
       throw new NotFoundException("Item doesn't exist.");

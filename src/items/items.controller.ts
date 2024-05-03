@@ -6,7 +6,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
 } from "@nestjs/common";
 import { ItemsService } from "./items.service";
 
@@ -19,10 +18,15 @@ export class ItemsController {
     return this.itemService.getUserAllItemsByTheme(userNo, theme);
   }
 
+  @Get(":itemNo")
+  getOneItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
+    return this.itemService.getOneItem(itemNo);
+  }
+
   @Post(":itemNo")
   buyItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     const userNo = 1;
-    return this.itemService.buyItem(userNo, itemNo);
+    return this.itemService.buyOneItem(userNo, itemNo);
   }
 
   @Post(":itemNo/present/:receiverNo")
