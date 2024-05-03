@@ -106,7 +106,7 @@ export class ItemsService {
     }
 
     const checkInventoryItem =
-      await this.inventoryRepository.checkInventoryItem(userNo, itemNo);
+      await this.inventoryRepository.FindOneItemFromInventory(userNo, itemNo);
 
     if (checkInventoryItem) {
       throw new ConflictException("User already owns the item.");
@@ -125,27 +125,27 @@ export class ItemsService {
     return true;
   }
 
-  async useItem(userNo: number, itemNo: number) {
+  async useItemUnuseOthers(userNo: number, itemNo: number) {
     /**
      * user가 이미 같은 타입의 아이템을 사용하고 있다면 자동으로 바꿔줘야함
      * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
      * 이것 역시 트랜잭션을 이용할것
      */
-    const haveItem = await this.inventoryRepository.checkInventoryItem(
+    const item = await this.inventoryRepository.FindOneItemFromInventory(
       userNo,
       itemNo,
     );
 
-    if (!haveItem) {
+    if (!item) {
       throw new NotFoundException("User doesn't have the item");
     }
 
     const { type } = await this.itemsRepository.getItemType(itemNo);
 
-    await this.inventoryRepository.discardItem(userNo, type);
+    await this.inventoryRepository.unUseOtherItems(userNo, type);
 
     await this.inventoryRepository.useItem(userNo, itemNo);
 
-    return "success";
+    return true;
   }
 }

@@ -14,7 +14,7 @@ export class InventoryRepository {
     });
   }
 
-  checkInventoryItem(userNo: number, itemNo: number) {
+  FindOneItemFromInventory(userNo: number, itemNo: number) {
     return this.prisma.inventory.findFirst({
       where: { userNo, itemNo },
     });
@@ -48,7 +48,7 @@ export class InventoryRepository {
     });
   }
 
-  discardItem(userNo: number, itemType: string) {
+  unUseOtherItems(userNo: number, itemType: string) {
     return this.prisma.inventory.updateMany({
       data: { status: false },
       where: { userNo, item: { type: itemType } },
