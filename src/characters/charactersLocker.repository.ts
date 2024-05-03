@@ -5,20 +5,20 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class CharacterLockerRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  addOneCharacter(characterNo: number, userNo: number) {
+  addOneCharacter(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.create({
       data: { characterNo, userNo },
     });
   }
 
-  useOneCharacter(characterNo: number, userNo: number) {
+  useOneCharacter(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.updateMany({
       data: { status: true },
       where: { userNo, characterNo },
     });
   }
 
-  unUseOtherCharacters(characterNo: number, userNo: number) {
+  unUseOtherCharacters(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.updateMany({
       data: { status: false },
       where: { userNo, characterNo: { not: characterNo } },
@@ -28,6 +28,12 @@ export class CharacterLockerRepository {
   getUserAllCharacters(userNo: number) {
     return this.prisma.characterLocker.findMany({
       where: { userNo },
+    });
+  }
+
+  findOneCharacterFromInventory(userNo: number, characterNo: number) {
+    return this.prisma.characterLocker.findFirst({
+      where: { userNo, characterNo },
     });
   }
 }

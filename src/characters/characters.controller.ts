@@ -31,7 +31,7 @@ export class CharactersController {
     return this.charactersServcie.buyOneCharacter(userNo, characterNo);
   }
 
-  @Patch("characterNo")
+  @Patch(":characterNo")
   updateCharacterStatus(
     @Param("characterNo", ParseIntPipe) characterNo: number,
   ) {

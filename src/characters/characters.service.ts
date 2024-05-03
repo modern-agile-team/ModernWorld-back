@@ -47,7 +47,7 @@ export class CharactersService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
-    await this.characterLocker.addOneCharacter(characterNo, userNo);
+    await this.characterLocker.addOneCharacter(userNo, characterNo);
 
     await this.userRepository.modifyUserCurrentPoint(userNo, -character.price);
 
@@ -62,6 +62,15 @@ export class CharactersService {
   }
 
   async useCharacterUnuseOhers(userNo: number, characterNo: number) {
+    const character = await this.characterLocker.findOneCharacterFromInventory(
+      userNo,
+      characterNo,
+    );
+
+    if (!character) {
+      throw new NotFoundException("user doesn't have that character.");
+    }
+
     const result = await this.characterLocker.useOneCharacter(
       userNo,
       characterNo,
