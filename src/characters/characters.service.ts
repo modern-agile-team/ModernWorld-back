@@ -60,4 +60,15 @@ export class CharactersService {
 
     return character;
   }
+
+  async useCharacterUnuseOhers(userNo: number, characterNo: number) {
+    const result = await this.characterLocker.useOneCharacter(
+      userNo,
+      characterNo,
+    );
+
+    await this.characterLocker.unUseOtherCharacters(userNo, characterNo);
+
+    return result;
+  }
 }

@@ -34,5 +34,9 @@ export class CharactersController {
   @Patch("characterNo")
   updateCharacterStatus(
     @Param("characterNo", ParseIntPipe) characterNo: number,
-  ) {}
+  ) {
+    const userNo = 1;
+
+    return this.charactersServcie.useCharacterUnuseOhers(userNo, characterNo);
+  }
 }
