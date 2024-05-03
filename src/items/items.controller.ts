@@ -14,12 +14,13 @@ import { ItemsService } from "./items.service";
 export class ItemsController {
   constructor(private readonly itemService: ItemsService) {}
   @Get("")
-  showItems(@Query("theme") theme: string) {
-    return this.itemService.showItems(theme);
+  getUserAllItemsByTheme(@Query("theme") theme: string) {
+    const userNo = 1;
+    return this.itemService.getUserAllItemsByTheme(userNo, theme);
   }
 
   @Post(":itemNo")
-  buyitem(@Param("itemNo", ParseIntPipe) itemNo: number) {
+  buyItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     const userNo = 1;
     return this.itemService.buyItem(userNo, itemNo);
   }

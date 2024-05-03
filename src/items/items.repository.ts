@@ -13,7 +13,7 @@ export class ItemsRepository {
     });
   }
 
-  showItems(theme: string) {
+  getAllItemsByTheme(theme: string) {
     return this.prisma.item.findMany({ where: { theme: theme } });
   }
 

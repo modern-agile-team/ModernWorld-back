@@ -4,19 +4,17 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
 import { ItemsRepository } from "./items.repository";
 import { InventoryRepository } from "src/inventory/inventory.repository";
 import { UserRepository } from "src/users/users.repository";
 @Injectable()
 export class ItemsService {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly itemsRepository: ItemsRepository,
     private readonly inventoryRepository: InventoryRepository,
     private readonly usersRepository: UserRepository,
   ) {}
-  async showItems(theme: string) {
+  async getUserAllItemsByTheme(userNo: number, theme: string) {
     /**
      * 반환할때 자기가 보유하고 있는지에 대한 여부도 표시해주면 좋을듯
      * 1. 해당 테마의 모든 아이템을 반환한다.
@@ -24,9 +22,17 @@ export class ItemsService {
      *
      *
      */
-    const result = await this.itemsRepository.showItems(theme);
 
-    return result;
+    const userHas = (
+      await this.inventoryRepository.getUserAllItemsByTheme(userNo, theme)
+    ).map((obj) => {
+      return obj.itemNo;
+    });
+
+    const allItemsByTheme =
+      await this.itemsRepository.getAllItemsByTheme(theme);
+
+    return { userHas, allItemsByTheme };
   }
 
   async presentItem(userNo: number, itemNo: number, receiverNo: number) {

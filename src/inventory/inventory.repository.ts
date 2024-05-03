@@ -5,6 +5,15 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class InventoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  getUserAllItemsByTheme(userNo: number, theme: string) {
+    return this.prisma.inventory.findMany({
+      where: {
+        userNo,
+        item: { theme },
+      },
+    });
+  }
+
   checkInventoryItem(userNo: number, itemNo: number) {
     return this.prisma.inventory.findFirst({
       where: { userNo, itemNo },
