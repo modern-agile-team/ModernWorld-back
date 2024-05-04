@@ -54,13 +54,13 @@ export class CharactersService {
       throw new NotFoundException("There is no such character.");
     }
 
-    const isThereCharacter =
+    const userCharacter =
       await this.characterLockerRepository.findOneCharacterFromInventory(
         userNo,
         characterNo,
       );
 
-    if (isThereCharacter) {
+    if (userCharacter) {
       throw new ForbiddenException("User already has this character");
     }
 
