@@ -39,6 +39,6 @@ export class CharactersController {
   ) {
     const userNo = 1;
 
-    return this.charactersServcie.useCharacterUnuseOhers(userNo, characterNo);
+    return this.charactersServcie.useCharacterUnuseOthers(userNo, characterNo);
   }
 }

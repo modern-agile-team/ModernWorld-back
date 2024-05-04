@@ -11,7 +11,7 @@ export class CharacterLockerRepository {
     });
   }
 
-  useOneCharacter(userNo: number, characterNo: number) {
+  updateStatus(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.updateMany({
       data: { status: true },
       where: { userNo, characterNo },

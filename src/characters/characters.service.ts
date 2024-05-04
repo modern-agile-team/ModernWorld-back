@@ -12,20 +12,23 @@ export class CharactersService {
   constructor(
     private readonly charactersRepository: CharactersRepository,
     private readonly userRepository: UserRepository,
-    private readonly characterLocker: CharacterLockerRepository,
+    private readonly characterLockerRepository: CharacterLockerRepository,
   ) {}
 
   async getCharactersBySpeices(userNo: number, species: string) {
     const userHas = (
-      await this.characterLocker.getUserAllCharactersBySpecies(userNo, species)
+      await this.characterLockerRepository.getUserAllCharactersBySpecies(
+        userNo,
+        species,
+      )
     ).map((obj) => {
       return obj.characterNo;
     });
 
-    const allCharactersBySpecies =
+    const characters =
       await this.charactersRepository.getCharactersBySpecies(species);
 
-    return { userHas, allCharactersBySpecies };
+    return { userHas, characters };
   }
 
   async buyOneCharacter(userNo: number, characterNo: number) {
@@ -52,7 +55,7 @@ export class CharactersService {
     }
 
     const isThereCharacter =
-      await this.characterLocker.findOneCharacterFromInventory(
+      await this.characterLockerRepository.findOneCharacterFromInventory(
         userNo,
         characterNo,
       );
@@ -67,7 +70,7 @@ export class CharactersService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
-    await this.characterLocker.addOneCharacter(userNo, characterNo);
+    await this.characterLockerRepository.addOneCharacter(userNo, characterNo);
 
     await this.userRepository.modifyUserCurrentPoint(userNo, -character.price);
 
@@ -81,23 +84,27 @@ export class CharactersService {
     return character;
   }
 
-  async useCharacterUnuseOhers(userNo: number, characterNo: number) {
-    const character = await this.characterLocker.findOneCharacterFromInventory(
-      userNo,
-      characterNo,
-    );
+  async useCharacterUnuseOthers(userNo: number, characterNo: number) {
+    const character =
+      await this.characterLockerRepository.findOneCharacterFromInventory(
+        userNo,
+        characterNo,
+      );
 
     if (!character) {
-      throw new NotFoundException("user doesn't have that character.");
+      throw new NotFoundException("User doesn't have that character.");
     }
 
     // 트랜잭션으로 묶어놓을것.
-    const result = await this.characterLocker.useOneCharacter(
+    const result = await this.characterLockerRepository.updateStatus(
       userNo,
       characterNo,
     );
 
-    await this.characterLocker.unUseOtherCharacters(userNo, characterNo);
+    await this.characterLockerRepository.unUseOtherCharacters(
+      userNo,
+      characterNo,
+    );
 
     return result;
   }
