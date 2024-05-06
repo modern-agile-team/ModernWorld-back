@@ -15,7 +15,10 @@ export class CharactersService {
     private readonly characterLockerRepository: CharacterLockerRepository,
   ) {}
 
-  async getCharactersBySpeices(userNo: number, species: string) {
+  async getCharactersBySpeices(
+    userNo: number,
+    species: string,
+  ): Promise<object> {
     const userHas = (
       await this.characterLockerRepository.getUserAllCharactersBySpecies(
         userNo,
@@ -31,7 +34,7 @@ export class CharactersService {
     return { userHas, characters };
   }
 
-  async buyOneCharacter(userNo: number, characterNo: number) {
+  async buyOneCharacter(userNo: number, characterNo: number): Promise<boolean> {
     /**
      * 유저가 캐릭터를 사는 로직
      * 1. 해당번호의 캐릭터가 캐릭터 테이블에 실제로 존재하는지 확인
@@ -77,14 +80,17 @@ export class CharactersService {
     return true;
   }
 
-  async getOneCharacter(characterNo: number) {
+  async getOneCharacter(characterNo: number): Promise<object> {
     const character =
       await this.charactersRepository.getOneCharacter(characterNo);
 
     return character;
   }
 
-  async useCharacterUnuseOthers(userNo: number, characterNo: number) {
+  async useCharacterDisuseOthers(
+    userNo: number,
+    characterNo: number,
+  ): Promise<object> {
     const character =
       await this.characterLockerRepository.findOneCharacterFromInventory(
         userNo,
@@ -101,7 +107,7 @@ export class CharactersService {
       characterNo,
     );
 
-    await this.characterLockerRepository.unUseOtherCharacters(
+    await this.characterLockerRepository.disuseOtherCharacters(
       userNo,
       characterNo,
     );

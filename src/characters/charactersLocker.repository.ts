@@ -18,7 +18,7 @@ export class CharacterLockerRepository {
     });
   }
 
-  unUseOtherCharacters(userNo: number, characterNo: number) {
+  disuseOtherCharacters(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.updateMany({
       data: { status: false },
       where: { userNo, characterNo: { not: characterNo } },
