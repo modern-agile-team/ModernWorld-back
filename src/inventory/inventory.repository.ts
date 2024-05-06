@@ -14,7 +14,7 @@ export class InventoryRepository {
     });
   }
 
-  FindOneItemFromInventory(userNo: number, itemNo: number) {
+  FindOneItem(userNo: number, itemNo: number) {
     return this.prisma.inventory.findFirst({
       where: { userNo, itemNo },
     });
@@ -35,11 +35,11 @@ export class InventoryRepository {
         status: true,
         item: { select: { name: true, image: true, type: true } },
       },
-      where: { userNo: userNo, status: true },
+      where: { userNo, status: true },
     });
   }
 
-  useItem(userNo: number, itemNo: number) {
+  updateItemStatus(userNo: number, itemNo: number) {
     return this.prisma.inventory.updateMany({
       data: {
         status: true,
@@ -48,7 +48,7 @@ export class InventoryRepository {
     });
   }
 
-  unUseOtherItems(userNo: number, itemType: string) {
+  disuseOtherItems(userNo: number, itemType: string) {
     return this.prisma.inventory.updateMany({
       data: { status: false },
       where: { userNo, item: { type: itemType } },

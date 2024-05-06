@@ -16,11 +16,11 @@ export class ItemsService {
   ) {}
 
   async getOneItem(itemNo: number) {
-    const result = this.itemsRepository.getOneItem(itemNo);
+    const result = await this.itemsRepository.getOneItem(itemNo);
     return result;
   }
 
-  async getUserAllItemsByTheme(userNo: number, theme: string) {
+  async getUserAllItemsByTheme(userNo: number, theme: string): Promise<object> {
     /**
      * 반환할때 자기가 보유하고 있는지에 대한 여부도 표시해주면 좋을듯
      * 1. 해당 테마의 모든 아이템을 반환한다.
@@ -41,7 +41,11 @@ export class ItemsService {
     return { userHas, allItemsByTheme };
   }
 
-  async presentItem(userNo: number, itemNo: number, receiverNo: number) {
+  async presentItem(
+    userNo: number,
+    itemNo: number,
+    receiverNo: number,
+  ): Promise<boolean> {
     /**
      * 아이템을 특정유저에게 선물하는 로직
      *
@@ -73,16 +77,13 @@ export class ItemsService {
     }
 
     //4번 과정 마저 할것.
-    const pay = await this.usersRepository.modifyUserCurrentPoint(
-      userNo,
-      -item.price,
-    );
+    await this.usersRepository.modifyUserCurrentPoint(userNo, -item.price);
     // const gift = await this
 
     return true;
   }
 
-  async buyOneItem(userNo: number, itemNo: number) {
+  async buyOneItem(userNo: number, itemNo: number): Promise<boolean> {
     /**
      * 아이템을 사는 로직
      *
@@ -105,8 +106,10 @@ export class ItemsService {
       throw new NotFoundException("Item doesn't exist.");
     }
 
-    const checkInventoryItem =
-      await this.inventoryRepository.FindOneItemFromInventory(userNo, itemNo);
+    const checkInventoryItem = await this.inventoryRepository.FindOneItem(
+      userNo,
+      itemNo,
+    );
 
     if (checkInventoryItem) {
       throw new ConflictException("User already owns the item.");
@@ -125,16 +128,13 @@ export class ItemsService {
     return true;
   }
 
-  async useItemUnuseOthers(userNo: number, itemNo: number) {
+  async useItemDisuseOthers(userNo: number, itemNo: number): Promise<boolean> {
     /**
      * user가 이미 같은 타입의 아이템을 사용하고 있다면 자동으로 바꿔줘야함
      * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
      * 이것 역시 트랜잭션을 이용할것
      */
-    const item = await this.inventoryRepository.FindOneItemFromInventory(
-      userNo,
-      itemNo,
-    );
+    const item = await this.inventoryRepository.FindOneItem(userNo, itemNo);
 
     if (!item) {
       throw new NotFoundException("User doesn't have the item");
@@ -142,9 +142,9 @@ export class ItemsService {
 
     const { type } = await this.itemsRepository.getItemType(itemNo);
 
-    await this.inventoryRepository.unUseOtherItems(userNo, type);
+    await this.inventoryRepository.disuseOtherItems(userNo, type);
 
-    await this.inventoryRepository.useItem(userNo, itemNo);
+    await this.inventoryRepository.updateItemStatus(userNo, itemNo);
 
     return true;
   }

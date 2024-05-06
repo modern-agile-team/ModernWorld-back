@@ -4,10 +4,11 @@ import { ItemsController } from "./items.controller";
 import { ItemsRepository } from "./items.repository";
 import { InventoryModule } from "src/inventory/inventory.module";
 import { UserRepository } from "src/users/users.repository";
+import { UsersModule } from "src/users/users.module";
 
 @Module({
-  imports: [InventoryModule],
+  imports: [InventoryModule, UsersModule],
   controllers: [ItemsController],
-  providers: [ItemsService, ItemsRepository, UserRepository],
+  providers: [ItemsService, ItemsRepository],
 })
 export class ItemsModule {}

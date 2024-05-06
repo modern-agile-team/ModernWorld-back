@@ -14,7 +14,7 @@ export class ItemsRepository {
   }
 
   getAllItemsByTheme(theme: string) {
-    return this.prisma.item.findMany({ where: { theme: theme } });
+    return this.prisma.item.findMany({ where: { theme } });
   }
 
   getItemType(itemNo: number) {
