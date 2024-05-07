@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
+import { inventory, item } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class InventoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getUserAllItemsByTheme(userNo: number, theme: string) {
+  getUserAllItems(userNo: number, theme?: string): Promise<inventory[]> {
     return this.prisma.inventory.findMany({
       where: {
         userNo,
@@ -14,13 +15,13 @@ export class InventoryRepository {
     });
   }
 
-  FindOneItem(userNo: number, itemNo: number) {
+  FindOneItem(userNo: number, itemNo: number): Promise<inventory> {
     return this.prisma.inventory.findFirst({
       where: { userNo, itemNo },
     });
   }
 
-  addOneItem(userNo: number, itemNo: number) {
+  addOneItem(userNo: number, itemNo: number): Promise<inventory> {
     return this.prisma.inventory.create({
       data: {
         userNo,
