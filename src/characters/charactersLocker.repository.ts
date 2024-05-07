@@ -11,7 +11,7 @@ export class CharacterLockerRepository {
     });
   }
 
-  updateStatus(userNo: number, characterNo: number) {
+  updateCharacterStatus(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.updateMany({
       data: { status: true },
       where: { userNo, characterNo },
@@ -25,7 +25,7 @@ export class CharacterLockerRepository {
     });
   }
 
-  getUserAllCharactersBySpecies(userNo: number, species: string) {
+  getUserAllCharactersBySpecies(userNo: number, species?: string) {
     return this.prisma.characterLocker.findMany({
       where: { userNo, character: { species } },
     });

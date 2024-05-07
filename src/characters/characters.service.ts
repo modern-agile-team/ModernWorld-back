@@ -15,23 +15,8 @@ export class CharactersService {
     private readonly characterLockerRepository: CharacterLockerRepository,
   ) {}
 
-  async getCharactersBySpeices(
-    userNo: number,
-    species: string,
-  ): Promise<object> {
-    const userHas = (
-      await this.characterLockerRepository.getUserAllCharactersBySpecies(
-        userNo,
-        species,
-      )
-    ).map((obj) => {
-      return obj.characterNo;
-    });
-
-    const characters =
-      await this.charactersRepository.getCharactersBySpecies(species);
-
-    return { userHas, characters };
+  async getCharactersBySpeices(species?: string): Promise<object> {
+    return this.charactersRepository.getCharactersBySpecies(species);
   }
 
   async buyOneCharacter(userNo: number, characterNo: number): Promise<boolean> {
@@ -81,10 +66,7 @@ export class CharactersService {
   }
 
   async getOneCharacter(characterNo: number): Promise<object> {
-    const character =
-      await this.charactersRepository.getOneCharacter(characterNo);
-
-    return character;
+    return await this.charactersRepository.getOneCharacter(characterNo);
   }
 
   async useCharacterDisuseOthers(
@@ -102,7 +84,7 @@ export class CharactersService {
     }
 
     // 트랜잭션으로 묶어놓을것.
-    const result = await this.characterLockerRepository.updateStatus(
+    const result = await this.characterLockerRepository.updateCharacterStatus(
       userNo,
       characterNo,
     );
