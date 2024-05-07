@@ -5,23 +5,24 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PresentsRepository } from "./presents.repository";
-import { NotFoundError } from "rxjs";
 import { InventoryRepository } from "src/inventory/inventory.repository";
-import { AcceptReject, PresentStatus } from "./enum/present-status-enum";
+import { AcceptReject } from "./enum/present-status-enum";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { UserRepository as UserRepository } from "src/users/users.repository";
 
 @Injectable()
 export class PresentsService {
   constructor(
     private readonly presentRepository: PresentsRepository,
     private readonly inventoryRepository: InventoryRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async getOneOrManyPresentsByBox(
     userNo: number,
     senderReceiverNoField: SenderReceiverNoField,
     presentNo?: number,
-  ) {
+  ): Promise<object> {
     if (
       senderReceiverNoField !== "receiverNo" &&
       senderReceiverNoField !== "senderNo"
@@ -106,17 +107,19 @@ export class PresentsService {
         userNo,
         itemNo,
       );
+
       if (existItem) {
+        // 아이템 가격은 아이템 레포에서 찾아와야함 머지 될시 이 작업 꼭 해둘것 --------------
         //포인트 넣어주는 로직 추가할것-------------------------------------
+        // this.userRepository.modifyUserCurrentPoint(userNo,-existItem.)
+
         return 0;
       }
     }
 
     await this.inventoryRepository.addItemToInventory(userNo, itemNo);
 
-    return 0;
-
-    // 마저 작업할것
+    return true;
   }
 
   async updateOnePresentTodelete(

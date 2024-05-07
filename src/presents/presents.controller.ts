@@ -58,8 +58,6 @@ export class PresentsController {
   ) {
     const userNo = 1;
 
-    console.log(userNo, presentNo, senderReceiverNoField, acceptReject);
-
     return this.presentsService.acceptOrRejectOnePresent(
       userNo,
       presentNo,

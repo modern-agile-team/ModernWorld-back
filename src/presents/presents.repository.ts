@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AcceptReject, PresentStatus } from "./enum/present-status-enum";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
-import { PrismaPromise, item, present } from "@prisma/client";
+import { PrismaPromise, present } from "@prisma/client";
 
 @Injectable()
 export class PresentsRepository {
@@ -60,17 +60,6 @@ export class PresentsRepository {
     return this.prisma.present.update({
       data: { status: "read" },
       where: { no: presentNo, status: "unread" },
-    });
-  }
-
-  getInboxPresentStatusItemNo(
-    userNo: number,
-    presentNo: number,
-  ): PrismaPromise<Pick<present, "status" | "itemNo">> {
-    return this.prisma.present.findFirst({
-      select: { status: true, itemNo: true },
-
-      where: { no: presentNo, receiverNo: userNo },
     });
   }
 
