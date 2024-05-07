@@ -15,30 +15,13 @@ export class ItemsService {
     private readonly usersRepository: UserRepository,
   ) {}
 
-  async getOneItem(itemNo: number) {
+  async getOneItem(itemNo: number): Promise<object> {
     const result = await this.itemsRepository.getOneItem(itemNo);
     return result;
   }
 
-  async getUserAllItemsByTheme(userNo: number, theme: string): Promise<object> {
-    /**
-     * 반환할때 자기가 보유하고 있는지에 대한 여부도 표시해주면 좋을듯
-     * 1. 해당 테마의 모든 아이템을 반환한다.
-     *
-     *
-     *
-     */
-
-    const userHas = (
-      await this.inventoryRepository.getUserAllItemsByTheme(userNo, theme)
-    ).map((obj) => {
-      return obj.itemNo;
-    });
-
-    const allItemsByTheme =
-      await this.itemsRepository.getAllItemsByTheme(theme);
-
-    return { userHas, allItemsByTheme };
+  async getUserItems(theme?: string): Promise<object> {
+    return await this.itemsRepository.getAllItems(theme);
   }
 
   async presentItem(

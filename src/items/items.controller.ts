@@ -13,9 +13,8 @@ import { ItemsService } from "./items.service";
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
   @Get()
-  getUserAllItemsByTheme(@Query("theme") theme: string) {
-    const userNo = 1;
-    return this.itemsService.getUserAllItemsByTheme(userNo, theme);
+  getUserItems(@Query("theme") theme?: string) {
+    return this.itemsService.getUserItems(theme);
   }
 
   @Get(":itemNo")
