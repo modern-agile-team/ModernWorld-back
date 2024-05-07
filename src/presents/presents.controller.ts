@@ -17,7 +17,7 @@ import { AcceptReject } from "./enum/present-status-enum";
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
 
-  @Get("")
+  @Get()
   getPresentsByBox(
     @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
     senderReceiverNoField: SenderReceiverNoField,

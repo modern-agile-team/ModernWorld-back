@@ -2,12 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AcceptReject, PresentStatus } from "./enum/present-status-enum";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { PrismaPromise, item, present } from "@prisma/client";
 
 @Injectable()
 export class PresentsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOnePresent(presentNo: number) {
+  getOnePresent(presentNo: number): PrismaPromise<present> {
     return this.prisma.present.findUnique({
       where: { no: presentNo },
     });
@@ -62,7 +63,10 @@ export class PresentsRepository {
     });
   }
 
-  getInboxPresentStatusItemNo(userNo: number, presentNo: number) {
+  getInboxPresentStatusItemNo(
+    userNo: number,
+    presentNo: number,
+  ): PrismaPromise<Pick<present, "status" | "itemNo">> {
     return this.prisma.present.findFirst({
       select: { status: true, itemNo: true },
 
