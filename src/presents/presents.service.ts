@@ -15,23 +15,13 @@ export class PresentsService {
   constructor(
     private readonly presentRepository: PresentsRepository,
     private readonly inventoryRepository: InventoryRepository,
-    private readonly userRepository: UserRepository,
   ) {}
 
   async getOneOrManyPresentsByBox(
     userNo: number,
-    senderReceiverNoField: SenderReceiverNoField,
+    senderReceiverNoField?: SenderReceiverNoField,
     presentNo?: number,
   ): Promise<object> {
-    if (
-      senderReceiverNoField !== "receiverNo" &&
-      senderReceiverNoField !== "senderNo"
-    ) {
-      throw new BadRequestException(
-        "where has two options : receiverNo, senderNo",
-      );
-    }
-
     const senderReceiverDeleteField =
       senderReceiverNoField === "receiverNo"
         ? "receiverDelete"
@@ -57,7 +47,7 @@ export class PresentsService {
       return result;
     }
 
-    const result = await this.presentRepository.getPresentsByBox(
+    const result = await this.presentRepository.getPresents(
       userNo,
       senderReceiverNoField,
       senderReceiverDeleteField,

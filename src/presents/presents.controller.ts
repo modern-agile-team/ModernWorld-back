@@ -20,7 +20,7 @@ export class PresentsController {
   @Get()
   getPresentsByBox(
     @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
-    senderReceiverNoField: SenderReceiverNoField,
+    senderReceiverNoField?: SenderReceiverNoField,
   ) {
     console.log("Get /presents/?senderReceiverNoField=");
     const userNo = 1;
@@ -51,8 +51,6 @@ export class PresentsController {
   @Patch(":presentNo")
   updatePresentStatus(
     @Param("presentNo", ParseIntPipe) presentNo: number,
-    @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
-    senderReceiverNoField: SenderReceiverNoField,
     @Query("acceptReject", new ParseEnumPipe(AcceptReject))
     acceptReject: AcceptReject,
   ) {

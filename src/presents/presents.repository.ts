@@ -14,7 +14,7 @@ export class PresentsRepository {
     });
   }
 
-  getPresentsByBox(
+  getPresents(
     userNo: number,
     senderReceiverNoField: SenderReceiverNoField,
     senderReceiverDeleteField: string,
