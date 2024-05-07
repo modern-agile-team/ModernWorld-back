@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -8,7 +7,6 @@ import { PresentsRepository } from "./presents.repository";
 import { InventoryRepository } from "src/inventory/inventory.repository";
 import { AcceptReject } from "./enum/present-status-enum";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
-import { UserRepository as UserRepository } from "src/users/users.repository";
 
 @Injectable()
 export class PresentsService {
