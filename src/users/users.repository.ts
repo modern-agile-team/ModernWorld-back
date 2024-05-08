@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { JsonValue } from "@prisma/client/runtime/library";
+import { contains } from "class-validator";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -121,11 +122,13 @@ export class UsersRepository {
     animal: string,
     skip: number,
     sort: string,
+    userName?: string,
   ) {
     let where = {};
 
     if (animal) {
       where = {
+        userName: { contains: userName },
         characterLocker: {
           some: { status: true, character: { species: animal } },
         },

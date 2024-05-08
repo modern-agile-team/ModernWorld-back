@@ -134,7 +134,7 @@ export class UsersService {
   }
 
   async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
-    const { take, animal, orderByField } = queryParams;
+    const { take, animal, orderByField, userName } = queryParams;
 
     const skip = (pageNo - 1) * take;
     const sort = orderByField === "createdAt" ? "asc" : "desc";
@@ -145,6 +145,7 @@ export class UsersService {
       animal,
       skip,
       sort,
+      userName,
     );
 
     //가공
