@@ -15,7 +15,7 @@ export class InventoryRepository {
     });
   }
 
-  FindOneItem(userNo: number, itemNo: number): Promise<inventory> {
+  findOneItem(userNo: number, itemNo: number): Promise<inventory> {
     return this.prisma.inventory.findFirst({
       where: { userNo, itemNo },
     });

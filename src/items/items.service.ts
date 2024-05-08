@@ -89,7 +89,7 @@ export class ItemsService {
       throw new NotFoundException("Item doesn't exist.");
     }
 
-    const checkInventoryItem = await this.inventoryRepository.FindOneItem(
+    const checkInventoryItem = await this.inventoryRepository.findOneItem(
       userNo,
       itemNo,
     );
@@ -117,7 +117,7 @@ export class ItemsService {
      * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
      * 이것 역시 트랜잭션을 이용할것
      */
-    const item = await this.inventoryRepository.FindOneItem(userNo, itemNo);
+    const item = await this.inventoryRepository.findOneItem(userNo, itemNo);
 
     if (!item) {
       throw new NotFoundException("User doesn't have the item");

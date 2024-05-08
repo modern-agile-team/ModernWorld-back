@@ -91,7 +91,7 @@ export class PresentsService {
     );
 
     if (acceptReject === "accept") {
-      const existItem = await this.inventoryRepository.checkInventoryItem(
+      const existItem = await this.inventoryRepository.findOneItem(
         userNo,
         itemNo,
       );
@@ -105,7 +105,7 @@ export class PresentsService {
       }
     }
 
-    await this.inventoryRepository.addItemToInventory(userNo, itemNo);
+    await this.inventoryRepository.addOneItem(userNo, itemNo);
 
     return true;
   }
