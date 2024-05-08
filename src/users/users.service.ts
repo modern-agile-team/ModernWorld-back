@@ -110,7 +110,6 @@ export class UsersService {
     description: string,
   ) {
     //이곳에 트랜잭션으로 캐릭터보관함에 캐릭터 넣는것까지 같이 할것.
-    console.log(characterNo);
 
     const result =
       await this.userRepository.updateUserNicknameDesriptionAttendance(
@@ -134,7 +133,7 @@ export class UsersService {
   }
 
   async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
-    const { take, animal, orderByField, userName } = queryParams;
+    const { take, animal, orderByField, nickname } = queryParams;
 
     const skip = (pageNo - 1) * take;
     const sort = orderByField === "createdAt" ? "asc" : "desc";
@@ -145,7 +144,7 @@ export class UsersService {
       animal,
       skip,
       sort,
-      userName,
+      nickname,
     );
 
     //가공

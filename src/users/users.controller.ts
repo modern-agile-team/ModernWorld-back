@@ -3,16 +3,14 @@ import {
   Controller,
   Get,
   Param,
-  ParseBoolPipe,
   ParseIntPipe,
-  Put,
   Query,
   Post,
   Patch,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 
 @Controller("users")
 @ApiTags("Users")
@@ -22,6 +20,13 @@ export class UsersController {
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
   @Get("show/:pageNo")
+  @ApiParam({
+    name: "pageNo",
+    example: 1,
+    required: true,
+    description: "페이지 번호",
+  })
+  @ApiOperation({ summary: "종별 유저 불러오기 API" })
   getUsersByAnimal(
     @Param("pageNo", ParseIntPipe) pageNo: number,
     @Query() queryParams: GetUsersByAnimalDto,
