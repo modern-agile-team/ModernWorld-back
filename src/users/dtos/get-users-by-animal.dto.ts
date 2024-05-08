@@ -13,4 +13,8 @@ export class GetUsersByAnimalDto {
 
   @IsEnum(orderByField)
   orderByField: string;
+
+  @IsOptional()
+  @IsString()
+  userName?: string;
 }
