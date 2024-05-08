@@ -6,13 +6,13 @@ import {
 } from "@nestjs/common";
 import { ItemsRepository } from "./items.repository";
 import { InventoryRepository } from "src/inventory/inventory.repository";
-import { UserRepository } from "src/users/users.repository";
+import { UsersRepository } from "src/users/users.repository";
 @Injectable()
 export class ItemsService {
   constructor(
     private readonly itemsRepository: ItemsRepository,
     private readonly inventoryRepository: InventoryRepository,
-    private readonly usersRepository: UserRepository,
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   async getOneItem(itemNo: number): Promise<object> {

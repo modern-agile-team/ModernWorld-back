@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { PrismaPromise, characterLocker } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -25,7 +26,10 @@ export class CharacterLockerRepository {
     });
   }
 
-  getUserAllCharactersBySpecies(userNo: number, species?: string) {
+  getUserAllCharactersBySpecies(
+    userNo: number,
+    species?: string,
+  ): PrismaPromise<characterLocker[]> {
     return this.prisma.characterLocker.findMany({
       where: { userNo, character: { species } },
     });

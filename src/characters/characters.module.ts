@@ -2,16 +2,12 @@ import { Module } from "@nestjs/common";
 import { CharactersController } from "./characters.controller";
 import { CharactersService } from "./characters.service";
 import { CharactersRepository } from "./characters.repository";
-import { CharacterLockerRepository } from "./charactersLocker.repository";
 import { UsersModule } from "src/users/users.module";
+import { CharacterLockerModule } from "src/character-locker/character-locker.module";
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, CharacterLockerModule],
   controllers: [CharactersController],
-  providers: [
-    CharactersService,
-    CharactersRepository,
-    CharacterLockerRepository,
-  ],
+  providers: [CharactersService, CharactersRepository],
 })
 export class CharactersModule {}

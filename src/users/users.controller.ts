@@ -15,7 +15,7 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
@@ -32,7 +32,7 @@ export class UsersController {
      */
 
     //VALIDATION !!!!!! orderByField의 값은 정해져있어야함, like, createdAt, accumulationPoint 이 세개로 한정해야함
-    return this.userService.getUsersByAnimal(pageNo, queryParams);
+    return this.usersService.getUsersByAnimal(pageNo, queryParams);
   }
 
   //유저 마이페이지
@@ -40,7 +40,7 @@ export class UsersController {
   getOneUserWithNamePointAchievementTitle(
     @Param("userNo", ParseIntPipe) userNo: number,
   ) {
-    return this.userService.getUserNameCurrentPointAccumulationPointTitle(
+    return this.usersService.getUserNameCurrentPointAccumulationPointTitle(
       userNo,
     );
   }
@@ -48,13 +48,13 @@ export class UsersController {
   //유저 출석부 조회
   @Get(":userNo/attendance")
   getOneUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
-    return this.userService.getUserAttendance(userNo);
+    return this.usersService.getUserAttendance(userNo);
   }
 
   //유저 출석부 체크
   @Patch(":userNo/attendance")
   markUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
-    return this.userService.markUserAttendance(userNo);
+    return this.usersService.markUserAttendance(userNo);
   }
 
   //사실 createUser는 회원가입할 때 같이 불러올 api임 따라서 Controller가 필요 없다. Service만 auth에서 사용하면 그만이다.
@@ -81,7 +81,7 @@ export class UsersController {
     @Body("characterNo", ParseIntPipe) characterNo: number,
     @Body("description") description: string,
   ) {
-    return this.userService.updateUserNicknameDescriptionAttendanceCharacter(
+    return this.usersService.updateUserNicknameDescriptionAttendanceCharacter(
       userNo,
       characterNo,
       nickname,
@@ -92,7 +92,7 @@ export class UsersController {
   //유저 방 조회
   @Get(":userNo/room")
   showUserRoom(@Param("userNo") userNo: number) {
-    return this.userService.getUserRoom(userNo);
+    return this.usersService.getUserRoom(userNo);
   }
 
   //특정 유저 아이템 테마별로 불러오기(인벤토리(아이템) 불러오기)
@@ -101,4 +101,12 @@ export class UsersController {
     @Param("userNo") userNo: number,
     @Query("theme") theme: string,
   ) {}
+
+  @Get(":userNo/characters")
+  showCharactersBySpecies(@Param("userNo", ParseIntPipe) userNo: number) {
+    // this.usersService.
+  }
+
+  @Post(":userNo/presents")
+  presentOneItem(@Body("number") number: number) {}
 }

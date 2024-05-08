@@ -3,17 +3,19 @@ import {
   Injectable,
   InternalServerErrorException,
 } from "@nestjs/common";
-import { UserRepository } from "./users.repository";
+import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { InventoryRepository } from "src/inventory/inventory.repository";
+import { CharacterLockerRepository } from "src/character-locker/charactersLocker.repository";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly userRepository: UserRepository,
+    private readonly userRepository: UsersRepository,
     private readonly inventoryRepository: InventoryRepository,
+    private readonly charactersRepository: CharacterLockerRepository,
   ) {}
 
   async getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
@@ -162,5 +164,12 @@ export class UsersService {
         ? obj.characterLocker[0].character.image
         : null,
     }));
+  }
+
+  async getUserCharacters(userNo: number, species?: string) {
+    return await this.charactersRepository.getUserAllCharactersBySpecies(
+      userNo,
+      species,
+    );
   }
 }

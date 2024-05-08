@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
-export class UserRepository {
+export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   findUserByUniqueIndentifier(uniqueIdentifier: string) {

@@ -4,14 +4,14 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { CharactersRepository } from "./characters.repository";
-import { UserRepository } from "src/users/users.repository";
-import { CharacterLockerRepository } from "./charactersLocker.repository";
+import { UsersRepository } from "src/users/users.repository";
+import { CharacterLockerRepository } from "../character-locker/charactersLocker.repository";
 
 @Injectable()
 export class CharactersService {
   constructor(
     private readonly charactersRepository: CharactersRepository,
-    private readonly userRepository: UserRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly characterLockerRepository: CharacterLockerRepository,
   ) {}
 
@@ -52,7 +52,7 @@ export class CharactersService {
       throw new ForbiddenException("User already has this character");
     }
 
-    const { currentPoint } = await this.userRepository.findUserPoint(userNo);
+    const { currentPoint } = await this.usersRepository.findUserPoint(userNo);
 
     if (currentPoint < character.price) {
       throw new ForbiddenException("User doesn't have enough point.");
@@ -60,7 +60,7 @@ export class CharactersService {
 
     await this.characterLockerRepository.addOneCharacter(userNo, characterNo);
 
-    await this.userRepository.modifyUserCurrentPoint(userNo, -character.price);
+    await this.usersRepository.modifyUserCurrentPoint(userNo, -character.price);
 
     return true;
   }
