@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
+import { ItemsModule } from "./items/items.module";
 import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
 import { CharactersModule } from "./characters/characters.module";
@@ -10,6 +11,7 @@ import { CharactersModule } from "./characters/characters.module";
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    ItemsModule,
     UsersModule,
     InventoryModule,
     CharactersModule,
