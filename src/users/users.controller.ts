@@ -7,18 +7,20 @@ import {
   Query,
   Post,
   Patch,
-  ParseEnumPipe,
   Delete,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
+import { PresentsService } from "src/presents/presents.service";
 
 @Controller("users")
 @ApiTags("Users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly presentsService: PresentsService,
+  ) {}
 
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
@@ -112,18 +114,23 @@ export class UsersController {
     @Query("theme") theme: string,
   ) {}
 
+  //유저의 캐릭터 조회
   @Get(":userNo/characters")
   showCharactersBySpecies(@Param("userNo", ParseIntPipe) userNo: number) {
     // this.usersService.
   }
 
+  //선물 생성
   @Post(":userNo/presents")
   presentOneItem(@Body("number") number: number) {}
 
-  @Delete(":presentNo")
+  //선물 삭제
+  @Delete("/presents/:presentNo")
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log(`Delete /:${presentNo}`);
 
     const userNo = 1;
+
+    return this.presentsService.updateOnePresentTodelete(userNo, presentNo);
   }
 }

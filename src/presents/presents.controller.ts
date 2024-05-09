@@ -62,30 +62,4 @@ export class PresentsController {
       acceptReject,
     );
   }
-
-  @Delete(":presentNo")
-  deleteOnePresent(
-    @Param("presentNo", ParseIntPipe) presentNo: number,
-    @Query(
-      "senderReceiverNoField",
-      new ParseEnumPipe(SenderReceiverNoField, {
-        exceptionFactory() {
-          return new BadRequestException(
-            "Validation failed (enum: senderNo,receiverNo)",
-          );
-        },
-      }),
-    )
-    senderReceiverNoField: SenderReceiverNoField,
-  ) {
-    console.log("Delete /:presentNo?where=");
-
-    const userNo = 1;
-
-    return this.presentsService.updateOnePresentTodelete(
-      userNo,
-      senderReceiverNoField,
-      presentNo,
-    );
-  }
 }

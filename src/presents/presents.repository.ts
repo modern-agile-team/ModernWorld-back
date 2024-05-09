@@ -73,9 +73,7 @@ export class PresentsRepository {
     });
   }
 
-  updateOnePresentStatusToDeleteBySenderReceiver(
-    userNo: number,
-    senderReceiverNoField: SenderReceiverNoField,
+  updateOnePresentToDeleteBySenderReceiver(
     presentNo: number,
     senderReceiverDeleteField: string,
   ) {
@@ -83,7 +81,6 @@ export class PresentsRepository {
       data: { [senderReceiverDeleteField]: true },
       where: {
         no: presentNo,
-        [senderReceiverNoField]: userNo,
       },
     });
   }

@@ -110,11 +110,7 @@ export class PresentsService {
     return true;
   }
 
-  async updateOnePresentTodelete(
-    userNo: number,
-    senderReceiverNoField: SenderReceiverNoField,
-    presentNo: number,
-  ) {
+  async updateOnePresentTodelete(userNo: number, presentNo: number) {
     /**
      * 매개변수에 해당하는 선물이 실제로 존재하는지 확인하고
      *
@@ -122,32 +118,39 @@ export class PresentsService {
      *
      * 존재한다면 수/발신자 삭제 필드 에 따라 true로 설정
      *
+     *
+     *
+     *
      */
 
-    const senderReceiverDeleteField =
-      senderReceiverNoField === "receiverNo"
-        ? "receiverDelete"
-        : "senderDelete";
+    const present = await this.presentRepository.getOnePresent(presentNo);
 
-    const hasPresent = await this.presentRepository.getOnePresentByBox(
-      userNo,
-      senderReceiverNoField,
-      presentNo,
-      senderReceiverDeleteField,
-    );
-
-    if (!hasPresent) {
-      throw new NotFoundException("already deleted or couldn't find");
+    if (!present) {
+      throw new NotFoundException("Couldn't find this present.");
     }
 
-    const result =
-      await this.presentRepository.updateOnePresentStatusToDeleteBySenderReceiver(
-        userNo,
-        senderReceiverNoField,
-        presentNo,
-        senderReceiverDeleteField,
-      );
+    const { senderNo, receiverNo, senderDelete, receiverDelete } = present;
 
-    return result;
+    if (userNo === senderNo) {
+      if (senderDelete === true) {
+        throw new ForbiddenException("Already deleted from sender");
+      }
+
+      return await this.presentRepository.updateOnePresentToDeleteBySenderReceiver(
+        presentNo,
+        "senderDelete",
+      );
+    } else if (userNo === receiverNo) {
+      if (receiverDelete === true) {
+        throw new ForbiddenException("Already deleted from receiver");
+      }
+
+      return await this.presentRepository.updateOnePresentToDeleteBySenderReceiver(
+        presentNo,
+        "receiverDelete",
+      );
+    }
+
+    throw new ForbiddenException("This present is not related with you.");
   }
 }
