@@ -120,14 +120,21 @@ export class UsersController {
     // this.usersService.
   }
 
-  //선물 생성
-  @Post(":userNo/presents")
-  presentOneItem(@Body("number") number: number) {}
+  //유저 선물 생성
+  @Post("/:userNo/presents/:presentNo")
+  presentOneItem(
+    @Param("userNo", ParseIntPipe) receiverNo: number,
+    @Param("presentNo", ParseIntPipe) presentNo: number,
+  ) {
+    console.log(`Post /users/:${receiverNo}/presents/:${presentNo}`);
 
-  //선물 삭제
+    const userNo = 1;
+  }
+
+  //유저 선물 삭제
   @Delete("/presents/:presentNo")
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log(`Delete /:${presentNo}`);
+    console.log(`Delete /users/presents/:${presentNo}`);
 
     const userNo = 1;
 
