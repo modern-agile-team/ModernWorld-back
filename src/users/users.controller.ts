@@ -7,10 +7,13 @@ import {
   Query,
   Post,
   Patch,
+  ParseEnumPipe,
+  Delete,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
 
 @Controller("users")
 @ApiTags("Users")
@@ -116,4 +119,11 @@ export class UsersController {
 
   @Post(":userNo/presents")
   presentOneItem(@Body("number") number: number) {}
+
+  @Delete(":presentNo")
+  deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log("Delete /:presentNo");
+
+    const userNo = 1;
+  }
 }
