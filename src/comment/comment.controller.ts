@@ -14,7 +14,7 @@ import { UpdateCommentDto } from "./dto/update-comment.dto";
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post("/:receiver_no")
+  @Post(":receiver_no")
   createComment(
     @Param("receiver_no") receiver_no: number,
     @Body("sender_no") sender_no: number,
@@ -38,8 +38,8 @@ export class CommentController {
   //   return this.commentService.update(+id, updateCommentDto);
   // }
 
-  // @Delete(":id")
-  // remove(@Param("id") id: string) {
-  //   return this.commentService.remove(+id);
-  // }
+  @Delete(":no")
+  removeComment(@Param("no") no: number) {
+    return this.commentService.removeComment(no);
+  }
 }

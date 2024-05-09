@@ -6,16 +6,20 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class CommentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  createComment(
-    receiverNo: number,
-    senderNo: number,
-    content: string,
-  ): Promise<comment> {
+  createComment(receiverNo: number, senderNo: number, content: string) {
     return this.prisma.comment.create({
       data: {
         receiverNo,
         senderNo,
         content,
+      },
+    });
+  }
+
+  removeComment(id: number) {
+    return this.prisma.comment.delete({
+      where: {
+        no: id,
       },
     });
   }

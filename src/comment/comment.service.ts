@@ -7,12 +7,12 @@ import { CommentRepository } from "./comment.repository";
 export class CommentService {
   constructor(private readonly CommentRepository: CommentRepository) {}
   async commentCreate(receiver_no: number, sender_no: number, content: string) {
-    const asd = await this.CommentRepository.createComment(
+    const comment = await this.CommentRepository.createComment(
       receiver_no,
       sender_no,
       content,
     );
-    return asd;
+    return comment;
   }
 
   // findAll() {
@@ -27,7 +27,9 @@ export class CommentService {
   //   return `This action updates a #${id} comment`;
   // }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} comment`;
-  // }
+  async removeComment(id: number) {
+    const result = await this.CommentRepository.removeComment(id);
+    console.log(result);
+    return result;
+  }
 }
