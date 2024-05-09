@@ -122,7 +122,7 @@ export class UsersController {
 
   @Delete(":presentNo")
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log("Delete /:presentNo");
+    console.log(`Delete /:${presentNo}`);
 
     const userNo = 1;
   }
