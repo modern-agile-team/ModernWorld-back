@@ -28,8 +28,8 @@ export class CommentService {
   //   return `This action updates a #${id} comment`;
   // }
 
-  async removeComment(id: number) {
-    const result = await this.CommentRepository.removeComment(id);
+  async softDeleteComment(id: number) {
+    const result = await this.CommentRepository.softDeleteComment(id);
     return result;
   }
 }

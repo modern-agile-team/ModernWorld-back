@@ -38,8 +38,8 @@ export class CommentController {
   //   return this.commentService.update(+id, updateCommentDto);
   // }
 
-  @Delete(":no")
-  removeComment(@Param("no") no: number) {
-    return this.commentService.removeComment(no);
+  @Patch(":no")
+  softDeletComment(@Param("no") no: number) {
+    return this.commentService.softDeleteComment(no);
   }
 }

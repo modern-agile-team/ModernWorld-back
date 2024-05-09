@@ -20,14 +20,18 @@ export class CommentRepository {
     return this.prisma.comment.findMany({
       where: {
         senderNo,
+        deletedAt: null,
       },
     });
   }
 
-  removeComment(id: number) {
-    return this.prisma.comment.delete({
+  softDeleteComment(id: number) {
+    return this.prisma.comment.update({
       where: {
         no: id,
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
   }
