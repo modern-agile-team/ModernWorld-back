@@ -14,19 +14,19 @@ import { UpdateCommentDto } from "./dto/update-comment.dto";
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post(":receiver_no")
+  @Post(":receiverNo")
   createComment(
-    @Param("receiver_no") receiver_no: number,
-    @Body("sender_no") sender_no: number,
+    @Param("receiverNo") receiver_no: number,
+    @Body("senderNo") sender_no: number,
     @Body("content") content: string,
   ) {
     return this.commentService.commentCreate(receiver_no, sender_no, content);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.commentService.findAll();
-  // }
+  @Get(":senderNo")
+  findAllComment(@Param("senderNo") senderNo: number) {
+    return this.commentService.findComment(senderNo);
+  }
 
   // @Get(":id")
   // findOne(@Param("id") id: string) {

@@ -15,9 +15,10 @@ export class CommentService {
     return comment;
   }
 
-  // findAll() {
-  //   return `This action returns all comment`;
-  // }
+  async findComment(senderNo: number) {
+    const result = await this.CommentRepository.findComment(senderNo);
+    return result;
+  }
 
   // findOne(id: number) {
   //   return `This action returns a #${id} comment`;
@@ -29,7 +30,6 @@ export class CommentService {
 
   async removeComment(id: number) {
     const result = await this.CommentRepository.removeComment(id);
-    console.log(result);
     return result;
   }
 }

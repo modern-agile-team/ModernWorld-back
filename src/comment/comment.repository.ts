@@ -16,6 +16,14 @@ export class CommentRepository {
     });
   }
 
+  findComment(senderNo: number) {
+    return this.prisma.comment.findMany({
+      where: {
+        senderNo,
+      },
+    });
+  }
+
   removeComment(id: number) {
     return this.prisma.comment.delete({
       where: {
