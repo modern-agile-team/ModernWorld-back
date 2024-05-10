@@ -16,7 +16,7 @@ import { AcceptReject } from "./enum/present-status-enum";
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
 
-  @Get("/:presentNo")
+  @Get(":presentNo")
   getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log(`Get /users/presents/:${presentNo}`);
     const userNo = 1;
@@ -33,23 +33,6 @@ export class PresentsController {
   //   const userNo = 1;
 
   //   return this.presentsService.getOneOrManyPresentsByBox(userNo);
-  // }
-
-  // @Get(":presentNo")
-  // getOnePresentByBox(
-  //   @Param("presentNo", ParseIntPipe) presentNo: number,
-  //   @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
-  //   senderReceiverNoField: SenderReceiverNoField,
-  // ) {
-  //   console.log("Get /presents/:presentNo/?senderReceiverNoField=");
-
-  //   const userNo = 1;
-
-  //   return this.presentsService.getOnePresent(
-  //     userNo,
-  //     senderReceiverNoField,
-  //     presentNo,
-  //   );
   // }
 
   @Patch(":presentNo")
