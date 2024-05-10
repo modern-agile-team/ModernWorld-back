@@ -28,17 +28,6 @@ export class ItemsController {
     return this.itemsService.buyOneItem(userNo, itemNo);
   }
 
-  //사실 이 요청은 /users/:userNo/presents/:itemNo 에 흡수될 가능성이 높습니다.
-  @Post(":itemNo/present/:receiverNo")
-  presentItem(
-    @Param("itemNo", ParseIntPipe) itemNo: number,
-    @Param("receiverNo", ParseIntPipe) receiverNo: number,
-  ) {
-    const userNo = 1;
-
-    return this.itemsService.presentItem(userNo, itemNo, receiverNo);
-  }
-
   @Patch(":itemNo")
   useItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     const userNo = 1;

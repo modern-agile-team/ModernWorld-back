@@ -24,48 +24,6 @@ export class ItemsService {
     return await this.itemsRepository.getAllItems(theme);
   }
 
-  async presentItem(
-    userNo: number,
-    itemNo: number,
-    receiverNo: number,
-  ): Promise<boolean> {
-    /**
-     * 아이템을 특정유저에게 선물하는 로직
-     *
-     * 1. 그 아이템이 실제로 아이템 테이블에 존재하는 지 확인 (itemsRepository)
-     *
-     * 2. 포인트가 아이템 가격보다 높은지 확인 (usersRepository)
-     *
-     * 3. 선물 받을 유저가 진짜 존재하는지 확인 (usersRepository)
-     *
-     * 4. present 에 추가 및 포인트 감소(presentsRepository) 트랜잭션으로 묶을것
-     */
-
-    const item = await this.itemsRepository.getOneItem(itemNo);
-
-    if (!item) {
-      throw new NotFoundException("Item doesn't exist.");
-    }
-
-    const { currentPoint } = await this.usersRepository.findUserPoint(userNo);
-
-    if (currentPoint < item.price) {
-      throw new ForbiddenException("User doesn't have enough point.");
-    }
-
-    const isUser = await this.usersRepository.findUserPoint(receiverNo);
-
-    if (!isUser) {
-      throw new NotFoundException("Couldn't find receiver.");
-    }
-
-    //4번 과정 마저 할것.
-    await this.usersRepository.modifyUserCurrentPoint(userNo, -item.price);
-    // const gift = await this
-
-    return true;
-  }
-
   async buyOneItem(userNo: number, itemNo: number): Promise<boolean> {
     /**
      * 아이템을 사는 로직
