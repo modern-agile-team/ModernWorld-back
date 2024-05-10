@@ -49,6 +49,12 @@ export class PresentsRepository {
     });
   }
 
+  createOneItemToUser(senderNo: number, receiverNo: number, itemNo: number) {
+    return this.prisma.present.create({
+      data: { senderNo, receiverNo, itemNo },
+    });
+  }
+
   updateOnePresentStatusFromUnreadToRead(presentNo: number) {
     return this.prisma.present.update({
       data: { status: "read" },
