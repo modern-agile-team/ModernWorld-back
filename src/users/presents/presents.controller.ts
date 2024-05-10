@@ -6,13 +6,15 @@ import {
   ParseEnumPipe,
   ParseIntPipe,
   Patch,
+  Post,
   Query,
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
 import { AcceptReject } from "./enum/present-status-enum";
-import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { ApiTags } from "@nestjs/swagger";
 
-@Controller("users/presents")
+@Controller("presents")
+@ApiTags("Presents")
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
 
@@ -56,5 +58,15 @@ export class PresentsController {
     const userNo = 1;
 
     return this.presentsService.updateOnePresentTodelete(userNo, presentNo);
+  }
+  //유저 선물 생성
+  @Post(":presentNo/user/:userNo")
+  presentOneItem(
+    @Param("userNo", ParseIntPipe) receiverNo: number,
+    @Param("presentNo", ParseIntPipe) presentNo: number,
+  ) {
+    console.log(`Post /presents/:${presentNo}/users/:${receiverNo}`);
+
+    const userNo = 1;
   }
 }
