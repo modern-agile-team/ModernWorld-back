@@ -29,17 +29,4 @@ export class ItemsController {
   getOneItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     return this.itemsService.getOneItem(itemNo);
   }
-
-  @Post(":itemNo")
-  buyItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
-    const userNo = 1;
-    return this.itemsService.buyOneItem(userNo, itemNo);
-  }
-
-  @Patch(":itemNo")
-  useItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
-    const userNo = 1;
-
-    return this.itemsService.useItemDisuseOthers(userNo, itemNo);
-  }
 }
