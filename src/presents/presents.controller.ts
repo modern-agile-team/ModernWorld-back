@@ -17,36 +17,33 @@ import { AcceptReject } from "./enum/present-status-enum";
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
 
-  @Get()
-  getPresentsByBox(
-    @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
-    senderReceiverNoField?: SenderReceiverNoField,
-  ) {
-    console.log("Get /presents/?senderReceiverNoField=");
-    const userNo = 1;
+  // @Get()
+  // getPresentsByBox(
+  //   @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
+  //   senderReceiverNoField?: SenderReceiverNoField,
+  // ) {
+  //   console.log("Get /presents/?senderReceiverNoField=");
+  //   const userNo = 1;
 
-    return this.presentsService.getOneOrManyPresentsByBox(
-      userNo,
-      senderReceiverNoField,
-    );
-  }
+  //   return this.presentsService.getOneOrManyPresentsByBox(userNo);
+  // }
 
-  @Get(":presentNo")
-  getOnePresentByBox(
-    @Param("presentNo", ParseIntPipe) presentNo: number,
-    @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
-    senderReceiverNoField: SenderReceiverNoField,
-  ) {
-    console.log("Get /presents/:presentNo/?senderReceiverNoField=");
+  // @Get(":presentNo")
+  // getOnePresentByBox(
+  //   @Param("presentNo", ParseIntPipe) presentNo: number,
+  //   @Query("senderReceiverNoField", new ParseEnumPipe(SenderReceiverNoField))
+  //   senderReceiverNoField: SenderReceiverNoField,
+  // ) {
+  //   console.log("Get /presents/:presentNo/?senderReceiverNoField=");
 
-    const userNo = 1;
+  //   const userNo = 1;
 
-    return this.presentsService.getOneOrManyPresentsByBox(
-      userNo,
-      senderReceiverNoField,
-      presentNo,
-    );
-  }
+  //   return this.presentsService.getOnePresent(
+  //     userNo,
+  //     senderReceiverNoField,
+  //     presentNo,
+  //   );
+  // }
 
   @Patch(":presentNo")
   updatePresentStatus(
