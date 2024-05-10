@@ -14,22 +14,21 @@ export class PresentsRepository {
     });
   }
 
-  getPresents(
-    userNo: number,
-    senderReceiverNoField: SenderReceiverNoField,
-    senderReceiverDeleteField: string,
-  ) {
+  getPresents(userNo: number) {
     return this.prisma.present.findMany({
       select: {
         no: true,
         status: true,
         createdAt: true,
         item: { select: { name: true } },
-        userPresentSenderNo: { select: { nickname: true } },
+        userPresentSenderNo: { select: { no: true, nickname: true } },
+        userPresentReceiverNo: { select: { no: true, nickname: true } },
       },
       where: {
-        [senderReceiverNoField]: userNo,
-        [senderReceiverDeleteField]: false,
+        OR: [
+          { AND: { senderNo: userNo, senderDelete: false } },
+          { AND: { receiverNo: userNo, receiverDelete: false } },
+        ],
       },
     });
   }
