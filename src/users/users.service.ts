@@ -6,14 +6,12 @@ import {
 import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CharacterLockerRepository } from "src/characterLocker/characterLocker.repository";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userRepository: UsersRepository,
-    private readonly charactersRepository: CharacterLockerRepository,
   ) {}
 
   async getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
@@ -151,12 +149,5 @@ export class UsersService {
         ? obj.characterLocker[0].character.image
         : null,
     }));
-  }
-
-  async getUserCharacters(userNo: number, species?: string) {
-    return await this.charactersRepository.getUserAllCharactersBySpecies(
-      userNo,
-      species,
-    );
   }
 }
