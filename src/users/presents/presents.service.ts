@@ -16,10 +16,7 @@ export class PresentsService {
   ) {}
 
   async getPresents(userNo: number): Promise<object> {
-    const presents = await this.presentRepository.getPresents(userNo);
-    console.log(presents);
-
-    return presents;
+    return await this.presentRepository.getPresents(userNo);
   }
 
   async getOnePresent(userNo: number, presentNo: number) {
