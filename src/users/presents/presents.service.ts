@@ -15,44 +15,12 @@ export class PresentsService {
     private readonly inventoryRepository: InventoryRepository,
   ) {}
 
-  // async getOneOrManyPresentsByBox(
-  //   userNo: number,
-  //   senderReceiverNoField?: SenderReceiverNoField,
-  //   presentNo?: number,
-  // ): Promise<object> {
-  //   const senderReceiverDeleteField =
-  //     senderReceiverNoField === "receiverNo"
-  //       ? "receiverDelete"
-  //       : "senderDelete";
+  async getPresents(userNo: number): Promise<object> {
+    const presents = await this.presentRepository.getPresents(userNo);
+    console.log(presents);
 
-  //   if (presentNo) {
-  //     const result = await this.presentRepository.getOnePresentByBox(
-  //       userNo,
-  //       senderReceiverNoField,
-  //       presentNo,
-  //       senderReceiverDeleteField,
-  //     );
-
-  //     if (
-  //       senderReceiverNoField === "receiverNo" &&
-  //       result.status === "unread"
-  //     ) {
-  //       await this.presentRepository.updateOnePresentStatusFromUnreadToRead(
-  //         result.no,
-  //       );
-  //     }
-
-  //     return result;
-  //   }
-
-  //   const result = await this.presentRepository.getPresents(
-  //     userNo,
-  //     senderReceiverNoField,
-  //     senderReceiverDeleteField,
-  //   );
-
-  //   return result;
-  // }
+    return presents;
+  }
 
   async getOnePresent(userNo: number, presentNo: number) {
     const present =
