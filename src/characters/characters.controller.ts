@@ -4,8 +4,6 @@ import {
   Param,
   ParseEnumPipe,
   ParseIntPipe,
-  Patch,
-  Post,
   Query,
 } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
@@ -27,21 +25,5 @@ export class CharactersController {
   @Get(":characterNo")
   getOneCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
     return this.charactersServcie.getOneCharacter(characterNo);
-  }
-
-  @Post(":characterNo")
-  createCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
-    const userNo = 1;
-
-    return this.charactersServcie.buyOneCharacter(userNo, characterNo);
-  }
-
-  @Patch(":characterNo")
-  updateCharacterStatus(
-    @Param("characterNo", ParseIntPipe) characterNo: number,
-  ) {
-    const userNo = 1;
-
-    return this.charactersServcie.useCharacterDisuseOthers(userNo, characterNo);
   }
 }
