@@ -8,8 +8,10 @@ import {
 } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
 import { Animal } from "src/common/enum/animal-enum";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller("characters")
+@ApiTags("Characters")
 export class CharactersController {
   constructor(private readonly charactersServcie: CharactersService) {}
 
