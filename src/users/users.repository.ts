@@ -44,7 +44,7 @@ export class UsersRepository {
     });
   }
 
-  modifyUserCurrentPointAccumulationPoint(
+  updateUserCurrentPointAccumulationPoint(
     userNo: number,
     incrementalPoint: number,
   ) {

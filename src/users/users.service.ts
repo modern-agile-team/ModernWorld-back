@@ -90,7 +90,7 @@ export class UsersService {
       const [user, point] = await this.prisma.$transaction([
         this.userRepository.updateUserAttendance(userNo, attendance),
 
-        this.userRepository.modifyUserCurrentPointAccumulationPoint(
+        this.userRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
         ),

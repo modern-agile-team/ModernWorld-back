@@ -86,7 +86,9 @@ export class PresentsService {
       await this.presentRepository.getOnePresent(presentNo);
 
     if (userNo !== receiverNo) {
-      throw new NotFoundException("receiverNo doesn't match userNo");
+      throw new ForbiddenException(
+        "User can only receive gifts for themselves.",
+      );
     }
 
     if (status !== "read") {
@@ -105,11 +107,14 @@ export class PresentsService {
       );
 
       if (existItem) {
-        // 아이템 가격은 아이템 레포에서 찾아와야함 머지 될시 이 작업 꼭 해둘것 --------------
-        //포인트 넣어주는 로직 추가할것-------------------------------------
-        // this.userRepository.modifyUserCurrentPoint(userNo,-existItem.)
+        const item = await this.itemsRepository.getOneItem(itemNo);
 
-        return 0;
+        await this.usersRepository.updateUserCurrentPointAccumulationPoint(
+          userNo,
+          item.price / 2,
+        );
+
+        return true;
       }
     }
 
