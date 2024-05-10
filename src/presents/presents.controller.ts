@@ -63,6 +63,8 @@ export class PresentsController {
     @Query("acceptReject", new ParseEnumPipe(AcceptReject))
     acceptReject: AcceptReject,
   ) {
+    console.log(`Patch /presents/:${presentNo}`);
+
     const userNo = 1;
 
     return this.presentsService.acceptOrRejectOnePresent(
