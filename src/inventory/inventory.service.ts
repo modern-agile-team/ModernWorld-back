@@ -82,7 +82,7 @@ export class InventoryService {
     return true;
   }
 
-  async getUserRoom(userNo: number) {
+  async getUsingitem(userNo: number) {
     const result = await this.inventoryRepository.getUserRoom(userNo);
 
     return result.map((obj) => ({
