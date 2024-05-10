@@ -39,6 +39,17 @@ export class PresentsController {
     return this.presentsService.getOnePresent(userNo, presentNo);
   }
 
+  @Post(":presentNo/user/:userNo")
+  @ApiOperation({ summary: "특정 선물 추가 API" })
+  presentOneItem(
+    @Param("presentNo", ParseIntPipe) presentNo: number,
+    @Param("userNo", ParseIntPipe) receiverNo: number,
+  ) {
+    console.log(`Post /presents/:${presentNo}/users/:${receiverNo}`);
+
+    const userNo = 1;
+  }
+
   @Patch(":presentNo")
   @ApiOperation({ summary: "특정 선물 수락/거절 API" })
   updatePresentStatus(
@@ -55,25 +66,13 @@ export class PresentsController {
     );
   }
 
-  //유저 선물 softDelete
   @Delete(":presentNo")
-  @ApiOperation({ summary: "특정 선물 제거 API" })
+  @ApiOperation({ summary: "특정 선물 발신/수신 기준 제거 API" })
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log(`Delete /users/presents/:${presentNo}`);
 
     const userNo = 1;
 
     return this.presentsService.updateOnePresentTodelete(userNo, presentNo);
-  }
-  //유저 선물 생성
-  @Post(":presentNo/user/:userNo")
-  @ApiOperation({ summary: "특정 선물 추가 API" })
-  presentOneItem(
-    @Param("userNo", ParseIntPipe) receiverNo: number,
-    @Param("presentNo", ParseIntPipe) presentNo: number,
-  ) {
-    console.log(`Post /presents/:${presentNo}/users/:${receiverNo}`);
-
-    const userNo = 1;
   }
 }

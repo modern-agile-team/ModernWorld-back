@@ -6,7 +6,6 @@ import {
 import { PresentsRepository } from "./presents.repository";
 import { InventoryRepository } from "src/inventory/inventory.repository";
 import { AcceptReject } from "./enum/present-status-enum";
-import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Injectable()
 export class PresentsService {
