@@ -13,6 +13,7 @@ import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { PresentsService } from "src/presents/presents.service";
+import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
 
 @Controller("users")
 @ApiTags("Users")
@@ -118,6 +119,28 @@ export class UsersController {
   @Get(":userNo/characters")
   showCharactersBySpecies(@Param("userNo", ParseIntPipe) userNo: number) {
     // this.usersService.
+  }
+
+  @Get("/presents/:presentNo")
+  getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log(`Get /users/presents/:${presentNo}`);
+    const userNo = 1;
+
+    return this.presentsService.getOnePresent(userNo, presentNo);
+  }
+
+  @Get("/presents")
+  getAllPresents(
+    @Query("senderReceiverNoField")
+    senderReceiverNoField: SenderReceiverNoField,
+  ) {
+    console.log(
+      `Get /users/presents/?senderReceiverNoField=${senderReceiverNoField}`,
+    );
+
+    const userNo = 1;
+
+    // return this.presentsService.getOnePresent(userNo, senderReceiverNoField);
   }
 
   //유저 선물 생성
