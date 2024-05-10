@@ -149,18 +149,11 @@ export class PresentsService {
     throw new ForbiddenException("This present is not related with you.");
   }
 
-  async createOnePresent(userNo: number, itemNo: number, receiverNo: number) {
+  async createOnePresent(senderNo: number, itemNo: number, receiverNo: number) {
     /**
      *
-     * 유저 존재 여부 확인,
-     *
-     * 아이템 존재 여부 확인
-     *
-     * 포인트 확인
-     */
-
-    /**
      * 아이템을 특정유저에게 선물하는 로직
+     * 0. 본인이 본인한테 선물하는거 막아야됨
      *
      * 1. 그 아이템이 실제로 아이템 테이블에 존재하는 지 확인 (itemsRepository)
      *
@@ -171,13 +164,17 @@ export class PresentsService {
      * 4. present 에 추가 및 포인트 감소(presentsRepository) 트랜잭션으로 묶을것
      */
 
+    if (senderNo === receiverNo) {
+      throw new ForbiddenException("User cannot gift themselves alone.");
+    }
+
     const item = await this.itemsRepository.getOneItem(itemNo);
 
     if (!item) {
       throw new NotFoundException("Item doesn't exist.");
     }
 
-    const { currentPoint } = await this.usersRepository.findUserPoint(userNo);
+    const { currentPoint } = await this.usersRepository.findUserPoint(senderNo);
 
     if (currentPoint < item.price) {
       throw new ForbiddenException("User doesn't have enough point.");
@@ -190,9 +187,13 @@ export class PresentsService {
     }
 
     //4번 과정 마저 할것.
-    await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
-    // const gift = await this
+    await this.usersRepository.updateUserCurrentPoint(senderNo, -item.price);
+    const present = await this.presentRepository.createOneItemToUser(
+      senderNo,
+      receiverNo,
+      itemNo,
+    );
 
-    return true;
+    return present;
   }
 }
