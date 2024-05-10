@@ -8,6 +8,7 @@ import { InventoryRepository } from "src/inventory/inventory.repository";
 import { AcceptReject } from "./enum/present-status-enum";
 import { ItemsRepository } from "src/items/items.repository";
 import { UsersRepository } from "src/users/users.repository";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Injectable()
 export class PresentsService {
@@ -18,8 +19,20 @@ export class PresentsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async getPresents(userNo: number): Promise<object> {
-    return await this.presentRepository.getPresents(userNo);
+  async getPresents(
+    userNo: number,
+    senderReceiverNoField: SenderReceiverNoField,
+  ): Promise<object> {
+    const senderReceiverDeleteField =
+      senderReceiverNoField === "receiverNo"
+        ? "receiverDelete"
+        : "senderDelete";
+
+    return await this.presentRepository.getPresents(
+      userNo,
+      senderReceiverNoField,
+      senderReceiverDeleteField,
+    );
   }
 
   async getOnePresent(userNo: number, presentNo: number) {

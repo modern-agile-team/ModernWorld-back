@@ -12,6 +12,7 @@ import {
 import { PresentsService } from "./presents.service";
 import { AcceptReject } from "./enum/present-status-enum";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Controller("presents")
 @ApiTags("Presents")
@@ -20,20 +21,23 @@ export class PresentsController {
 
   @Get("all")
   @ApiOperation({
-    summary: "유저와 연관된 모든 선물 가져오기 API (발신, 수신 포함)",
+    summary: "유저와 연관된 선물 가져오기 API (발신, 수신)",
   })
-  getPresents() {
-    console.log(`Get /users/presents/all`);
+  getPresents(
+    @Query("type", new ParseEnumPipe(SenderReceiverNoField))
+    senderReceiverNoField: SenderReceiverNoField,
+  ) {
+    console.log(`Get /presents/${senderReceiverNoField}`);
 
     const userNo = 1;
 
-    return this.presentsService.getPresents(userNo);
+    return this.presentsService.getPresents(userNo, senderReceiverNoField);
   }
 
   @Get(":presentNo")
   @ApiOperation({ summary: "특정 선물 가져오기 API" })
   getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log(`Get /users/presents/:${presentNo}`);
+    console.log(`Get /presents/:${presentNo}`);
     const userNo = 1;
 
     return this.presentsService.getOnePresent(userNo, presentNo);
@@ -71,7 +75,7 @@ export class PresentsController {
   @Delete(":presentNo")
   @ApiOperation({ summary: "특정 선물 발신/수신 기준 제거 API" })
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log(`Delete /users/presents/:${presentNo}`);
+    console.log(`Delete /presents/:${presentNo}`);
 
     const userNo = 1;
 

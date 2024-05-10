@@ -14,7 +14,11 @@ export class PresentsRepository {
     });
   }
 
-  getPresents(userNo: number) {
+  getPresents(
+    userNo: number,
+    senderReceiverNoField: SenderReceiverNoField,
+    senderReceiverDeleteField: string,
+  ) {
     return this.prisma.present.findMany({
       select: {
         no: true,
@@ -25,10 +29,8 @@ export class PresentsRepository {
         userPresentReceiverNo: { select: { no: true, nickname: true } },
       },
       where: {
-        OR: [
-          { AND: { senderNo: userNo, senderDelete: false } },
-          { AND: { receiverNo: userNo, receiverDelete: false } },
-        ],
+        [senderReceiverNoField]: userNo,
+        [senderReceiverDeleteField]: false,
       },
     });
   }
