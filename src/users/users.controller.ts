@@ -7,12 +7,10 @@ import {
   Query,
   Post,
   Patch,
-  Delete,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { PresentsService } from "src/users/presents/presents.service";
 import { SenderReceiverNoField } from "src/users/presents/enum/present-senderReceiverNo-enum";
 
 @Controller("users")
@@ -130,16 +128,5 @@ export class UsersController {
     const userNo = 1;
 
     // return this.presentsService.getOnePresent(userNo, senderReceiverNoField);
-  }
-
-  //유저 선물 생성
-  @Post("/:userNo/presents/:presentNo")
-  presentOneItem(
-    @Param("userNo", ParseIntPipe) receiverNo: number,
-    @Param("presentNo", ParseIntPipe) presentNo: number,
-  ) {
-    console.log(`Post /users/:${receiverNo}/presents/:${presentNo}`);
-
-    const userNo = 1;
   }
 }
