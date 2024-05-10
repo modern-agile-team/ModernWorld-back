@@ -8,7 +8,13 @@ import {
 } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
 import { Animal } from "src/common/enum/animal-enum";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  PickType,
+} from "@nestjs/swagger";
 
 @Controller("characters")
 @ApiTags("Characters")
@@ -19,6 +25,11 @@ export class CharactersController {
   @ApiOperation({
     summary: "모든 캐릭터 불러오기 API",
     description: "캐릭터를 불러옵니다. species는 cat, dog",
+  })
+  @ApiQuery({
+    name: "species",
+    required: false,
+    example: "cat",
   })
   getCharactersBySpeices(
     @Query("species", new ParseEnumPipe(Animal, { optional: true }))
@@ -31,9 +42,14 @@ export class CharactersController {
 
   @Get(":characterNo")
   @ApiOperation({
-    summary: "캐릭터 사용 API",
-    description:
-      "캐릭터를 사용합니다. 이전에 사용했던 캐릭터는 사용해제됩니다.",
+    summary: "특정 캐릭터 불러오기 API",
+    description: "특정 캐릭터를 불러옵니다.",
+  })
+  @ApiParam({
+    name: "characterNo",
+    type: Number,
+    required: true,
+    example: 1,
   })
   getOneCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
     return this.charactersServcie.getOneCharacter(characterNo);
