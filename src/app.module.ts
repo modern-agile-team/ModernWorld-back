@@ -6,9 +6,9 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { ItemsModule } from "./items/items.module";
 import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
-import { PresentsModule } from "./presents/presents.module";
+import { PresentsModule } from "./users/presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
-import { CharacterLockerModule } from './character-locker/character-locker.module';
+import { CharacterLockerModule } from "./character-locker/character-locker.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),

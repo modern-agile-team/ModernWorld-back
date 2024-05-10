@@ -12,8 +12,8 @@ import {
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { PresentsService } from "src/presents/presents.service";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
+import { PresentsService } from "src/users/presents/presents.service";
+import { SenderReceiverNoField } from "src/users/presents/enum/present-senderReceiverNo-enum";
 
 @Controller("users")
 @ApiTags("Users")
