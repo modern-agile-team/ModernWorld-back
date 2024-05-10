@@ -39,15 +39,17 @@ export class PresentsController {
     return this.presentsService.getOnePresent(userNo, presentNo);
   }
 
-  @Post(":presentNo/user/:userNo")
+  @Post(":itemNo/user/:userNo")
   @ApiOperation({ summary: "특정 선물 추가 API" })
   presentOneItem(
-    @Param("presentNo", ParseIntPipe) presentNo: number,
+    @Param("itemNo", ParseIntPipe) itemNo: number,
     @Param("userNo", ParseIntPipe) receiverNo: number,
   ) {
-    console.log(`Post /presents/:${presentNo}/users/:${receiverNo}`);
+    console.log(`Post /presents/:${itemNo}/users/:${receiverNo}`);
 
     const userNo = 1;
+
+    return this.presentsService.createOnePresent(userNo, itemNo, receiverNo);
   }
 
   @Patch(":presentNo")
