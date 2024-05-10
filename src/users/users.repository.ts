@@ -34,7 +34,7 @@ export class UsersRepository {
     });
   }
 
-  modifyUserCurrentPoint(userNo: number, incrementalPoint: number) {
+  updateUserCurrentPoint(userNo: number, incrementalPoint: number) {
     return this.prisma.user.update({
       select: { nickname: true, currentPoint: true, accumulationPoint: true },
       data: {

@@ -190,7 +190,7 @@ export class PresentsService {
     }
 
     //4번 과정 마저 할것.
-    await this.usersRepository.modifyUserCurrentPoint(userNo, -item.price);
+    await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
     // const gift = await this
 
     return true;

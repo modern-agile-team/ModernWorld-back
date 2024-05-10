@@ -64,7 +64,7 @@ export class ItemsService {
 
     await this.inventoryRepository.addOneItem(userNo, itemNo);
 
-    await this.usersRepository.modifyUserCurrentPoint(userNo, -item.price);
+    await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
 
     return true;
   }

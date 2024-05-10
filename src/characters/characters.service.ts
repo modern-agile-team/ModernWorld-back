@@ -60,7 +60,7 @@ export class CharactersService {
 
     await this.characterLockerRepository.addOneCharacter(userNo, characterNo);
 
-    await this.usersRepository.modifyUserCurrentPoint(userNo, -character.price);
+    await this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
 
     return true;
   }
