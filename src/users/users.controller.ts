@@ -115,18 +115,4 @@ export class UsersController {
   showCharactersBySpecies(@Param("userNo", ParseIntPipe) userNo: number) {
     // this.usersService.
   }
-
-  @Get("/presents")
-  getAllPresents(
-    @Query("senderReceiverNoField")
-    senderReceiverNoField: SenderReceiverNoField,
-  ) {
-    console.log(
-      `Get /users/presents/?senderReceiverNoField=${senderReceiverNoField}`,
-    );
-
-    const userNo = 1;
-
-    // return this.presentsService.getOnePresent(userNo, senderReceiverNoField);
-  }
 }
