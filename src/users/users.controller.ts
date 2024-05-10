@@ -5,13 +5,11 @@ import {
   Param,
   ParseIntPipe,
   Query,
-  Post,
   Patch,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
 
 @Controller("users")
 @ApiTags("Users")
@@ -95,12 +93,6 @@ export class UsersController {
       nickname,
       description,
     );
-  }
-
-  //유저 방 조회
-  @Get(":userNo/room")
-  showUserRoom(@Param("userNo") userNo: number) {
-    return this.usersService.getUserRoom(userNo);
   }
 
   //특정 유저 아이템 테마별로 불러오기(인벤토리(아이템) 불러오기)

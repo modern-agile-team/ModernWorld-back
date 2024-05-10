@@ -14,7 +14,6 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userRepository: UsersRepository,
-    private readonly inventoryRepository: InventoryRepository,
     private readonly charactersRepository: CharacterLockerRepository,
   ) {}
 
@@ -121,16 +120,16 @@ export class UsersService {
     return result;
   }
 
-  async getUserRoom(userNo: number) {
-    const result = await this.inventoryRepository.getUserRoom(userNo);
+  // async getUserRoom(userNo: number) {
+  //   const result = await this.inventoryRepository.getUserRoom(userNo);
 
-    return result.map((obj) => ({
-      status: obj.status,
-      itemName: obj.item.name,
-      itemImage: obj.item.image,
-      itemType: obj.item.type,
-    }));
-  }
+  //   return result.map((obj) => ({
+  //     status: obj.status,
+  //     itemName: obj.item.name,
+  //     itemImage: obj.item.image,
+  //     itemType: obj.item.type,
+  //   }));
+  // }
 
   async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
     const { take, animal, orderByField, nickname } = queryParams;
