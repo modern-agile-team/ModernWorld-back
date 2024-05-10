@@ -121,14 +121,6 @@ export class UsersController {
     // this.usersService.
   }
 
-  @Get("/presents/:presentNo")
-  getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log(`Get /users/presents/:${presentNo}`);
-    const userNo = 1;
-
-    return this.presentsService.getOnePresent(userNo, presentNo);
-  }
-
   @Get("/presents")
   getAllPresents(
     @Query("senderReceiverNoField")

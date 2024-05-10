@@ -10,12 +10,19 @@ import {
   Query,
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
-import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 import { AcceptReject } from "./enum/present-status-enum";
 
-@Controller("presents")
+@Controller("users/presents")
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
+
+  @Get("/:presentNo")
+  getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log(`Get /users/presents/:${presentNo}`);
+    const userNo = 1;
+
+    return this.presentsService.getOnePresent(userNo, presentNo);
+  }
 
   // @Get()
   // getPresentsByBox(
