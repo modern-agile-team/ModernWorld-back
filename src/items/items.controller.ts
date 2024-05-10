@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-} from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { ItemsService } from "./items.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 

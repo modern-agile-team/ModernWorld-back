@@ -6,7 +6,6 @@ import {
 import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { InventoryRepository } from "src/inventory/inventory.repository";
 import { CharacterLockerRepository } from "src/character-locker/charactersLocker.repository";
 
 @Injectable()
@@ -119,17 +118,6 @@ export class UsersService {
 
     return result;
   }
-
-  // async getUserRoom(userNo: number) {
-  //   const result = await this.inventoryRepository.getUserRoom(userNo);
-
-  //   return result.map((obj) => ({
-  //     status: obj.status,
-  //     itemName: obj.item.name,
-  //     itemImage: obj.item.image,
-  //     itemType: obj.item.type,
-  //   }));
-  // }
 
   async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
     const { take, animal, orderByField, nickname } = queryParams;
