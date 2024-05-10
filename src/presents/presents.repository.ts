@@ -34,24 +34,18 @@ export class PresentsRepository {
     });
   }
 
-  getOnePresentByBox(
-    userNo: number,
-    senderReceiverNoField: SenderReceiverNoField,
-    presentNo: number,
-    senderReceiverDeleteField: string,
-  ) {
+  getOnePresentWithItemUserInformation(presentNo: number) {
     return this.prisma.present.findUnique({
       select: {
         no: true,
         status: true,
         createdAt: true,
         item: { select: { name: true, image: true, description: true } },
-        userPresentSenderNo: { select: { nickname: true } },
+        userPresentSenderNo: { select: { no: true, nickname: true } },
+        userPresentReceiverNo: { select: { no: true, nickname: true } },
       },
       where: {
-        [senderReceiverNoField]: userNo,
         no: presentNo,
-        [senderReceiverDeleteField]: false,
       },
     });
   }

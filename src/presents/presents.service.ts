@@ -15,43 +15,70 @@ export class PresentsService {
     private readonly inventoryRepository: InventoryRepository,
   ) {}
 
-  async getOneOrManyPresentsByBox(
-    userNo: number,
-    senderReceiverNoField?: SenderReceiverNoField,
-    presentNo?: number,
-  ): Promise<object> {
-    const senderReceiverDeleteField =
-      senderReceiverNoField === "receiverNo"
-        ? "receiverDelete"
-        : "senderDelete";
+  // async getOneOrManyPresentsByBox(
+  //   userNo: number,
+  //   senderReceiverNoField?: SenderReceiverNoField,
+  //   presentNo?: number,
+  // ): Promise<object> {
+  //   const senderReceiverDeleteField =
+  //     senderReceiverNoField === "receiverNo"
+  //       ? "receiverDelete"
+  //       : "senderDelete";
 
-    if (presentNo) {
-      const result = await this.presentRepository.getOnePresentByBox(
-        userNo,
-        senderReceiverNoField,
+  //   if (presentNo) {
+  //     const result = await this.presentRepository.getOnePresentByBox(
+  //       userNo,
+  //       senderReceiverNoField,
+  //       presentNo,
+  //       senderReceiverDeleteField,
+  //     );
+
+  //     if (
+  //       senderReceiverNoField === "receiverNo" &&
+  //       result.status === "unread"
+  //     ) {
+  //       await this.presentRepository.updateOnePresentStatusFromUnreadToRead(
+  //         result.no,
+  //       );
+  //     }
+
+  //     return result;
+  //   }
+
+  //   const result = await this.presentRepository.getPresents(
+  //     userNo,
+  //     senderReceiverNoField,
+  //     senderReceiverDeleteField,
+  //   );
+
+  //   return result;
+  // }
+
+  async getOnePresent(userNo: number, presentNo: number) {
+    const present =
+      await this.presentRepository.getOnePresentWithItemUserInformation(
         presentNo,
-        senderReceiverDeleteField,
       );
 
-      if (
-        senderReceiverNoField === "receiverNo" &&
-        result.status === "unread"
-      ) {
-        await this.presentRepository.updateOnePresentStatusFromUnreadToRead(
-          result.no,
-        );
-      }
-
-      return result;
+    if (
+      present.userPresentReceiverNo.no !== userNo &&
+      present.userPresentSenderNo.no !== userNo
+    ) {
+      throw new ForbiddenException("This present is not related with user.");
     }
 
-    const result = await this.presentRepository.getPresents(
-      userNo,
-      senderReceiverNoField,
-      senderReceiverDeleteField,
-    );
+    if (
+      present.userPresentReceiverNo.no === userNo &&
+      present.status === "unread"
+    ) {
+      await this.presentRepository.updateOnePresentStatusFromUnreadToRead(
+        presentNo,
+      );
 
-    return result;
+      present.status === "unread" ? (present.status = "read") : null;
+    }
+
+    return present;
   }
 
   async acceptOrRejectOnePresent(
