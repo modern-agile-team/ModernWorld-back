@@ -18,10 +18,7 @@ import { SenderReceiverNoField } from "src/users/presents/enum/present-senderRec
 @Controller("users")
 @ApiTags("Users")
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly presentsService: PresentsService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
@@ -144,15 +141,5 @@ export class UsersController {
     console.log(`Post /users/:${receiverNo}/presents/:${presentNo}`);
 
     const userNo = 1;
-  }
-
-  //유저 선물 삭제
-  @Delete("/presents/:presentNo")
-  deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log(`Delete /users/presents/:${presentNo}`);
-
-    const userNo = 1;
-
-    return this.presentsService.updateOnePresentTodelete(userNo, presentNo);
   }
 }

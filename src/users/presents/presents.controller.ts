@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -48,5 +47,15 @@ export class PresentsController {
       presentNo,
       acceptReject,
     );
+  }
+
+  //유저 선물 softDelete
+  @Delete(":presentNo")
+  deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
+    console.log(`Delete /users/presents/:${presentNo}`);
+
+    const userNo = 1;
+
+    return this.presentsService.updateOnePresentTodelete(userNo, presentNo);
   }
 }
