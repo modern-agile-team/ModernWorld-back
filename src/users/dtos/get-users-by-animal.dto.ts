@@ -1,7 +1,8 @@
 import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { Type } from "class-transformer";
-import { Animal, orderByField } from "../enum/animal-enum";
+import { Animal } from "../../common/enum/animal-enum";
 import { ApiProperty } from "@nestjs/swagger";
+import { orderByField } from "../enum/animal-enum";
 
 export class GetUsersByAnimalDto {
   @ApiProperty({
