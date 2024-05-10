@@ -6,7 +6,7 @@ import {
 import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CharacterLockerRepository } from "src/character-locker/charactersLocker.repository";
+import { CharacterLockerRepository } from "src/characterLocker/characterLocker.repository";
 
 @Injectable()
 export class UsersService {

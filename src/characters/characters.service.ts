@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { CharactersRepository } from "./characters.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { CharacterLockerRepository } from "../character-locker/charactersLocker.repository";
+import { CharacterLockerRepository } from "../characterLocker/characterLocker.repository";
 
 @Injectable()
 export class CharactersService {

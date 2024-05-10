@@ -3,7 +3,7 @@ import { CharactersController } from "./characters.controller";
 import { CharactersService } from "./characters.service";
 import { CharactersRepository } from "./characters.repository";
 import { UsersModule } from "src/users/users.module";
-import { CharacterLockerModule } from "src/character-locker/character-locker.module";
+import { CharacterLockerModule } from "src/characterLocker/characterLocker.module";
 
 @Module({
   imports: [UsersModule, CharacterLockerModule],

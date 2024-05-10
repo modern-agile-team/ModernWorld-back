@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { CharacterLockerRepository } from "./charactersLocker.repository";
+import { CharacterLockerRepository } from "./characterLocker.repository";
 
 @Module({
   providers: [CharacterLockerRepository],

@@ -8,7 +8,7 @@ import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
 import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
-import { CharacterLockerModule } from "./character-locker/character-locker.module";
+import { CharacterLockerModule } from "./characterLocker/characterLocker.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
