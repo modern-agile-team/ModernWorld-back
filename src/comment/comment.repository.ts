@@ -25,6 +25,17 @@ export class CommentRepository {
     });
   }
 
+  updateComment(id: number, content: string) {
+    return this.prisma.comment.update({
+      where: {
+        no: id,
+      },
+      data: {
+        content,
+      },
+    });
+  }
+
   softDeleteComment(id: number) {
     return this.prisma.comment.update({
       where: {

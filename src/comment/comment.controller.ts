@@ -28,15 +28,10 @@ export class CommentController {
     return this.commentService.findComment(senderNo);
   }
 
-  // @Get(":id")
-  // findOne(@Param("id") id: string) {
-  //   return this.commentService.findOne(+id);
-  // }
-
-  // @Patch(":id")
-  // update(@Param("id") id: string, @Body() updateCommentDto: UpdateCommentDto) {
-  //   return this.commentService.update(+id, updateCommentDto);
-  // }
+  @Patch(":no")
+  update(@Param("no") no: number, @Body("content") content: string) {
+    return this.commentService.updateComment(no, content);
+  }
 
   @Patch(":no")
   softDeletComment(@Param("no") no: number) {
