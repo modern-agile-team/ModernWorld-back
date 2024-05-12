@@ -19,20 +19,29 @@ export class PresentsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  async getPresents(
+  getPresents(
     userNo: number,
     senderReceiverNoField: SenderReceiverNoField,
   ): Promise<object> {
     const senderReceiverDeleteField =
       senderReceiverNoField === "receiverNo"
         ? "receiverDelete"
-        : "senderDelete";
+        : senderReceiverNoField === "senderNo"
+          ? "senderDelete"
+          : undefined;
 
-    return await this.presentRepository.getPresents(
-      userNo,
-      senderReceiverNoField,
-      senderReceiverDeleteField,
-    );
+    let where = {};
+
+    if (senderReceiverDeleteField) {
+      where = {
+        [senderReceiverNoField]: userNo,
+        [senderReceiverDeleteField]: false,
+      };
+    }
+
+    console.log(where);
+
+    return this.presentRepository.getPresents(where);
   }
 
   async getOnePresent(userNo: number, presentNo: number) {

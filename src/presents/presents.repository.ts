@@ -14,11 +14,7 @@ export class PresentsRepository {
     });
   }
 
-  getPresents(
-    userNo: number,
-    senderReceiverNoField: SenderReceiverNoField,
-    senderReceiverDeleteField: string,
-  ): PrismaPromise<
+  getPresents(where: object): PrismaPromise<
     {
       no: number;
       status: present_status;
@@ -37,10 +33,8 @@ export class PresentsRepository {
         userPresentSenderNo: { select: { no: true, nickname: true } },
         userPresentReceiverNo: { select: { no: true, nickname: true } },
       },
-      where: {
-        [senderReceiverNoField]: userNo,
-        [senderReceiverDeleteField]: false,
-      },
+      where,
+      orderBy: { no: "desc" },
     });
   }
 

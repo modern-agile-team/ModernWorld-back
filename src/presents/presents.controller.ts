@@ -26,11 +26,11 @@ export class PresentsController {
   @ApiQuery({
     name: "type",
     enum: SenderReceiverNoField,
-    required: true,
+    required: false,
     example: "senderNo",
   })
   getPresents(
-    @Query("type", new ParseEnumPipe(SenderReceiverNoField))
+    @Query("type", new ParseEnumPipe(SenderReceiverNoField, { optional: true }))
     senderReceiverNoField: SenderReceiverNoField,
   ) {
     console.log(`Get /presents/${senderReceiverNoField}`);
