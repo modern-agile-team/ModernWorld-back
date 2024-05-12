@@ -39,8 +39,6 @@ export class PresentsService {
       };
     }
 
-    console.log(where);
-
     return this.presentRepository.getPresents(where);
   }
 
