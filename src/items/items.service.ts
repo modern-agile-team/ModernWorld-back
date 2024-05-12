@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { ItemsRepository } from "./items.repository";
+import { GetUserAllItems } from "./dtos/get-user-all-items.dto";
 @Injectable()
 export class ItemsService {
   constructor(private readonly itemsRepository: ItemsRepository) {}
 
-  async getOneItem(itemNo: number): Promise<object> {
-    const result = await this.itemsRepository.getOneItem(itemNo);
-    return result;
+  getOneItem(itemNo: number): Promise<object> {
+    return this.itemsRepository.getOneItem(itemNo);
   }
 
-  async getUserItems(theme?: string): Promise<object> {
-    return await this.itemsRepository.getAllItems(theme);
+  getUserItems(queryParams: GetUserAllItems): Promise<object> {
+    const { theme, itemName } = queryParams;
+
+    return this.itemsRepository.getAllItems(theme, itemName);
   }
 }

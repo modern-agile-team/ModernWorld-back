@@ -1,6 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { ItemsService } from "./items.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { GetUserAllItems } from "./dtos/get-user-all-items.dto";
 
 @Controller("items")
 @ApiTags("Items")
@@ -8,10 +9,10 @@ export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
   @Get()
   @ApiOperation({
-    summary: "아이템 테마별로 가져오기 API",
+    summary: "아이템 가져오기 API",
   })
-  getUserItems(@Query("theme") theme?: string) {
-    return this.itemsService.getUserItems(theme);
+  getUserItems(@Query() queryParms: GetUserAllItems) {
+    return this.itemsService.getUserItems(queryParms);
   }
 
   @Get(":itemNo")
