@@ -2,17 +2,34 @@ import {
   Controller,
   Get,
   Param,
+  ParseBoolPipe,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { GetUserAllCharacteresDto } from "./dtos/get-user-all-characters.dto";
 
 @Controller("inventory")
 @ApiTags("Inventory")
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
+
+  @Get("users/:userNo")
+  @ApiOperation({
+    summary: "아이템 조회 API",
+    description: "유저 아이템 조회 API",
+  })
+  @ApiParam({ name: "userNo", type: Number, required: true, example: 1 })
+  getUserAllItems(
+    @Param("userNo", ParseIntPipe) userNo: number,
+    @Query() queryParam: GetUserAllCharacteresDto,
+  ) {
+    console.log(queryParam);
+    return this.inventoryService.getUserAllItems(userNo, queryParam);
+  }
 
   @Post(":itemNo")
   @ApiOperation({

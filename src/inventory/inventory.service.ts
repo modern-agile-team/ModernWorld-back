@@ -7,6 +7,7 @@ import {
 import { ItemsRepository } from "src/items/items.repository";
 import { InventoryRepository } from "./inventory.repository";
 import { UsersRepository } from "src/users/users.repository";
+import { GetUserAllCharacteresDto } from "./dtos/get-user-all-characters.dto";
 
 @Injectable()
 export class InventoryService {
@@ -15,6 +16,15 @@ export class InventoryService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
+  getUserAllItems(userNo: number, queryParam: GetUserAllCharacteresDto) {
+    const { theme, status, itemName } = queryParam;
+    return this.inventoryRepository.getUserAllItems(
+      userNo,
+      theme,
+      status,
+      itemName,
+    );
+  }
 
   async buyOneItem(userNo: number, itemNo: number): Promise<boolean> {
     /**

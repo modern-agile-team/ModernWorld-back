@@ -6,11 +6,34 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class InventoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getUserAllItems(userNo: number, theme?: string): PrismaPromise<inventory[]> {
+  getUserAllItems(
+    userNo: number,
+    theme?: string,
+    status?: boolean,
+    itemName?: string,
+  ): PrismaPromise<inventory[]> {
     return this.prisma.inventory.findMany({
+      select: {
+        no: true,
+        userNo: true,
+        itemNo: true,
+        createdAt: true,
+        status: true,
+        item: {
+          select: {
+            no: true,
+            name: true,
+            description: true,
+            theme: true,
+            type: true,
+            price: true,
+          },
+        },
+      },
       where: {
         userNo,
-        item: { theme },
+        item: { name: { contains: itemName }, theme },
+        status,
       },
     });
   }
