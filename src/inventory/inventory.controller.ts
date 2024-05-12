@@ -25,10 +25,9 @@ export class InventoryController {
   @ApiParam({ name: "userNo", type: Number, required: true, example: 1 })
   getUserAllItems(
     @Param("userNo", ParseIntPipe) userNo: number,
-    @Query() queryParam: GetUserAllCharacteresDto,
+    @Query() queryParams: GetUserAllCharacteresDto,
   ) {
-    console.log(queryParam);
-    return this.inventoryService.getUserAllItems(userNo, queryParam);
+    return this.inventoryService.getUserAllItems(userNo, queryParams);
   }
 
   @Post(":itemNo")

@@ -16,8 +16,8 @@ export class InventoryService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
-  getUserAllItems(userNo: number, queryParam: GetUserAllCharacteresDto) {
-    const { theme, status, itemName } = queryParam;
+  getUserAllItems(userNo: number, queryParams: GetUserAllCharacteresDto) {
+    const { theme, status, itemName } = queryParams;
     return this.inventoryRepository.getUserAllItems(
       userNo,
       theme,
