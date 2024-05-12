@@ -18,7 +18,7 @@ export class UsersController {
 
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
-  @Get("show/:pageNo")
+  @Get("all/:pageNo")
   @ApiParam({
     name: "pageNo",
     example: 1,
