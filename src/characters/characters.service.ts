@@ -5,11 +5,11 @@ import { CharactersRepository } from "./characters.repository";
 export class CharactersService {
   constructor(private readonly charactersRepository: CharactersRepository) {}
 
-  async getCharactersBySpeices(species?: string): Promise<object> {
+  getCharactersBySpeices(species?: string): Promise<object> {
     return this.charactersRepository.getCharactersBySpecies(species);
   }
 
-  async getOneCharacter(characterNo: number): Promise<object> {
-    return await this.charactersRepository.getOneCharacter(characterNo);
+  getOneCharacter(characterNo: number): Promise<object> {
+    return this.charactersRepository.getOneCharacter(characterNo);
   }
 }

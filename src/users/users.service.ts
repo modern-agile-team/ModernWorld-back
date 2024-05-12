@@ -45,9 +45,7 @@ export class UsersService {
   // }
 
   async getUserAttendance(userNo: number) {
-    const result = await this.userRepository.getUserAttendance(userNo);
-
-    return result;
+    return this.userRepository.getUserAttendance(userNo);
   }
 
   async markUserAttendance(userNo: number) {

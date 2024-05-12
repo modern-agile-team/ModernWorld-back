@@ -8,13 +8,7 @@ import {
 } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
 import { Animal } from "src/common/enum/animal-enum";
-import {
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiTags,
-  PickType,
-} from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 
 @Controller("characters")
 @ApiTags("Characters")
