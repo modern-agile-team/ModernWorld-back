@@ -94,11 +94,4 @@ export class UsersController {
       description,
     );
   }
-
-  //특정 유저 아이템 테마별로 불러오기(인벤토리(아이템) 불러오기)
-  @Get(":userNo/items")
-  showItemsBytheme(
-    @Param("userNo") userNo: number,
-    @Query("theme") theme: string,
-  ) {}
 }
