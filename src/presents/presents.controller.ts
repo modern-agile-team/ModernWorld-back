@@ -55,7 +55,7 @@ export class PresentsController {
     return this.presentsService.getOnePresent(userNo, presentNo);
   }
 
-  @Post(":itemNo/user/:userNo")
+  @Post(":itemNo/users/:userNo")
   @ApiOperation({ summary: "특정 선물 추가 API" })
   @ApiParam({
     name: "itemNo",
