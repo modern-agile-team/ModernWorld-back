@@ -1,6 +1,16 @@
-import { Controller, Param, ParseIntPipe, Patch, Post } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+  ParseEnumPipe,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from "@nestjs/common";
 import { CharacterLockerService } from "./characterLocker.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { Animal } from "src/common/enum/animal-enum";
 
 @Controller("characterLocker")
 @ApiTags("CharacterLocker")
@@ -8,6 +18,32 @@ export class CharacterLockerController {
   constructor(
     private readonly characterLockerService: CharacterLockerService,
   ) {}
+
+  @Get("users/:userNo")
+  @ApiOperation({
+    summary: "유저 캐릭터 조회 API",
+    description: "유저가 가지고 있는 캐릭터를 조회합니다.",
+  })
+  @ApiParam({
+    name: "userNo",
+    type: Number,
+    required: true,
+    example: 1,
+  })
+  @ApiQuery({
+    name: "species",
+    enum: Animal,
+    required: false,
+    example: "cat",
+  })
+  getUserCharacters(
+    @Param("userNo", ParseIntPipe) userNo: number,
+    @Query("species", new ParseEnumPipe(Animal, { optional: true }))
+    species?: Animal,
+  ) {
+    return this.characterLockerService.getUserAllCharacters(userNo, species);
+  }
+
   @Post(":characterNo")
   @ApiOperation({
     summary: "캐릭터 구매 API",

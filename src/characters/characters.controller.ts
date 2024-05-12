@@ -28,6 +28,7 @@ export class CharactersController {
   })
   @ApiQuery({
     name: "species",
+    enum: Animal,
     required: false,
     example: "cat",
   })

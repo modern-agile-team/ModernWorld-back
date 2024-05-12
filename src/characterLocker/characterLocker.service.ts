@@ -6,6 +6,7 @@ import {
 import { CharacterLockerRepository } from "./characterLocker.repository";
 import { CharactersRepository } from "src/characters/characters.repository";
 import { UsersRepository } from "src/users/users.repository";
+import { Animal } from "src/common/enum/animal-enum";
 
 @Injectable()
 export class CharacterLockerService {
@@ -14,6 +15,10 @@ export class CharacterLockerService {
     private readonly charactersRepository: CharactersRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
+
+  async getUserAllCharacters(userNo: number, species?: Animal) {
+    return this.characterLockerRepository.getUserAllCharacters(userNo, species);
+  }
 
   async buyOneCharacter(userNo: number, characterNo: number): Promise<boolean> {
     /**

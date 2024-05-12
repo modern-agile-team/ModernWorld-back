@@ -101,10 +101,4 @@ export class UsersController {
     @Param("userNo") userNo: number,
     @Query("theme") theme: string,
   ) {}
-
-  //유저의 캐릭터 조회
-  @Get(":userNo/characters")
-  showCharactersBySpecies(@Param("userNo", ParseIntPipe) userNo: number) {
-    // this.usersService.
-  }
 }
