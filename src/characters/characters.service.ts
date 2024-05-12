@@ -1,12 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { CharactersRepository } from "./characters.repository";
+import { GetCharactersDto } from "./dtos/get-charactes.dto";
 
 @Injectable()
 export class CharactersService {
   constructor(private readonly charactersRepository: CharactersRepository) {}
 
-  getCharactersBySpeices(species?: string): Promise<object> {
-    return this.charactersRepository.getCharactersBySpecies(species);
+  getCharactersBySpeices(queryParmas: GetCharactersDto): Promise<object> {
+    const { species, characterName } = queryParmas;
+
+    return this.charactersRepository.getCharactersBySpeciesOrName(
+      species,
+      characterName,
+    );
   }
 
   getOneCharacter(characterNo: number): Promise<object> {

@@ -14,8 +14,12 @@ export class CharactersRepository {
     });
   }
 
-  getCharactersBySpecies(species?: string): PrismaPromise<character[]> {
-    console.log(species);
-    return this.prisma.character.findMany({ where: { species } });
+  getCharactersBySpeciesOrName(
+    species?: string,
+    characterName?: string,
+  ): PrismaPromise<character[]> {
+    return this.prisma.character.findMany({
+      where: { species, name: { contains: characterName } },
+    });
   }
 }
