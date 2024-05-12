@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
 import { AcceptReject } from "./enum/present-status-enum";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
 
 @Controller("presents")
@@ -22,6 +22,12 @@ export class PresentsController {
   @Get("all")
   @ApiOperation({
     summary: "유저와 연관된 선물 가져오기 API (발신, 수신)",
+  })
+  @ApiQuery({
+    name: "type",
+    enum: SenderReceiverNoField,
+    required: true,
+    example: "senderNo",
   })
   getPresents(
     @Query("type", new ParseEnumPipe(SenderReceiverNoField))
@@ -36,6 +42,12 @@ export class PresentsController {
 
   @Get(":presentNo")
   @ApiOperation({ summary: "특정 선물 가져오기 API" })
+  @ApiParam({
+    name: "presentNo",
+    type: Number,
+    required: true,
+    example: 1,
+  })
   getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log(`Get /presents/:${presentNo}`);
     const userNo = 1;
@@ -45,6 +57,18 @@ export class PresentsController {
 
   @Post(":itemNo/user/:userNo")
   @ApiOperation({ summary: "특정 선물 추가 API" })
+  @ApiParam({
+    name: "itemNo",
+    type: Number,
+    required: true,
+    example: 1,
+  })
+  @ApiParam({
+    name: "userNo",
+    type: Number,
+    required: true,
+    example: 1,
+  })
   presentOneItem(
     @Param("itemNo", ParseIntPipe) itemNo: number,
     @Param("userNo", ParseIntPipe) receiverNo: number,
@@ -58,6 +82,18 @@ export class PresentsController {
 
   @Patch(":presentNo")
   @ApiOperation({ summary: "특정 선물 수락/거절 API" })
+  @ApiParam({
+    name: "presentNo",
+    type: Number,
+    required: true,
+    example: 1,
+  })
+  @ApiQuery({
+    name: "acceptReject",
+    enum: AcceptReject,
+    required: true,
+    example: "accept",
+  })
   updatePresentStatus(
     @Param("presentNo", ParseIntPipe) presentNo: number,
     @Query("acceptReject", new ParseEnumPipe(AcceptReject))
@@ -76,6 +112,12 @@ export class PresentsController {
 
   @Delete(":presentNo")
   @ApiOperation({ summary: "특정 선물 발신/수신 기준 제거 API" })
+  @ApiParam({
+    name: "presentNo",
+    type: Number,
+    required: true,
+    example: 1,
+  })
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
     console.log(`Delete /presents/:${presentNo}`);
 
