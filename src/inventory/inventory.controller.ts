@@ -19,8 +19,8 @@ export class InventoryController {
 
   @Get("users/:userNo")
   @ApiOperation({
-    summary: "아이템 조회 API",
-    description: "유저 아이템 조회 API",
+    summary: "인벤토리 조회 API",
+    description: "인벤토리 조회 API",
   })
   @ApiParam({ name: "userNo", type: Number, required: true, example: 1 })
   getUserAllItems(
