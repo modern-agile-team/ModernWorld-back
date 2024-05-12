@@ -91,15 +91,4 @@ export class InventoryService {
 
     return true;
   }
-
-  async getUsingitem(userNo: number) {
-    const result = await this.inventoryRepository.getUserRoom(userNo);
-
-    return result.map((obj) => ({
-      status: obj.status,
-      itemName: obj.item.name,
-      itemImage: obj.item.image,
-      itemType: obj.item.type,
-    }));
-  }
 }

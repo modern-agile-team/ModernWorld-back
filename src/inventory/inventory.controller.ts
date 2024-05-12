@@ -52,14 +52,4 @@ export class InventoryController {
 
     return this.inventoryService.useItemDisuseOthers(userNo, itemNo);
   }
-
-  //유저 방 조회
-  @Get(":userNo/room")
-  @ApiOperation({
-    summary: "유저 방 불러오기 API",
-    description: "유저의 아이템 중에서 활성화 중인 아이템을 가져옵니다.",
-  })
-  showUserRoom(@Param("userNo") userNo: number) {
-    return this.inventoryService.getUsingitem(userNo);
-  }
 }

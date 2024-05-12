@@ -53,23 +53,6 @@ export class InventoryRepository {
     });
   }
 
-  getUserRoom(userNo: number): PrismaPromise<
-    {
-      status: boolean;
-      item: { name: string; description: string; image: string; type: string };
-    }[]
-  > {
-    return this.prisma.inventory.findMany({
-      select: {
-        status: true,
-        item: {
-          select: { name: true, description: true, image: true, type: true },
-        },
-      },
-      where: { userNo, status: true },
-    });
-  }
-
   updateItemStatus(
     userNo: number,
     itemNo: number,
