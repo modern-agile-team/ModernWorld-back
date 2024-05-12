@@ -86,9 +86,7 @@ export class PresentsService {
       await this.presentRepository.getOnePresent(presentNo);
 
     if (userNo !== receiverNo) {
-      throw new ForbiddenException(
-        "User can only receive gifts for themselves.",
-      );
+      throw new ForbiddenException("Users can only accept their own gifts.");
     }
 
     if (status !== "read") {
