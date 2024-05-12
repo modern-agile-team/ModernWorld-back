@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AcceptReject, PresentStatus } from "./enum/present-status-enum";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
-import { PrismaPromise, present } from "@prisma/client";
+import { PrismaPromise, present, present_status } from "@prisma/client";
 
 @Injectable()
 export class PresentsRepository {
@@ -18,7 +18,16 @@ export class PresentsRepository {
     userNo: number,
     senderReceiverNoField: SenderReceiverNoField,
     senderReceiverDeleteField: string,
-  ) {
+  ): PrismaPromise<
+    {
+      no: number;
+      status: present_status;
+      createdAt: Date;
+      item: { name: string };
+      userPresentSenderNo: { no: number; nickname: string };
+      userPresentReceiverNo: { no: number; nickname: string };
+    }[]
+  > {
     return this.prisma.present.findMany({
       select: {
         no: true,
@@ -35,7 +44,14 @@ export class PresentsRepository {
     });
   }
 
-  getOnePresentWithItemUserInformation(presentNo: number) {
+  getOnePresentWithItemUserInformation(presentNo: number): PrismaPromise<{
+    no: number;
+    status: present_status;
+    createdAt: Date;
+    item: { name: string };
+    userPresentSenderNo: { no: number; nickname: string };
+    userPresentReceiverNo: { no: number; nickname: string };
+  }> {
     return this.prisma.present.findUnique({
       select: {
         no: true,
@@ -51,13 +67,19 @@ export class PresentsRepository {
     });
   }
 
-  createOneItemToUser(senderNo: number, receiverNo: number, itemNo: number) {
+  createOneItemToUser(
+    senderNo: number,
+    receiverNo: number,
+    itemNo: number,
+  ): PrismaPromise<present> {
     return this.prisma.present.create({
       data: { senderNo, receiverNo, itemNo },
     });
   }
 
-  updateOnePresentStatusFromUnreadToRead(presentNo: number) {
+  updateOnePresentStatusFromUnreadToRead(
+    presentNo: number,
+  ): PrismaPromise<present> {
     return this.prisma.present.update({
       data: { status: "read" },
       where: { no: presentNo, status: "unread" },
@@ -67,7 +89,7 @@ export class PresentsRepository {
   updateOnePresentStatus(
     presentNo: number,
     status: PresentStatus | AcceptReject,
-  ) {
+  ): PrismaPromise<present> {
     return this.prisma.present.update({
       data: { status },
       where: { no: presentNo },
@@ -77,7 +99,7 @@ export class PresentsRepository {
   updateOnePresentToDeleteBySenderReceiver(
     presentNo: number,
     senderReceiverDeleteField: string,
-  ) {
+  ): PrismaPromise<present> {
     return this.prisma.present.update({
       data: { [senderReceiverDeleteField]: true },
       where: {

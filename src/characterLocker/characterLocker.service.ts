@@ -39,7 +39,7 @@ export class CharacterLockerService {
     }
 
     const userCharacter =
-      await this.characterLockerRepository.findOneCharacterFromInventory(
+      await this.characterLockerRepository.findUserCharacterFromInventory(
         userNo,
         characterNo,
       );
@@ -66,7 +66,7 @@ export class CharacterLockerService {
     characterNo: number,
   ): Promise<object> {
     const character =
-      await this.characterLockerRepository.findOneCharacterFromInventory(
+      await this.characterLockerRepository.findUserCharacterFromInventory(
         userNo,
         characterNo,
       );

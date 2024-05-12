@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { inventory } from "@prisma/client";
+import { PrismaPromise, inventory } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class InventoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getUserAllItems(userNo: number, theme?: string): Promise<inventory[]> {
+  getUserAllItems(userNo: number, theme?: string): PrismaPromise<inventory[]> {
     return this.prisma.inventory.findMany({
       where: {
         userNo,
@@ -15,13 +15,13 @@ export class InventoryRepository {
     });
   }
 
-  findOneItem(userNo: number, itemNo: number): Promise<inventory> {
+  findOneItem(userNo: number, itemNo: number): PrismaPromise<inventory> {
     return this.prisma.inventory.findFirst({
       where: { userNo, itemNo },
     });
   }
 
-  addOneItem(userNo: number, itemNo: number): Promise<inventory> {
+  addOneItem(userNo: number, itemNo: number): PrismaPromise<inventory> {
     return this.prisma.inventory.create({
       data: {
         userNo,
@@ -30,17 +30,27 @@ export class InventoryRepository {
     });
   }
 
-  getUserRoom(userNo: number) {
+  getUserRoom(userNo: number): PrismaPromise<
+    {
+      status: boolean;
+      item: { name: string; description: string; image: string; type: string };
+    }[]
+  > {
     return this.prisma.inventory.findMany({
       select: {
         status: true,
-        item: { select: { name: true, image: true, type: true } },
+        item: {
+          select: { name: true, description: true, image: true, type: true },
+        },
       },
       where: { userNo, status: true },
     });
   }
 
-  updateItemStatus(userNo: number, itemNo: number) {
+  updateItemStatus(
+    userNo: number,
+    itemNo: number,
+  ): PrismaPromise<{ count: number }> {
     return this.prisma.inventory.updateMany({
       data: {
         status: true,
@@ -49,7 +59,10 @@ export class InventoryRepository {
     });
   }
 
-  disuseOtherItems(userNo: number, itemType: string) {
+  disuseOtherItems(
+    userNo: number,
+    itemType: string,
+  ): PrismaPromise<{ count: number }> {
     return this.prisma.inventory.updateMany({
       data: { status: false },
       where: { userNo, item: { type: itemType } },
