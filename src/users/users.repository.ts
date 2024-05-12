@@ -151,10 +151,9 @@ export class UsersRepository {
   getUsersByAnimal(
     take: number,
     orderByField: string,
-    animal: string,
     skip: number,
     sort: string,
-    nickname?: string,
+    where: object,
   ): PrismaPromise<
     {
       nickname: string;
@@ -166,14 +165,6 @@ export class UsersRepository {
       userAchievement: { achievement: { title: string; fontColor: string } }[];
     }[]
   > {
-    let where = { nickname: { contains: nickname }, characterLocker: {} };
-
-    if (animal) {
-      where.characterLocker = {
-        some: { status: true, character: { species: animal } },
-      };
-    }
-
     return this.prisma.user.findMany({
       take: take,
       skip: skip,

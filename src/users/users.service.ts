@@ -123,13 +123,20 @@ export class UsersService {
     const skip = (pageNo - 1) * take;
     const sort = orderByField === "createdAt" ? "asc" : "desc";
 
+    let where = { nickname: { contains: nickname }, characterLocker: {} };
+
+    if (animal) {
+      where.characterLocker = {
+        some: { status: true, character: { species: animal } },
+      };
+    }
+
     const result = await this.userRepository.getUsersByAnimal(
       take,
       orderByField,
-      animal,
       skip,
       sort,
-      nickname,
+      where,
     );
 
     //가공
