@@ -16,8 +16,12 @@ export class CommentService {
     return comment;
   }
 
-  async findComment(senderNo: number) {
-    const result = await this.CommentRepository.findComment(senderNo);
+  async findComment(senderNo: number, page: number) {
+    const commentPage = (page - 1) * 2;
+    const result = await this.CommentRepository.findComment(
+      senderNo,
+      commentPage,
+    );
     return result;
   }
 

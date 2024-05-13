@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
@@ -24,8 +25,11 @@ export class CommentController {
   }
 
   @Get(":senderNo")
-  findAllComment(@Param("senderNo") senderNo: number) {
-    return this.commentService.findComment(senderNo);
+  findAllComment(
+    @Param("senderNo") senderNo: number,
+    @Query("page") page: number,
+  ) {
+    return this.commentService.findComment(senderNo, page);
   }
 
   @Patch(":no")

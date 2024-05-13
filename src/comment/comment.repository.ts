@@ -16,8 +16,11 @@ export class CommentRepository {
     });
   }
 
-  findComment(senderNo: number) {
+  findComment(senderNo: number, commentPage: number) {
     return this.prisma.comment.findMany({
+      skip: commentPage,
+      take: 2,
+      orderBy: { no: "desc" },
       where: {
         senderNo,
         deletedAt: null,
