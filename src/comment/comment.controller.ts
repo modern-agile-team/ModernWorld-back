@@ -5,11 +5,12 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { CreateCommentDto } from "./dto/create-comment.dto";
 
 @Controller("comment")
 export class CommentController {
@@ -17,11 +18,11 @@ export class CommentController {
 
   @Post(":receiverNo")
   createComment(
-    @Param("receiverNo") receiver_no: number,
-    @Body("senderNo") sender_no: number,
-    @Body("content") content: string,
+    @Param("receiverNo") receiverNo: number,
+    @Body() content: CreateCommentDto,
   ) {
-    return this.commentService.commentCreate(receiver_no, sender_no, content);
+    const userNo = 1;
+    return this.commentService.commentCreate(receiverNo, userNo, content);
   }
 
   @Get(":senderNo")
