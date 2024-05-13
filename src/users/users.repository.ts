@@ -162,7 +162,7 @@ export class UsersRepository {
       like: number;
       createdAt: Date;
       characterLocker: { character: { image: string } }[];
-      userAchievement: { achievement: { title: string; fontColor: string } }[];
+      userAchievement: { achievement: { title: string; level: string } }[];
     }[]
   > {
     return this.prisma.user.findMany({
@@ -179,7 +179,7 @@ export class UsersRepository {
           where: { status: true },
           select: {
             achievement: {
-              select: { fontColor: true, title: true },
+              select: { title: true, level: true },
             },
           },
         },
