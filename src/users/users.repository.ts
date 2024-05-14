@@ -128,7 +128,7 @@ export class UsersRepository {
     currentPoint: number;
     accumulationPoint: number;
     userAchievement: {
-      achievement: { title: string; fontColor: string };
+      achievement: { title: string; level: string };
     }[];
   }> {
     return this.prisma.user.findUnique({
@@ -139,7 +139,7 @@ export class UsersRepository {
         userAchievement: {
           where: { status: true },
           select: {
-            achievement: { select: { title: true, fontColor: true } },
+            achievement: { select: { title: true, level: true } },
           },
         },
       },

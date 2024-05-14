@@ -25,7 +25,7 @@ export class UsersService {
       currentPoint: result.currentPoint,
       accumulationPoint: result.accumulationPoint,
       title: result.userAchievement[0].achievement.title,
-      fontColor: result.userAchievement[0].achievement.fontColor,
+      fontColor: result.userAchievement[0].achievement.level,
     };
   }
 
