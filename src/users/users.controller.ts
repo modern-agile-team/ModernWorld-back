@@ -18,18 +18,9 @@ export class UsersController {
 
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
-  @Get("all/:pageNo")
+  @Get()
   @ApiOperation({ summary: "유저 불러오기 API" })
-  @ApiParam({
-    name: "pageNo",
-    example: 1,
-    required: true,
-    description: "페이지 번호",
-  })
-  getUsersByAnimal(
-    @Param("pageNo", ParseIntPipe) pageNo: number,
-    @Query() queryParams: GetUsersByAnimalDto,
-  ) {
+  getUsersByAnimal(@Query() queryParams: GetUsersByAnimalDto) {
     /**
      * pageNo는 페이지의 번호
      * take는 몇개씩 가져올것인가
@@ -38,11 +29,17 @@ export class UsersController {
      */
 
     //VALIDATION !!!!!! orderByField의 값은 정해져있어야함, like, createdAt, accumulationPoint 이 세개로 한정해야함
-    return this.usersService.getUsersByAnimal(pageNo, queryParams);
+    return this.usersService.getUsersByAnimal(queryParams);
   }
 
   @Get(":userNo")
-  @ApiOperation({ summary: "유저 불러오기 API" })
+  @ApiOperation({ summary: "특정 유저 불러오기 API" })
+  @ApiParam({
+    name: "userNo",
+    example: 1,
+    required: true,
+    description: "유저 번호",
+  })
   getUserNamePointAchievementTitle(
     @Param("userNo", ParseIntPipe) userNo: number,
   ) {

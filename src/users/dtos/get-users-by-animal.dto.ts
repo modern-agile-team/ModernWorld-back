@@ -6,6 +6,17 @@ import { orderByField } from "../enum/orderByFeild-enum";
 
 export class GetUsersByAnimalDto {
   @ApiProperty({
+    name: "pageNo",
+    type: Number,
+    required: true,
+    description: "페이지 번호",
+    example: 1,
+  })
+  @Type(() => Number)
+  @IsNumber()
+  pageNo: number;
+
+  @ApiProperty({
     name: "take",
     type: Number,
     required: true,

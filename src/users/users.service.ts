@@ -111,13 +111,16 @@ export class UsersService {
     return result;
   }
 
-  async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
-    const { take, animal, orderByField, nickname } = queryParams;
+  async getUsersByAnimal(queryParams: GetUsersByAnimalDto) {
+    const { pageNo, take, animal, orderByField, nickname } = queryParams;
 
     const skip = (pageNo - 1) * take;
     const sort = orderByField === "createdAt" ? "asc" : "desc";
 
-    let where = { nickname: { contains: nickname }, characterLocker: {} };
+    let where = {
+      nickname: { contains: nickname },
+      characterLocker: {},
+    };
 
     if (animal) {
       where.characterLocker = {
