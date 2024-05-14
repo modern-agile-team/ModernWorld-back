@@ -12,7 +12,6 @@ model achievement {
   name            String            @db.VarChar(20)
   description     String            @db.VarChar(100)
   title           String            @db.VarChar(20)
-  fontColor       String            @map("font_color") @db.VarChar(10)
   level           achievement_level
   point           Int               @db.UnsignedInt
   userAchievement userAchievement[]
@@ -163,6 +162,17 @@ model reply {
   @@index([userNo], map: "user_no")
 }
 
+model token {
+  no             Int     @id @default(autoincrement()) @db.UnsignedInt
+  userNo         Int     @map("user_no") @db.UnsignedInt
+  socialAccess   String? @map("social_access") @db.VarChar(300)
+  socialRefresh  String? @map("social_refresh") @db.VarChar(300)
+  serviceRefresh String? @map("service_refresh") @db.VarChar(300)
+  user           user    @relation(fields: [userNo], references: [no])
+
+  @@index([userNo], map: "user_no")
+}
+
 model user {
   no                Int         @id @default(autoincrement()) @db.UnsignedInt
   nickname          String?     @unique(map: "nickname") @db.VarChar(10)
@@ -194,6 +204,7 @@ model user {
   presentSenderNo    present[]         @relation("present_sender_noTouser")
   presentReceiverNo  present[]         @relation("present_receiver_noTouser")
   reply              reply[]
+  token              token[]
   userAchievement    userAchievement[]
 }
 
