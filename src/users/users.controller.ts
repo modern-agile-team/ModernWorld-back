@@ -19,13 +19,13 @@ export class UsersController {
   //offset 기반 pagination
   //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
   @Get("all/:pageNo")
+  @ApiOperation({ summary: "유저 불러오기 API" })
   @ApiParam({
     name: "pageNo",
     example: 1,
     required: true,
     description: "페이지 번호",
   })
-  @ApiOperation({ summary: "종별 유저 불러오기 API" })
   getUsersByAnimal(
     @Param("pageNo", ParseIntPipe) pageNo: number,
     @Query() queryParams: GetUsersByAnimalDto,
@@ -41,26 +41,28 @@ export class UsersController {
     return this.usersService.getUsersByAnimal(pageNo, queryParams);
   }
 
-  //유저 마이페이지
   @Get(":userNo")
-  getOneUserWithNamePointAchievementTitle(
+  @ApiOperation({ summary: "유저 불러오기 API" })
+  getUserNamePointAchievementTitle(
     @Param("userNo", ParseIntPipe) userNo: number,
   ) {
-    return this.usersService.getUserNameCurrentPointAccumulationPointTitle(
-      userNo,
-    );
+    return this.usersService.getUserNamePointTitleCharacter(userNo);
   }
 
   //유저 출석부 조회
   @Get(":userNo/attendance")
+  @ApiOperation({ summary: "유저 출석부 조회 API" })
   getOneUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
     return this.usersService.getUserAttendance(userNo);
   }
 
   //유저 출석부 체크
   @Patch(":userNo/attendance")
+  @ApiOperation({ summary: "유저 출석부 체크 API" })
   markUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
-    return this.usersService.markUserAttendance(userNo);
+    const tokenUserNo = 1;
+
+    return this.usersService.markUserAttendance(tokenUserNo, userNo);
   }
 
   //사실 createUser는 회원가입할 때 같이 불러올 api임 따라서 Controller가 필요 없다. Service만 auth에서 사용하면 그만이다.
