@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -10,9 +11,9 @@ import {
   Query,
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
-import { AcceptReject } from "./enum/present-status-enum";
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 
 @Controller("presents")
 @ApiTags("Presents")
@@ -88,16 +89,10 @@ export class PresentsController {
     required: true,
     example: 1,
   })
-  @ApiQuery({
-    name: "acceptReject",
-    enum: AcceptReject,
-    required: true,
-    example: "accept",
-  })
   updatePresentStatus(
     @Param("presentNo", ParseIntPipe) presentNo: number,
-    @Query("acceptReject", new ParseEnumPipe(AcceptReject))
-    acceptReject: AcceptReject,
+    @Body()
+    body: PresentAcceptRejectDto,
   ) {
     console.log(`Patch /presents/:${presentNo}`);
 
@@ -106,7 +101,7 @@ export class PresentsController {
     return this.presentsService.acceptOrRejectOnePresent(
       userNo,
       presentNo,
-      acceptReject,
+      body,
     );
   }
 

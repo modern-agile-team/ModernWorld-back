@@ -5,10 +5,10 @@ import {
 } from "@nestjs/common";
 import { PresentsRepository } from "./presents.repository";
 import { InventoryRepository } from "src/inventory/inventory.repository";
-import { AcceptReject } from "./enum/present-status-enum";
 import { ItemsRepository } from "src/items/items.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 
 @Injectable()
 export class PresentsService {
@@ -72,7 +72,7 @@ export class PresentsService {
   async acceptOrRejectOnePresent(
     userNo: number,
     presentNo: number,
-    acceptReject: AcceptReject,
+    body: PresentAcceptRejectDto,
   ) {
     /**
      * 1. 선물의 수신자가 해당 인물이 맞는지 확인 (present) ㅇ
@@ -88,6 +88,7 @@ export class PresentsService {
      * 2, 3, 4의 과정은 한번에 이루어져야 할듯 트랜잭션으로 묶기
      *
      */
+    const acceptReject = body.status;
 
     const { receiverNo, status, itemNo } =
       await this.presentRepository.getOnePresent(presentNo);
