@@ -62,23 +62,7 @@ export class UsersController {
     return this.usersService.markUserAttendance(tokenUserNo, userNo);
   }
 
-  //사실 createUser는 회원가입할 때 같이 불러올 api임 따라서 Controller가 필요 없다. Service만 auth에서 사용하면 그만이다.
-  // @Post()
-  // createUser(
-  //   @Body("uniqueIdentifier") uniqueIdentifier: string,
-  //   @Body("socialName") socialName: string,
-  //   @Body("image") image: string,
-  //   @Body("domain") domain: string,
-  // ) {
-  //   return this.userService.createUser(
-  //     uniqueIdentifier,
-  //     socialName,
-  //     image,
-  //     domain,
-  //   );
-  // }
-
-  //유저 닉네임, 자기소개, 출석부, 캐릭터 업데이트
+  //유저 닉네임, 자기소개 Update
   @Patch(":userNo")
   updateUser(
     @Param("userNo", ParseIntPipe) userNo: number,
