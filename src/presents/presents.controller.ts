@@ -20,7 +20,7 @@ import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
 
-  @Get("all")
+  @Get()
   @ApiOperation({
     summary: "유저와 연관된 선물 가져오기 API (발신, 수신)",
   })
