@@ -123,10 +123,12 @@ export class UsersRepository {
     });
   }
 
-  getUserNameCurrentPointAccumulationPointTitle(userNo: number): PrismaPromise<{
+  getUserNamePointTitleCharacter(userNo: number): PrismaPromise<{
     nickname: string;
     currentPoint: number;
     accumulationPoint: number;
+    like: number;
+    characterLocker: { character: { image: string } }[];
     userAchievement: {
       achievement: { title: string; level: string };
     }[];
@@ -136,11 +138,16 @@ export class UsersRepository {
         nickname: true,
         currentPoint: true,
         accumulationPoint: true,
-        userAchievement: {
+        like: true,
+        characterLocker: {
+          select: { character: { select: { image: true } } },
           where: { status: true },
+        },
+        userAchievement: {
           select: {
             achievement: { select: { title: true, level: true } },
           },
+          where: { status: true },
         },
       },
 
