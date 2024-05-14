@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
 } from "@nestjs/common";
@@ -14,19 +15,8 @@ export class UsersService {
     private readonly userRepository: UsersRepository,
   ) {}
 
-  async getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
-    const result =
-      await this.userRepository.getUserNameCurrentPointAccumulationPointTitle(
-        userNo,
-      );
-
-    return {
-      nickname: result.nickname,
-      currentPoint: result.currentPoint,
-      accumulationPoint: result.accumulationPoint,
-      title: result.userAchievement[0].achievement.title,
-      fontColor: result.userAchievement[0].achievement.level,
-    };
+  getUserNamePointTitleCharacter(userNo: number) {
+    return this.userRepository.getUserNamePointTitleCharacter(userNo);
   }
 
   // async createUser(
@@ -48,7 +38,7 @@ export class UsersService {
     return this.userRepository.getUserAttendance(userNo);
   }
 
-  async markUserAttendance(userNo: number) {
+  async markUserAttendance(tokenUserNo: number, userNo: number) {
     /**
      * 일주일 출석부 가져와서 월, 화, 수, 목, 금, 토, 일
      * 즉, 요일에 따라 출석부가 갱신되어야함, 근데 한국시간 기준으로 만들어야함
@@ -66,6 +56,12 @@ export class UsersService {
      * */
 
     //토큰의 userNo !== 파람의 userNo 작업
+
+    if (tokenUserNo !== userNo) {
+      throw new ForbiddenException(
+        "User can only check in on their own attendance.",
+      );
+    }
 
     const offset = 1000 * 60 * 60 * 9;
     const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms)
