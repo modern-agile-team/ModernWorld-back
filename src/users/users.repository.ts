@@ -37,6 +37,13 @@ export class UsersRepository {
     });
   }
 
+  findUserNickname(no: number): PrismaPromise<{ nickname: string }> {
+    return this.prisma.user.findUnique({
+      select: { nickname: true },
+      where: { no },
+    });
+  }
+
   updateUserCurrentPoint(
     userNo: number,
     incrementalPoint: number,
@@ -108,16 +115,10 @@ export class UsersRepository {
     });
   }
 
-  updateUserNicknameDesriptionAttendance(
-    userNo: number,
-    nickname: string,
-    description: string,
-  ): PrismaPromise<user> {
+  updateUserNickname(userNo: number, nickname: string): PrismaPromise<user> {
     return this.prisma.user.update({
       data: {
         nickname,
-        description,
-        attendance: {},
       },
       where: { no: userNo },
     });
