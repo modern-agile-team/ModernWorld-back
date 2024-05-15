@@ -65,6 +65,6 @@ export class UsersController {
     @Param("userNo", ParseIntPipe) userNo: number,
     @Body("description") description: string,
   ) {
-    // return this.usersService.
+    return this.usersService.updateUserDescription(userNo, description);
   }
 }

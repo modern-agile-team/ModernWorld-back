@@ -102,13 +102,24 @@ export class UsersService {
       throw new ForbiddenException("User can only fix their own name.");
     }
 
-    const dbName = await this.userRepository.findUserNickname(userNo);
+    const userName = await this.userRepository.findUserNickname(userNo);
 
-    if (dbName) {
+    if (userName) {
       throw new ForbiddenException("User already has a nickname.");
     }
 
+    const duplicateName =
+      await this.userRepository.findUserByNickname(nickname);
+
+    if (duplicateName) {
+      throw new ForbiddenException(`[${nickname}] is duplicated.`);
+    }
+
     return this.userRepository.updateUserNickname(userNo, nickname);
+  }
+
+  async updateUserDescription(userNo: number, description: string) {
+    return this.userRepository.updateUserDescription(userNo, description);
   }
 
   async getUsersByAnimal(queryParams: GetUsersByAnimalDto) {
