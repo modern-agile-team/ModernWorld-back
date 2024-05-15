@@ -50,18 +50,21 @@ export class UsersController {
     return this.usersService.markUserAttendance(tokenUserNo, userNo);
   }
 
-  @Patch(":userNo")
+  @Patch(":userNo/nickname")
   updateUser(
     @Param("userNo", ParseIntPipe) userNo: number,
     @Body("nickname") nickname: string,
-    @Body("characterNo", ParseIntPipe) characterNo: number,
+  ) {
+    const tokenUserNo = 1;
+
+    return this.usersService.updateUserNickname(tokenUserNo, userNo, nickname);
+  }
+
+  @Patch(":userNo/description")
+  updateUserDescription(
+    @Param("userNo", ParseIntPipe) userNo: number,
     @Body("description") description: string,
   ) {
-    return this.usersService.updateUserNicknameDescriptionAttendanceCharacter(
-      userNo,
-      characterNo,
-      nickname,
-      description,
-    );
+    // return this.usersService.
   }
 }
