@@ -93,22 +93,22 @@ export class UsersService {
     }
   }
 
-  async updateUserNicknameDescriptionAttendanceCharacter(
+  async updateUserNickname(
+    tokenUserNo: number,
     userNo: number,
-    characterNo: number,
     nickname: string,
-    description: string,
   ) {
-    //이곳에 트랜잭션으로 캐릭터보관함에 캐릭터 넣는것까지 같이 할것.
+    if (tokenUserNo !== userNo) {
+      throw new ForbiddenException("User can only fix their own name.");
+    }
 
-    const result =
-      await this.userRepository.updateUserNicknameDesriptionAttendance(
-        userNo,
-        nickname,
-        description,
-      );
+    const dbName = await this.userRepository.findUserNickname(userNo);
 
-    return result;
+    if (dbName) {
+      throw new ForbiddenException("User already has a nickname.");
+    }
+
+    return this.userRepository.updateUserNickname(userNo, nickname);
   }
 
   async getUsersByAnimal(queryParams: GetUsersByAnimalDto) {
