@@ -1,12 +1,15 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { UsersModule } from "src/users/users.module";
-// import { AuthStrategy } from "./auth.strategy";
+import { TokenService } from "./token.service";
+import { TokenRepository } from "./token.repository";
+import { JwtService } from "@nestjs/jwt";
+
 
 @Module({
   imports: [UsersModule],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, TokenService, TokenRepository, JwtService],
 })
 export class AuthModule {}

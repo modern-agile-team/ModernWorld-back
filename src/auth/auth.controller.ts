@@ -1,8 +1,5 @@
-import { Controller, Get, Query, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Query } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { AuthGuard } from "@nestjs/passport";
-import { configDotenv } from "dotenv";
-import { UserProvider } from "src/auth/user-provider.enum";
 
 @Controller("auth")
 export class AuthController {
@@ -31,6 +28,6 @@ export class AuthController {
     if (!code) {
       throw new Error("인가 코드가 없습니다.");
     }
-    // return this.authService.kakaoLogin(code);
+    return this.authService.kakaoLogin(code);
   }
 }

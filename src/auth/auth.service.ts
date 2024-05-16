@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { UserProvider } from "src/auth/user-provider.enum";
 import axios from "axios";
-import { UsersService } from "src/users/users.service";
 import { UserRepository } from "src/users/users.repository";
+import { TokenService } from "src/auth/token.service";
+import { TokenRepository } from "src/auth/token.repository";
 
 @Injectable()
 export class AuthService {
@@ -14,10 +14,13 @@ export class AuthService {
   private state: string;
   private userInfoUrl: string;
   private redirect_uri: string;
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly tokenService: TokenService,
+    private readonly tokenRepository: TokenRepository,
+  ) {}
   async naverLogin(authorizeCode: string) {
     try {
-      // 여기서 this 키워드를 사용하여 클래스 속성에 접근할 수 있습니다.
       this.tokenUrl = "https://nid.naver.com/oauth2.0/token";
       this.grant_type = "authorization_code";
       this.client_id = process.env.NAVER_CLIENT_ID;
@@ -37,8 +40,17 @@ export class AuthService {
           { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
         )
       ).data;
+      if (!token) {
+        throw new Error("소셜 토큰 발급 중 에러가 발생했습니다.");
+      }
       const socialAccessToken = token.access_token;
       const socialRefreshToken = token.refresh_token;
+      if (!socialAccessToken) {
+        throw new Error("소셜 액세스 토큰이 없습니다.");
+      }
+      if (!socialRefreshToken) {
+        throw new Error("소셜 리프레시 토큰이 없습니다.");
+      }
       this.userInfoUrl = "https://openapi.naver.com/v1/nid/me";
       const userInfo = (
         await axios.get(this.userInfoUrl, {
@@ -48,25 +60,52 @@ export class AuthService {
           },
         })
       ).data;
+      if (!userInfo) {
+        throw new Error("소셜 유저 정보를 가져오는 데 실패했습니다.");
+      }
       console.log(userInfo);
+      const userUniqueNumber = userInfo.response.id;
+      const user =
+        await this.userRepository.findUserByUniqueIndentifier(userUniqueNumber);
+      console.log(user);
+      if (!user) {
+        console.log("유저 없음");
+        await this.userRepository.createUser(
+          userInfo.response.id,
+          userInfo.response.name,
+          userInfo.response.profile_image,
+          "naver",
+        );
+      }
+      const accessToken = await this.tokenService.createAccessToken(
+        userUniqueNumber,
+        user.no,
+      );
+      const refreshToken = await this.tokenService.createRefreshToken(
+        userUniqueNumber,
+        user.no,
+      );
+      await this.tokenRepository.saveTokens(
+        userUniqueNumber,
+        socialAccessToken,
+        socialRefreshToken,
+        refreshToken,
+      );
+      // await this.tokenService.setRefreshToken(userUniqueNumber, refreshToken); //redis에 리프레시 토큰 저장로직(아직 미완)
 
-      // const user = await this.userRepository.createUser()
-
-      //id 값이 존재하면 유저 키값 가져와서 최신화 존재하지 않으면 db상에 저장
+      return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
     }
   }
   async kakaoLogin(authorizeCode: string) {
     try {
-      // 여기서 this 키워드를 사용하여 클래스 속성에 접근할 수 있습니다.
       this.tokenUrl = "https://kauth.kakao.com/oauth/token";
       this.grant_type = "authorization_code";
-      this.client_id = process.env.CACAOK_CLIENT_ID;
-      this.client_secret = process.env.CACAOK_CLIENT_SECRET;
-      this.redirect_uri = process.env.CACAOK_CLIENT_CALLBACK_URL;
+      this.client_id = process.env.KAKAO_CLIENT_ID;
+      this.client_secret = process.env.KAKAO_CLIENT_SECRET;
+      this.redirect_uri = process.env.KAKAO_CLIENT_CALLBACK_URL;
       this.code = authorizeCode;
-      this.state = "test";
       const token = (
         await axios.post(
           this.tokenUrl,
@@ -85,9 +124,12 @@ export class AuthService {
           },
         )
       ).data;
+      if (!token) {
+        throw new Error("소셜 토큰 발급 중 에러가 발생했습니다.");
+      }
       const socialAccessToken = token.access_token;
       const socialRefreshToken = token.refresh_token;
-      this.userInfoUrl = "https://openapi.naver.com/v1/nid/me";
+      this.userInfoUrl = "https://kapi.kakao.com/v2/user/me";
       const userInfo = (
         await axios.get(this.userInfoUrl, {
           headers: {
@@ -96,86 +138,43 @@ export class AuthService {
           },
         })
       ).data;
+      if (!userInfo) {
+        throw new Error("소셜 유저 정보를 가져오는 데 실패했습니다.");
+      }
       console.log(userInfo);
+      const userUniqueNumber = userInfo.id.toString();
+      const userProperties = userInfo.properties;
+      console.log(userUniqueNumber);
+      const user =
+        await this.userRepository.findUserByUniqueIndentifier(userUniqueNumber);
+      console.log(user);
+      if (!user) {
+        console.log("유저 없음");
+        await this.userRepository.createUser(
+          userUniqueNumber,
+          userProperties.nickname,
+          userProperties.profile_image,
+          "kakao",
+        );
+      }
+      const accessToken = await this.tokenService.createAccessToken(
+        userUniqueNumber,
+        user.no,
+      );
+      const refreshToken = await this.tokenService.createRefreshToken(
+        userUniqueNumber,
+        user.no,
+      );
+      await this.tokenRepository.saveTokens(
+        userUniqueNumber,
+        socialAccessToken,
+        socialRefreshToken,
+        refreshToken,
+      );
+      return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
+      console.log(error);
     }
   }
 }
-// async googleLogin(authorizeCode: string) {
-//   try {
-//     this.tokenUrl = "구글 토큰 URL";
-//     this.grant_type = "구글 grant type";
-//     this.client_id = "구글 클라이언트 ID";
-//     this.client_secret = "구글 클라이언트 Secret";
-//     this.code = authorizeCode;
-//     this.state = "구글 state";
-//     // 나머지 로직 추가
-//   } catch (error) {
-//     // 에러 처리
-//   }
-// }
-
-// async kakaoLogin(authorizeCode: string) {
-//   try {
-//     this.tokenUrl = "카카오 토큰 URL";
-//     this.grant_type = "카카오 grant type";
-//     this.client_id = "카카오 클라이언트 ID";
-//     this.client_secret = "카카오 클라이언트 Secret";
-//     this.code = authorizeCode;
-//     this.state = "카카오 state";
-//     // 나머지 로직 추가
-//   } catch (error) {
-//     // 에러 처리
-//   }
-// }
-
-//   async login(authorizeCode: string, provider: UserProvider) {
-//    try {
-//     let tokenUrl: string,
-//         tokenHeader: object,
-//         tokenBody: object,
-//         userInfoUrl: string,
-//         userInfoHeader: object;
-//         if (provider === UserProvider.Google) {
-//           // 구글 토큰 발급
-//           tokenUrl = 'https://oauth2.googleapis.com/token';
-//           tokenHeader = {
-//             headers: {
-//               'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-//             },
-//           };
-//           tokenBody = {
-//             grant_type: 'authorization_code',
-//             client_id: this.appConfigService.get<string>(
-//               process.env.GOOGLE_CLIENT_ID,
-//             ),
-//             client_secret: this.appConfigService.get<string>(
-//               process.env.GOOGLE_CLIENT_SECRET,
-//             ),
-//             code: authorizeCode,
-//             redirect_uri: this.appConfigService.get<string>(
-//               process.env.GOGLE_CLIENT_CALLBACK_URL,
-//             ),
-//           };
-//         }
-//         const token = (await axios.post(tokenUrl, tokenBody, tokenHeader)).data;
-
-//         const socialAccessToken = token.access_token;
-//         const socialRefreshToken = token.refresh_token;
-//       }
-//   getHello(): string {
-//     throw new Error("Method not implemented.");
-//   }
-//   googleLogin(req: { user: any }) {
-//     if (!req.user) {
-//       return "No user from google";
-//     }
-
-//     return {
-//       message: "User information from google",
-//       user: req.user,
-//     };
-//   }
-// }
-// }
