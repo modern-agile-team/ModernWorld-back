@@ -6,18 +6,18 @@ export class TokenRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async saveTokens(
-    userId: string,
-    socialAccessToken: string,
-    socialRefreshToken: string,
-    refreshToken: string,
+    userNo: number,
+    socialAccess: string,
+    socialRefresh: string,
+    serviceRefresh: string,
   ) {
-    // return this.prisma.token.create({
-    //   data: {
-    //     userId,
-    //     socialAccessToken,
-    //     socialRefreshToken,
-    //     refreshToken,
-    //   },
-    // });
+    return this.prisma.token.create({
+      data: {
+        userNo,
+        socialAccess,
+        socialRefresh,
+        serviceRefresh,
+      },
+    });
   }
 }

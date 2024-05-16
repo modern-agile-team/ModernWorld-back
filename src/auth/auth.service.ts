@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import axios from "axios";
 import { UserRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/token.service";
@@ -45,12 +45,7 @@ export class AuthService {
       }
       const socialAccessToken = token.access_token;
       const socialRefreshToken = token.refresh_token;
-      if (!socialAccessToken) {
-        throw new Error("소셜 액세스 토큰이 없습니다.");
-      }
-      if (!socialRefreshToken) {
-        throw new Error("소셜 리프레시 토큰이 없습니다.");
-      }
+
       this.userInfoUrl = "https://openapi.naver.com/v1/nid/me";
       const userInfo = (
         await axios.get(this.userInfoUrl, {
@@ -63,15 +58,14 @@ export class AuthService {
       if (!userInfo) {
         throw new Error("소셜 유저 정보를 가져오는 데 실패했습니다.");
       }
-      console.log(userInfo);
+
       const userUniqueNumber = userInfo.response.id;
-      const user =
+      let user =
         await this.userRepository.findUserByUniqueIndentifier(userUniqueNumber);
-      console.log(user);
+
       if (!user) {
-        console.log("유저 없음");
-        await this.userRepository.createUser(
-          userInfo.response.id,
+        user = await this.userRepository.createUser(
+          userUniqueNumber,
           userInfo.response.name,
           userInfo.response.profile_image,
           "naver",
@@ -86,7 +80,7 @@ export class AuthService {
         user.no,
       );
       await this.tokenRepository.saveTokens(
-        userUniqueNumber,
+        user.no,
         socialAccessToken,
         socialRefreshToken,
         refreshToken,
@@ -96,6 +90,9 @@ export class AuthService {
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
+      throw new InternalServerErrorException(
+        "로그인 중 서버에러가 발생했습니다.",
+      );
     }
   }
   async kakaoLogin(authorizeCode: string) {
@@ -141,16 +138,14 @@ export class AuthService {
       if (!userInfo) {
         throw new Error("소셜 유저 정보를 가져오는 데 실패했습니다.");
       }
-      console.log(userInfo);
+
       const userUniqueNumber = userInfo.id.toString();
       const userProperties = userInfo.properties;
-      console.log(userUniqueNumber);
-      const user =
+
+      let user =
         await this.userRepository.findUserByUniqueIndentifier(userUniqueNumber);
-      console.log(user);
       if (!user) {
-        console.log("유저 없음");
-        await this.userRepository.createUser(
+        user = await this.userRepository.createUser(
           userUniqueNumber,
           userProperties.nickname,
           userProperties.profile_image,
@@ -166,7 +161,7 @@ export class AuthService {
         user.no,
       );
       await this.tokenRepository.saveTokens(
-        userUniqueNumber,
+        user.no,
         socialAccessToken,
         socialRefreshToken,
         refreshToken,
@@ -174,7 +169,9 @@ export class AuthService {
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
-      console.log(error);
+      throw new InternalServerErrorException(
+        "로그인 중 서버에러가 발생했습니다.",
+      );
     }
   }
 }
