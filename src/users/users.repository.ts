@@ -105,7 +105,7 @@ export class UserRepository {
         userAchievement: {
           where: { status: true },
           select: {
-            achievement: { select: { title: true, fontColor: true } },
+            achievement: { select: { title: true, level: true } },
           },
         },
       },
@@ -145,7 +145,7 @@ export class UserRepository {
           where: { status: true },
           select: {
             achievement: {
-              select: { fontColor: true, title: true },
+              select: { title: true, level: true },
             },
           },
         },

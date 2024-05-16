@@ -3,11 +3,23 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
+import { ItemsModule } from "./items/items.module";
 import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
+import { PresentsModule } from "./presents/presents.module";
+import { CharactersModule } from "./characters/characters.module";
 import { AuthModule } from "./auth/auth.module";
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    ItemsModule,
+    UsersModule,
+    InventoryModule,
+    PresentsModule,
+    CharactersModule,
+    AuthModule,
+  ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
   providers: [AppService, ConfigService],
