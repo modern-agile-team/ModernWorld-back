@@ -32,7 +32,7 @@ export class CommentController {
   }
 
   @Patch(":no")
-  update(
+  updateComment(
     @Param("no", ParseIntPipe) no: number,
     @Body() content: UpdateCommentDto,
   ) {
