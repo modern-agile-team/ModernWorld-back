@@ -105,7 +105,7 @@ export class UsersService {
     }
 
     const { nickname: userName } =
-      await this.userRepository.findUserNickname(userNo);
+      await this.userRepository.findUserNicknameByUserNo(userNo);
 
     console.log(userName);
 
@@ -116,7 +116,7 @@ export class UsersService {
     const { nickname } = body;
 
     const duplicateName =
-      await this.userRepository.findUserByNickname(nickname);
+      await this.userRepository.findUserNicknameByNickname(nickname);
 
     if (duplicateName) {
       throw new ForbiddenException(`[${nickname}] is duplicated.`);

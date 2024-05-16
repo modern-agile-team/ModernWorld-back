@@ -37,14 +37,16 @@ export class UsersRepository {
     });
   }
 
-  findUserNickname(no: number): PrismaPromise<{ nickname: string }> {
+  findUserNicknameByUserNo(no: number): PrismaPromise<{ nickname: string }> {
     return this.prisma.user.findUnique({
       select: { nickname: true },
       where: { no },
     });
   }
 
-  findUserByNickname(nickname: string) {
+  findUserNicknameByNickname(
+    nickname: string,
+  ): PrismaPromise<{ nickname: string }> {
     return this.prisma.user.findUnique({
       select: { nickname: true },
       where: { nickname },
