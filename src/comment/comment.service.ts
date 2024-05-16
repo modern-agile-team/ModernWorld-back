@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CommentRepository } from "./comment.repository";
 import { comment } from "@prisma/client";
 import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
 
 @Injectable()
 export class CommentService {
@@ -10,7 +11,7 @@ export class CommentService {
     receiverNo: number,
     senderNo: number,
     createcontent: CreateCommentDto,
-  ) {
+  ): Promise<comment> {
     const { content } = createcontent;
 
     const comment = await this.CommentRepository.createComment(
@@ -30,7 +31,10 @@ export class CommentService {
     return result;
   }
 
-  async updateComment(id: number, createcontent: CreateCommentDto) {
+  async updateComment(
+    id: number,
+    createcontent: UpdateCommentDto,
+  ): Promise<comment> {
     const { content } = createcontent;
     const result = await this.CommentRepository.updateComment(id, content);
     return result;

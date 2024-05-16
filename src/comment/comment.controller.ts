@@ -10,6 +10,7 @@ import {
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
 
 @Controller("comment")
 export class CommentController {
@@ -24,18 +25,16 @@ export class CommentController {
     return this.commentService.commentCreate(receiverNo, userNo, content);
   }
 
-  @Get(":senderNo")
-  findAllComment(
-    @Param("senderNo", ParseIntPipe) senderNo: number,
-    @Query("page", ParseIntPipe) page: number,
-  ) {
-    return this.commentService.findComment(senderNo, page);
+  @Get()
+  findAllComment(@Query("page", ParseIntPipe) page: number) {
+    const userNo = 1;
+    return this.commentService.findComment(userNo, page);
   }
 
   @Patch(":no")
   update(
     @Param("no", ParseIntPipe) no: number,
-    @Body() content: CreateCommentDto,
+    @Body() content: UpdateCommentDto,
   ) {
     return this.commentService.updateComment(no, content);
   }
