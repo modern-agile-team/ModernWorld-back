@@ -8,6 +8,8 @@ import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
 import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
+import { PostsController } from './posts/posts.controller';
+import { PostsModule } from './posts/posts.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -17,9 +19,10 @@ import { CharactersModule } from "./characters/characters.module";
     InventoryModule,
     PresentsModule,
     CharactersModule,
+    PostsModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
-  controllers: [AppController],
+  controllers: [AppController, PostsController],
   providers: [AppService, ConfigService],
   // 앵간하면 nestJS에서 권장하는 방법인 ConfigService를 이용하여 환경변수 값을 사용해야함.
 })
