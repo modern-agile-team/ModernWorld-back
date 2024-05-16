@@ -120,15 +120,23 @@ export class UsersRepository {
     });
   }
 
-  updateUserNickname(userNo: number, nickname: string): PrismaPromise<user> {
+  updateUserNickname(
+    userNo: number,
+    nickname: string,
+  ): PrismaPromise<{ no: number; nickname: string }> {
     return this.prisma.user.update({
+      select: { no: true, nickname: true },
       data: { nickname },
       where: { no: userNo },
     });
   }
 
-  updateUserDescription(userNo: number, description: string) {
+  updateUserDescription(
+    userNo: number,
+    description: string,
+  ): PrismaPromise<{ no: number; description: string }> {
     return this.prisma.user.update({
+      select: { no: true, description: true },
       data: { description },
       where: { no: userNo },
     });

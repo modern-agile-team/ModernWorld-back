@@ -7,6 +7,8 @@ import {
 import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
+import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 
 @Injectable()
 export class UsersService {
@@ -96,17 +98,22 @@ export class UsersService {
   async updateUserNickname(
     tokenUserNo: number,
     userNo: number,
-    nickname: string,
+    body: UpdateUserNicknameDto,
   ) {
     if (tokenUserNo !== userNo) {
       throw new ForbiddenException("User can only fix their own name.");
     }
 
-    const userName = await this.userRepository.findUserNickname(userNo);
+    const { nickname: userName } =
+      await this.userRepository.findUserNickname(userNo);
+
+    console.log(userName);
 
     if (userName) {
       throw new ForbiddenException("User already has a nickname.");
     }
+
+    const { nickname } = body;
 
     const duplicateName =
       await this.userRepository.findUserByNickname(nickname);
@@ -118,7 +125,17 @@ export class UsersService {
     return this.userRepository.updateUserNickname(userNo, nickname);
   }
 
-  async updateUserDescription(userNo: number, description: string) {
+  async updateUserDescription(
+    tokenUserNo: number,
+    userNo: number,
+    body: UpdateUserDescriptionDto,
+  ) {
+    if (tokenUserNo !== userNo) {
+      throw new ForbiddenException("User can only fix their own description.");
+    }
+
+    const { description } = body;
+
     return this.userRepository.updateUserDescription(userNo, description);
   }
 

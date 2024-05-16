@@ -10,6 +10,8 @@ import {
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
+import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 
 @Controller("users")
 @ApiTags("Users")
@@ -51,20 +53,24 @@ export class UsersController {
   }
 
   @Patch(":userNo/nickname")
+  @ApiOperation({ summary: "유저 닉네임 변경 API" })
   updateUser(
     @Param("userNo", ParseIntPipe) userNo: number,
-    @Body("nickname") nickname: string,
+    @Body() body: UpdateUserNicknameDto,
   ) {
     const tokenUserNo = 1;
 
-    return this.usersService.updateUserNickname(tokenUserNo, userNo, nickname);
+    return this.usersService.updateUserNickname(tokenUserNo, userNo, body);
   }
 
   @Patch(":userNo/description")
+  @ApiOperation({ summary: "유저 자기소개 변경 API" })
   updateUserDescription(
     @Param("userNo", ParseIntPipe) userNo: number,
-    @Body("description") description: string,
+    @Body() body: UpdateUserDescriptionDto,
   ) {
-    return this.usersService.updateUserDescription(userNo, description);
+    const tokenUserNo = 1;
+
+    return this.usersService.updateUserDescription(tokenUserNo, userNo, body);
   }
 }
