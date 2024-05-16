@@ -6,8 +6,7 @@ import {
   Patch,
   Param,
   Query,
-  UsePipes,
-  ValidationPipe,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
@@ -18,7 +17,7 @@ export class CommentController {
 
   @Post(":receiverNo")
   createComment(
-    @Param("receiverNo") receiverNo: number,
+    @Param("receiverNo", ParseIntPipe) receiverNo: number,
     @Body() content: CreateCommentDto,
   ) {
     const userNo = 1;
@@ -27,19 +26,22 @@ export class CommentController {
 
   @Get(":senderNo")
   findAllComment(
-    @Param("senderNo") senderNo: number,
-    @Query("page") page: number,
+    @Param("senderNo", ParseIntPipe) senderNo: number,
+    @Query("page", ParseIntPipe) page: number,
   ) {
     return this.commentService.findComment(senderNo, page);
   }
 
   @Patch(":no")
-  update(@Param("no") no: number, @Body("content") content: string) {
+  update(
+    @Param("no", ParseIntPipe) no: number,
+    @Body() content: CreateCommentDto,
+  ) {
     return this.commentService.updateComment(no, content);
   }
 
   @Patch(":no")
-  softDeletComment(@Param("no") no: number) {
+  softDeletComment(@Param("no", ParseIntPipe) no: number) {
     return this.commentService.softDeleteComment(no);
   }
 }

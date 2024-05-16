@@ -9,9 +9,9 @@ export class CommentService {
   async commentCreate(
     receiverNo: number,
     senderNo: number,
-    content1: CreateCommentDto,
+    createcontent: CreateCommentDto,
   ) {
-    const { content } = content1;
+    const { content } = createcontent;
 
     const comment = await this.CommentRepository.createComment(
       receiverNo,
@@ -30,7 +30,8 @@ export class CommentService {
     return result;
   }
 
-  async updateComment(id: number, content: string) {
+  async updateComment(id: number, createcontent: CreateCommentDto) {
+    const { content } = createcontent;
     const result = await this.CommentRepository.updateComment(id, content);
     return result;
   }
