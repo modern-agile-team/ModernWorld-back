@@ -10,7 +10,6 @@ export async function achievement(prisma: PrismaClient) {
         name: `${i}번 업적`,
         description: `${i}번 업적 설명`,
         title: `${i}번 업적 칭호`,
-        fontColor: `#${i}번째 폰트 색`,
         level,
         point: 100,
       },
