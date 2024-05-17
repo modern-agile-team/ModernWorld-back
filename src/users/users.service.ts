@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -9,6 +10,7 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
+import { DomainEnum } from "./enum/domain-enum";
 
 @Injectable()
 export class UsersService {
@@ -21,26 +23,26 @@ export class UsersService {
     return this.userRepository.getUserNamePointTitleCharacter(userNo);
   }
 
-  // async createUser(
-  //   uniqueIdentifier: string,
-  //   socialName: string,
-  //   image: string,
-  //   domain: string,
-  // ) {
-  //   const result = await this.userRepository.createUser(
-  //     uniqueIdentifier,
-  //     socialName,
-  //     image,
-  //     domain,
-  //   );
-  //   return result;
-  // }
+  async createUser(
+    uniqueIdentifier: string,
+    socialName: string,
+    image: string,
+    domain: DomainEnum,
+  ) {
+    const result = await this.userRepository.createUser(
+      uniqueIdentifier,
+      socialName,
+      image,
+      domain,
+    );
+    return result;
+  }
 
   async getUserAttendance(userNo: number) {
     return this.userRepository.getUserAttendance(userNo);
   }
 
-  async markUserAttendance(tokenUserNo: number, userNo: number) {
+  async markUserAttendance(userNo: number) {
     /**
      * 일주일 출석부 가져와서 월, 화, 수, 목, 금, 토, 일
      * 즉, 요일에 따라 출석부가 갱신되어야함, 근데 한국시간 기준으로 만들어야함
@@ -57,29 +59,21 @@ export class UsersService {
      * 끝
      * */
 
-    //토큰의 userNo !== 파람의 userNo 작업
-
-    if (tokenUserNo !== userNo) {
-      throw new ForbiddenException(
-        "User can only check in on their own attendance.",
-      );
-    }
-
     const offset = 1000 * 60 * 60 * 9;
-    const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms)
+    const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms) 한국시각 반환함
     const day = today.getUTCDay(); //getDay()는 현재 로컬환경시각인 +9를 더해주는 바람에 안됨(뇌피셜)
 
     let attendance = (await this.userRepository.getUserAttendance(userNo))
       .attendance;
 
     if (attendance[day][0]) {
-      throw new BadRequestException("already attended");
+      throw new ConflictException("already attended");
     }
 
     attendance[day][0] = true;
 
     try {
-      const [user, point] = await this.prisma.$transaction([
+      this.prisma.$transaction([
         this.userRepository.updateUserAttendance(userNo, attendance),
 
         this.userRepository.updateUserCurrentPointAccumulationPoint(
@@ -88,26 +82,15 @@ export class UsersService {
         ),
       ]);
 
-      //아니 근데 이거 다 주는거 맞냐??;; 의미 없는것같은데
-      return [user, point];
+      return true;
     } catch (error) {
       throw new InternalServerErrorException("transaction error");
     }
   }
 
-  async updateUserNickname(
-    tokenUserNo: number,
-    userNo: number,
-    body: UpdateUserNicknameDto,
-  ) {
-    if (tokenUserNo !== userNo) {
-      throw new ForbiddenException("User can only fix their own name.");
-    }
-
+  async updateUserNickname(userNo: number, body: UpdateUserNicknameDto) {
     const { nickname: userName } =
       await this.userRepository.findUserNicknameByUserNo(userNo);
-
-    console.log(userName);
 
     if (userName) {
       throw new ForbiddenException("User already has a nickname.");
@@ -115,25 +98,17 @@ export class UsersService {
 
     const { nickname } = body;
 
-    const duplicateName =
+    const duplicatedName =
       await this.userRepository.findUserNicknameByNickname(nickname);
 
-    if (duplicateName) {
-      throw new ForbiddenException(`[${nickname}] is duplicated.`);
+    if (duplicatedName) {
+      throw new ForbiddenException(`'${nickname}' is duplicated.`);
     }
 
     return this.userRepository.updateUserNickname(userNo, nickname);
   }
 
-  async updateUserDescription(
-    tokenUserNo: number,
-    userNo: number,
-    body: UpdateUserDescriptionDto,
-  ) {
-    if (tokenUserNo !== userNo) {
-      throw new ForbiddenException("User can only fix their own description.");
-    }
-
+  async updateUserDescription(userNo: number, body: UpdateUserDescriptionDto) {
     const { description } = body;
 
     return this.userRepository.updateUserDescription(userNo, description);
