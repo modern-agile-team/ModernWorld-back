@@ -18,13 +18,21 @@ import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get("/attendance")
+  @ApiOperation({ summary: "유저 출석부 조회 API" })
+  getOneUserAttendance() {
+    const userNo = 1;
+
+    return this.usersService.getUserAttendance(userNo);
+  }
+
   @Get()
   @ApiOperation({ summary: "유저 불러오기 API" })
   getUsersByAnimal(@Query() queryParams: GetUsersByAnimalDto) {
     return this.usersService.getUsersByAnimal(queryParams);
   }
 
-  @Get(":userNo")
+  @Get("/:userNo")
   @ApiOperation({ summary: "특정 유저 불러오기 API" })
   @ApiParam({
     name: "userNo",
@@ -38,39 +46,27 @@ export class UsersController {
     return this.usersService.getUserNamePointTitleCharacter(userNo);
   }
 
-  @Get(":userNo/attendance")
-  @ApiOperation({ summary: "유저 출석부 조회 API" })
-  getOneUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
-    return this.usersService.getUserAttendance(userNo);
-  }
-
-  @Patch(":userNo/attendance")
+  @Patch("/attendance")
   @ApiOperation({ summary: "유저 출석부 체크 API" })
-  markUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
-    const tokenUserNo = 1;
+  markUserAttendance() {
+    const userNo = 1;
 
-    return this.usersService.markUserAttendance(tokenUserNo, userNo);
+    return this.usersService.markUserAttendance(userNo);
   }
 
-  @Patch(":userNo/nickname")
+  @Patch("/nickname")
   @ApiOperation({ summary: "유저 닉네임 변경 API" })
-  updateUser(
-    @Param("userNo", ParseIntPipe) userNo: number,
-    @Body() body: UpdateUserNicknameDto,
-  ) {
-    const tokenUserNo = 1;
+  updateUser(@Body() body: UpdateUserNicknameDto) {
+    const userNo = 1;
 
-    return this.usersService.updateUserNickname(tokenUserNo, userNo, body);
+    return this.usersService.updateUserNickname(userNo, body);
   }
 
-  @Patch(":userNo/description")
+  @Patch("/description")
   @ApiOperation({ summary: "유저 자기소개 변경 API" })
-  updateUserDescription(
-    @Param("userNo", ParseIntPipe) userNo: number,
-    @Body() body: UpdateUserDescriptionDto,
-  ) {
-    const tokenUserNo = 1;
+  updateUserDescription(@Body() body: UpdateUserDescriptionDto) {
+    const userNo = 1;
 
-    return this.usersService.updateUserDescription(tokenUserNo, userNo, body);
+    return this.usersService.updateUserDescription(userNo, body);
   }
 }
