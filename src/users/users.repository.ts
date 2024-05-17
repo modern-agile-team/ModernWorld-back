@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaPromise, user } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
+import { DomainEnum } from "./enum/domain-enum";
 
 @Injectable()
 export class UsersRepository {
@@ -20,19 +21,14 @@ export class UsersRepository {
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: string,
+    domain: DomainEnum,
   ): PrismaPromise<user> {
     return this.prisma.user.create({
       data: {
         uniqueIdentifier,
         socialName,
         image,
-        domain:
-          domain === "naver"
-            ? "naver"
-            : domain === "google"
-              ? "google"
-              : "kakao",
+        domain,
       },
     });
   }
@@ -103,7 +99,7 @@ export class UsersRepository {
     attendance: JsonValue;
   }> {
     return this.prisma.user.findUnique({
-      select: { nickname: true, attendance: true },
+      select: { no: true, nickname: true, attendance: true },
       where: { no: userNo },
     });
   }
