@@ -6,7 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class InventoryRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getUserAllItems(
+  getUserItems(
     userNo: number,
     theme: string,
     status: boolean,

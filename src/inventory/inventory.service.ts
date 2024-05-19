@@ -16,9 +16,9 @@ export class InventoryService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
-  getUserAllItems(userNo: number, queryParams: GetUserAllCharacteresDto) {
+  getUserItems(userNo: number, queryParams: GetUserAllCharacteresDto) {
     const { theme, status, itemName } = queryParams;
-    return this.inventoryRepository.getUserAllItems(
+    return this.inventoryRepository.getUserItems(
       userNo,
       theme,
       status,
@@ -26,7 +26,7 @@ export class InventoryService {
     );
   }
 
-  async buyOneItem(userNo: number, itemNo: number): Promise<boolean> {
+  async buyOneItem(userNo: number, itemNo: number) {
     /**
      * 아이템을 사는 로직
      *
@@ -64,6 +64,7 @@ export class InventoryService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
+    // 두 로직 트랜잭션으로 나중에 묶을 것.
     await this.inventoryRepository.addOneItem(userNo, itemNo);
 
     await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
@@ -71,7 +72,7 @@ export class InventoryService {
     return true;
   }
 
-  async useItemDisuseOthers(userNo: number, itemNo: number): Promise<boolean> {
+  async updateItemStatus(userNo: number, itemNo: number) {
     /**
      * user가 이미 같은 타입의 아이템을 사용하고 있다면 자동으로 바꿔줘야함
      * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
@@ -85,6 +86,7 @@ export class InventoryService {
 
     const { type } = await this.itemsRepository.getItemType(itemNo);
 
+    // 추후 트랜잭션
     await this.inventoryRepository.disuseOtherItems(userNo, type);
 
     await this.inventoryRepository.updateItemStatus(userNo, itemNo);
