@@ -10,14 +10,14 @@ export class CharactersController {
 
   @Get()
   @ApiOperation({
-    summary: "모든 캐릭터 불러오기 API",
+    summary: "캐릭터 가져오기 API",
     description: "캐릭터를 불러옵니다. species는 cat, dog",
   })
-  getCharactersBySpeices(
+  getCharacters(
     @Query()
     queryParams: GetCharactersDto,
   ) {
-    return this.charactersServcie.getCharactersBySpeices(queryParams);
+    return this.charactersServcie.getCharacters(queryParams);
   }
 
   @Get(":characterNo")
@@ -27,8 +27,6 @@ export class CharactersController {
   })
   @ApiParam({
     name: "characterNo",
-    type: Number,
-    required: true,
     example: 1,
   })
   getOneCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
