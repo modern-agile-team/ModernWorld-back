@@ -43,7 +43,6 @@ export class PresentsController {
   @ApiOperation({ summary: "특정 선물 가져오기 API" })
   @ApiParam({
     name: "presentNo",
-    type: Number,
     required: true,
     example: 1,
   })
@@ -53,21 +52,18 @@ export class PresentsController {
     return this.presentsService.getOnePresent(userNo, presentNo);
   }
 
+  //아 이건 진짜 짜치네ㄱ
   @Post(":itemNo/users/:userNo")
   @ApiOperation({ summary: "특정 선물 추가 API" })
   @ApiParam({
     name: "itemNo",
-    type: Number,
-    required: true,
     example: 1,
   })
   @ApiParam({
     name: "userNo",
-    type: Number,
-    required: true,
     example: 1,
   })
-  presentOneItem(
+  createOnePresent(
     @Param("itemNo", ParseIntPipe) itemNo: number,
     @Param("userNo", ParseIntPipe) receiverNo: number,
   ) {
@@ -80,8 +76,6 @@ export class PresentsController {
   @ApiOperation({ summary: "특정 선물 수락/거절 API" })
   @ApiParam({
     name: "presentNo",
-    type: Number,
-    required: true,
     example: 1,
   })
   updatePresentStatus(
@@ -102,8 +96,6 @@ export class PresentsController {
   @ApiOperation({ summary: "특정 선물 발신/수신 기준 제거 API" })
   @ApiParam({
     name: "presentNo",
-    type: Number,
-    required: true,
     example: 1,
   })
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {

@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -44,9 +45,7 @@ export class PresentsService {
 
   async getOnePresent(userNo: number, presentNo: number) {
     const present =
-      await this.presentRepository.getOnePresentWithItemUserInformation(
-        presentNo,
-      );
+      await this.presentRepository.getOnePresentWithItemUserInfo(presentNo);
 
     if (
       present.userPresentReceiverNo.no !== userNo &&
@@ -63,7 +62,7 @@ export class PresentsService {
         presentNo,
       );
 
-      present.status === "unread" ? (present.status = "read") : null;
+      present.status = "read";
     }
 
     return present;
@@ -94,25 +93,22 @@ export class PresentsService {
       await this.presentRepository.getOnePresent(presentNo);
 
     if (userNo !== receiverNo) {
-      throw new ForbiddenException("Users can only accept their own gifts.");
+      throw new ForbiddenException(
+        "Users can only accept or reject their own gifts.",
+      );
     }
 
     if (status !== "read") {
       throw new ForbiddenException("Present's status must be 'read'");
     }
 
-    await this.presentRepository.updateOnePresentStatus(
-      presentNo,
-      acceptReject,
-    );
-
     if (acceptReject === "accept") {
-      const existItem = await this.inventoryRepository.findOneItem(
+      const existedItem = await this.inventoryRepository.findOneItem(
         userNo,
         itemNo,
       );
 
-      if (existItem) {
+      if (existedItem) {
         const item = await this.itemsRepository.getOneItem(itemNo);
 
         await this.usersRepository.updateUserCurrentPointAccumulationPoint(
@@ -120,13 +116,24 @@ export class PresentsService {
           item.price / 2,
         );
 
-        return true;
+        return this.presentRepository.updateOnePresentStatus(
+          presentNo,
+          acceptReject,
+        );
       }
+
+      await this.inventoryRepository.addOneItem(userNo, itemNo);
+
+      return this.presentRepository.updateOnePresentStatus(
+        presentNo,
+        acceptReject,
+      );
     }
 
-    await this.inventoryRepository.addOneItem(userNo, itemNo);
-
-    return true;
+    return this.presentRepository.updateOnePresentStatus(
+      presentNo,
+      acceptReject,
+    );
   }
 
   async updateOnePresentTodelete(userNo: number, presentNo: number) {
@@ -136,10 +143,6 @@ export class PresentsService {
      * 존재하지 않거나 이미 발신/수신자 입장에서 삭제처리 되어있으면 에러 때리고
      *
      * 존재한다면 수/발신자 삭제 필드 에 따라 true로 설정
-     *
-     *
-     *
-     *
      */
 
     const present = await this.presentRepository.getOnePresent(presentNo);
@@ -152,19 +155,19 @@ export class PresentsService {
 
     if (userNo === senderNo) {
       if (senderDelete === true) {
-        throw new ForbiddenException("Already deleted from sender");
+        throw new ConflictException("Already deleted from sender.");
       }
 
-      return await this.presentRepository.updateOnePresentToDeleteBySenderReceiver(
+      return this.presentRepository.updateOnePresentToDeleteByUser(
         presentNo,
         "senderDelete",
       );
     } else if (userNo === receiverNo) {
       if (receiverDelete === true) {
-        throw new ForbiddenException("Already deleted from receiver");
+        throw new ConflictException("Already deleted from receiver.");
       }
 
-      return await this.presentRepository.updateOnePresentToDeleteBySenderReceiver(
+      return this.presentRepository.updateOnePresentToDeleteByUser(
         presentNo,
         "receiverDelete",
       );
@@ -210,14 +213,13 @@ export class PresentsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    //4번 과정 마저 할것.
+    //트랜잭션 묶을것.
     await this.usersRepository.updateUserCurrentPoint(senderNo, -item.price);
-    const present = await this.presentRepository.createOneItemToUser(
+
+    return this.presentRepository.createOneItemToUser(
       senderNo,
       receiverNo,
       itemNo,
     );
-
-    return present;
   }
 }

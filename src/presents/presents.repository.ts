@@ -38,7 +38,7 @@ export class PresentsRepository {
     });
   }
 
-  getOnePresentWithItemUserInformation(presentNo: number): PrismaPromise<{
+  getOnePresentWithItemUserInfo(presentNo: number): PrismaPromise<{
     no: number;
     status: present_status;
     createdAt: Date;
@@ -90,7 +90,7 @@ export class PresentsRepository {
     });
   }
 
-  updateOnePresentToDeleteBySenderReceiver(
+  updateOnePresentToDeleteByUser(
     presentNo: number,
     senderReceiverDeleteField: string,
   ): PrismaPromise<present> {
