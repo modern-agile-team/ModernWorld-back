@@ -26,8 +26,6 @@ export class CharacterLockerController {
   })
   @ApiParam({
     name: "userNo",
-    type: Number,
-    required: true,
     example: 1,
   })
   @ApiQuery({
@@ -39,7 +37,7 @@ export class CharacterLockerController {
   getUserCharacters(
     @Param("userNo", ParseIntPipe) userNo: number,
     @Query("species", new ParseEnumPipe(Animal, { optional: true }))
-    species?: Animal,
+    species: Animal,
   ) {
     return this.characterLockerService.getUserAllCharacters(userNo, species);
   }
@@ -66,7 +64,7 @@ export class CharacterLockerController {
   ) {
     const userNo = 1;
 
-    return this.characterLockerService.useCharacterDisuseOthers(
+    return this.characterLockerService.updateCharacterStatus(
       userNo,
       characterNo,
     );

@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -16,11 +17,11 @@ export class CharacterLockerService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  getUserAllCharacters(userNo: number, species?: Animal) {
+  getUserAllCharacters(userNo: number, species: Animal) {
     return this.characterLockerRepository.getUserAllCharacters(userNo, species);
   }
 
-  async buyOneCharacter(userNo: number, characterNo: number): Promise<boolean> {
+  async buyOneCharacter(userNo: number, characterNo: number) {
     /**
      * 유저가 캐릭터를 사는 로직
      * 1. 해당번호의 캐릭터가 캐릭터 테이블에 실제로 존재하는지 확인
@@ -50,7 +51,7 @@ export class CharacterLockerService {
       );
 
     if (userCharacter) {
-      throw new ForbiddenException("User already has this character");
+      throw new ConflictException("User already has this character");
     }
 
     const { currentPoint } = await this.usersRepository.findUserPoint(userNo);
@@ -59,17 +60,12 @@ export class CharacterLockerService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
-    await this.characterLockerRepository.addOneCharacter(userNo, characterNo);
-
     await this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
 
-    return true;
+    return this.characterLockerRepository.addOneCharacter(userNo, characterNo);
   }
 
-  async useCharacterDisuseOthers(
-    userNo: number,
-    characterNo: number,
-  ): Promise<object> {
+  async updateCharacterStatus(userNo: number, characterNo: number) {
     const character =
       await this.characterLockerRepository.findUserCharacterFromInventory(
         userNo,
@@ -81,16 +77,15 @@ export class CharacterLockerService {
     }
 
     // 트랜잭션으로 묶어놓을것.
-    const result = await this.characterLockerRepository.updateCharacterStatus(
-      userNo,
-      characterNo,
-    );
 
     await this.characterLockerRepository.disuseOtherCharacters(
       userNo,
       characterNo,
     );
 
-    return result;
+    return this.characterLockerRepository.updateCharacterStatus(
+      userNo,
+      characterNo,
+    );
   }
 }
