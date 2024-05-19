@@ -56,10 +56,11 @@ export class InventoryRepository {
   updateItemStatus(
     userNo: number,
     itemNo: number,
+    status: boolean,
   ): PrismaPromise<{ count: number }> {
     return this.prisma.inventory.updateMany({
       data: {
-        status: true,
+        status,
       },
       where: { userNo, itemNo },
     });

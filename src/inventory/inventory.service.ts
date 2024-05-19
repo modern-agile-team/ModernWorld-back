@@ -7,7 +7,8 @@ import {
 import { ItemsRepository } from "src/items/items.repository";
 import { InventoryRepository } from "./inventory.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { GetUserAllCharacteresDto } from "./dtos/get-user-all-characters.dto";
+import { GetUserItemsDto } from "./dtos/get-user-items.dto";
+import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
 
 @Injectable()
 export class InventoryService {
@@ -16,7 +17,7 @@ export class InventoryService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
-  getUserItems(userNo: number, queryParams: GetUserAllCharacteresDto) {
+  getUserItems(userNo: number, queryParams: GetUserItemsDto) {
     const { theme, status, itemName } = queryParams;
     return this.inventoryRepository.getUserItems(
       userNo,
@@ -72,16 +73,27 @@ export class InventoryService {
     return true;
   }
 
-  async updateItemStatus(userNo: number, itemNo: number) {
+  async updateItemStatus(
+    userNo: number,
+    itemNo: number,
+    body: UpdateUserItemStatusDto,
+  ) {
     /**
      * user가 이미 같은 타입의 아이템을 사용하고 있다면 자동으로 바꿔줘야함
      * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
      * 이것 역시 트랜잭션을 이용할것
      */
+
     const item = await this.inventoryRepository.findOneItem(userNo, itemNo);
 
     if (!item) {
       throw new NotFoundException("User doesn't have the item");
+    }
+
+    const { status } = body;
+
+    if (!status) {
+      return this.inventoryRepository.updateItemStatus(userNo, itemNo, status);
     }
 
     const { type } = await this.itemsRepository.getItemType(itemNo);
@@ -89,8 +101,6 @@ export class InventoryService {
     // 추후 트랜잭션
     await this.inventoryRepository.disuseOtherItems(userNo, type);
 
-    await this.inventoryRepository.updateItemStatus(userNo, itemNo);
-
-    return true;
+    return this.inventoryRepository.updateItemStatus(userNo, itemNo, status);
   }
 }

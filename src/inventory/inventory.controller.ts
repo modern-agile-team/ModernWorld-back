@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -9,7 +10,8 @@ import {
 } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { GetUserAllCharacteresDto } from "./dtos/get-user-all-characters.dto";
+import { GetUserItemsDto } from "./dtos/get-user-items.dto";
+import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
 
 @Controller("inventory")
 @ApiTags("Inventory")
@@ -24,7 +26,7 @@ export class InventoryController {
   @ApiParam({ name: "userNo", type: Number, required: true, example: 1 })
   getUserItems(
     @Param("userNo", ParseIntPipe) userNo: number,
-    @Query() queryParams: GetUserAllCharacteresDto,
+    @Query() queryParams: GetUserItemsDto,
   ) {
     return this.inventoryService.getUserItems(userNo, queryParams);
   }
@@ -42,13 +44,16 @@ export class InventoryController {
 
   @Patch(":itemNo")
   @ApiOperation({
-    summary: "아이템 사용 API",
+    summary: "아이템 사용 / 사용안함 API",
     description:
-      "사용시 같은 타입의 다른 아이템은 자동으로 사용해제 처리됩니다.",
+      "사용시 같은 타입의 다른 아이템은 자동으로 사용해제 처리됩니다. status의 true / false는 사용 / 사용안함",
   })
-  useItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
+  updateItemStatus(
+    @Param("itemNo", ParseIntPipe) itemNo: number,
+    @Body() body: UpdateUserItemStatusDto,
+  ) {
     const userNo = 1;
 
-    return this.inventoryService.updateItemStatus(userNo, itemNo);
+    return this.inventoryService.updateItemStatus(userNo, itemNo, body);
   }
 }
