@@ -28,8 +28,8 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: "유저 불러오기 API" })
-  getUsersByAnimal(@Query() queryParams: GetUsersByAnimalDto) {
-    return this.usersService.getUsersByAnimal(queryParams);
+  getUsers(@Query() queryParams: GetUsersByAnimalDto) {
+    return this.usersService.getUsers(queryParams);
   }
 
   @Get("/:userNo")
@@ -48,15 +48,15 @@ export class UsersController {
 
   @Patch("/attendance")
   @ApiOperation({ summary: "유저 출석부 체크 API" })
-  markUserAttendance() {
+  updateUserAttendance() {
     const userNo = 1;
 
-    return this.usersService.markUserAttendance(userNo);
+    return this.usersService.updateUserAttendance(userNo);
   }
 
   @Patch("/nickname")
   @ApiOperation({ summary: "유저 닉네임 변경 API" })
-  updateUser(@Body() body: UpdateUserNicknameDto) {
+  updateUserNickname(@Body() body: UpdateUserNicknameDto) {
     const userNo = 1;
 
     return this.usersService.updateUserNickname(userNo, body);

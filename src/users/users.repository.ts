@@ -1,5 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, user } from "@prisma/client";
+import {
+  PrismaPromise,
+  achievement,
+  character,
+  characterLocker,
+  like,
+  user,
+  userAchievement,
+} from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
 import { DomainEnum } from "./enum/domain-enum";
@@ -10,7 +18,7 @@ export class UsersRepository {
 
   findUserByUniqueIndentifier(
     uniqueIdentifier: string,
-  ): PrismaPromise<{ no: number; nickname: string; uniqueIdentifier: string }> {
+  ): PrismaPromise<Pick<user, "no" | "nickname" | "uniqueIdentifier">> {
     return this.prisma.user.findUnique({
       select: { no: true, nickname: true, uniqueIdentifier: true },
       where: { uniqueIdentifier },
@@ -33,7 +41,7 @@ export class UsersRepository {
     });
   }
 
-  findUserNicknameByUserNo(no: number): PrismaPromise<{ nickname: string }> {
+  findUserNicknameByUserNo(no: number): PrismaPromise<Pick<user, "nickname">> {
     return this.prisma.user.findUnique({
       select: { nickname: true },
       where: { no },
@@ -42,7 +50,7 @@ export class UsersRepository {
 
   findUserNicknameByNickname(
     nickname: string,
-  ): PrismaPromise<{ nickname: string }> {
+  ): PrismaPromise<Pick<user, "nickname">> {
     return this.prisma.user.findUnique({
       select: { nickname: true },
       where: { nickname },
@@ -52,11 +60,9 @@ export class UsersRepository {
   updateUserCurrentPoint(
     userNo: number,
     incrementalPoint: number,
-  ): PrismaPromise<{
-    nickname: string;
-    currentPoint: number;
-    accumulationPoint: number;
-  }> {
+  ): PrismaPromise<
+    Pick<user, "nickname" | "currentPoint" | "accumulationPoint">
+  > {
     return this.prisma.user.update({
       select: { nickname: true, currentPoint: true, accumulationPoint: true },
       data: {
@@ -69,11 +75,9 @@ export class UsersRepository {
   updateUserCurrentPointAccumulationPoint(
     userNo: number,
     incrementalPoint: number,
-  ): PrismaPromise<{
-    nickname: string;
-    currentPoint: number;
-    accumulationPoint: number;
-  }> {
+  ): PrismaPromise<
+    Pick<user, "nickname" | "currentPoint" | "accumulationPoint">
+  > {
     return this.prisma.user.update({
       select: { nickname: true, currentPoint: true, accumulationPoint: true },
       data: {
@@ -84,20 +88,18 @@ export class UsersRepository {
     });
   }
 
-  findUserPoint(userNo: number): PrismaPromise<{
-    nickname: string;
-    currentPoint: number;
-  }> {
+  findUserPoint(
+    userNo: number,
+  ): PrismaPromise<Pick<user, "nickname" | "currentPoint">> {
     return this.prisma.user.findUnique({
       select: { nickname: true, currentPoint: true },
       where: { no: userNo },
     });
   }
 
-  getUserAttendance(userNo: number): PrismaPromise<{
-    nickname: string;
-    attendance: JsonValue;
-  }> {
+  getUserAttendance(
+    userNo: number,
+  ): PrismaPromise<Pick<user, "no" | "nickname" | "attendance">> {
     return this.prisma.user.findUnique({
       select: { no: true, nickname: true, attendance: true },
       where: { no: userNo },
@@ -107,10 +109,7 @@ export class UsersRepository {
   updateUserAttendance(
     userNo: number,
     attendance: JsonValue,
-  ): PrismaPromise<{
-    nickname: string;
-    attendance: JsonValue;
-  }> {
+  ): PrismaPromise<Pick<user, "nickname" | "attendance">> {
     return this.prisma.user.update({
       select: { nickname: true, attendance: true },
       data: { attendance },
@@ -121,7 +120,7 @@ export class UsersRepository {
   updateUserNickname(
     userNo: number,
     nickname: string,
-  ): PrismaPromise<{ no: number; nickname: string }> {
+  ): PrismaPromise<Pick<user, "no" | "nickname">> {
     return this.prisma.user.update({
       select: { no: true, nickname: true },
       data: { nickname },
@@ -132,7 +131,7 @@ export class UsersRepository {
   updateUserDescription(
     userNo: number,
     description: string,
-  ): PrismaPromise<{ no: number; description: string }> {
+  ): PrismaPromise<Pick<user, "no" | "description">> {
     return this.prisma.user.update({
       select: { no: true, description: true },
       data: { description },
@@ -172,7 +171,7 @@ export class UsersRepository {
     });
   }
 
-  getUsersByAnimal(
+  getUsers(
     take: number,
     orderByField: string,
     skip: number,

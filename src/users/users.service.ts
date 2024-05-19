@@ -42,7 +42,7 @@ export class UsersService {
     return this.userRepository.getUserAttendance(userNo);
   }
 
-  async markUserAttendance(userNo: number) {
+  async updateUserAttendance(userNo: number) {
     /**
      * 일주일 출석부 가져와서 월, 화, 수, 목, 금, 토, 일
      * 즉, 요일에 따라 출석부가 갱신되어야함, 근데 한국시간 기준으로 만들어야함
@@ -58,6 +58,11 @@ export class UsersService {
      * 안돼있다면 출석체크 하고 포인트 얻음 (트랜잭션으로 묶음)ㅇ
      * 끝
      * */
+    /** 출석부의 형식은 다음과 같다. Json형태임
+     * {"0": [false, 100], "1": [false, 200], "2": [false, 300], "3": [false, 200], "4": [false, 400], "5": [true, 300], "6": [false, 300]}
+     *
+     * true가 출석했다는 의미, 그 뒤의 수는 출석했을 시 얻을 포인트
+     */
 
     const offset = 1000 * 60 * 60 * 9;
     const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms) 한국시각 반환함
@@ -72,6 +77,7 @@ export class UsersService {
 
     attendance[day][0] = true;
 
+    //짧게나마 트랜잭션을 구현했으나, 이는 나중에 좀더 수정해야 할듯함.
     try {
       this.prisma.$transaction([
         this.userRepository.updateUserAttendance(userNo, attendance),
@@ -84,7 +90,7 @@ export class UsersService {
 
       return true;
     } catch (error) {
-      throw new InternalServerErrorException("transaction error");
+      throw new InternalServerErrorException("transaction error.");
     }
   }
 
@@ -114,7 +120,7 @@ export class UsersService {
     return this.userRepository.updateUserDescription(userNo, description);
   }
 
-  async getUsersByAnimal(queryParams: GetUsersByAnimalDto) {
+  async getUsers(queryParams: GetUsersByAnimalDto) {
     const { pageNo, take, animal, orderByField, nickname } = queryParams;
 
     const skip = (pageNo - 1) * take;
@@ -131,7 +137,7 @@ export class UsersService {
       };
     }
 
-    const result = await this.userRepository.getUsersByAnimal(
+    const result = await this.userRepository.getUsers(
       take,
       orderByField,
       skip,
