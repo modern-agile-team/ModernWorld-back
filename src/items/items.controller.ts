@@ -11,8 +11,8 @@ export class ItemsController {
   @ApiOperation({
     summary: "아이템 가져오기 API",
   })
-  getUserItems(@Query() queryParms: GetUserAllItems) {
-    return this.itemsService.getUserItems(queryParms);
+  getItems(@Query() queryParms: GetUserAllItems) {
+    return this.itemsService.getItems(queryParms);
   }
 
   @Get(":itemNo")
