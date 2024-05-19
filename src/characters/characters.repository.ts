@@ -15,8 +15,8 @@ export class CharactersRepository {
   }
 
   getCharactersBySpeciesOrName(
-    species?: string,
-    characterName?: string,
+    species: string,
+    characterName: string,
   ): PrismaPromise<character[]> {
     return this.prisma.character.findMany({
       where: { species, name: { contains: characterName } },

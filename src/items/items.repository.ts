@@ -14,7 +14,7 @@ export class ItemsRepository {
     });
   }
 
-  getAllItems(theme?: string, itemName?: string): PrismaPromise<item[]> {
+  getAllItems(theme: string, itemName: string): PrismaPromise<item[]> {
     return this.prisma.item.findMany({
       where: { theme, name: { contains: itemName } },
     });

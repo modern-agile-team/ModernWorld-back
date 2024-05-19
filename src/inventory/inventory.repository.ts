@@ -8,9 +8,9 @@ export class InventoryRepository {
 
   getUserAllItems(
     userNo: number,
-    theme?: string,
-    status?: boolean,
-    itemName?: string,
+    theme: string,
+    status: boolean,
+    itemName: string,
   ): PrismaPromise<inventory[]> {
     return this.prisma.inventory.findMany({
       select: {

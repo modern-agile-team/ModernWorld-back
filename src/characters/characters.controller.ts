@@ -15,7 +15,7 @@ export class CharactersController {
   })
   getCharactersBySpeices(
     @Query()
-    queryParams?: GetCharactersDto,
+    queryParams: GetCharactersDto,
   ) {
     return this.charactersServcie.getCharactersBySpeices(queryParams);
   }
