@@ -3,7 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
 import { IsBoolean, IsOptional, IsString } from "class-validator";
 
-export class GetUserAllCharacteresDto {
+export class GetUserItemsDto {
   @ApiProperty({
     name: "theme",
     type: String,
