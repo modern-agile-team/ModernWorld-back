@@ -14,8 +14,12 @@ export class ItemsRepository {
     });
   }
 
-  getItems(theme: string, itemName: string): PrismaPromise<item[]> {
+  getItems(
+    theme: string,
+    itemName: string,
+  ): PrismaPromise<Pick<item, "no" | "name" | "image">[]> {
     return this.prisma.item.findMany({
+      select: { no: true, name: true, image: true },
       where: { theme, name: { contains: itemName } },
     });
   }
