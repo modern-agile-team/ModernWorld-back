@@ -34,8 +34,6 @@ export class PresentsController {
     @Query("type", new ParseEnumPipe(SenderReceiverNoField, { optional: true }))
     senderReceiverNoField: SenderReceiverNoField,
   ) {
-    console.log(`Get /presents/${senderReceiverNoField}`);
-
     const userNo = 1;
 
     return this.presentsService.getPresents(userNo, senderReceiverNoField);
@@ -50,7 +48,6 @@ export class PresentsController {
     example: 1,
   })
   getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log(`Get /presents/:${presentNo}`);
     const userNo = 1;
 
     return this.presentsService.getOnePresent(userNo, presentNo);
@@ -74,8 +71,6 @@ export class PresentsController {
     @Param("itemNo", ParseIntPipe) itemNo: number,
     @Param("userNo", ParseIntPipe) receiverNo: number,
   ) {
-    console.log(`Post /presents/:${itemNo}/users/:${receiverNo}`);
-
     const userNo = 1;
 
     return this.presentsService.createOnePresent(userNo, itemNo, receiverNo);
@@ -94,8 +89,6 @@ export class PresentsController {
     @Body()
     body: PresentAcceptRejectDto,
   ) {
-    console.log(`Patch /presents/:${presentNo}`);
-
     const userNo = 1;
 
     return this.presentsService.acceptOrRejectOnePresent(
@@ -114,8 +107,6 @@ export class PresentsController {
     example: 1,
   })
   deleteOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
-    console.log(`Delete /presents/:${presentNo}`);
-
     const userNo = 1;
 
     return this.presentsService.updateOnePresentTodelete(userNo, presentNo);
