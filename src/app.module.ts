@@ -8,9 +8,11 @@ import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
 import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
+import { ScheduleModule } from "@nestjs/schedule";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     ItemsModule,
     UsersModule,
