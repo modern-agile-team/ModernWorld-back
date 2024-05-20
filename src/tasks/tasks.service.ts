@@ -1,4 +1,10 @@
 import { Injectable } from "@nestjs/common";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
-export class TasksService {}
+export class TasksService {
+  @Cron("* * * * * *")
+  test() {
+    console.log("뭉탱이");
+  }
+}
