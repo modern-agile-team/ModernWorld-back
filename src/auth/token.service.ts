@@ -9,7 +9,7 @@ export class TokenService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async createAccessToken(userId: string, userNo: number) {
+  createAccessToken(userId: string, userNo: number) {
     const payload = { userId, userNo };
 
     return this.jwtService.sign(payload, {
@@ -17,7 +17,7 @@ export class TokenService {
       secret: process.env.ACCESS_TOKEN_SECRET,
     });
   }
-  async createRefreshToken(userId: string, userNo: number) {
+  createRefreshToken(userId: string, userNo: number) {
     const payload = { userId, userNo };
 
     return this.jwtService.sign(payload, {

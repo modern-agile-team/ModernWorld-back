@@ -71,11 +71,11 @@ export class AuthService {
           "naver",
         );
       }
-      const accessToken = await this.tokenService.createAccessToken(
+      const accessToken = this.tokenService.createAccessToken(
         userUniqueNumber,
         user.no,
       );
-      const refreshToken = await this.tokenService.createRefreshToken(
+      const refreshToken = this.tokenService.createRefreshToken(
         userUniqueNumber,
         user.no,
       );
