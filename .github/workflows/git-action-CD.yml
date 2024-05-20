@@ -18,4 +18,4 @@ jobs:
     - name: Delete Old docker container
       run: sudo docker rm -f ma7-back-1 || true
     - name: Run Docker Container
-      run: cd /home/ubuntu/MA7 | sudo docker compose up
+      run: cd /home/ubuntu/MA7 && sudo docker compose up
