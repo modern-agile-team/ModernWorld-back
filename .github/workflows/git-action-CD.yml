@@ -16,7 +16,7 @@ jobs:
     
 
     - name: Delete Old docker container
-      run: docker rm -f ma7-back || true
+      run: docker rm -f ma7-back-1 || true
     - name: Login Dockerhub
       env:
         DOCKER_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
