@@ -16,6 +16,8 @@ jobs:
 
     - name: Delete Old docker container
       run: docker rm -f ma7-back-1 || true
+    - name: Delete Old docker image
+      run: docker rmi cogeu/secret || true
     - name: Login Dockerhub
       env:
         DOCKER_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
@@ -24,4 +26,4 @@ jobs:
     - name: Pull Docker image
       run: docker pull cogeu/secret:latest
     - name: Run Docker Container
-      run: docker-compose -f /home/ubuntu/MA7/docker-compose.yml up
+      run: docker-compose -f /home/ubuntu/MA7/docker-compose.yml up -d
