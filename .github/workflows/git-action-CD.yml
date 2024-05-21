@@ -10,12 +10,13 @@ jobs:
 
   build:
 
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Pull Docker image
-      run: sudo docker pull cogeu/secret:latest
+
     - name: Delete Old docker container
       run: sudo docker rm -f ma7-back-1 || true
+    - name: Pull Docker image
+      run: sudo docker pull cogeu/secret:latest
     - name: Run Docker Container
       run: sudo docker-compose -f /home/ubuntu/MA7/docker-compose.yml up
