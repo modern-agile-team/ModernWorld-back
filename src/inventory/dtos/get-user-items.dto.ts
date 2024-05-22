@@ -1,23 +1,17 @@
 import { BadRequestException } from "@nestjs/common";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsBoolean, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsOptional } from "class-validator";
 
 export class GetUserItemsDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "theme",
-    type: String,
-    required: false,
     example: "테마이름",
   })
-  @IsString()
-  @IsOptional()
   theme?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "status",
-    type: Boolean,
-    required: false,
     example: true,
   })
   @IsBoolean()
@@ -31,13 +25,9 @@ export class GetUserItemsDto {
   @IsOptional()
   status?: boolean;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "itemName",
-    type: String,
-    required: false,
     example: "왕덕봉",
   })
-  @IsString()
-  @IsOptional()
   itemName?: string;
 }
