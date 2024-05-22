@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
 import { Type } from "class-transformer";
 import { Animal } from "../../common/enum/animal.enum";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
@@ -11,7 +11,7 @@ export class GetUsersByAnimalDto {
     example: 1,
   })
   @Type(() => Number)
-  @IsNumber()
+  @IsInt()
   pageNo: number;
 
   @ApiProperty({
@@ -20,7 +20,7 @@ export class GetUsersByAnimalDto {
     example: 10,
   })
   @Type(() => Number)
-  @IsNumber()
+  @IsInt()
   take: number;
 
   @ApiPropertyOptional({
