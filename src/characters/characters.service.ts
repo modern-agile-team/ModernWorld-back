@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { CharactersRepository } from "./characters.repository";
-import { GetCharactersDto } from "./dtos/get-charactes.dto";
+import { GetCharactersDto } from "./dtos/get-characters.dto";
 
 @Injectable()
 export class CharactersService {

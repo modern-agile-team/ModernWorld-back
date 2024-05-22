@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
-import { GetCharactersDto } from "./dtos/get-charactes.dto";
+import { GetCharactersDto } from "./dtos/get-characters.dto";
 
 @Controller("characters")
 @ApiTags("Characters")
