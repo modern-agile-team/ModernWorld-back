@@ -22,9 +22,9 @@ export class CommentService {
     return comment;
   }
 
-  async findComment(senderNo: number, page: number) {
+  async getComment(senderNo: number, page: number) {
     const commentPage = (page - 1) * 2;
-    const result = await this.CommentRepository.findComment(
+    const result = await this.CommentRepository.getComment(
       senderNo,
       commentPage,
     );

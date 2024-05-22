@@ -15,7 +15,7 @@ export class CommentRepository {
     });
   }
 
-  findComment(senderNo: number, commentPage: number) {
+  getComment(senderNo: number, commentPage: number) {
     return this.prisma.comment.findMany({
       skip: commentPage,
       take: 2,

@@ -26,9 +26,9 @@ export class CommentController {
   }
 
   @Get()
-  findAllComment(@Query("page", ParseIntPipe) page: number) {
+  getComment(@Query("page", ParseIntPipe) page: number) {
     const userNo = 1;
-    return this.commentService.findComment(userNo, page);
+    return this.commentService.getComment(userNo, page);
   }
 
   @Patch(":no")
