@@ -12,7 +12,7 @@ import { CharacterLockerService } from "./characterLocker.service";
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { Animal } from "src/common/enum/animal.enum";
 
-@Controller("characterLocker")
+@Controller("character-locker")
 @ApiTags("CharacterLocker")
 export class CharacterLockerController {
   constructor(
@@ -37,7 +37,7 @@ export class CharacterLockerController {
   getUserCharacters(
     @Param("userNo", ParseIntPipe) userNo: number,
     @Query("species", new ParseEnumPipe(Animal, { optional: true }))
-    species: Animal,
+    species?: Animal,
   ) {
     return this.characterLockerService.getUserAllCharacters(userNo, species);
   }
