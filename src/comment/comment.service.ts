@@ -1,47 +1,36 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CommentRepository } from "./comment.repository";
-import { comment } from "@prisma/client";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
 
 @Injectable()
 export class CommentService {
   constructor(private readonly CommentRepository: CommentRepository) {}
-  async commentCreate(
+  async createComment(
     receiverNo: number,
     senderNo: number,
     createcontent: CreateCommentDto,
-  ): Promise<comment> {
+  ) {
     const { content } = createcontent;
 
-    const comment = await this.CommentRepository.createComment(
+    return await this.CommentRepository.createComment(
       receiverNo,
       senderNo,
       content,
     );
-    return comment;
   }
 
   async getComment(senderNo: number, page: number) {
     const commentPage = (page - 1) * 2;
-    const result = await this.CommentRepository.getComment(
-      senderNo,
-      commentPage,
-    );
-    return result;
+    return await this.CommentRepository.getComment(senderNo, commentPage);
   }
 
-  async updateComment(
-    id: number,
-    createcontent: UpdateCommentDto,
-  ): Promise<comment> {
+  async updateComment(id: number, createcontent: UpdateCommentDto) {
     const { content } = createcontent;
-    const result = await this.CommentRepository.updateComment(id, content);
-    return result;
+    return await this.CommentRepository.updateComment(id, content);
   }
 
-  async softDeleteComment(id: number): Promise<comment> {
-    const result = await this.CommentRepository.softDeleteComment(id);
-    return result;
+  async softDeleteComment(id: number) {
+    return await this.CommentRepository.softDeleteComment(id);
   }
 }

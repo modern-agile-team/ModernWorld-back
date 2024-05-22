@@ -23,7 +23,7 @@ export class CommentController {
     @Body() content: CreateCommentDto,
   ) {
     const userNo = 1;
-    return this.commentService.commentCreate(receiverNo, userNo, content);
+    return this.commentService.createComment(receiverNo, userNo, content);
   }
 
   @Get()
@@ -41,7 +41,7 @@ export class CommentController {
   }
 
   @Delete(":commnetNo")
-  softDeletComment(@Param("commnetNo", ParseIntPipe) commentNo: number) {
+  softDeleteComment(@Param("commnetNo", ParseIntPipe) commentNo: number) {
     return this.commentService.softDeleteComment(commentNo);
   }
 }
