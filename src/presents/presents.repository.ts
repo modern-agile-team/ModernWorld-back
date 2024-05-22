@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AcceptReject, PresentStatus } from "./enum/present-status-enum";
-import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { AcceptReject, PresentStatus } from "./enum/present-status.enum";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo.enum";
 import { PrismaPromise, present, present_status } from "@prisma/client";
 
 @Injectable()

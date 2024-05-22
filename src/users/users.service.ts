@@ -10,7 +10,7 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
-import { DomainEnum } from "./enum/domain-enum";
+import { DomainEnum } from "./enum/domain.enum";
 
 @Injectable()
 export class UsersService {

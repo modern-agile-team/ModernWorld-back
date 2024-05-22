@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo.enum";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 
 @Controller("presents")

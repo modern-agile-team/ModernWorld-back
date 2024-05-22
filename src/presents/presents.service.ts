@@ -8,7 +8,7 @@ import { PresentsRepository } from "./presents.repository";
 import { InventoryRepository } from "src/inventory/inventory.repository";
 import { ItemsRepository } from "src/items/items.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { SenderReceiverNoField } from "./enum/present-senderReceiverNo-enum";
+import { SenderReceiverNoField } from "./enum/present-senderReceiverNo.enum";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 
 @Injectable()

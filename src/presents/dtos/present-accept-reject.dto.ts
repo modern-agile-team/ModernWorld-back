@@ -1,5 +1,5 @@
 import { IsEnum } from "class-validator";
-import { AcceptReject } from "../enum/present-status-enum";
+import { AcceptReject } from "../enum/present-status.enum";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class PresentAcceptRejectDto {
