@@ -23,7 +23,7 @@ export class InventoryController {
     summary: "유저의 인벤토리 조회 API",
     description: "유저의 인벤토리를 조회합니다.",
   })
-  @ApiParam({ name: "userNo", type: Number, required: true, example: 1 })
+  @ApiParam({ name: "userNo", example: 1 })
   getUserItems(
     @Param("userNo", ParseIntPipe) userNo: number,
     @Query() queryParams: GetUserItemsDto,
@@ -46,7 +46,7 @@ export class InventoryController {
   @ApiOperation({
     summary: "아이템 사용 / 사용안함 API",
     description:
-      "사용시 같은 타입의 다른 아이템은 자동으로 사용해제 처리됩니다. status의 true / false는 사용 / 사용안함",
+      "사용시 같은 타입의 다른 아이템은 자동으로 사용해제 처리됩니다.",
   })
   updateItemStatus(
     @Param("itemNo", ParseIntPipe) itemNo: number,
