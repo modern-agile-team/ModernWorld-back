@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  Delete,
 } from "@nestjs/common";
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
@@ -31,16 +32,16 @@ export class CommentController {
     return this.commentService.getComment(userNo, page);
   }
 
-  @Patch(":no")
+  @Patch(":commnetNo")
   updateComment(
-    @Param("no", ParseIntPipe) no: number,
+    @Param("commnetNo", ParseIntPipe) commentNo: number,
     @Body() content: UpdateCommentDto,
   ) {
-    return this.commentService.updateComment(no, content);
+    return this.commentService.updateComment(commentNo, content);
   }
 
-  @Patch(":no")
-  softDeletComment(@Param("no", ParseIntPipe) no: number) {
-    return this.commentService.softDeleteComment(no);
+  @Delete(":commnetNo")
+  softDeletComment(@Param("commnetNo", ParseIntPipe) commentNo: number) {
+    return this.commentService.softDeleteComment(commentNo);
   }
 }
