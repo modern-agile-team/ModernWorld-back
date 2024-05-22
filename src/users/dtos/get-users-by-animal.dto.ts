@@ -7,8 +7,6 @@ import { orderByField } from "../enum/orderByFeild-enum";
 export class GetUsersByAnimalDto {
   @ApiProperty({
     name: "pageNo",
-    type: Number,
-    required: true,
     description: "페이지 번호",
     example: 1,
   })
@@ -18,8 +16,6 @@ export class GetUsersByAnimalDto {
 
   @ApiProperty({
     name: "take",
-    type: Number,
-    required: true,
     description: "가져올 자료 개수",
     example: 10,
   })
@@ -39,9 +35,7 @@ export class GetUsersByAnimalDto {
 
   @ApiProperty({
     name: "orderByField",
-    type: String,
     description: "정렬 종류 (like, accumulationPoint, createdAt)",
-    required: true,
     example: "like",
   })
   @IsEnum(orderByField)
@@ -49,7 +43,6 @@ export class GetUsersByAnimalDto {
 
   @ApiPropertyOptional({
     name: "nickname",
-    type: String,
     description: "검색할 유저 이름",
     example: "엄준식",
   })
