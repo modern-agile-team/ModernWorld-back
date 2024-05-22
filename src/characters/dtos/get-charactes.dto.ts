@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsOptional, IsString } from "class-validator";
-import { Animal } from "src/common/enum/animal-enum";
+import { Animal } from "src/common/enum/animal.enum";
 
 export class GetCharactersDto {
   @ApiProperty({

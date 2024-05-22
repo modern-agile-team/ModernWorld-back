@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, characterLocker } from "@prisma/client";
-import { Animal } from "src/common/enum/animal-enum";
+import { Animal } from "src/common/enum/animal.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()

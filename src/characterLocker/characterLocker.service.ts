@@ -7,7 +7,7 @@ import {
 import { CharacterLockerRepository } from "./characterLocker.repository";
 import { CharactersRepository } from "src/characters/characters.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { Animal } from "src/common/enum/animal-enum";
+import { Animal } from "src/common/enum/animal.enum";
 
 @Injectable()
 export class CharacterLockerService {

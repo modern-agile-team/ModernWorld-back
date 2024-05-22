@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { CharacterLockerService } from "./characterLocker.service";
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { Animal } from "src/common/enum/animal-enum";
+import { Animal } from "src/common/enum/animal.enum";
 
 @Controller("characterLocker")
 @ApiTags("CharacterLocker")
