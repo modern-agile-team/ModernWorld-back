@@ -83,7 +83,7 @@ export class CharacterLockerService {
       characterNo,
     );
 
-    return this.characterLockerRepository.updateCharacterStatus(
+    return this.characterLockerRepository.updateCharacterStatusToUse(
       userNo,
       characterNo,
     );

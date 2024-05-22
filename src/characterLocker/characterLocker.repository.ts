@@ -40,7 +40,7 @@ export class CharacterLockerRepository {
     });
   }
 
-  updateCharacterStatus(
+  updateCharacterStatusToUse(
     userNo: number,
     characterNo: number,
   ): PrismaPromise<{ count: number }> {
