@@ -20,6 +20,5 @@ export class GetCharactersDto {
     example: "캐릭터 이름",
   })
   @IsOptional()
-  @IsString()
   characterName?: string;
 }
