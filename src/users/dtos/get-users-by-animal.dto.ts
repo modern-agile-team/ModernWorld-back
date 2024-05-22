@@ -1,7 +1,7 @@
 import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 import { Type } from "class-transformer";
 import { Animal } from "../../common/enum/animal.enum";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { orderByField } from "../enum/orderByFeild-enum";
 
 export class GetUsersByAnimalDto {
@@ -27,11 +27,10 @@ export class GetUsersByAnimalDto {
   @IsNumber()
   take: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "animal",
     enum: Animal,
-    required: false,
-    description: "동물 종류 (cat, dog)",
+    description: "동물 분류",
     example: "dog",
   })
   @IsOptional()
@@ -48,14 +47,12 @@ export class GetUsersByAnimalDto {
   @IsEnum(orderByField)
   orderByField: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "nickname",
     type: String,
-    required: false,
     description: "검색할 유저 이름",
     example: "엄준식",
   })
   @IsOptional()
-  @IsString()
   nickname?: string;
 }
