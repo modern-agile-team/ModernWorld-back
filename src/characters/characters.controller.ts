@@ -11,7 +11,7 @@ export class CharactersController {
   @Get()
   @ApiOperation({
     summary: "캐릭터 가져오기 API",
-    description: "캐릭터를 불러옵니다. species는 cat, dog",
+    description: "캐릭터를 불러옵니다.",
   })
   getCharacters(
     @Query()
