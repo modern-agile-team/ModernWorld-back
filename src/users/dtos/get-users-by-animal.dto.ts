@@ -46,6 +46,5 @@ export class GetUsersByAnimalDto {
     description: "검색할 유저 이름",
     example: "엄준식",
   })
-  @IsOptional()
   nickname?: string;
 }
