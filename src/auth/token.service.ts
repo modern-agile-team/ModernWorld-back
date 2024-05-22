@@ -9,16 +9,17 @@ export class TokenService {
     private readonly jwtService: JwtService,
   ) {}
 
-  createAccessToken(userId: string, userNo: number) {
-    const payload = { userId, userNo };
+  createAccessToken(userNo: number) {
+    const payload = { sub: "accessToken", userNo };
 
     return this.jwtService.sign(payload, {
-      expiresIn: "6h",
+      expiresIn: "10m",
       secret: process.env.ACCESS_TOKEN_SECRET,
     });
   }
-  createRefreshToken(userId: string, userNo: number) {
-    const payload = { userId, userNo };
+
+  createRefreshToken(userNo: number) {
+    const payload = { sub: "refreshToken", userNo };
 
     return this.jwtService.sign(payload, {
       expiresIn: "7d",

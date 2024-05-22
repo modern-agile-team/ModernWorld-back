@@ -1,6 +1,15 @@
-import { Controller, Get, NotFoundException, Query } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { use } from "passport";
+import { AccessTokenAuthGuard } from "./jwt.guard";
+import { userNo } from "./auth.decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -29,6 +38,7 @@ export class AuthController {
       },
     },
   })
+  // @UseGuards(AccessTokenAuthGuard) //가드 사용 예제
   naverLogin(@Query("code") code: string) {
     if (!code) {
       throw new NotFoundException("인가 코드가 없습니다.");
@@ -52,5 +62,11 @@ export class AuthController {
       throw new NotFoundException("인가 코드가 없습니다.");
     }
     return this.authService.kakaoLogin(code);
+  }
+  @UseGuards(AccessTokenAuthGuard)
+  @Get("test")
+  test(@userNo() userNo: number) {
+    console.log("test");
+    console.log(userNo);
   }
 }

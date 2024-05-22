@@ -71,14 +71,9 @@ export class AuthService {
           "naver",
         );
       }
-      const accessToken = this.tokenService.createAccessToken(
-        userUniqueNumber,
-        user.no,
-      );
-      const refreshToken = this.tokenService.createRefreshToken(
-        userUniqueNumber,
-        user.no,
-      );
+      const accessToken = this.tokenService.createAccessToken(user.no);
+      const refreshToken = this.tokenService.createRefreshToken(user.no);
+
       await this.tokenRepository.saveTokens(
         user.no,
         socialAccessToken,
@@ -152,14 +147,8 @@ export class AuthService {
           "kakao",
         );
       }
-      const accessToken = await this.tokenService.createAccessToken(
-        userUniqueNumber,
-        user.no,
-      );
-      const refreshToken = await this.tokenService.createRefreshToken(
-        userUniqueNumber,
-        user.no,
-      );
+      const accessToken = this.tokenService.createAccessToken(user.no);
+      const refreshToken = this.tokenService.createRefreshToken(user.no);
       await this.tokenRepository.saveTokens(
         user.no,
         socialAccessToken,
