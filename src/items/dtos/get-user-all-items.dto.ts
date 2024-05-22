@@ -1,24 +1,15 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 
 export class GetUserAllItems {
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "theme",
-    type: String,
-    required: false,
     example: "테마이름",
   })
-  @IsString()
-  @IsOptional()
   theme?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "itemName",
-    type: String,
-    required: false,
     example: "아이템 이름",
   })
-  @IsString()
-  @IsOptional()
   itemName?: string;
 }
