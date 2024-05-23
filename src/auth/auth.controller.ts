@@ -1,13 +1,13 @@
 import {
+  BadRequestException,
   Controller,
   Get,
-  NotFoundException,
+  Post,
   Query,
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { use } from "passport";
 import { AccessTokenAuthGuard } from "./jwt.guard";
 import { userNo } from "./auth.decorator";
 
@@ -15,18 +15,7 @@ import { userNo } from "./auth.decorator";
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Get()
-  // @UseGuards(AuthGuard("google"))
-  // async googleAuth(@Req() req) {}
-  // @UseGuards(AuthGuard(""))
-  // @Get("google/login")
-  // googleLogin(@Query("code") code: string) {
-  //   if (!code) {
-  //     throw new Error("인가 코드가 없습니다.");
-  //   }
-  //   // return this.authService.googleLogin(code);
-  // }
-  @Get("naver/login")
+  @Post("naver/login")
   @ApiOperation({ summary: "네이버 로그인" })
   @ApiQuery({ name: "code", description: "인가 코드", required: true })
   @ApiResponse({
@@ -41,11 +30,12 @@ export class AuthController {
   // @UseGuards(AccessTokenAuthGuard) //가드 사용 예제
   naverLogin(@Query("code") code: string) {
     if (!code) {
-      throw new NotFoundException("인가 코드가 없습니다.");
+      throw new BadRequestException("인가 코드가 없습니다.");
     }
     return this.authService.naverLogin(code);
   }
-  @Get("kakao/login")
+
+  @Post("kakao/login")
   @ApiOperation({ summary: "카카오 로그인" })
   @ApiQuery({ name: "code", description: "인가 코드", required: true })
   @ApiResponse({
@@ -59,10 +49,11 @@ export class AuthController {
   })
   kakaoLogin(@Query("code") code: string) {
     if (!code) {
-      throw new NotFoundException("인가 코드가 없습니다.");
+      throw new BadRequestException("인가 코드가 없습니다.");
     }
     return this.authService.kakaoLogin(code);
   }
+
   @UseGuards(AccessTokenAuthGuard)
   @Get("test")
   test(@userNo() userNo: number) {

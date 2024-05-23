@@ -41,7 +41,9 @@ export class AuthService {
         )
       ).data;
       if (!token) {
-        throw new Error("소셜 토큰 발급 중 에러가 발생했습니다.");
+        throw new InternalServerErrorException(
+          "소셜 토큰 발급 중 에러가 발생했습니다.",
+        );
       }
       const socialAccessToken = token.access_token;
       const socialRefreshToken = token.refresh_token;
@@ -56,7 +58,9 @@ export class AuthService {
         })
       ).data;
       if (!userInfo) {
-        throw new Error("소셜 유저 정보를 가져오는 데 실패했습니다.");
+        throw new InternalServerErrorException(
+          "소셜 유저 정보를 가져오는 데 실패했습니다.",
+        );
       }
 
       const userUniqueNumber = userInfo.response.id;
@@ -117,7 +121,9 @@ export class AuthService {
         )
       ).data;
       if (!token) {
-        throw new Error("소셜 토큰 발급 중 에러가 발생했습니다.");
+        throw new InternalServerErrorException(
+          "소셜 토큰 발급 중 에러가 발생했습니다.",
+        );
       }
       const socialAccessToken = token.access_token;
       const socialRefreshToken = token.refresh_token;
@@ -131,17 +137,21 @@ export class AuthService {
         })
       ).data;
       if (!userInfo) {
-        throw new Error("소셜 유저 정보를 가져오는 데 실패했습니다.");
+        throw new InternalServerErrorException(
+          "소셜 유저 정보를 가져오는 데 실패했습니다.",
+        );
       }
 
-      const userUniqueNumber = userInfo.id.toString();
+      const userUniqueIdentifier = userInfo.id.toString();
       const userProperties = userInfo.properties;
 
       let user =
-        await this.userRepository.findUserByUniqueIndentifier(userUniqueNumber);
+        await this.userRepository.findUserByUniqueIndentifier(
+          userUniqueIdentifier,
+        );
       if (!user) {
         user = await this.userRepository.createUser(
-          userUniqueNumber,
+          userUniqueIdentifier,
           userProperties.nickname,
           userProperties.profile_image,
           "kakao",
