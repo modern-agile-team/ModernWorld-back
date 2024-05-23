@@ -1,48 +1,25 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-} from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { ItemsService } from "./items.service";
+import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { GetUserAllItems } from "./dtos/get-user-all-items.dto";
 
 @Controller("items")
+@ApiTags("Items")
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) {}
   @Get()
-  getUserItems(@Query("theme") theme?: string) {
-    return this.itemsService.getUserItems(theme);
+  @ApiOperation({
+    summary: "아이템 가져오기 API",
+  })
+  getItems(@Query() queryParms: GetUserAllItems) {
+    return this.itemsService.getItems(queryParms);
   }
 
   @Get(":itemNo")
+  @ApiOperation({
+    summary: "특정 아이템 가져오기 API",
+  })
   getOneItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
     return this.itemsService.getOneItem(itemNo);
-  }
-
-  @Post(":itemNo")
-  buyItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
-    const userNo = 1;
-    return this.itemsService.buyOneItem(userNo, itemNo);
-  }
-
-  //사실 이 요청은 /users/:userNo/presents/:itemNo 에 흡수될 가능성이 높습니다.
-  @Post(":itemNo/present/:receiverNo")
-  presentItem(
-    @Param("itemNo", ParseIntPipe) itemNo: number,
-    @Param("receiverNo", ParseIntPipe) receiverNo: number,
-  ) {
-    const userNo = 1;
-
-    return this.itemsService.presentItem(userNo, itemNo, receiverNo);
-  }
-
-  @Patch(":itemNo")
-  useItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
-    const userNo = 1;
-
-    return this.itemsService.useItemDisuseOthers(userNo, itemNo);
   }
 }

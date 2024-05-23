@@ -1,43 +1,35 @@
-import {
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-} from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
+import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { GetCharactersDto } from "./dtos/get-characters.dto";
 
 @Controller("characters")
+@ApiTags("Characters")
 export class CharactersController {
   constructor(private readonly charactersServcie: CharactersService) {}
 
   @Get()
-  getCharactersBySpeices(@Query("species") species?: string) {
-    //요놈 type, User에서 만든 animal enum 나중에 써라
-
-    return this.charactersServcie.getCharactersBySpeices(species);
+  @ApiOperation({
+    summary: "캐릭터 가져오기 API",
+    description: "캐릭터를 불러옵니다.",
+  })
+  getCharacters(
+    @Query()
+    queryParams: GetCharactersDto,
+  ) {
+    return this.charactersServcie.getCharacters(queryParams);
   }
 
   @Get(":characterNo")
+  @ApiOperation({
+    summary: "특정 캐릭터 불러오기 API",
+    description: "특정 캐릭터를 불러옵니다.",
+  })
+  @ApiParam({
+    name: "characterNo",
+    example: 1,
+  })
   getOneCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
     return this.charactersServcie.getOneCharacter(characterNo);
-  }
-
-  @Post(":characterNo")
-  createCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
-    const userNo = 1;
-
-    return this.charactersServcie.buyOneCharacter(userNo, characterNo);
-  }
-
-  @Patch(":characterNo")
-  updateCharacterStatus(
-    @Param("characterNo", ParseIntPipe) characterNo: number,
-  ) {
-    const userNo = 1;
-
-    return this.charactersServcie.useCharacterDisuseOthers(userNo, characterNo);
   }
 }
