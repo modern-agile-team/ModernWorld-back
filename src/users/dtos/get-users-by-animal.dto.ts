@@ -33,13 +33,16 @@ export class GetUsersByAnimalDto {
   @IsEnum(Animal)
   animal?: Animal;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     name: "orderByField",
-    description: "정렬 종류 (like, accumulationPoint, createdAt)",
+    enum: orderByField,
+    description:
+      "정렬 종류를 결정합니다. 값이 정해지지 않을시, 유저를 최신순으로 불러옵니다.",
     example: "like",
   })
+  @IsOptional()
   @IsEnum(orderByField)
-  orderByField: string;
+  orderByField: orderByField;
 
   @ApiPropertyOptional({
     name: "nickname",

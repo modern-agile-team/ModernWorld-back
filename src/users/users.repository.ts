@@ -176,7 +176,7 @@ export class UsersRepository {
     orderByField: string,
     skip: number,
     sort: string,
-    where: object,
+    where: { nickname: {}; characterLocker: {} },
   ): PrismaPromise<
     {
       nickname: string;
