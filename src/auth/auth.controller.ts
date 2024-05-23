@@ -27,7 +27,6 @@ export class AuthController {
       },
     },
   })
-  // @UseGuards(AccessTokenAuthGuard) //가드 사용 예제
   naverLogin(@Query("code") code: string) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
