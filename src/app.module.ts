@@ -6,6 +6,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { ItemsModule } from "./items/items.module";
 import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
+import { CommentModule } from "./comment/comment.module";
 import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
 import { CharacterLockerModule } from "./characterLocker/characterLocker.module";
@@ -16,6 +17,7 @@ import { CharacterLockerModule } from "./characterLocker/characterLocker.module"
     ItemsModule,
     UsersModule,
     InventoryModule,
+    CommentModule,
     PresentsModule,
     CharactersModule,
     CharacterLockerModule,
