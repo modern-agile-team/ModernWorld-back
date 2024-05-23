@@ -23,8 +23,8 @@ export class CommentService {
 
   async getComment(senderNo: number, queryParams: GetCommentDto) {
     const { page, take } = queryParams;
-    const commentPage = (page - 1) * 2;
-    return await this.CommentRepository.getComment(senderNo, commentPage, take);
+    const skip = (page - 1) * page;
+    return await this.CommentRepository.getComment(senderNo, skip, take);
   }
 
   async updateComment(id: number, createcontent: UpdateCommentDto) {
