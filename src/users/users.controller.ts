@@ -37,7 +37,6 @@ export class UsersController {
   @ApiParam({
     name: "userNo",
     example: 1,
-    required: true,
     description: "유저 번호",
   })
   getUserNamePointAchievementTitle(
