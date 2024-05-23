@@ -13,7 +13,6 @@ jobs:
 
     steps:
     
-
     - name: Delete Old docker container
       run: docker rm -f ma7-back-1 || true
     - name: Delete Old docker image
