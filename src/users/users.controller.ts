@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Query,
   Patch,
+  Put,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
@@ -53,7 +54,7 @@ export class UsersController {
     return this.usersService.updateUserAttendance(userNo);
   }
 
-  @Patch("/nickname")
+  @Put("/nickname")
   @ApiOperation({ summary: "유저 닉네임 변경 API" })
   updateUserNickname(@Body() body: UpdateUserNicknameDto) {
     const userNo = 1;
@@ -61,7 +62,7 @@ export class UsersController {
     return this.usersService.updateUserNickname(userNo, body);
   }
 
-  @Patch("/description")
+  @Put("/description")
   @ApiOperation({ summary: "유저 자기소개 변경 API" })
   updateUserDescription(@Body() body: UpdateUserDescriptionDto) {
     const userNo = 1;
