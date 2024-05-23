@@ -173,7 +173,7 @@ export class UsersRepository {
 
   getUsers(
     take: number,
-    orderByField: string,
+    orderByField: string = "createdAt",
     skip: number,
     sort: string,
     where: { nickname: {}; characterLocker: {} },

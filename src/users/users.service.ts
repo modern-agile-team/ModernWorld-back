@@ -124,7 +124,7 @@ export class UsersService {
     const { pageNo, take, animal, orderByField, nickname } = queryParams;
 
     const skip = (pageNo - 1) * take;
-    const sort = orderByField === "createdAt" ? "asc" : "desc";
+    const sort = orderByField === undefined ? "asc" : "desc";
 
     let where = {
       nickname: { contains: nickname },
