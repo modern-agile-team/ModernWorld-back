@@ -70,7 +70,7 @@ export class InventoryService {
 
     await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
 
-    return true;
+    return;
   }
 
   async updateItemStatus(
