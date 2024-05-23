@@ -23,7 +23,7 @@ export class CommentService {
 
   async getComment(senderNo: number, queryParams: GetCommentDto) {
     const { page, take } = queryParams;
-    const skip = (page - 1) * page;
+    const skip = (page - 1) * take;
     return await this.CommentRepository.getComment(senderNo, skip, take);
   }
 
