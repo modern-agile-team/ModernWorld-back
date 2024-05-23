@@ -9,6 +9,7 @@ import { UsersModule } from "./users/users.module";
 import { CommentModule } from "./comment/comment.module";
 import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
+import { ReplyModule } from './reply/reply.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -19,6 +20,7 @@ import { CharactersModule } from "./characters/characters.module";
     CommentModule,
     PresentsModule,
     CharactersModule,
+    ReplyModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
