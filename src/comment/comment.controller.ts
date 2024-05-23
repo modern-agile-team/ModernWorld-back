@@ -12,6 +12,7 @@ import {
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { GetCommentDto } from "./dto/get-comment.dto";
 
 @Controller("comment")
 export class CommentController {
@@ -27,9 +28,9 @@ export class CommentController {
   }
 
   @Get()
-  getComment(@Query("page", ParseIntPipe) page: number) {
+  getComment(@Query() queryParams: GetCommentDto) {
     const userNo = 1;
-    return this.commentService.getComment(userNo, page);
+    return this.commentService.getComment(userNo, queryParams);
   }
 
   @Patch(":commnetNo")

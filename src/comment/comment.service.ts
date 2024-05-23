@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CommentRepository } from "./comment.repository";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { GetCommentDto } from "./dto/get-comment.dto";
 
 @Injectable()
 export class CommentService {
@@ -20,9 +21,10 @@ export class CommentService {
     );
   }
 
-  async getComment(senderNo: number, page: number) {
+  async getComment(senderNo: number, queryParams: GetCommentDto) {
+    const { page, take } = queryParams;
     const commentPage = (page - 1) * 2;
-    return await this.CommentRepository.getComment(senderNo, commentPage);
+    return await this.CommentRepository.getComment(senderNo, commentPage, take);
   }
 
   async updateComment(id: number, createcontent: UpdateCommentDto) {

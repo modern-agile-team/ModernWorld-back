@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength } from "class-validator";
+import { IsNotEmpty, IsNumber, MaxLength } from "class-validator";
 
 export class CreateCommentDto {
   @IsNotEmpty()
