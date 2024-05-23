@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Patch,
@@ -32,6 +33,7 @@ export class InventoryController {
   }
 
   @Post(":itemNo")
+  @HttpCode(204)
   @ApiOperation({
     summary: "아이템 구매 API",
     description: "아이템을 구매하여 inventory테이블에 등록합니다.",
