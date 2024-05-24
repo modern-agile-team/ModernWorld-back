@@ -2,10 +2,14 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PostsRepository } from "./posts.repositroy";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { createOnePostDto } from "./dto/create-post.dto";
+import { UsersRepository } from "src/users/users.repository";
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly postsRepository: PostsRepository) {}
+  constructor(
+    private readonly postsRepository: PostsRepository,
+    private readonly usersRepository: UsersRepository,
+  ) {}
 
   getPostsByUserNo(userNo: number, type: SenderReceiverNoField) {
     // return this.postsRepository.
