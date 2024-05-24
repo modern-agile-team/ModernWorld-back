@@ -76,5 +76,5 @@ export class PostsService {
     return this.postsRepository.createOnePost(senderNo, receiverNo, content);
   }
 
-  deleteOnePost() {}
+  deleteOnePost(userNo: number, postNo: number) {}
 }

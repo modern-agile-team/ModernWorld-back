@@ -49,7 +49,9 @@ export class PostsController {
   }
 
   @Delete(":postNo")
-  deletePost(@Query("postNo", ParseIntPipe) postNo: number) {
-    // return this.postsService.deletePost();
+  deletePost(@Param("postNo", ParseIntPipe) postNo: number) {
+    const userNo = 1;
+
+    return this.postsService.deleteOnePost(userNo, postNo);
   }
 }
