@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
+import { createOnePostDto } from "./dto/create-post.dto";
 
 @Controller("posts")
 export class PostsController {
@@ -37,7 +38,7 @@ export class PostsController {
   }
 
   @Post("/users/:userNo")
-  createPost(@Body() body: string) {
+  createPost(@Body() body: createOnePostDto) {
     return this.postsService.createOnePost();
   }
 
