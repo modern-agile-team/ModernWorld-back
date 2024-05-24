@@ -12,8 +12,10 @@ import {
 import { PostsService } from "./posts.service";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { createOnePostDto } from "./dto/create-post.dto";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller("posts")
+@ApiTags("Posts")
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
