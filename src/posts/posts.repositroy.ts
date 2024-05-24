@@ -1,13 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, post } from "@prisma/client";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class PostsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getPosts(where): PrismaPromise<
+  getPosts(where: object): PrismaPromise<
     {
       no: number;
       createdAt: Date;
