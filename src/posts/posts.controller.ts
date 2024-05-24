@@ -39,6 +39,8 @@ export class PostsController {
 
   @Post("/users/:userNo")
   createPost(@Body() body: createOnePostDto) {
+    const userNo = 1;
+
     return this.postsService.createOnePost();
   }
 
