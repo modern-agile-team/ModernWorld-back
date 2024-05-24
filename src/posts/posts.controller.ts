@@ -36,7 +36,7 @@ export class PostsController {
     return this.postsService.getOnePostByUserNo(tokenUserNo, userNo, postNo);
   }
 
-  @Post()
+  @Post("/users/:userNo")
   createPost(@Body() body: string) {
     return this.postsService.createOnePost();
   }
