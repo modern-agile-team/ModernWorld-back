@@ -1,13 +1,21 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
+import { UsersRepository } from "src/users/users.repository";
 
 @Injectable()
 export class TasksService {
-  @Cron("* * * * * *", {
+  constructor(private readonly usersRepository: UsersRepository) {}
+
+  @Cron("0 0 0 * * 1", {
     timeZone: "Asia/seoul",
   })
-  test() {
-    //0 0 0 * * 1 - 매주 월요일 00시 00분
-    console.log("뭉탱이");
+  resetUserAttendance() {
+    //0 0 0 * * 1 - 매주 월요일 00시 00분 00초
+
+    try {
+      return this.usersRepository.resetUserAttendance();
+    } catch {
+      throw new InternalServerErrorException("transaction error");
+    }
   }
 }
