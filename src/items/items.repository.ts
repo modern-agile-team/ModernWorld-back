@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { item } from "@prisma/client";
+import { PrismaPromise, item } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class ItemsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOneItem(itemNo: number): Promise<item> {
+  getOneItem(itemNo: number): PrismaPromise<item> {
     return this.prisma.item.findUnique({
       where: {
         no: itemNo,
@@ -14,11 +14,17 @@ export class ItemsRepository {
     });
   }
 
-  getAllItems(theme?: string): Promise<item[]> {
-    return this.prisma.item.findMany({ where: { theme } });
+  getItems(
+    theme: string,
+    itemName: string,
+  ): PrismaPromise<Pick<item, "no" | "name" | "image">[]> {
+    return this.prisma.item.findMany({
+      select: { no: true, name: true, image: true },
+      where: { theme, name: { contains: itemName } },
+    });
   }
 
-  getItemType(itemNo: number): Promise<Pick<item, "type">> {
+  getItemType(itemNo: number): PrismaPromise<Pick<item, "type">> {
     return this.prisma.item.findUnique({
       select: { type: true },
       where: { no: itemNo },

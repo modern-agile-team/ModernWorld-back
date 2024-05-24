@@ -3,102 +3,70 @@ import {
   Controller,
   Get,
   Param,
-  ParseBoolPipe,
   ParseIntPipe,
-  Put,
   Query,
-  Post,
   Patch,
+  Put,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
+import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
+import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 
 @Controller("users")
+@ApiTags("Users")
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  //offset 기반 pagination
-  //인기(좋아요), 최신유저, 랭킹(누적포인트 랭킹)
-  @Get("show/:pageNo")
-  getUsersByAnimal(
-    @Param("pageNo", ParseIntPipe) pageNo: number,
-    @Query() queryParams: GetUsersByAnimalDto,
-  ) {
-    /**
-     * pageNo는 페이지의 번호
-     * take는 몇개씩 가져올것인가
-     * animal은 그 사람이 현재 사용중인 동물, 어차피 개 고양이밖에 없음 만약 주지않는다면 모든 유저를 불러옴
-     * orderByField는 어떤 식으로 정렬할것인지에 대한 정보
-     */
+  @Get("/attendance")
+  @ApiOperation({ summary: "유저 출석부 조회 API" })
+  getOneUserAttendance() {
+    const userNo = 1;
 
-    //VALIDATION !!!!!! orderByField의 값은 정해져있어야함, like, createdAt, accumulationPoint 이 세개로 한정해야함
-    return this.userService.getUsersByAnimal(pageNo, queryParams);
+    return this.usersService.getUserAttendance(userNo);
   }
 
-  //유저 마이페이지
-  @Get(":userNo")
-  getOneUserWithNamePointAchievementTitle(
+  @Get()
+  @ApiOperation({ summary: "유저 불러오기 API" })
+  getUsers(@Query() queryParams: GetUsersByAnimalDto) {
+    return this.usersService.getUsers(queryParams);
+  }
+
+  @Get("/:userNo")
+  @ApiOperation({ summary: "특정 유저 불러오기 API" })
+  @ApiParam({
+    name: "userNo",
+    example: 1,
+    description: "유저 번호",
+  })
+  getUserNamePointAchievementTitle(
     @Param("userNo", ParseIntPipe) userNo: number,
   ) {
-    return this.userService.getUserNameCurrentPointAccumulationPointTitle(
-      userNo,
-    );
+    return this.usersService.getUserNamePointTitleCharacter(userNo);
   }
 
-  //유저 출석부 조회
-  @Get(":userNo/attendance")
-  getOneUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
-    return this.userService.getUserAttendance(userNo);
+  @Patch("/attendance")
+  @ApiOperation({ summary: "유저 출석부 체크 API" })
+  updateUserAttendance() {
+    const userNo = 1;
+
+    return this.usersService.updateUserAttendance(userNo);
   }
 
-  //유저 출석부 체크
-  @Patch(":userNo/attendance")
-  markUserAttendance(@Param("userNo", ParseIntPipe) userNo: number) {
-    return this.userService.markUserAttendance(userNo);
+  @Put("/nickname")
+  @ApiOperation({ summary: "유저 닉네임 변경 API" })
+  updateUserNickname(@Body() body: UpdateUserNicknameDto) {
+    const userNo = 1;
+
+    return this.usersService.updateUserNickname(userNo, body);
   }
 
-  //사실 createUser는 회원가입할 때 같이 불러올 api임 따라서 Controller가 필요 없다. Service만 auth에서 사용하면 그만이다.
-  // @Post()
-  // createUser(
-  //   @Body("uniqueIdentifier") uniqueIdentifier: string,
-  //   @Body("socialName") socialName: string,
-  //   @Body("image") image: string,
-  //   @Body("domain") domain: string,
-  // ) {
-  //   return this.userService.createUser(
-  //     uniqueIdentifier,
-  //     socialName,
-  //     image,
-  //     domain,
-  //   );
-  // }
+  @Put("/description")
+  @ApiOperation({ summary: "유저 자기소개 변경 API" })
+  updateUserDescription(@Body() body: UpdateUserDescriptionDto) {
+    const userNo = 1;
 
-  //유저 닉네임, 자기소개, 출석부, 캐릭터 업데이트
-  @Patch(":userNo")
-  updateUser(
-    @Param("userNo", ParseIntPipe) userNo: number,
-    @Body("nickname") nickname: string,
-    @Body("characterNo", ParseIntPipe) characterNo: number,
-    @Body("description") description: string,
-  ) {
-    return this.userService.updateUserNicknameDescriptionAttendanceCharacter(
-      userNo,
-      characterNo,
-      nickname,
-      description,
-    );
+    return this.usersService.updateUserDescription(userNo, body);
   }
-
-  //유저 방 조회
-  @Get(":userNo/room")
-  showUserRoom(@Param("userNo") userNo: number) {
-    return this.userService.getUserRoom(userNo);
-  }
-
-  //특정 유저 아이템 테마별로 불러오기(인벤토리(아이템) 불러오기)
-  @Get(":userNo/items")
-  showItemsBytheme(
-    @Param("userNo") userNo: number,
-    @Query("theme") theme: string,
-  ) {}
 }
