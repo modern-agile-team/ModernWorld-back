@@ -21,6 +21,10 @@ export class PostsService {
 
   createOnePost(senderNo: number, receiverNo: number, body: createOnePostDto) {
     const { content } = body;
+
+    if (senderNo === receiverNo) {
+      throw new ForbiddenException("Users cannot post themselves alone.");
+    }
   }
 
   deleteOnePost() {}
