@@ -17,7 +17,11 @@ export class PostsRepository {
     return this.prisma.post.findUniqueOrThrow({ where: { no: postNo } });
   }
 
-  createOnePost(senderNo: number, receiverNo: number, content: string) {
+  createOnePost(
+    senderNo: number,
+    receiverNo: number,
+    content: string,
+  ): PrismaPromise<post> {
     return this.prisma.post.create({ data: { senderNo, receiverNo, content } });
   }
 
