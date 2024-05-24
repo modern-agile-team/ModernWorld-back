@@ -13,8 +13,27 @@ export class PostsRepository {
     });
   }
 
-  getOnePost(postNo: number) {
-    return this.prisma.post.findUniqueOrThrow({ where: { no: postNo } });
+  getOnePost(postNo: number): PrismaPromise<{
+    no: number;
+    senderNo: number;
+    receiverNo: number;
+    content: string;
+    check: boolean;
+    userPostSenderNo: { nickname: string };
+    userPostReceiverNo: { nickname: string };
+  }> {
+    return this.prisma.post.findUniqueOrThrow({
+      select: {
+        no: true,
+        senderNo: true,
+        receiverNo: true,
+        content: true,
+        check: true,
+        userPostSenderNo: { select: { nickname: true } },
+        userPostReceiverNo: { select: { nickname: true } },
+      },
+      where: { no: postNo },
+    });
   }
 
   createOnePost(
