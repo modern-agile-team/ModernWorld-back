@@ -1,58 +1,48 @@
 import {
   BadRequestException,
+  ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
 } from "@nestjs/common";
-import { UserRepository } from "./users.repository";
+import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { InventoryRepository } from "src/inventory/inventory.repository";
+import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
+import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
+import { DomainEnum } from "./enum/domain.enum";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly userRepository: UserRepository,
-    private readonly inventoryRepository: InventoryRepository,
+    private readonly userRepository: UsersRepository,
   ) {}
 
-  async getUserNameCurrentPointAccumulationPointTitle(userNo: number) {
-    const result =
-      await this.userRepository.getUserNameCurrentPointAccumulationPointTitle(
-        userNo,
-      );
-
-    return {
-      nickname: result.nickname,
-      currentPoint: result.currentPoint,
-      accumulationPoint: result.accumulationPoint,
-      title: result.userAchievement[0].achievement.title,
-      fontColor: result.userAchievement[0].achievement.level,
-    };
+  getUserNamePointTitleCharacter(userNo: number) {
+    return this.userRepository.getUserNamePointTitleCharacter(userNo);
   }
 
-  // async createUser(
-  //   uniqueIdentifier: string,
-  //   socialName: string,
-  //   image: string,
-  //   domain: string,
-  // ) {
-  //   const result = await this.userRepository.createUser(
-  //     uniqueIdentifier,
-  //     socialName,
-  //     image,
-  //     domain,
-  //   );
-  //   return result;
-  // }
-
-  async getUserAttendance(userNo: number) {
-    const result = await this.userRepository.getUserAttendance(userNo);
-
+  async createUser(
+    uniqueIdentifier: string,
+    socialName: string,
+    image: string,
+    domain: DomainEnum,
+  ) {
+    const result = await this.userRepository.createUser(
+      uniqueIdentifier,
+      socialName,
+      image,
+      domain,
+    );
     return result;
   }
 
-  async markUserAttendance(userNo: number) {
+  async getUserAttendance(userNo: number) {
+    return this.userRepository.getUserAttendance(userNo);
+  }
+
+  async updateUserAttendance(userNo: number) {
     /**
      * 일주일 출석부 가져와서 월, 화, 수, 목, 금, 토, 일
      * 즉, 요일에 따라 출석부가 갱신되어야함, 근데 한국시간 기준으로 만들어야함
@@ -68,99 +58,93 @@ export class UsersService {
      * 안돼있다면 출석체크 하고 포인트 얻음 (트랜잭션으로 묶음)ㅇ
      * 끝
      * */
-
-    //토큰의 userNo !== 파람의 userNo 작업
+    /** 출석부의 형식은 다음과 같다. Json형태임
+     * {"0": [false, 100], "1": [false, 200], "2": [false, 300], "3": [false, 200], "4": [false, 400], "5": [true, 300], "6": [false, 300]}
+     *
+     * true가 출석했다는 의미, 그 뒤의 수는 출석했을 시 얻을 포인트
+     */
 
     const offset = 1000 * 60 * 60 * 9;
-    const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms)
+    const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms) 한국시각 반환함
     const day = today.getUTCDay(); //getDay()는 현재 로컬환경시각인 +9를 더해주는 바람에 안됨(뇌피셜)
 
     let attendance = (await this.userRepository.getUserAttendance(userNo))
       .attendance;
 
     if (attendance[day][0]) {
-      throw new BadRequestException("already attended");
+      throw new ConflictException("already attended");
     }
 
     attendance[day][0] = true;
 
+    //짧게나마 트랜잭션을 구현했으나, 이는 나중에 좀더 수정해야 할듯함.
     try {
-      const [user, point] = await this.prisma.$transaction([
+      this.prisma.$transaction([
         this.userRepository.updateUserAttendance(userNo, attendance),
 
-        this.userRepository.modifyUserCurrentPointAccumulationPoint(
+        this.userRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
         ),
       ]);
 
-      //아니 근데 이거 다 주는거 맞냐??;; 의미 없는것같은데
-      return [user, point];
+      return true;
     } catch (error) {
-      throw new InternalServerErrorException("transaction error");
+      throw new InternalServerErrorException("transaction error.");
     }
   }
 
-  async updateUserNicknameDescriptionAttendanceCharacter(
-    userNo: number,
-    characterNo: number,
-    nickname: string,
-    description: string,
-  ) {
-    //이곳에 트랜잭션으로 캐릭터보관함에 캐릭터 넣는것까지 같이 할것.
-    console.log(characterNo);
+  async updateUserNickname(userNo: number, body: UpdateUserNicknameDto) {
+    const { nickname: userName } =
+      await this.userRepository.findUserNicknameByUserNo(userNo);
 
-    const result =
-      await this.userRepository.updateUserNicknameDesriptionAttendance(
-        userNo,
-        nickname,
-        description,
-      );
+    if (userName) {
+      throw new ForbiddenException("User already has a nickname.");
+    }
 
-    return result;
+    const { nickname } = body;
+
+    const duplicatedName =
+      await this.userRepository.findUserNicknameByNickname(nickname);
+
+    if (duplicatedName) {
+      throw new ForbiddenException(`'${nickname}' is duplicated.`);
+    }
+
+    return this.userRepository.updateUserNickname(userNo, nickname);
   }
 
-  async getUserRoom(userNo: number) {
-    const result = await this.inventoryRepository.getUserRoom(userNo);
+  async updateUserDescription(userNo: number, body: UpdateUserDescriptionDto) {
+    const { description } = body;
 
-    return result.map((obj) => ({
-      status: obj.status,
-      itemName: obj.item.name,
-      itemImage: obj.item.image,
-      itemType: obj.item.type,
-    }));
+    return this.userRepository.updateUserDescription(userNo, description);
   }
 
-  async getUsersByAnimal(pageNo: number, queryParams: GetUsersByAnimalDto) {
-    const { take, animal, orderByField } = queryParams;
+  async getUsers(queryParams: GetUsersByAnimalDto) {
+    const { pageNo, take, animal, orderByField, nickname } = queryParams;
 
     const skip = (pageNo - 1) * take;
-    const sort = orderByField === "createdAt" ? "asc" : "desc";
+    const sort = orderByField === undefined ? "asc" : "desc";
 
-    const result = await this.userRepository.getUsersByAnimal(
+    let where = {
+      nickname: { contains: nickname },
+      characterLocker: {},
+    };
+
+    if (animal) {
+      where.characterLocker = {
+        some: { status: true, character: { species: animal } },
+      };
+    }
+
+    const result = await this.userRepository.getUsers(
       take,
       orderByField,
-      animal,
       skip,
       sort,
+      where,
     );
 
-    //가공
-    return result.map((obj) => ({
-      nickname: obj.nickname,
-      description: obj.description,
-      createdAt: obj.createdAt,
-      like: obj.like,
-      accumulationPoint: obj.accumulationPoint,
-      achievementTitle: obj.userAchievement[0]
-        ? obj.userAchievement[0].achievement.title
-        : null,
-      achievementFontColor: obj.userAchievement[0]
-        ? obj.userAchievement[0].achievement.level
-        : null,
-      characterImage: obj.characterLocker[0]
-        ? obj.characterLocker[0].character.image
-        : null,
-    }));
+    return result;
   }
 }
