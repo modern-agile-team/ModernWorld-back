@@ -9,6 +9,7 @@ export class PostsRepository {
   getPosts(where: object): PrismaPromise<
     {
       no: number;
+      check: boolean;
       createdAt: Date;
       userPostSenderNo: { nickname: string };
       userPostReceiverNo: { nickname: string };
@@ -17,6 +18,7 @@ export class PostsRepository {
     return this.prisma.post.findMany({
       select: {
         no: true,
+        check: true,
         createdAt: true,
         userPostSenderNo: { select: { nickname: true } },
         userPostReceiverNo: { select: { nickname: true } },
