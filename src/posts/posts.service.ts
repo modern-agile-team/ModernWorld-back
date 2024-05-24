@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PostsRepository } from "./posts.repositroy";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
+import { createOnePostDto } from "./dto/create-post.dto";
 
 @Injectable()
 export class PostsService {
@@ -18,7 +19,9 @@ export class PostsService {
     return this.postsRepository.getOnePost(postNo);
   }
 
-  createOnePost() {}
+  createOnePost(senderNo: number, receiverNo: number, body: createOnePostDto) {
+    const { content } = body;
+  }
 
   deleteOnePost() {}
 }
