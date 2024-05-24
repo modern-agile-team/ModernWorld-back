@@ -44,6 +44,13 @@ export class PostsRepository {
     return this.prisma.post.create({ data: { senderNo, receiverNo, content } });
   }
 
+  updateOnePostCheckToTrue(postNo: number) {
+    return this.prisma.post.update({
+      data: { check: true },
+      where: { no: postNo },
+    });
+  }
+
   deleteOnePost(postNo: number) {
     return 0;
   }
