@@ -12,14 +12,14 @@ import {
 import { PostsService } from "./posts.service";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { createOnePostDto } from "./dto/create-post.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiParam, ApiTags } from "@nestjs/swagger";
 
 @Controller("posts")
 @ApiTags("Posts")
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get("/users/:userNo")
+  @Get()
   getPosts(
     @Query("type", new ParseEnumPipe(SenderReceiverNoField, { optional: true }))
     type: SenderReceiverNoField,
@@ -30,6 +30,7 @@ export class PostsController {
   }
 
   @Get("/:postNo")
+  @ApiParam({ name: "postNo", example: 1 })
   getOnePost(@Param("postNo", ParseIntPipe) postNo: number) {
     const userNo = 1;
 
