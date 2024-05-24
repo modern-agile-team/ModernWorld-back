@@ -44,9 +44,9 @@ export class PostsService {
       // 수신자이면, 처음 조회할 경우 읽었다는걸 표시해야함
       if (!post.check) {
         await this.postsRepository.updateOnePostCheckToTrue(postNo);
-
-        return post;
+        post.check = true;
       }
+
       return post;
     } else if (userNo === post.senderNo) {
       // 발신자이면 다른로직은 없음
