@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, post } from "@prisma/client";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
+import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -17,9 +17,11 @@ export class PostsRepository {
     return this.prisma.post.findUniqueOrThrow({ where: { no: postNo } });
   }
 
-  createOnePost(userNo: number) {
+  createOnePost(senderNo: number, receiverNo: number, content: string) {
     return 0;
   }
 
-  deleteOnePost(postNo: number) {}
+  deleteOnePost(postNo: number) {
+    return 0;
+  }
 }

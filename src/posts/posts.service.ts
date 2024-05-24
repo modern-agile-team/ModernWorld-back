@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PostsRepository } from "./posts.repositroy";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
+import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 
 @Injectable()
 export class PostsService {

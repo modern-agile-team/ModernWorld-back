@@ -10,7 +10,7 @@ import {
   Query,
 } from "@nestjs/common";
 import { PostsService } from "./posts.service";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo-enum";
+import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 
 @Controller("posts")
 export class PostsController {
