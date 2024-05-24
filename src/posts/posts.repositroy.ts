@@ -18,7 +18,7 @@ export class PostsRepository {
   }
 
   createOnePost(senderNo: number, receiverNo: number, content: string) {
-    return 0;
+    return this.prisma.post.create({ data: { senderNo, receiverNo, content } });
   }
 
   deleteOnePost(postNo: number) {
