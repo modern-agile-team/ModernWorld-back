@@ -11,9 +11,12 @@ import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
 import { AuthModule } from "./auth/auth.module";
 import { CharacterLockerModule } from "./characterLocker/characterLocker.module";
+import { ScheduleModule } from "@nestjs/schedule";
+import { TasksModule } from "./tasks/tasks.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     ItemsModule,
     UsersModule,
@@ -23,6 +26,7 @@ import { CharacterLockerModule } from "./characterLocker/characterLocker.module"
     CharactersModule,
     AuthModule,
     CharacterLockerModule,
+    TasksModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],

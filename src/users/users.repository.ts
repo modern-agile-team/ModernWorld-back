@@ -1,13 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import {
-  PrismaPromise,
-  achievement,
-  character,
-  characterLocker,
-  like,
-  user,
-  userAchievement,
-} from "@prisma/client";
+import { PrismaPromise, user } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
 import { DomainEnum } from "./enum/domain.enum";
@@ -113,6 +105,22 @@ export class UsersRepository {
       select: { nickname: true, attendance: true },
       data: { attendance },
       where: { no: userNo },
+    });
+  }
+
+  resetUserAttendance(): PrismaPromise<{ count: number }> {
+    return this.prisma.user.updateMany({
+      data: {
+        attendance: {
+          "0": [false, 100],
+          "1": [false, 200],
+          "2": [false, 300],
+          "3": [false, 200],
+          "4": [false, 400],
+          "5": [false, 300],
+          "6": [false, 300],
+        },
+      },
     });
   }
 
