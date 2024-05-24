@@ -15,8 +15,26 @@ export class PostsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  getPostsByUserNo(userNo: number, type: SenderReceiverNoField) {
-    // return this.postsRepository.
+  getPostsByUserNo(
+    userNo: number,
+    senderReceiverNoField: SenderReceiverNoField,
+  ) {
+    const senderReceiverDeleteField =
+      senderReceiverNoField === "receiverNo"
+        ? "receiverDelete"
+        : senderReceiverNoField === "senderNo"
+          ? "senderDelete"
+          : undefined;
+
+    let where = {};
+
+    if (senderReceiverDeleteField) {
+      where = {
+        [senderReceiverNoField]: userNo,
+        [senderReceiverDeleteField]: false,
+      };
+    }
+    return this.postsRepository.getPosts(where);
   }
 
   async getOnePostByUserNo(userNo: number, postNo: number) {

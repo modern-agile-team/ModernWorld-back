@@ -7,9 +7,22 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class PostsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getPosts(userNo: number, type: SenderReceiverNoField): PrismaPromise<post[]> {
+  getPosts(where): PrismaPromise<
+    {
+      no: number;
+      createdAt: Date;
+      userPostSenderNo: { nickname: string };
+      userPostReceiverNo: { nickname: string };
+    }[]
+  > {
     return this.prisma.post.findMany({
-      where: { OR: [{ senderNo: userNo }, { receiverNo: userNo }] },
+      select: {
+        no: true,
+        createdAt: true,
+        userPostSenderNo: { select: { nickname: true } },
+        userPostReceiverNo: { select: { nickname: true } },
+      },
+      where,
     });
   }
 
