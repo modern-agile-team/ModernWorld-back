@@ -29,14 +29,11 @@ export class PostsController {
     return this.postsService.getPostsByUserNo(userNo, type);
   }
 
-  @Get("/:postNo/users/:userNo")
-  getOnePost(
-    @Param("postNo", ParseIntPipe) postNo: number,
-    @Param("userNo", ParseIntPipe) userNo: number,
-  ) {
-    const tokenUserNo = 1;
+  @Get("/:postNo")
+  getOnePost(@Param("postNo", ParseIntPipe) postNo: number) {
+    const userNo = 1;
 
-    return this.postsService.getOnePostByUserNo(tokenUserNo, postNo);
+    return this.postsService.getOnePostByUserNo(userNo, postNo);
   }
 
   @Post("/users/:userNo")
