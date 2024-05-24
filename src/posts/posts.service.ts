@@ -44,6 +44,8 @@ export class PostsService {
     if (!user) {
       throw new NotFoundException("Couldn't find receiver.");
     }
+
+    return this.postsRepository.createOnePost(senderNo, receiverNo, content);
   }
 
   deleteOnePost() {}
