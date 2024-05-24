@@ -19,11 +19,7 @@ export class PostsService {
     // return this.postsRepository.
   }
 
-  getOnePostByUserNo(tokenUserNo: number, userNo: number, postNo: number) {
-    if (tokenUserNo !== userNo) {
-      throw new ForbiddenException("Users can only ready their posts.");
-    }
-
+  getOnePostByUserNo(userNo: number, postNo: number) {
     return this.postsRepository.getOnePost(postNo);
   }
 

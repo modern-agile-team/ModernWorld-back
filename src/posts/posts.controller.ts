@@ -36,7 +36,7 @@ export class PostsController {
   ) {
     const tokenUserNo = 1;
 
-    return this.postsService.getOnePostByUserNo(tokenUserNo, userNo, postNo);
+    return this.postsService.getOnePostByUserNo(tokenUserNo, postNo);
   }
 
   @Post("/users/:userNo")
