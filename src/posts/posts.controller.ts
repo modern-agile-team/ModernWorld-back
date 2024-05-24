@@ -12,7 +12,7 @@ import {
 import { PostsService } from "./posts.service";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { createOnePostDto } from "./dto/create-post.dto";
-import { ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 
 @Controller("posts")
 @ApiTags("Posts")
@@ -20,6 +20,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
+  @ApiQuery({ name: "type", required: false, enum: SenderReceiverNoField })
   getPosts(
     @Query("type", new ParseEnumPipe(SenderReceiverNoField, { optional: true }))
     senderReceiverNoField: SenderReceiverNoField,
