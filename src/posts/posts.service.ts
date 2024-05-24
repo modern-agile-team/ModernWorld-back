@@ -19,8 +19,22 @@ export class PostsService {
     // return this.postsRepository.
   }
 
-  getOnePostByUserNo(userNo: number, postNo: number) {
-    return this.postsRepository.getOnePost(postNo);
+  async getOnePostByUserNo(userNo: number, postNo: number) {
+    const post = await this.postsRepository.getOnePost(postNo);
+
+    if (userNo === post.receiverNo) {
+      // 수신자이면, 처음 조회할 경우 읽었다는걸 표시해야함
+      if (!post.check) {
+        await this.postsRepository.updateOnePostCheckToTrue(postNo);
+
+        return post;
+      }
+      return post;
+    } else if (userNo === post.senderNo) {
+      // 발신자이면 다른로직은 없음
+      return post;
+    }
+    throw new ForbiddenException("This post is not ralated with user.");
   }
 
   async createOnePost(
