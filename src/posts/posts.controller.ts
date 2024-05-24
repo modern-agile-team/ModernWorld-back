@@ -22,11 +22,11 @@ export class PostsController {
   @Get()
   getPosts(
     @Query("type", new ParseEnumPipe(SenderReceiverNoField, { optional: true }))
-    type: SenderReceiverNoField,
+    SenderReceiverNoField: SenderReceiverNoField,
   ) {
     const userNo = 1;
 
-    return this.postsService.getPostsByUserNo(userNo, type);
+    return this.postsService.getPostsByUserNo(userNo, SenderReceiverNoField);
   }
 
   @Get("/:postNo")
