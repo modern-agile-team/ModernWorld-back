@@ -19,6 +19,7 @@ export class PostsRepository {
     receiverNo: number;
     content: string;
     check: boolean;
+    createdAt: Date;
     userPostSenderNo: { nickname: string };
     userPostReceiverNo: { nickname: string };
   }> {
@@ -29,6 +30,7 @@ export class PostsRepository {
         receiverNo: true,
         content: true,
         check: true,
+        createdAt: true,
         userPostSenderNo: { select: { nickname: true } },
         userPostReceiverNo: { select: { nickname: true } },
       },
