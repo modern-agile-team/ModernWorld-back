@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -88,5 +89,26 @@ export class PostsService {
     }
 
     const { senderNo, receiverNo, senderDelete, receiverDelete } = post;
+
+    if (userNo !== senderNo && userNo !== receiverNo) {
+      throw new ForbiddenException("This post is not related with you.");
+    }
+
+    const isSender = userNo === senderNo;
+
+    if (isSender && senderDelete) {
+      throw new ConflictException("Already deleted from sender.");
+    } else if (!isSender && receiverDelete) {
+      throw new ConflictException("Already deleted from receiver.");
+    }
+
+    const senderReceiverDeleteField = isSender
+      ? "senderDelete"
+      : "receiverDelete";
+
+    return this.postsRepository.updateOnePresentToDeleteByUser(
+      postNo,
+      senderReceiverDeleteField,
+    );
   }
 }

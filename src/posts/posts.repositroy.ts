@@ -71,7 +71,13 @@ export class PostsRepository {
     });
   }
 
-  deleteOnePost(postNo: number) {
-    return 0;
+  updateOnePresentToDeleteByUser(
+    no: number,
+    senderReceiverDeleteField: string,
+  ): PrismaPromise<post> {
+    return this.prisma.post.update({
+      data: { [senderReceiverDeleteField]: true },
+      where: { no },
+    });
   }
 }
