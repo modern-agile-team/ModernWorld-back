@@ -37,7 +37,7 @@ export class PostsRepository {
     userPostSenderNo: { nickname: string };
     userPostReceiverNo: { nickname: string };
   }> {
-    return this.prisma.post.findUniqueOrThrow({
+    return this.prisma.post.findUnique({
       select: {
         no: true,
         senderNo: true,

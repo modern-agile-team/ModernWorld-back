@@ -40,6 +40,10 @@ export class PostsService {
   async getOnePostByUserNo(userNo: number, postNo: number) {
     const post = await this.postsRepository.getOnePost(postNo);
 
+    if (!post) {
+      throw new NotFoundException("This post doesn't exist.");
+    }
+
     if (userNo === post.receiverNo) {
       // 수신자이면, 처음 조회할 경우 읽었다는걸 표시해야함
       if (!post.check) {
