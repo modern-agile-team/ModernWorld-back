@@ -52,6 +52,6 @@ export class PostsController {
   deletePost(@Param("postNo", ParseIntPipe) postNo: number) {
     const userNo = 1;
 
-    return this.postsService.deleteOnePost(userNo, postNo);
+    return this.postsService.updateOnePostToDelete(userNo, postNo);
   }
 }

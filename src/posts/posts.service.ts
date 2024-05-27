@@ -38,7 +38,7 @@ export class PostsService {
   }
 
   async getOnePostByUserNo(userNo: number, postNo: number) {
-    const post = await this.postsRepository.getOnePost(postNo);
+    const post = await this.postsRepository.getOnePostWithUserName(postNo);
 
     if (!post) {
       throw new NotFoundException("This post doesn't exist.");
@@ -80,5 +80,13 @@ export class PostsService {
     return this.postsRepository.createOnePost(senderNo, receiverNo, content);
   }
 
-  deleteOnePost(userNo: number, postNo: number) {}
+  async updateOnePostToDelete(userNo: number, postNo: number) {
+    const post = await this.postsRepository.getOnePostByNo(postNo);
+
+    if (!post) {
+      throw new NotFoundException("This post doesn't exist.");
+    }
+
+    const { senderNo, receiverNo, senderDelete, receiverDelete } = post;
+  }
 }
