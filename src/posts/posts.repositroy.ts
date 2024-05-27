@@ -6,6 +6,10 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class PostsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  getOnePostByNo(postNo: number): PrismaPromise<post> {
+    return this.prisma.post.findUnique({ where: { no: postNo } });
+  }
+
   getPosts(where: object): PrismaPromise<
     {
       no: number;
@@ -27,7 +31,7 @@ export class PostsRepository {
     });
   }
 
-  getOnePost(postNo: number): PrismaPromise<{
+  getOnePostWithUserName(postNo: number): PrismaPromise<{
     no: number;
     senderNo: number;
     receiverNo: number;
