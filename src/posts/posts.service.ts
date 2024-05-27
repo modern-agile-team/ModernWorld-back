@@ -27,14 +27,18 @@ export class PostsService {
           ? "senderDelete"
           : undefined;
 
-    let where = {};
+    let where = senderReceiverDeleteField
+      ? {
+          [senderReceiverNoField]: userNo,
+          [senderReceiverDeleteField]: false,
+        }
+      : {
+          OR: [
+            { senderNo: userNo, senderDelete: false },
+            { receiverNo: userNo, receiverDelete: false },
+          ],
+        };
 
-    if (senderReceiverDeleteField) {
-      where = {
-        [senderReceiverNoField]: userNo,
-        [senderReceiverDeleteField]: false,
-      };
-    }
     return this.postsRepository.getPosts(where);
   }
 
