@@ -39,7 +39,7 @@ export class PostsService {
   }
 
   async getOnePostByUserNo(userNo: number, postNo: number) {
-    const post = await this.postsRepository.getOnePostWithUserName(postNo);
+    const post = await this.postsRepository.getOnePostWithUser(postNo);
 
     if (!post) {
       throw new NotFoundException("This post doesn't exist.");
