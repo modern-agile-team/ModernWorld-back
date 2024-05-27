@@ -13,19 +13,23 @@ export class PostsRepository {
   getPosts(where: object): PrismaPromise<
     {
       no: number;
+      senderNo: number;
+      receiverNo: number;
       check: boolean;
       createdAt: Date;
-      userPostSenderNo: { no: number; nickname: string };
-      userPostReceiverNo: { no: number; nickname: string };
+      userPostSenderNo: { nickname: string };
+      userPostReceiverNo: { nickname: string };
     }[]
   > {
     return this.prisma.post.findMany({
       select: {
         no: true,
+        senderNo: true,
+        receiverNo: true,
         check: true,
         createdAt: true,
-        userPostSenderNo: { select: { no: true, nickname: true } },
-        userPostReceiverNo: { select: { no: true, nickname: true } },
+        userPostSenderNo: { select: { nickname: true } },
+        userPostReceiverNo: { select: { nickname: true } },
       },
       where,
     });
@@ -38,8 +42,8 @@ export class PostsRepository {
     content: string;
     check: boolean;
     createdAt: Date;
-    userPostSenderNo: { no: number; nickname: string };
-    userPostReceiverNo: { no: number; nickname: string };
+    userPostSenderNo: { nickname: string };
+    userPostReceiverNo: { nickname: string };
   }> {
     return this.prisma.post.findUnique({
       select: {
@@ -49,8 +53,8 @@ export class PostsRepository {
         content: true,
         check: true,
         createdAt: true,
-        userPostSenderNo: { select: { no: true, nickname: true } },
-        userPostReceiverNo: { select: { no: true, nickname: true } },
+        userPostSenderNo: { select: { nickname: true } },
+        userPostReceiverNo: { select: { nickname: true } },
       },
       where: { no: postNo },
     });
