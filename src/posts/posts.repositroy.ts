@@ -15,8 +15,8 @@ export class PostsRepository {
       no: number;
       check: boolean;
       createdAt: Date;
-      userPostSenderNo: { nickname: string };
-      userPostReceiverNo: { nickname: string };
+      userPostSenderNo: { no: number; nickname: string };
+      userPostReceiverNo: { no: number; nickname: string };
     }[]
   > {
     return this.prisma.post.findMany({
@@ -24,8 +24,8 @@ export class PostsRepository {
         no: true,
         check: true,
         createdAt: true,
-        userPostSenderNo: { select: { nickname: true } },
-        userPostReceiverNo: { select: { nickname: true } },
+        userPostSenderNo: { select: { no: true, nickname: true } },
+        userPostReceiverNo: { select: { no: true, nickname: true } },
       },
       where,
     });
