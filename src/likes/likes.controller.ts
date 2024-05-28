@@ -1,4 +1,4 @@
-import { Controller, Delete, Post } from "@nestjs/common";
+import { Controller, Delete, Param, ParseIntPipe, Post } from "@nestjs/common";
 import { LikesService } from "./likes.service";
 import { ApiTags } from "@nestjs/swagger";
 
@@ -7,9 +7,17 @@ import { ApiTags } from "@nestjs/swagger";
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
-  @Post("")
-  test() {}
+  @Post("users/:userNo")
+  test(@Param("userNo", ParseIntPipe) userNo: number) {
+    const tokenUserNo = 1;
 
-  @Delete("")
-  test2() {}
+    return this.likesService.createOneLike();
+  }
+
+  @Delete("users/:userNo")
+  test2(@Param("userNo", ParseIntPipe) userNo: number) {
+    const tokenUserNo = 1;
+
+    return this.likesService.deleteOneLike();
+  }
 }
