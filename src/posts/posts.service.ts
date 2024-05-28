@@ -112,7 +112,7 @@ export class PostsService {
 
     if (isSender && senderDelete) {
       throw new ConflictException("Already deleted from sender.");
-    } else if (!isSender && receiverDelete) {
+    } else if (receiverDelete) {
       throw new ConflictException("Already deleted from receiver.");
     }
 
