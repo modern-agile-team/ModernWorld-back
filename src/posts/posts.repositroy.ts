@@ -42,6 +42,8 @@ export class PostsRepository {
     content: string;
     check: boolean;
     createdAt: Date;
+    senderDelete: boolean;
+    receiverDelete: boolean;
     userPostSenderNo: { nickname: string };
     userPostReceiverNo: { nickname: string };
   }> {
@@ -53,6 +55,8 @@ export class PostsRepository {
         content: true,
         check: true,
         createdAt: true,
+        senderDelete: true,
+        receiverDelete: true,
         userPostSenderNo: { select: { nickname: true } },
         userPostReceiverNo: { select: { nickname: true } },
       },

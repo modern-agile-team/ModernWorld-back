@@ -49,19 +49,29 @@ export class PostsService {
       throw new NotFoundException("This post doesn't exist.");
     }
 
+    if (userNo !== post.senderNo && userNo !== post.receiverNo) {
+      throw new ForbiddenException("This post is not related with you.");
+    }
+
     if (userNo === post.receiverNo) {
+      if (post.receiverDelete) {
+        throw new ForbiddenException("This post was deleted from receiver.");
+      }
       // 수신자이면, 처음 조회할 경우 읽었다는걸 표시해야함
       if (!post.check) {
         await this.postsRepository.updateOnePostCheckToTrue(postNo);
         post.check = true;
       }
-
-      return post;
-    } else if (userNo === post.senderNo) {
+    } else if (post.senderDelete) {
+      throw new ForbiddenException("This post was deleted from sender.");
       // 발신자이면 다른로직은 없음
-      return post;
     }
-    throw new ForbiddenException("This post is not ralated with user.");
+
+    // 객체 프로퍼티를 제거하기 위한 작업, 개인적으로 수, 발신자 기준 삭제 여부는 안보여주는게 좋을것같아서..
+    delete post["senderDelete"];
+    delete post["receiverDelete"];
+
+    return post;
   }
 
   async createOnePost(
