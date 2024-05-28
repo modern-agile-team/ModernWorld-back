@@ -6,6 +6,7 @@ import { ApiTags } from "@nestjs/swagger";
 @ApiTags("Likes")
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
+
   @Post("")
   test() {}
 
