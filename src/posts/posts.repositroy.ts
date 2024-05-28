@@ -72,7 +72,7 @@ export class PostsRepository {
     return this.prisma.post.create({ data: { senderNo, receiverNo, content } });
   }
 
-  updateOnePostCheckToTrue(postNo: number) {
+  updateOnePostCheckToTrue(postNo: number): PrismaPromise<post> {
     return this.prisma.post.update({
       data: { check: true },
       where: { no: postNo },
