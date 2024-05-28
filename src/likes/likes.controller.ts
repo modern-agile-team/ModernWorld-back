@@ -1,7 +1,9 @@
 import { Controller, Delete, Post } from "@nestjs/common";
 import { LikesService } from "./likes.service";
+import { ApiTags } from "@nestjs/swagger";
 
-@Controller("like")
+@Controller("likes")
+@ApiTags("Likes")
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
   @Post("")
