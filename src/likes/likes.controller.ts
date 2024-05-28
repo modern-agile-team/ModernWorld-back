@@ -8,14 +8,14 @@ export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
   @Post("users/:userNo")
-  test(@Param("userNo", ParseIntPipe) userNo: number) {
+  createOneLike(@Param("userNo", ParseIntPipe) userNo: number) {
     const tokenUserNo = 1;
 
     return this.likesService.createOneLike();
   }
 
   @Delete("users/:userNo")
-  test2(@Param("userNo", ParseIntPipe) userNo: number) {
+  deleteOneLike(@Param("userNo", ParseIntPipe) userNo: number) {
     const tokenUserNo = 1;
 
     return this.likesService.deleteOneLike();
