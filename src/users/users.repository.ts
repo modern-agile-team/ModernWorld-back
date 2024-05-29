@@ -16,19 +16,23 @@ export class UsersRepository {
       where: { uniqueIdentifier },
     });
   }
-
   createUser(
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: DomainEnum,
+    domain: string,
   ): PrismaPromise<user> {
     return this.prisma.user.create({
       data: {
         uniqueIdentifier,
         socialName,
         image,
-        domain,
+        domain:
+          domain === "naver"
+            ? "naver"
+            : domain === "google"
+              ? "google"
+              : "kakao",
       },
     });
   }
