@@ -24,6 +24,7 @@ export class InventoryRepository {
             no: true,
             name: true,
             description: true,
+            image: true,
             theme: true,
             type: true,
             price: true,
