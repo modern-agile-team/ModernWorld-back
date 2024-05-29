@@ -5,7 +5,7 @@ import { LikesRepository } from "./likes.repository";
 export class LikesService {
   constructor(private readonly likesRepository: LikesRepository) {}
 
-  createOneLike() {}
+  createOneLike(senderNo: number, receiverNo: number) {}
 
-  deleteOneLike() {}
+  deleteOneLike(senderNo: number, receiverNo: number) {}
 }
