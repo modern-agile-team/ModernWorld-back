@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import axios from "axios";
-import { UserRepository } from "src/users/users.repository";
+import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/token.service";
 import { TokenRepository } from "src/auth/token.repository";
 
@@ -15,7 +15,7 @@ export class AuthService {
   private userInfoUrl: string;
   private redirect_uri: string;
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly tokenService: TokenService,
     private readonly tokenRepository: TokenRepository,
   ) {}
@@ -65,12 +65,12 @@ export class AuthService {
 
       const userUniqueIdentifier = userInfo.response.id;
       let user =
-        await this.userRepository.findUserByUniqueIndentifier(
+        await this.usersRepository.findUserByUniqueIndentifier(
           userUniqueIdentifier,
         );
 
       if (!user) {
-        user = await this.userRepository.createUser(
+        user = await this.usersRepository.createUser(
           userUniqueIdentifier,
           userInfo.response.name,
           userInfo.response.profile_image,
@@ -148,11 +148,11 @@ export class AuthService {
       const userProperties = userInfo.properties;
 
       let user =
-        await this.userRepository.findUserByUniqueIndentifier(
+        await this.usersRepository.findUserByUniqueIndentifier(
           userUniqueIdentifier,
         );
       if (!user) {
-        user = await this.userRepository.createUser(
+        user = await this.usersRepository.createUser(
           userUniqueIdentifier,
           userProperties.nickname,
           userProperties.profile_image,

@@ -13,7 +13,7 @@ export class TokenService {
     const payload = { sub: "accessToken", userNo };
 
     return this.jwtService.sign(payload, {
-      expiresIn: "10m",
+      expiresIn: "3h",
       secret: process.env.ACCESS_TOKEN_SECRET,
     });
   }
