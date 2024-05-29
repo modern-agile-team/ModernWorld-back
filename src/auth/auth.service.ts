@@ -63,13 +63,15 @@ export class AuthService {
         );
       }
 
-      const userUniqueNumber = userInfo.response.id;
+      const userUniqueIdentifier = userInfo.response.id;
       let user =
-        await this.userRepository.findUserByUniqueIndentifier(userUniqueNumber);
+        await this.userRepository.findUserByUniqueIndentifier(
+          userUniqueIdentifier,
+        );
 
       if (!user) {
         user = await this.userRepository.createUser(
-          userUniqueNumber,
+          userUniqueIdentifier,
           userInfo.response.name,
           userInfo.response.profile_image,
           "naver",
