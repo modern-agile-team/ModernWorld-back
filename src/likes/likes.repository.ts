@@ -6,6 +6,10 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class LikesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  findOneLike(senderNo: number, receiverNo: number): PrismaPromise<like> {
+    return this.prisma.like.findFirst({ where: { senderNo, receiverNo } });
+  }
+
   createOneLike(senderNo: number, receiverNo: number): PrismaPromise<like> {
     return this.prisma.like.create({ data: { senderNo, receiverNo } });
   }
