@@ -169,8 +169,9 @@ export class AuthService {
       );
       return { accessToken, refreshToken };
     } catch (error) {
+      console.log(error);
       // 에러 처리
-      throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error);
     }
   }
 }
