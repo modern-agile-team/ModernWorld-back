@@ -4,10 +4,14 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { LikesRepository } from "./likes.repository";
+import { UsersRepository } from "src/users/users.repository";
 
 @Injectable()
 export class LikesService {
-  constructor(private readonly likesRepository: LikesRepository) {}
+  constructor(
+    private readonly likesRepository: LikesRepository,
+    private readonly usersRepository: UsersRepository,
+  ) {}
 
   async createOneLike(senderNo: number, receiverNo: number) {
     if (senderNo === receiverNo)
