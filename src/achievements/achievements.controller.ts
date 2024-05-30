@@ -1,4 +1,7 @@
-import { Controller } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 
 @Controller("achievements")
-export class AchievementsController {}
+export class AchievementsController {
+  @Get()
+  getAchievements() {}
+}
