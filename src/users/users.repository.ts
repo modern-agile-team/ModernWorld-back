@@ -233,7 +233,7 @@ export class UsersRepository {
     });
   }
 
-  updateUserLike(userNo: number, count: number): PrismaPromise<user> {
+  updateUserLikeCount(userNo: number, count: number): PrismaPromise<user> {
     return this.prisma.user.update({
       data: { like: { increment: count } },
       where: { no: userNo },
