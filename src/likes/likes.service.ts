@@ -24,6 +24,9 @@ export class LikesService {
     if (await this.likesRepository.findOneLike(senderNo, receiverNo))
       throw new ConflictException("This like already exist.");
 
+    //트랜잭션으로 묶을것.
+
+    await this.usersRepository.updateUserLike(receiverNo, 1);
     return this.likesRepository.createOneLike(senderNo, receiverNo);
   }
 
@@ -34,6 +37,9 @@ export class LikesService {
     if (!(await this.likesRepository.findOneLike(senderNo, receiverNo)))
       throw new NotFoundException("This like doesn't exist.");
 
+    //트랜잭션 묶을것.
+
+    await this.usersRepository.updateUserLike(receiverNo, -1);
     return this.likesRepository.deleteOneLike(senderNo, receiverNo);
   }
 }
