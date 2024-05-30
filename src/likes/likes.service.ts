@@ -26,7 +26,13 @@ export class LikesService {
     return this.likesRepository.createOneLike(senderNo, receiverNo);
   }
 
-  deleteOneLike(senderNo: number, receiverNo: number) {
+  async deleteOneLike(senderNo: number, receiverNo: number) {
+    if (!(await this.usersRepository.findUserNicknameByUserNo(receiverNo)))
+      throw new NotFoundException("User doesn't exist.");
+
+    if (!(await this.likesRepository.findOneLike(senderNo, receiverNo)))
+      throw new NotFoundException("This like doesn't exist.");
+
     return this.likesRepository.deleteOneLike(senderNo, receiverNo);
   }
 }
