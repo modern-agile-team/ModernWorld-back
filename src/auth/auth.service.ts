@@ -170,9 +170,7 @@ export class AuthService {
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
-      throw new InternalServerErrorException(
-        "로그인 중 서버에러가 발생했습니다.",
-      );
+      throw new InternalServerErrorException(error.message);
     }
   }
 }
