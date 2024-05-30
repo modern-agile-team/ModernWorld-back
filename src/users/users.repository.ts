@@ -232,4 +232,11 @@ export class UsersRepository {
       orderBy: [{ [orderByField]: sort }, { no: "desc" }],
     });
   }
+
+  updateUserLike(userNo: number, count: number) {
+    return this.prisma.user.update({
+      data: { like: { increment: count } },
+      where: { no: userNo },
+    });
+  }
 }
