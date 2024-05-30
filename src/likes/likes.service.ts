@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -21,7 +22,7 @@ export class LikesService {
       throw new ForbiddenException("Users can't like themselves alone.");
 
     if (await this.likesRepository.findOneLike(senderNo, receiverNo))
-      throw new NotFoundException("This like already exist.");
+      throw new ConflictException("This like already exist.");
 
     return this.likesRepository.createOneLike(senderNo, receiverNo);
   }
