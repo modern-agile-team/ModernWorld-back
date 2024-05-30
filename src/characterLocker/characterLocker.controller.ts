@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseBoolPipe,
   ParseEnumPipe,
   ParseIntPipe,
   Patch,
@@ -34,12 +35,21 @@ export class CharacterLockerController {
     required: false,
     example: "cat",
   })
+  @ApiQuery({
+    name: "status",
+    required: false,
+  })
   getUserCharacters(
     @Param("userNo", ParseIntPipe) userNo: number,
     @Query("species", new ParseEnumPipe(Animal, { optional: true }))
     species?: Animal,
+    @Query("status", new ParseBoolPipe({ optional: true })) status?: boolean,
   ) {
-    return this.characterLockerService.getUserAllCharacters(userNo, species);
+    return this.characterLockerService.getUserAllCharacters(
+      userNo,
+      species,
+      status,
+    );
   }
 
   @Post(":characterNo")
