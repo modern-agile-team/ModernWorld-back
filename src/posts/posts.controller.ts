@@ -23,7 +23,7 @@ export class PostsController {
   @ApiQuery({ name: "type", required: false, enum: SenderReceiverNoField })
   getPosts(
     @Query("type", new ParseEnumPipe(SenderReceiverNoField, { optional: true }))
-    senderReceiverNoField: SenderReceiverNoField,
+    senderReceiverNoField?: SenderReceiverNoField,
   ) {
     const userNo = 1;
 
