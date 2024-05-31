@@ -42,7 +42,7 @@ export class GetUsersByAnimalDto {
   })
   @IsOptional()
   @IsEnum(orderByField)
-  orderByField: orderByField;
+  orderByField?: orderByField;
 
   @ApiPropertyOptional({
     name: "nickname",

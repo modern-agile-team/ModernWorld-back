@@ -188,9 +188,8 @@ export class UsersRepository {
 
   getUsers(
     take: number,
-    orderByField: string = "createdAt",
     skip: number,
-    sort: string,
+    orderBy: object,
     where: { nickname: {}; characterLocker: {} },
   ): PrismaPromise<
     {
@@ -233,7 +232,7 @@ export class UsersRepository {
 
       where,
 
-      orderBy: [{ [orderByField]: sort }, { no: "desc" }],
+      orderBy,
     });
   }
 }
