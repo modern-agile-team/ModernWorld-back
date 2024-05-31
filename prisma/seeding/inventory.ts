@@ -75,7 +75,7 @@ export async function inventory(prisma: PrismaClient) {
       },
       {
         userNo: 2,
-        itemNo: 7,
+        itemNo: 18,
         status: false,
       },
     ],
