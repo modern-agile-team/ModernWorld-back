@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { PostsRepository } from "./posts.repositroy";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
-import { createOnePostDto } from "./dto/create-post.dto";
+import { CreateOnePostDto } from "./dto/create-post.dto";
 import { UsersRepository } from "src/users/users.repository";
 
 @Injectable()
@@ -77,7 +77,7 @@ export class PostsService {
   async createOnePost(
     senderNo: number,
     receiverNo: number,
-    body: createOnePostDto,
+    body: CreateOnePostDto,
   ) {
     const { content } = body;
 

@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
-import { createOnePostDto } from "./dto/create-post.dto";
+import { CreateOnePostDto } from "./dto/create-post.dto";
 import { ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 
 @Controller("posts")
@@ -41,7 +41,7 @@ export class PostsController {
   @Post("/users/:userNo")
   createPost(
     @Param("userNo", ParseIntPipe) userNo: number,
-    @Body() body: createOnePostDto,
+    @Body() body: CreateOnePostDto,
   ) {
     const tokenUserNo = 1;
 

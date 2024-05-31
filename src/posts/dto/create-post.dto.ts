@@ -1,12 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MaxLength, MinLength } from "class-validator";
+import { Length, MaxLength, MinLength } from "class-validator";
 
-export class createOnePostDto {
+export class CreateOnePostDto {
   @ApiProperty({
     name: "content",
     example: "김뿡우",
   })
-  @MaxLength(100)
-  @MinLength(1)
+  @Length(1, 100)
   content: string;
 }
