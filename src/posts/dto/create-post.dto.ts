@@ -5,6 +5,8 @@ export class CreateOnePostDto {
   @ApiProperty({
     name: "content",
     example: "김뿡우",
+    minLength: 1,
+    maxLength: 100,
   })
   @Length(1, 100)
   content: string;
