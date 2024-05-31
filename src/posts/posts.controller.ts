@@ -30,7 +30,7 @@ export class PostsController {
     return this.postsService.getPostsByUserNo(userNo, senderReceiverNoField);
   }
 
-  @Get("/:postNo")
+  @Get(":postNo")
   @ApiParam({ name: "postNo", example: 1 })
   getOnePost(@Param("postNo", ParseIntPipe) postNo: number) {
     const userNo = 1;
@@ -38,7 +38,7 @@ export class PostsController {
     return this.postsService.getOnePostByUserNo(userNo, postNo);
   }
 
-  @Post("/users/:userNo")
+  @Post("users/:userNo")
   createPost(
     @Param("userNo", ParseIntPipe) userNo: number,
     @Body() body: CreateOnePostDto,

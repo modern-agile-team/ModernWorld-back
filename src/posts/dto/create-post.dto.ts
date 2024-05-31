@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Length, MaxLength, MinLength } from "class-validator";
+import { Length } from "class-validator";
 
 export class CreateOnePostDto {
   @ApiProperty({
