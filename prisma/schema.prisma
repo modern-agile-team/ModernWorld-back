@@ -83,7 +83,7 @@ model item {
 model legend {
   userNo          Int  @id @map("user_no") @db.UnsignedInt
   attendanceCount Int  @default(0) @map("attendance_count") @db.UnsignedInt
-  commetCount     Int  @default(0) @map("commet_count") @db.UnsignedInt
+  commentCount    Int  @default(0) @map("comment_count") @db.UnsignedInt
   itemCount       Int  @default(0) @map("item_count") @db.UnsignedInt
   presentCount    Int  @default(0) @map("present_count") @db.UnsignedInt
   likeCount       Int  @default(0) @map("like_count") @db.UnsignedInt
