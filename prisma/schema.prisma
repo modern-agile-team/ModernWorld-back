@@ -83,7 +83,7 @@ model item {
 model legend {
   userNo          Int  @id @map("user_no") @db.UnsignedInt
   attendanceCount Int  @default(0) @map("attendance_count") @db.UnsignedInt
-  commetCount     Int  @default(0) @map("commet_count") @db.UnsignedInt
+  commentCount    Int  @default(0) @map("comment_count") @db.UnsignedInt
   itemCount       Int  @default(0) @map("item_count") @db.UnsignedInt
   presentCount    Int  @default(0) @map("present_count") @db.UnsignedInt
   likeCount       Int  @default(0) @map("like_count") @db.UnsignedInt
@@ -181,7 +181,6 @@ model user {
   description       String?     @db.VarChar(150)
   attendance        Json?
   status            Boolean     @default(false)
-  like              Int         @default(0) @db.UnsignedInt
   createdAt         DateTime    @default(now()) @map("created_at") @db.DateTime(0)
   deletedAt         DateTime?   @map("deleted_at") @db.DateTime(0)
   admin             Boolean     @default(false)
