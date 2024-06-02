@@ -11,15 +11,10 @@ export class PostsRepository {
   }
 
   getPosts(where: object): PrismaPromise<
-    {
-      no: number;
-      senderNo: number;
-      receiverNo: number;
-      check: boolean;
-      createdAt: Date;
+    (Omit<post, "content" | "senderDelete" | "receiverDelete"> & {
       userPostSenderNo: { nickname: string };
       userPostReceiverNo: { nickname: string };
-    }[]
+    })[]
   > {
     return this.prisma.post.findMany({
       select: {
@@ -35,18 +30,12 @@ export class PostsRepository {
     });
   }
 
-  getOnePostWithUser(postNo: number): PrismaPromise<{
-    no: number;
-    senderNo: number;
-    receiverNo: number;
-    content: string;
-    check: boolean;
-    createdAt: Date;
-    senderDelete: boolean;
-    receiverDelete: boolean;
-    userPostSenderNo: { nickname: string };
-    userPostReceiverNo: { nickname: string };
-  }> {
+  getOnePostWithUser(postNo: number): PrismaPromise<
+    post & {
+      userPostSenderNo: { nickname: string };
+      userPostReceiverNo: { nickname: string };
+    }
+  > {
     return this.prisma.post.findUnique({
       select: {
         no: true,
