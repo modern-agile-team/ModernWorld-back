@@ -8,6 +8,7 @@ import { PostsRepository } from "./posts.repositroy";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { CreateOnePostDto } from "./dto/create-post.dto";
 import { UsersRepository } from "src/users/users.repository";
+import { GetOnePostDto } from "./dto/get-one-post.dto";
 
 @Injectable()
 export class PostsService {
@@ -67,11 +68,7 @@ export class PostsService {
       // 발신자이면 다른로직은 없음
     }
 
-    // 객체 프로퍼티를 제거하기 위한 작업, 개인적으로 수, 발신자 기준 삭제 여부는 안보여주는게 좋을것같아서..
-    delete post["senderDelete"];
-    delete post["receiverDelete"];
-
-    return post;
+    return new GetOnePostDto(post);
   }
 
   async createOnePost(
