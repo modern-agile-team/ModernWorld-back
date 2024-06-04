@@ -6,12 +6,14 @@ import {
 } from "@nestjs/common";
 import { LikesRepository } from "./likes.repository";
 import { UsersRepository } from "src/users/users.repository";
+import { LegendsRepository } from "src/legends/legends.repository";
 
 @Injectable()
 export class LikesService {
   constructor(
     private readonly likesRepository: LikesRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly legendsRepository: LegendsRepository,
   ) {}
 
   async createOneLike(senderNo: number, receiverNo: number) {
@@ -26,7 +28,7 @@ export class LikesService {
 
     //트랜잭션으로 묶을것.
 
-    await this.usersRepository.updateUserLikeCount(receiverNo, 1);
+    await this.legendsRepository.updateUserLikeCount(receiverNo, 1);
     return this.likesRepository.createOneLike(senderNo, receiverNo);
   }
 
@@ -39,7 +41,7 @@ export class LikesService {
 
     //트랜잭션 묶을것.
 
-    await this.usersRepository.updateUserLikeCount(receiverNo, -1);
+    await this.legendsRepository.updateUserLikeCount(receiverNo, -1);
     return this.likesRepository.deleteOneLike(senderNo, receiverNo);
   }
 }
