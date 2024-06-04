@@ -10,13 +10,13 @@ export class GetOnePostDto {
   ) {
     Object.assign(this, post);
   }
+
   no: number;
   senderNo: number;
   receiverNo: number;
   content: string;
   check: boolean;
   createdAt: Date;
-
   @Exclude()
   senderDelete: boolean;
   @Exclude()
