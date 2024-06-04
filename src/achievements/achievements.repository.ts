@@ -7,6 +7,6 @@ export class AchievementsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   getAchievements(): PrismaPromise<achievement[]> {
-    return this.prisma.achievement.findMany({ where: {} });
+    return this.prisma.achievement.findMany();
   }
 }

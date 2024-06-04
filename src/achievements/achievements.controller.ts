@@ -3,8 +3,10 @@ import { AchievementsService } from "./achievements.service";
 
 @Controller("achievements")
 export class AchievementsController {
-  constructor(ahcievementsService: AchievementsService) {}
+  constructor(private readonly achievementsService: AchievementsService) {}
 
   @Get()
-  getAchievements() {}
+  getAchievements() {
+    return this.achievementsService.getAchievements();
+  }
 }
