@@ -12,6 +12,7 @@ import { neighbor } from "./seeding/neighbor";
 import { comment } from "./seeding/comment";
 import { reply } from "./seeding/reply";
 import { like } from "./seeding/like";
+import { legend } from "./seeding/legend";
 
 const prisma = new PrismaClient();
 
@@ -29,6 +30,7 @@ async function main() {
   await comment(prisma);
   await reply(prisma);
   await like(prisma);
+  await legend(prisma);
 }
 
 main()

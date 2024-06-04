@@ -124,7 +124,6 @@ export class UsersService {
     const { pageNo, take, animal, orderByField, nickname } = queryParams;
 
     const skip = (pageNo - 1) * take;
-    const sort = orderByField === undefined ? "asc" : "desc";
 
     let where = {
       nickname: { contains: nickname },
@@ -137,11 +136,19 @@ export class UsersService {
       };
     }
 
+    // [{ undefined(createdAt): "asc" }, { no: "desc" }]
+    // [{ accummulationPoint: "desc" }, { no: "desc" }]
+    // [{ legend: { likeCount: "desc" } }, { no: "desc" }]
+
+    const orderBy =
+      orderByField === "like"
+        ? [{ legend: { likeCount: "desc" } }, { no: "desc" }]
+        : [{ [orderByField || "createdAt"]: "desc" }, { no: "desc" }];
+
     const result = await this.userRepository.getUsers(
       take,
-      orderByField,
       skip,
-      sort,
+      orderBy,
       where,
     );
 
