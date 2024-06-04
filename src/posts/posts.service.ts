@@ -71,12 +71,8 @@ export class PostsService {
     return new GetOnePostDto(post);
   }
 
-  async createOnePost(
-    senderNo: number,
-    receiverNo: number,
-    body: CreateOnePostDto,
-  ) {
-    const { content } = body;
+  async createOnePost(senderNo: number, body: CreateOnePostDto) {
+    const { userNo: receiverNo, content } = body;
 
     if (senderNo === receiverNo) {
       throw new ForbiddenException("Users cannot post themselves alone.");

@@ -38,14 +38,11 @@ export class PostsController {
     return this.postsService.getOnePostByUserNo(userNo, postNo);
   }
 
-  @Post("users/:userNo")
-  createPost(
-    @Param("userNo", ParseIntPipe) userNo: number,
-    @Body() body: CreateOnePostDto,
-  ) {
+  @Post()
+  createPost(@Body() body: CreateOnePostDto) {
     const tokenUserNo = 1;
 
-    return this.postsService.createOnePost(tokenUserNo, userNo, body);
+    return this.postsService.createOnePost(tokenUserNo, body);
   }
 
   @Delete(":postNo")
