@@ -9,6 +9,7 @@ import { UsersModule } from "./users/users.module";
 import { CommentModule } from "./comment/comment.module";
 import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
+import { PostsModule } from "./posts/posts.module";
 import { AuthModule } from "./auth/auth.module";
 import { CharacterLockerModule } from "./characterLocker/characterLocker.module";
 import { ScheduleModule } from "@nestjs/schedule";
@@ -25,6 +26,7 @@ import { LikesModule } from "./likes/likes.module";
     CommentModule,
     PresentsModule,
     CharactersModule,
+    PostsModule,
     AuthModule,
     CharacterLockerModule,
     TasksModule,

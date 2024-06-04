@@ -155,7 +155,7 @@ export class UsersRepository {
     nickname: string;
     currentPoint: number;
     accumulationPoint: number;
-    like: number;
+    legend: { likeCount: number };
     characterLocker: { character: { image: string } }[];
     userAchievement: {
       achievement: { title: string; level: string };
@@ -166,11 +166,14 @@ export class UsersRepository {
         nickname: true,
         currentPoint: true,
         accumulationPoint: true,
-        like: true,
+
+        legend: { select: { likeCount: true } },
+
         characterLocker: {
           select: { character: { select: { image: true } } },
           where: { status: true },
         },
+
         userAchievement: {
           select: {
             achievement: { select: { title: true, level: true } },
@@ -185,17 +188,16 @@ export class UsersRepository {
 
   getUsers(
     take: number,
-    orderByField: string = "createdAt",
     skip: number,
-    sort: string,
+    orderBy: object,
     where: { nickname: {}; characterLocker: {} },
   ): PrismaPromise<
     {
       nickname: string;
       accumulationPoint: number;
       description: string;
-      like: number;
       createdAt: Date;
+      legend: { likeCount: number };
       characterLocker: { character: { image: string } }[];
       userAchievement: { achievement: { title: string; level: string } }[];
     }[]
@@ -208,7 +210,8 @@ export class UsersRepository {
         description: true,
         createdAt: true,
         accumulationPoint: true,
-        like: true,
+
+        legend: { select: { likeCount: true } },
 
         userAchievement: {
           where: { status: true },
@@ -229,7 +232,7 @@ export class UsersRepository {
 
       where,
 
-      orderBy: [{ [orderByField]: sort }, { no: "desc" }],
+      orderBy,
     });
   }
 
