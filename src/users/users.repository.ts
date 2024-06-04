@@ -1,13 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import {
-  PrismaPromise,
-  achievement,
-  character,
-  characterLocker,
-  like,
-  user,
-  userAchievement,
-} from "@prisma/client";
+import { PrismaPromise, user } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
 import { DomainEnum } from "./enum/domain.enum";
@@ -24,19 +16,23 @@ export class UsersRepository {
       where: { uniqueIdentifier },
     });
   }
-
   createUser(
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: DomainEnum,
+    domain: string,
   ): PrismaPromise<user> {
     return this.prisma.user.create({
       data: {
         uniqueIdentifier,
         socialName,
         image,
-        domain,
+        domain:
+          domain === "naver"
+            ? "naver"
+            : domain === "google"
+              ? "google"
+              : "kakao",
       },
     });
   }
@@ -117,6 +113,22 @@ export class UsersRepository {
     });
   }
 
+  resetUserAttendance(): PrismaPromise<{ count: number }> {
+    return this.prisma.user.updateMany({
+      data: {
+        attendance: {
+          "0": [false, 100],
+          "1": [false, 200],
+          "2": [false, 300],
+          "3": [false, 200],
+          "4": [false, 400],
+          "5": [false, 300],
+          "6": [false, 300],
+        },
+      },
+    });
+  }
+
   updateUserNickname(
     userNo: number,
     nickname: string,
@@ -143,7 +155,7 @@ export class UsersRepository {
     nickname: string;
     currentPoint: number;
     accumulationPoint: number;
-    like: number;
+    legend: { likeCount: number };
     characterLocker: { character: { image: string } }[];
     userAchievement: {
       achievement: { title: string; level: string };
@@ -154,11 +166,14 @@ export class UsersRepository {
         nickname: true,
         currentPoint: true,
         accumulationPoint: true,
-        like: true,
+
+        legend: { select: { likeCount: true } },
+
         characterLocker: {
           select: { character: { select: { image: true } } },
           where: { status: true },
         },
+
         userAchievement: {
           select: {
             achievement: { select: { title: true, level: true } },
@@ -173,17 +188,16 @@ export class UsersRepository {
 
   getUsers(
     take: number,
-    orderByField: string = "createdAt",
     skip: number,
-    sort: string,
+    orderBy: object,
     where: { nickname: {}; characterLocker: {} },
   ): PrismaPromise<
     {
       nickname: string;
       accumulationPoint: number;
       description: string;
-      like: number;
       createdAt: Date;
+      legend: { likeCount: number };
       characterLocker: { character: { image: string } }[];
       userAchievement: { achievement: { title: string; level: string } }[];
     }[]
@@ -196,7 +210,8 @@ export class UsersRepository {
         description: true,
         createdAt: true,
         accumulationPoint: true,
-        like: true,
+
+        legend: { select: { likeCount: true } },
 
         userAchievement: {
           where: { status: true },
@@ -217,7 +232,7 @@ export class UsersRepository {
 
       where,
 
-      orderBy: [{ [orderByField]: sort }, { no: "desc" }],
+      orderBy,
     });
   }
 }

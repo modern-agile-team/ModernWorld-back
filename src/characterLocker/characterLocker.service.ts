@@ -17,8 +17,12 @@ export class CharacterLockerService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  getUserAllCharacters(userNo: number, species: Animal) {
-    return this.characterLockerRepository.getUserAllCharacters(userNo, species);
+  getUserAllCharacters(userNo: number, species: Animal, status: boolean) {
+    return this.characterLockerRepository.getUserAllCharacters(
+      userNo,
+      species,
+      status,
+    );
   }
 
   async buyOneCharacter(userNo: number, characterNo: number) {

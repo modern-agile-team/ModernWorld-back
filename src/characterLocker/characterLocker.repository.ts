@@ -10,6 +10,7 @@ export class CharacterLockerRepository {
   getUserAllCharacters(
     userNo: number,
     species: Animal,
+    status: boolean,
   ): PrismaPromise<characterLocker[]> {
     return this.prisma.characterLocker.findMany({
       select: {
@@ -27,7 +28,7 @@ export class CharacterLockerRepository {
           },
         },
       },
-      where: { userNo, character: { species } },
+      where: { userNo, character: { species }, status },
     });
   }
 
