@@ -6,4 +6,8 @@ export class UserAchievementsService {
   constructor(
     private readonly userAchievementsRepository: UserAchievementsRepository,
   ) {}
+
+  getUserAchievements() {
+    return this.userAchievementsRepository.getUserAchievements();
+  }
 }

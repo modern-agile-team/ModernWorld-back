@@ -8,5 +8,9 @@ export class UserAchievementsController {
   ) {}
 
   @Get("")
-  getUserAchievements() {}
+  getUserAchievements() {
+    const userNo = 1;
+
+    return this.userAchievementsService.getUserAchievements();
+  }
 }
