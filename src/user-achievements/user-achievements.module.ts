@@ -2,12 +2,11 @@ import { Module } from "@nestjs/common";
 import { UserAchievementsController } from "./user-achievements.controller";
 import { UserAchievementsRepository } from "./user-achievements.repository";
 import { UserAchievementsService } from "./user-achievements.service";
-import { AchievementsRepository } from "src/achievements/achievements.repository";
+import { AchievementsModule } from "src/achievements/achievements.module";
 
 @Module({
-  imports: [AchievementsRepository],
+  imports: [AchievementsModule],
   controllers: [UserAchievementsController],
   providers: [UserAchievementsRepository, UserAchievementsService],
-  exports: [UserAchievementsRepository],
 })
 export class UserAchievementsModule {}
