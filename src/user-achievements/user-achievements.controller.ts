@@ -13,6 +13,6 @@ export class UserAchievementsController {
   getUserAchievements() {
     const userNo = 1;
 
-    return this.userAchievementsService.getUserAchievements();
+    return this.userAchievementsService.getUserAchievements(userNo);
   }
 }

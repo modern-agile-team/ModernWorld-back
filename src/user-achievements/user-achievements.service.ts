@@ -7,7 +7,7 @@ export class UserAchievementsService {
     private readonly userAchievementsRepository: UserAchievementsRepository,
   ) {}
 
-  getUserAchievements() {
-    return this.userAchievementsRepository.getUserAchievements();
+  getUserAchievements(userNo: number) {
+    return this.userAchievementsRepository.getUserAchievements(userNo);
   }
 }
