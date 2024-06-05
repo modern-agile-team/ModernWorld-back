@@ -25,9 +25,16 @@ export class UserAchievementsRepository {
     });
   }
 
-  createOneUserAchievements(userNo: number, achievementNo: number) {
+  createOneUserAchievement(userNo: number, achievementNo: number) {
     return this.prisma.userAchievement.create({
       data: { userNo, achievementNo },
+    });
+  }
+
+  updateUserAchievementStatus(no: number, status: boolean) {
+    return this.prisma.userAchievement.updateMany({
+      data: { status },
+      where: { no },
     });
   }
 }
