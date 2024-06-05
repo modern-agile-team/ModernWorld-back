@@ -31,10 +31,14 @@ export class UserAchievementsRepository {
     });
   }
 
-  updateUserAchievementStatus(no: number, status: boolean) {
+  updateUserAchievementStatus(
+    userNo: number,
+    status: boolean,
+    achievementNo?: number,
+  ) {
     return this.prisma.userAchievement.updateMany({
       data: { status },
-      where: { no },
+      where: { userNo, achievementNo },
     });
   }
 }
