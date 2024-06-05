@@ -6,6 +6,10 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class AchievementsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  getOneAchievement(no: number): PrismaPromise<achievement> {
+    return this.prisma.achievement.findUnique({ where: { no } });
+  }
+
   getAchievements(where: object): PrismaPromise<achievement[]> {
     return this.prisma.achievement.findMany({
       where,
