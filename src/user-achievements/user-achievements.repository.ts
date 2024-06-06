@@ -5,6 +5,12 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class UserAchievementsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  findOneUserAchievement(userNo: number, achievementNo: number) {
+    return this.prisma.userAchievement.findMany({
+      where: { userNo, achievementNo },
+    });
+  }
+
   getUserAchievements(userNo: number) {
     return this.prisma.userAchievement.findMany({
       select: {
