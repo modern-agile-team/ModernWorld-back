@@ -6,7 +6,7 @@ export class UserAchievementsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   findOneUserAchievement(userNo: number, achievementNo: number) {
-    return this.prisma.userAchievement.findMany({
+    return this.prisma.userAchievement.findFirst({
       where: { userNo, achievementNo },
     });
   }
