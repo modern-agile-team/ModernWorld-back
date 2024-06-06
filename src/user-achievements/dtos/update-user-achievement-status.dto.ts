@@ -6,7 +6,12 @@ export class updateUserAchievementStatusDto {
   @IsBoolean()
   status: boolean;
 
-  @ApiProperty({ name: "achievementNo", required: false })
+  @ApiProperty({
+    name: "achievementNo",
+    required: false,
+    example: 1,
+    minimum: 1,
+  })
   @IsInt()
   @Min(1)
   achievementNo: number;
