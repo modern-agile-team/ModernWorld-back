@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, userAchievement } from "@prisma/client";
+import { PrismaPromise, achievement, userAchievement } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -15,7 +15,11 @@ export class UserAchievementsRepository {
     });
   }
 
-  getUserAchievements(userNo: number): PrismaPromise<userAchievement[]> {
+  getUserAchievements(
+    userNo: number,
+  ): PrismaPromise<
+    (userAchievement & { achievement: Omit<achievement, "no" | "point"> })[]
+  > {
     return this.prisma.userAchievement.findMany({
       select: {
         no: true,
