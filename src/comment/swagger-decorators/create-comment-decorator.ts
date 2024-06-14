@@ -35,11 +35,11 @@ export function ApiCreateComment() {
       },
     }),
     ApiResponse({
-      status: 411,
+      status: 400,
       description: "액세스 토큰이 제공되지 않은 경우",
       content: {
         JSON: {
-          example: { statusCode: 411, message: "토큰이 제공되지 않았습니다." },
+          example: { statusCode: 400, message: "토큰이 제공되지 않았습니다." },
         },
       },
     }),
