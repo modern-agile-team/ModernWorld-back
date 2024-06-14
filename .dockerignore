@@ -19,3 +19,7 @@ README.md
 .eslintrc.js
 nodemon.json
 .prettierrc
+
+# Ignore Seeding
+prisma/seed.ts
+prisma/seeding

@@ -12,11 +12,18 @@ import {
 import { CommentService } from "./comment.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
+import { GetCommentDto } from "./dto/get-comment.dto";
+import { ApiTags } from "@nestjs/swagger";
+import { ApiCreateComment } from "./swagger-decorators/create-comment-decorator";
+import { ApiFindComments } from "./swagger-decorators/find-comments-decorator";
+import { ApiUpdateComment } from "./swagger-decorators/update-comment-decorator";
+import { ApiDeleteComment } from "./swagger-decorators/delete-comments-decorator";
 
-@Controller("comment")
+@Controller("comments")
+@ApiTags("Comments")
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
-
+  @ApiCreateComment()
   @Post(":receiverNo")
   createComment(
     @Param("receiverNo", ParseIntPipe) receiverNo: number,
@@ -27,12 +34,14 @@ export class CommentController {
   }
 
   @Get()
-  getComment(@Query("page", ParseIntPipe) page: number) {
+  @ApiFindComments()
+  getComment(@Query() queryParams: GetCommentDto) {
     const userNo = 1;
-    return this.commentService.getComment(userNo, page);
+    return this.commentService.getComment(userNo, queryParams);
   }
 
   @Patch(":commnetNo")
+  @ApiUpdateComment()
   updateComment(
     @Param("commnetNo", ParseIntPipe) commentNo: number,
     @Body() content: UpdateCommentDto,
@@ -41,6 +50,7 @@ export class CommentController {
   }
 
   @Delete(":commnetNo")
+  @ApiDeleteComment()
   softDeleteComment(@Param("commnetNo", ParseIntPipe) commentNo: number) {
     return this.commentService.softDeleteComment(commentNo);
   }

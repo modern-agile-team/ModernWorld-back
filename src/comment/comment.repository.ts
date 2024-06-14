@@ -20,10 +20,14 @@ export class CommentRepository {
     });
   }
 
-  getComment(senderNo: number, commentPage: number): Promise<comment[]> {
+  getComment(
+    senderNo: number,
+    commentPage: number,
+    take: number,
+  ): Promise<comment[]> {
     return this.prisma.comment.findMany({
       skip: commentPage,
-      take: 2,
+      take,
       orderBy: { no: "desc" },
       where: {
         senderNo,
