@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { CommentRepository } from "./comment.repository";
-import { CreateCommentDto } from "./dto/create-comment.dto";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
-import { GetCommentDto } from "./dto/get-comment.dto";
+import { Injectable } from "@nestjs/common";
+import { CommentRepository } from "./comments.repository";
+import { CreateCommentDto } from "./dtos/create-comment.dto";
+import { UpdateCommentDto } from "./dtos/update-comment.dto";
+import { GetCommentDto } from "./dtos/get-comment.dto";
 
 @Injectable()
 export class CommentService {
@@ -21,10 +21,10 @@ export class CommentService {
     );
   }
 
-  async getComment(senderNo: number, queryParams: GetCommentDto) {
+  async getComment(receiverNo: number, queryParams: GetCommentDto) {
     const { page, take } = queryParams;
     const skip = (page - 1) * take;
-    return await this.CommentRepository.getComment(senderNo, skip, take);
+    return await this.CommentRepository.getComment(receiverNo, skip, take);
   }
 
   async updateComment(id: number, createcontent: UpdateCommentDto) {
