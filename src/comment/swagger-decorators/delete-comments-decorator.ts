@@ -30,7 +30,7 @@ export function ApiDeleteComment() {
       description: "방명록이 DB에 존재하지 않는 경우",
       content: {
         JSON: {
-          example: { statusCode: 401, message: "존재하지 않는 방명록입니다." },
+          example: { statusCode: 404, message: "존재하지 않는 방명록입니다." },
         },
       },
     }),
@@ -44,16 +44,16 @@ export function ApiDeleteComment() {
       },
     }),
     ApiResponse({
-      status: 411,
+      status: 400,
       description: "액세스 토큰이 제공되지 않은 경우",
       content: {
         JSON: {
-          example: { statusCode: 411, message: "토큰이 제공되지 않았습니다." },
+          example: { statusCode: 400, message: "토큰이 제공되지 않았습니다." },
         },
       },
     }),
     ApiResponse({
-      status: 403,
+      status: 401,
       description: "본인의 방명록이 아닌 경우",
       content: {
         JSON: {
