@@ -21,7 +21,7 @@ export class CommentRepository {
   }
 
   getComment(
-    senderNo: number,
+    receiverNo: number,
     commentPage: number,
     take: number,
   ): Promise<comment[]> {
@@ -30,7 +30,7 @@ export class CommentRepository {
       take,
       orderBy: { no: "desc" },
       where: {
-        senderNo,
+        receiverNo,
         deletedAt: null,
       },
     });
