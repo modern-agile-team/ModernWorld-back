@@ -10,7 +10,7 @@ export class SseController {
   @Sse(":userNo")
   sse(@Param("userNo") userNo: string): Observable<MessageEvent> {
     console.log(`${userNo} : SSE 연결이왔어용`);
-    const notifications$ = this.sseService.makeSseSubject(userNo);
+    const notifications$ = this.sseService.getSubject(userNo);
 
     return notifications$.pipe(
       map((message) => {
