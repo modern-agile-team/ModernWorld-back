@@ -29,4 +29,8 @@ export class AlarmsRepository {
   createOneAlarm(userNo: number, content: string): PrismaPromise<alarm> {
     return this.prisma.alarm.create({ data: { userNo, content } });
   }
+
+  updateAlarmStatusToTrue(no: number): PrismaPromise<alarm> {
+    return this.prisma.alarm.update({ data: { status: true }, where: { no } });
+  }
 }
