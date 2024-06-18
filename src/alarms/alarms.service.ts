@@ -10,8 +10,14 @@ export class AlarmsService {
     const { take, page } = queryParams;
     const skip = take * (page - 1);
 
+    const alarms = await this.alarmsRepository.getAllAlarmsByUserNo(
+      userNo,
+      take,
+      skip,
+    );
+
     await this.alarmsRepository.updateAlarmsStatusToTrueByUserNo(userNo);
 
-    return this.alarmsRepository.getAllAlarmsByUserNo(userNo, take, skip);
+    return alarms;
   }
 }
