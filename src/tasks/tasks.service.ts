@@ -3,6 +3,7 @@ import { Cron } from "@nestjs/schedule";
 import { SseService } from "src/sse/sse.service";
 import { UsersRepository } from "src/users/users.repository";
 
+// 오류가 났을 시, 로깅을 통해 해결할 것.
 @Injectable()
 export class TasksService {
   constructor(
@@ -16,10 +17,12 @@ export class TasksService {
   resetUserAttendance() {
     //0 0 0 * * 1 - 매주 월요일 00시 00분 00초
 
-    try {
-      return this.usersRepository.resetUserAttendance();
-    } catch {
-      throw new InternalServerErrorException("Transaction error.");
+    for (let i = 1; i <= 3; i++) {
+      try {
+        return this.usersRepository.resetUserAttendance();
+      } catch {
+        throw new InternalServerErrorException("Transaction error.");
+      }
     }
   }
 
@@ -27,10 +30,12 @@ export class TasksService {
   // 원래는 정각마다 초기화 해주는게 좋을듯, 아래는 10초마다 초기화해줌 10, 20, 30, 40
   @Cron("*/10 * * * * *")
   deleteSseConnection() {
-    try {
-      return this.sseService.deleteAllSse();
-    } catch {
-      throw new InternalServerErrorException("Sse initialization error.");
+    for (let i = 1; i <= 3; i++) {
+      try {
+        return this.sseService.deleteAllSse();
+      } catch {
+        throw new InternalServerErrorException("Sse initialization error.");
+      }
     }
   }
 }
