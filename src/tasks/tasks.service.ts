@@ -16,19 +16,20 @@ export class TasksService {
   })
   resetUserAttendance() {
     //0 0 0 * * 1 - 매주 월요일 00시 00분 00초
-
     for (let i = 1; i <= 3; i++) {
       try {
         return this.usersRepository.resetUserAttendance();
       } catch {
-        throw new InternalServerErrorException("Transaction error.");
+        throw new InternalServerErrorException(
+          "Reset user attendance Transaction error.",
+        );
       }
     }
   }
 
   // 0 * * * * *
-  // 원래는 정각마다 초기화 해주는게 좋을듯, 아래는 10초마다 초기화해줌 10, 20, 30, 40
-  @Cron("*/10 * * * * *")
+  // 원래는 정각마다 초기화 해주는게 좋을듯, 아래는 30초마다 초기화해줌 30, 00, 30, 00
+  @Cron("*/30 * * * * *")
   deleteSseConnection() {
     for (let i = 1; i <= 3; i++) {
       try {
