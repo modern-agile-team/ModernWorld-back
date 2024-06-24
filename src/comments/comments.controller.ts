@@ -9,10 +9,10 @@ import {
   ParseIntPipe,
   Delete,
 } from "@nestjs/common";
-import { CommentService } from "./comment.service";
-import { CreateCommentDto } from "./dto/create-comment.dto";
-import { UpdateCommentDto } from "./dto/update-comment.dto";
-import { GetCommentDto } from "./dto/get-comment.dto";
+import { CommentService } from "./comments.service";
+import { CreateCommentDto } from "./dtos/create-comment.dto";
+import { UpdateCommentDto } from "./dtos/update-comment.dto";
+import { GetCommentDto } from "./dtos/get-comment.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateComment } from "./swagger-decorators/create-comment-decorator";
 import { ApiFindComments } from "./swagger-decorators/find-comments-decorator";
@@ -33,25 +33,27 @@ export class CommentController {
     return this.commentService.createComment(receiverNo, userNo, content);
   }
 
-  @Get()
+  @Get(":receiverNo")
   @ApiFindComments()
-  getComment(@Query() queryParams: GetCommentDto) {
-    const userNo = 1;
-    return this.commentService.getComment(userNo, queryParams);
+  getComment(
+    @Param("receiverNo", ParseIntPipe) receiverNo: number,
+    @Query() queryParams: GetCommentDto,
+  ) {
+    return this.commentService.getComment(receiverNo, queryParams);
   }
 
-  @Patch(":commnetNo")
+  @Patch(":commentNo")
   @ApiUpdateComment()
   updateComment(
-    @Param("commnetNo", ParseIntPipe) commentNo: number,
+    @Param("commentNo", ParseIntPipe) commentNo: number,
     @Body() content: UpdateCommentDto,
   ) {
     return this.commentService.updateComment(commentNo, content);
   }
 
-  @Delete(":commnetNo")
+  @Delete(":commentNo")
   @ApiDeleteComment()
-  softDeleteComment(@Param("commnetNo", ParseIntPipe) commentNo: number) {
+  softDeleteComment(@Param("commentNo", ParseIntPipe) commentNo: number) {
     return this.commentService.softDeleteComment(commentNo);
   }
 }

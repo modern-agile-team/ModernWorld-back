@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { CommentService } from "./comment.service";
-import { CommentController } from "./comment.controller";
-import { CommentRepository } from "./comment.repository";
+import { CommentService } from "./comments.service";
+import { CommentController } from "./comments.controller";
+import { CommentRepository } from "./comments.repository";
 import { UsersModule } from "src/users/users.module";
 
 @Module({
