@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import { SseService } from "src/sse/sse.service";
 import { UsersRepository } from "src/users/users.repository";
@@ -7,6 +11,7 @@ import { UsersRepository } from "src/users/users.repository";
 @Injectable()
 export class TasksService {
   constructor(
+    private readonly logger: Logger,
     private readonly usersRepository: UsersRepository,
     private readonly sseService: SseService,
   ) {}
@@ -14,11 +19,13 @@ export class TasksService {
   @Cron("0 0 0 * * 1", {
     timeZone: "Asia/seoul",
   })
-  resetUserAttendance() {
+  async resetUserAttendance() {
     //0 0 0 * * 1 - 매주 월요일 00시 00분 00초
     for (let i = 1; i <= 3; i++) {
       try {
-        return this.usersRepository.resetUserAttendance();
+        const result = await this.usersRepository.resetUserAttendance();
+        this.logger.log("User Attendance intialization Completed.");
+        return result;
       } catch {
         throw new InternalServerErrorException(
           "Reset user attendance Transaction error.",
@@ -33,7 +40,9 @@ export class TasksService {
   deleteSseConnection() {
     for (let i = 1; i <= 3; i++) {
       try {
-        return this.sseService.deleteAllSse();
+        const result = this.sseService.deleteAllSse();
+        this.logger.log("Sse intialization Completed.");
+        return result;
       } catch {
         throw new InternalServerErrorException("Sse initialization error.");
       }
