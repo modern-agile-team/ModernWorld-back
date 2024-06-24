@@ -10,15 +10,16 @@ export class LoggerMiddleware implements NestMiddleware {
     const userAgent = req.get("user-agent");
     const { method, originalUrl, ip } = req;
 
+    res.on("finish", () => {
+      const resTime = Date.now();
+      const duration = resTime - reqTime;
+      const { statusCode } = res;
+
+      this.logger.log(
+        `${ip} ${statusCode} ${duration}ms ${method} [${originalUrl}] | ${userAgent}`,
+      );
+    });
+
     next();
-
-    const resTime = Date.now();
-    const duration = resTime - reqTime;
-    const { statusCode } = res;
-
-    //userAgent의 값은 일부러 넣지 않았습니다.
-    this.logger.log(
-      `${method} [${originalUrl}] IP : ${ip} ${duration}ms ${statusCode}`,
-    );
   }
 }
