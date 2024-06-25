@@ -18,6 +18,7 @@ import { ApiCreateComment } from "./swagger-decorators/create-comment-decorator"
 import { ApiFindComments } from "./swagger-decorators/find-comments-decorator";
 import { ApiUpdateComment } from "./swagger-decorators/update-comment-decorator";
 import { ApiDeleteComment } from "./swagger-decorators/delete-comments-decorator";
+import { GetReplyDto } from "./dtos/get_reply.dto";
 
 @Controller("comments")
 @ApiTags("Comments")
@@ -55,5 +56,22 @@ export class CommentController {
   @ApiDeleteComment()
   softDeleteComment(@Param("commentNo", ParseIntPipe) commentNo: number) {
     return this.commentService.softDeleteComment(commentNo);
+  }
+
+  @Post(":commentNo/reply")
+  createReply(
+    @Param("commentNo", ParseIntPipe) commentNo: number,
+    @Body() content: CreateCommentDto,
+  ) {
+    const userNo = 1;
+    return this.commentService.createReply(commentNo, userNo, content);
+  }
+
+  @Get(":commentNo/reply")
+  getReply(
+    @Param("commentNo", ParseIntPipe) commentNo: number,
+    @Query() queryParams: GetReplyDto,
+  ) {
+    return this.commentService.getReplies(commentNo, queryParams);
   }
 }

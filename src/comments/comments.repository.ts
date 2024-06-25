@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { comment } from "@prisma/client";
+import { comment, reply } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -54,6 +54,36 @@ export class CommentRepository {
       },
       data: {
         deletedAt: new Date(),
+      },
+    });
+  }
+
+  createReply(
+    commentNo: number,
+    userNo: number,
+    content: string,
+  ): Promise<reply> {
+    return this.prisma.reply.create({
+      data: {
+        commentNo,
+        userNo,
+        content,
+      },
+    });
+  }
+
+  getReplies(
+    commentNo: number,
+    replyPage: number,
+    take: number,
+  ): Promise<reply[]> {
+    return this.prisma.reply.findMany({
+      skip: replyPage,
+      take,
+      orderBy: { no: "desc" },
+      where: {
+        commentNo,
+        deletedAt: null,
       },
     });
   }

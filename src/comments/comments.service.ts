@@ -3,6 +3,7 @@ import { CommentRepository } from "./comments.repository";
 import { CreateCommentDto } from "./dtos/create-comment.dto";
 import { UpdateCommentDto } from "./dtos/update-comment.dto";
 import { GetCommentDto } from "./dtos/get-comment.dto";
+import { GetReplyDto } from "./dtos/get_reply.dto";
 
 @Injectable()
 export class CommentService {
@@ -34,5 +35,20 @@ export class CommentService {
 
   async softDeleteComment(id: number) {
     return await this.CommentRepository.softDeleteComment(id);
+  }
+
+  async createReply(
+    commentNo: number,
+    userNo: number,
+    createContent: CreateCommentDto,
+  ) {
+    const { content } = createContent;
+    return await this.CommentRepository.createReply(commentNo, userNo, content);
+  }
+
+  async getReplies(commentNo: number, queryParams: GetReplyDto) {
+    const { page, take } = queryParams;
+    const skip = (page - 1) * take;
+    return await this.CommentRepository.getReplies(commentNo, skip, take);
   }
 }
