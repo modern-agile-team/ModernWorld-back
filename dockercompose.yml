@@ -2,6 +2,8 @@ version: "3"
 services:
   back:
     image:
+    volumes:
+      - /home/ubuntu/MA7/logs:/logs
     ports:
       - "3000:3000"
     env_file:
