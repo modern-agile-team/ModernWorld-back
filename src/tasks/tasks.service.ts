@@ -27,8 +27,12 @@ export class TasksService {
         this.logger.log("User Attendance intialization Completed.");
         return result;
       } catch {
-        throw new InternalServerErrorException(
-          "Reset user attendance Transaction error.",
+        if (i === 3)
+          throw new InternalServerErrorException(
+            "Reset user attendance Transaction error.",
+          );
+        this.logger.warn(
+          `${i} user attendance initialization failed, try again...`,
         );
       }
     }
@@ -41,10 +45,12 @@ export class TasksService {
     for (let i = 1; i <= 3; i++) {
       try {
         const result = this.sseService.deleteAllSse();
-        this.logger.log("Sse intialization Completed.");
+        this.logger.log("SSE initialization Completed.");
         return result;
       } catch {
-        throw new InternalServerErrorException("Sse initialization error.");
+        if (i === 3)
+          throw new InternalServerErrorException("SSE initialization error.");
+        this.logger.warn(`${i} SSE initialization failed : try again...`);
       }
     }
   }
