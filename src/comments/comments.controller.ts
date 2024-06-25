@@ -74,4 +74,17 @@ export class CommentController {
   ) {
     return this.commentService.getReplies(commentNo, queryParams);
   }
+
+  @Patch("reply/:replyNo")
+  updateReply(
+    @Param("replyNo", ParseIntPipe) replyNo: number,
+    @Body() content: UpdateCommentDto,
+  ) {
+    return this.commentService.updateReply(replyNo, content);
+  }
+
+  @Delete("reply/:replyNo")
+  softDeleteReply(@Param("replyNo", ParseIntPipe) replyNo: number) {
+    return this.commentService.softDeleteReply(replyNo);
+  }
 }

@@ -51,4 +51,13 @@ export class CommentService {
     const skip = (page - 1) * take;
     return await this.CommentRepository.getReplies(commentNo, skip, take);
   }
+
+  async updateReply(replyNo: number, replyContent: UpdateCommentDto) {
+    const { content } = replyContent;
+    return await this.CommentRepository.updateReply(replyNo, content);
+  }
+
+  async softDeleteReply(replyNo: number) {
+    return await this.CommentRepository.softDeleteReply(replyNo);
+  }
 }

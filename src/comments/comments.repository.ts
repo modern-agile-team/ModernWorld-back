@@ -87,4 +87,26 @@ export class CommentRepository {
       },
     });
   }
+
+  updateReply(replyNo: number, content: string): Promise<reply> {
+    return this.prisma.reply.update({
+      where: {
+        no: replyNo,
+      },
+      data: {
+        content,
+      },
+    });
+  }
+
+  softDeleteReply(replyNo: number): Promise<reply> {
+    return this.prisma.reply.update({
+      where: {
+        no: replyNo,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  }
 }
