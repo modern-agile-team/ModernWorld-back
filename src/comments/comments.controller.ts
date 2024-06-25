@@ -14,14 +14,18 @@ import { CreateCommentDto } from "./dtos/create-comment.dto";
 import { UpdateCommentDto } from "./dtos/update-comment.dto";
 import { GetCommentDto } from "./dtos/get-comment.dto";
 import { ApiTags } from "@nestjs/swagger";
-import { ApiCreateComment } from "./swagger-decorators/create-comment-decorator";
-import { ApiFindComments } from "./swagger-decorators/find-comments-decorator";
-import { ApiUpdateComment } from "./swagger-decorators/update-comment-decorator";
-import { ApiDeleteComment } from "./swagger-decorators/delete-comments-decorator";
+import { ApiCreateComment } from "./swagger-decorators/comment-swagger/create-comment-decorator";
+import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments-decorator";
+import { ApiUpdateComment } from "./swagger-decorators/comment-swagger/update-comment-decorator";
+import { ApiDeleteComment } from "./swagger-decorators/comment-swagger/delete-comments-decorator";
 import { GetReplyDto } from "./dtos/get_reply.dto";
+import { ApiFindRelies } from "./swagger-decorators/reply-swagger/find-reply-decorate";
+import { ApiDeleteReply } from "./swagger-decorators/reply-swagger/delete-reply-decorate";
+import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply-decorate";
+import { ApiCreateReply } from "./swagger-decorators/reply-swagger/create-reply-decorater";
 
 @Controller("comments")
-@ApiTags("Comments")
+@ApiTags("Comments & Replies")
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
   @ApiCreateComment()
@@ -59,6 +63,7 @@ export class CommentController {
   }
 
   @Post(":commentNo/reply")
+  @ApiCreateReply()
   createReply(
     @Param("commentNo", ParseIntPipe) commentNo: number,
     @Body() content: CreateCommentDto,
@@ -68,6 +73,7 @@ export class CommentController {
   }
 
   @Get(":commentNo/reply")
+  @ApiFindRelies()
   getReply(
     @Param("commentNo", ParseIntPipe) commentNo: number,
     @Query() queryParams: GetReplyDto,
@@ -76,6 +82,7 @@ export class CommentController {
   }
 
   @Patch("reply/:replyNo")
+  @ApiUpdateReply()
   updateReply(
     @Param("replyNo", ParseIntPipe) replyNo: number,
     @Body() content: UpdateCommentDto,
@@ -84,6 +91,7 @@ export class CommentController {
   }
 
   @Delete("reply/:replyNo")
+  @ApiDeleteReply()
   softDeleteReply(@Param("replyNo", ParseIntPipe) replyNo: number) {
     return this.commentService.softDeleteReply(replyNo);
   }
