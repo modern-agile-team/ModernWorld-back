@@ -18,7 +18,7 @@ import { ApiCreateComment } from "./swagger-decorators/comment-swagger/create-co
 import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments-decorator";
 import { ApiUpdateComment } from "./swagger-decorators/comment-swagger/update-comment-decorator";
 import { ApiDeleteComment } from "./swagger-decorators/comment-swagger/delete-comments-decorator";
-import { GetReplyDto } from "./dtos/replies-dtos/get_reply.dto";
+import { GetReplyDto } from "./dtos/replies-dtos/get-reply.dto";
 import { ApiFindRelies } from "./swagger-decorators/reply-swagger/find-reply-decorate";
 import { ApiDeleteReply } from "./swagger-decorators/reply-swagger/delete-reply-decorate";
 import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply-decorate";
@@ -32,69 +32,69 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
   @ApiCreateComment()
   @Post(":receiverNo")
-  createComment(
+  createOneComment(
     @Param("receiverNo", ParseIntPipe) receiverNo: number,
     @Body() content: CreateCommentDto,
   ) {
     const userNo = 1;
-    return this.commentService.createComment(receiverNo, userNo, content);
+    return this.commentService.createOneComment(receiverNo, userNo, content);
   }
 
   @Get(":receiverNo")
   @ApiFindComments()
-  getComment(
+  getManyComments(
     @Param("receiverNo", ParseIntPipe) receiverNo: number,
     @Query() queryParams: GetCommentDto,
   ) {
-    return this.commentService.getComment(receiverNo, queryParams);
+    return this.commentService.getManyComments(receiverNo, queryParams);
   }
 
   @Patch(":commentNo")
   @ApiUpdateComment()
-  updateComment(
+  updatOneComment(
     @Param("commentNo", ParseIntPipe) commentNo: number,
     @Body() content: UpdateCommentDto,
   ) {
-    return this.commentService.updateComment(commentNo, content);
+    return this.commentService.updateOneComment(commentNo, content);
   }
 
   @Delete(":commentNo")
   @ApiDeleteComment()
-  softDeleteComment(@Param("commentNo", ParseIntPipe) commentNo: number) {
-    return this.commentService.softDeleteComment(commentNo);
+  softDeleteOneComment(@Param("commentNo", ParseIntPipe) commentNo: number) {
+    return this.commentService.softDeleteOneComment(commentNo);
   }
 
-  @Post(":commentNo/reply")
+  @Post(":commentNo/replies")
   @ApiCreateReply()
-  createReply(
+  createOneReply(
     @Param("commentNo", ParseIntPipe) commentNo: number,
     @Body() content: CreateReplyDto,
   ) {
     const userNo = 1;
-    return this.commentService.createReply(commentNo, userNo, content);
+    return this.commentService.createOneReply(commentNo, userNo, content);
   }
 
-  @Get(":commentNo/reply")
+  @Get(":commentNo/replies")
   @ApiFindRelies()
-  getReply(
+  getManyReplies(
     @Param("commentNo", ParseIntPipe) commentNo: number,
     @Query() queryParams: GetReplyDto,
   ) {
-    return this.commentService.getReplies(commentNo, queryParams);
+    return this.commentService.getManyReplies(commentNo, queryParams);
   }
 
-  @Patch("reply/:replyNo")
+  @Patch("replies/:replyNo")
   @ApiUpdateReply()
-  updateReply(
+  updateOneReply(
     @Param("replyNo", ParseIntPipe) replyNo: number,
     @Body() content: UpdateReplyDto,
   ) {
-    return this.commentService.updateReply(replyNo, content);
+    return this.commentService.updateOneReply(replyNo, content);
   }
 
-  @Delete("reply/:replyNo")
+  @Delete("replies/:replyNo")
   @ApiDeleteReply()
-  softDeleteReply(@Param("replyNo", ParseIntPipe) replyNo: number) {
-    return this.commentService.softDeleteReply(replyNo);
+  softDeleteOneReply(@Param("replyNo", ParseIntPipe) replyNo: number) {
+    return this.commentService.softDeleteOneReply(replyNo);
   }
 }

@@ -12,7 +12,14 @@ export function ApiCreateReply() {
       description: "방명록의 댓글을 성공적으로 생성한 경우",
       content: {
         JSON: {
-          example: {},
+          example: {
+            no: 27,
+            commentNo: 11,
+            userNo: 1,
+            content: "asd",
+            createdAt: "2024-06-26T08:38:00.000Z",
+            deletedAt: null,
+          },
         },
       },
     }),
@@ -40,18 +47,6 @@ export function ApiCreateReply() {
       content: {
         JSON: {
           example: { statusCode: 400, message: "토큰이 제공되지 않았습니다." },
-        },
-      },
-    }),
-    ApiResponse({
-      status: 500,
-      description: "방명록의 댓글을 생성하는 데 오류가 발생한 경우",
-      content: {
-        JSON: {
-          example: {
-            statusCode: 500,
-            message: "방명록의 댓글을 생성하는 과정 중 오류가 발생했습니다.",
-          },
         },
       },
     }),

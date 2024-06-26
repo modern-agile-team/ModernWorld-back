@@ -4,18 +4,20 @@ import { IsInt } from "class-validator";
 
 export class GetReplyDto {
   @ApiProperty({
-    name: "page",
-    description: "댓글 페이지 수",
+    description: "현재 페이지 수",
     example: 1,
+    minimum: 1,
+    format: "integer",
   })
   @Type(() => Number)
   @IsInt()
   page: number;
 
   @ApiProperty({
-    name: "take",
     description: "가지고 올 댓글의 수",
-    example: 1,
+    example: 2,
+    minimum: 1,
+    format: "integer",
   })
   @Type(() => Number)
   @IsInt()
