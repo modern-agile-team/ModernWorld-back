@@ -30,11 +30,11 @@ export class CommentRepository {
 
   getManyComments(
     receiverNo: number,
-    commentPage: number,
+    skip: number,
     take: number,
   ): PrismaPromise<comment[]> {
     return this.prisma.comment.findMany({
-      skip: commentPage,
+      skip,
       take,
       orderBy: { no: "desc" },
       where: {
@@ -91,11 +91,11 @@ export class CommentRepository {
 
   getManyReplies(
     commentNo: number,
-    replyPage: number,
+    skip: number,
     take: number,
   ): PrismaPromise<reply[]> {
     return this.prisma.reply.findMany({
-      skip: replyPage,
+      skip,
       take,
       orderBy: { no: "desc" },
       where: {
