@@ -57,7 +57,7 @@ export function ApiCreateComment() {
         JSON: {
           example: {
             statusCode: 500,
-            message: "댓글을 생성하는 과정 중 오류가 발생했습니다.",
+            message: "Internal server error",
           },
         },
       },

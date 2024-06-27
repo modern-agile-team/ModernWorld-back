@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CommentRepository } from "./comments.repository";
 import { CreateCommentDto } from "./dtos/comment-dtos/create-comment.dto";
 import { UpdateCommentDto } from "./dtos/comment-dtos/update-comment.dto";
@@ -79,13 +75,6 @@ export class CommentService {
       commentNo,
       replyNo,
     );
-
-    if (!deleteReply.deletedAt) {
-      throw new InternalServerErrorException(
-        "댓글을 삭제하는 과정 중 오류가 발생했습니다.",
-      );
-    }
-
     return deleteReply;
   }
 
