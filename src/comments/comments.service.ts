@@ -1,6 +1,6 @@
 import {
-  BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
 import { CommentRepository } from "./comments.repository";
@@ -12,6 +12,7 @@ import { GetReplyDto } from "./dtos/replies-dtos/get-reply.dto";
 @Injectable()
 export class CommentService {
   constructor(private readonly CommentRepository: CommentRepository) {}
+
   createOneComment(
     receiverNo: number,
     senderNo: number,
@@ -28,29 +29,18 @@ export class CommentService {
 
   getManyComments(receiverNo: number, queryParams: GetCommentDto) {
     const { page, take } = queryParams;
-    if (page < 0 || take < 0) {
-      throw new BadRequestException(
-        "현재 페이지 수와 가지고 올 댓글의 수는 양수이어야 합니다.",
-      );
-    }
     const skip = (page - 1) * take;
     return this.CommentRepository.getManyComments(receiverNo, skip, take);
   }
 
   async updateOneComment(commentNo: number, createcontent: UpdateCommentDto) {
     const { content } = createcontent;
-    const comment = await this.CommentRepository.getOneComment(commentNo);
-    if (!comment) {
-      throw new NotFoundException("해당 방명록을 찾을 수 없습니다.");
-    }
+    await this.commentNotFound(commentNo);
     return this.CommentRepository.updateOneComment(commentNo, content);
   }
 
   async softDeleteOneComment(commentNo: number) {
-    const comment = await this.CommentRepository.getOneComment(commentNo);
-    if (!comment) {
-      throw new NotFoundException("해당 방명록을 찾을 수 없습니다.");
-    }
+    await this.commentNotFound(commentNo);
     return this.CommentRepository.softDeleteOneComment(commentNo);
   }
 
@@ -60,42 +50,56 @@ export class CommentService {
     createContent: CreateCommentDto,
   ) {
     const { content } = createContent;
-    const comment = await this.CommentRepository.getOneComment(commentNo);
-    if (!comment) {
-      throw new NotFoundException("해당 방명록은 존재하지 않습니다.");
-    }
+    await this.commentNotFound(commentNo);
     return this.CommentRepository.createOneReply(commentNo, userNo, content);
   }
 
   async getManyReplies(commentNo: number, queryParams: GetReplyDto) {
     const { page, take } = queryParams;
-    const comment = await this.CommentRepository.getOneComment(commentNo);
-    if (!comment) {
-      throw new NotFoundException("해당 방명록은 존재하지 않습니다.");
-    }
-    if (page < 0 || take < 0) {
-      throw new BadRequestException(
-        "현재 페이지 수와 가지고 올 댓글의 수는 양수이어야 합니다.",
-      );
-    }
+    await this.commentNotFound(commentNo);
     const skip = (page - 1) * take;
     return this.CommentRepository.getManyReplies(commentNo, skip, take);
   }
 
-  async updateOneReply(replyNo: number, replyContent: UpdateCommentDto) {
+  async updateOneReply(
+    commentNo: number,
+    replyNo: number,
+    replyContent: UpdateCommentDto,
+  ) {
     const { content } = replyContent;
-    const reply = await this.CommentRepository.getOneComment(replyNo);
-    if (!reply) {
-      throw new NotFoundException("해당 댓글을 찾을 수 없습니다.");
-    }
-    return await this.CommentRepository.updateOneReply(replyNo, content);
+    await this.commentNotFound(commentNo);
+    await this.replyNotFound(commentNo, replyNo);
+    return this.CommentRepository.updateOneReply(commentNo, replyNo, content);
   }
 
-  async softDeleteOneReply(replyNo: number) {
-    const reply = await this.CommentRepository.getOneComment(replyNo);
-    if (!reply) {
-      throw new NotFoundException("해당 댓글을 찾을 수 없습니다.");
+  async softDeleteOneReply(commentNo: number, replyNo: number) {
+    await this.commentNotFound(commentNo);
+    await this.replyNotFound(commentNo, replyNo);
+    const deleteReply = await this.CommentRepository.softDeleteOneReply(
+      commentNo,
+      replyNo,
+    );
+
+    if (!deleteReply.deletedAt) {
+      throw new InternalServerErrorException(
+        "댓글을 삭제하는 과정 중 오류가 발생했습니다.",
+      );
     }
-    return await this.CommentRepository.softDeleteOneReply(replyNo);
+
+    return deleteReply;
+  }
+
+  async commentNotFound(commentNo: number) {
+    const comment = await this.CommentRepository.getOneComment(commentNo);
+    if (!comment) {
+      throw new NotFoundException("해당 방명록은 존재하지 않습니다.");
+    }
+  }
+
+  async replyNotFound(commentNo: number, replyNo: number) {
+    const reply = await this.CommentRepository.getOneReply(commentNo, replyNo);
+    if (!reply) {
+      throw new NotFoundException("해당 댓글은 존재하지 않습니다.");
+    }
   }
 }

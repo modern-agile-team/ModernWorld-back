@@ -83,18 +83,22 @@ export class CommentController {
     return this.commentService.getManyReplies(commentNo, queryParams);
   }
 
-  @Patch("replies/:replyNo")
+  @Patch(":commentNo/replies/:replyNo")
   @ApiUpdateReply()
   updateOneReply(
+    @Param("commentNo", ParseIntPipe) commentNo: number,
     @Param("replyNo", ParseIntPipe) replyNo: number,
     @Body() content: UpdateReplyDto,
   ) {
-    return this.commentService.updateOneReply(replyNo, content);
+    return this.commentService.updateOneReply(commentNo, replyNo, content);
   }
 
-  @Delete("replies/:replyNo")
+  @Delete(":commentNo/replies/:replyNo")
   @ApiDeleteReply()
-  softDeleteOneReply(@Param("replyNo", ParseIntPipe) replyNo: number) {
-    return this.commentService.softDeleteOneReply(replyNo);
+  softDeleteOneReply(
+    @Param("commentNo", ParseIntPipe) commentNo: number,
+    @Param("replyNo", ParseIntPipe) replyNo: number,
+  ) {
+    return this.commentService.softDeleteOneReply(commentNo, replyNo);
   }
 }

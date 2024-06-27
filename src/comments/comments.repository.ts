@@ -80,10 +80,11 @@ export class CommentRepository {
     });
   }
 
-  getOneReply(replyNo: number): PrismaPromise<comment> {
-    return this.prisma.comment.findUnique({
+  getOneReply(commentNo: number, replyNo: number): PrismaPromise<reply> {
+    return this.prisma.reply.findUnique({
       where: {
         no: replyNo,
+        commentNo,
       },
     });
   }
@@ -104,10 +105,15 @@ export class CommentRepository {
     });
   }
 
-  updateOneReply(replyNo: number, content: string): PrismaPromise<reply> {
+  updateOneReply(
+    commentNo: number,
+    replyNo: number,
+    content: string,
+  ): PrismaPromise<reply> {
     return this.prisma.reply.update({
       where: {
         no: replyNo,
+        commentNo,
       },
       data: {
         content,
@@ -115,10 +121,11 @@ export class CommentRepository {
     });
   }
 
-  softDeleteOneReply(replyNo: number): PrismaPromise<reply> {
+  softDeleteOneReply(commentNo: number, replyNo: number): PrismaPromise<reply> {
     return this.prisma.reply.update({
       where: {
         no: replyNo,
+        commentNo,
       },
       data: {
         deletedAt: new Date(),

@@ -50,5 +50,17 @@ export function ApiCreateComment() {
         },
       },
     }),
+    ApiResponse({
+      status: 500,
+      description: "방명록을 생성하는 데 오류가 발생한 경우",
+      content: {
+        JSON: {
+          example: {
+            statusCode: 500,
+            message: "댓글을 생성하는 과정 중 오류가 발생했습니다.",
+          },
+        },
+      },
+    }),
   );
 }

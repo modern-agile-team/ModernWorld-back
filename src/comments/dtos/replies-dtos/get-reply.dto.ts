@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt } from "class-validator";
+import { IsInt, IsPositive } from "class-validator";
 
 export class GetReplyDto {
   @ApiProperty({
@@ -11,6 +11,7 @@ export class GetReplyDto {
   })
   @Type(() => Number)
   @IsInt()
+  @IsPositive()
   page: number;
 
   @ApiProperty({
@@ -21,5 +22,6 @@ export class GetReplyDto {
   })
   @Type(() => Number)
   @IsInt()
+  @IsPositive()
   take: number;
 }
