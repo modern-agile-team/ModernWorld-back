@@ -18,6 +18,7 @@ import { LikesModule } from "./likes/likes.module";
 import { LegendsModule } from "./legends/legends.module";
 import { CommonModule } from "./common/common.module";
 import { AlarmsModule } from "./alarms/alarms.module";
+import { SseModule } from "./sse/sse.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -37,6 +38,7 @@ import { AlarmsModule } from "./alarms/alarms.module";
     LegendsModule,
     AlarmsModule,
     CommonModule,
+    SseModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
