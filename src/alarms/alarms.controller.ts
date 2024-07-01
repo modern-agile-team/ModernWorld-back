@@ -24,6 +24,7 @@ export class AlarmsController {
   }
 
   @Delete(":alarmNo")
+  @ApiOperation({ summary: "알람 삭제" })
   deleteOneAlarm(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
     const userNo = 1;
     return this.alarmsService.deleteOneAlarm(userNo, alarmNo);
