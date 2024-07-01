@@ -8,6 +8,7 @@ CREATE TABLE `alarm` (
     `content` VARCHAR(500) NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT false,
     `created_at` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `url` VARCHAR(300) NOT NULL,
 
     INDEX `user_no`(`user_no`),
     PRIMARY KEY (`no`)
