@@ -6,9 +6,10 @@ import { TokenService } from "./token.service";
 import { TokenRepository } from "./token.repository";
 import { JwtModule } from "@nestjs/jwt";
 import { AccessStrategy, RefreshStrategy } from "./jwt.strategy";
+import { RedisModule } from "./redis.module";
 
 @Module({
-  imports: [UsersModule, JwtModule],
+  imports: [UsersModule, JwtModule, RedisModule],
   controllers: [AuthController],
   providers: [
     AuthService,

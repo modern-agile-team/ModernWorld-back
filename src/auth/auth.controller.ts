@@ -4,12 +4,14 @@ import {
   Get,
   Post,
   Query,
+  Res,
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
 import { AccessTokenAuthGuard } from "./jwt.guard";
 import { userNo } from "./auth.decorator";
+import { Response } from "express";
 
 @Controller("auth")
 export class AuthController {
@@ -27,11 +29,17 @@ export class AuthController {
       },
     },
   })
-  naverLogin(@Query("code") code: string) {
+  async naverLogin(@Query("code") code: string, @Res() res: Response) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
-    return this.authService.naverLogin(code);
+    const token = await this.authService.naverLogin(code);
+    res.cookie("refreshToken", token.refreshToken, {
+      domain: "localhost",
+      path: "/",
+      httpOnly: true,
+    });
+    return res.send(token);
   }
 
   @Post("kakao/login")
@@ -46,11 +54,17 @@ export class AuthController {
       },
     },
   })
-  kakaoLogin(@Query("code") code: string) {
+  async kakaoLogin(@Query("code") code: string, @Res() res: Response) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
-    return this.authService.kakaoLogin(code);
+    const token = await this.authService.kakaoLogin(code);
+    res.cookie("refreshToken", token.refreshToken, {
+      domain: "localhost",
+      path: "/",
+      httpOnly: true,
+    });
+    return res.send(token);
   }
 
   @UseGuards(AccessTokenAuthGuard)

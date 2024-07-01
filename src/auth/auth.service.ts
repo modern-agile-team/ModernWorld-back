@@ -84,15 +84,25 @@ export class AuthService {
         user.no,
         socialAccessToken,
         socialRefreshToken,
-        refreshToken,
       );
-      // await this.tokenService.setRefreshToken(userUniqueNumber, refreshToken); //redis에 리프레시 토큰 저장로직(아직 미완)
+
+      await this.tokenService.setRefreshToken(
+        user.no.toString() + "-refreshToken",
+        refreshToken,
+        604800,
+      );
+      await this.tokenService.setAccessToken(
+        user.no.toString() + "-accessToken",
+        accessToken,
+        10800,
+      );
 
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
+        error.message,
       );
     }
   }
@@ -165,13 +175,25 @@ export class AuthService {
         user.no,
         socialAccessToken,
         socialRefreshToken,
-        refreshToken,
       );
+
+      await this.tokenService.setRefreshToken(
+        user.no.toString() + "-refreshToken",
+        refreshToken,
+        604800, // 7일
+      );
+      await this.tokenService.setAccessToken(
+        user.no.toString() + "-accessToken",
+        accessToken,
+        10800, // 3시간
+      );
+
       return { accessToken, refreshToken };
     } catch (error) {
-      console.log(error);
       // 에러 처리
-      throw new InternalServerErrorException(error);
+      throw new InternalServerErrorException(
+        "로그인 중 서버에러가 발생했습니다.",
+      );
     }
   }
 }
