@@ -20,7 +20,7 @@ export class AlarmsRepository {
   }
 
   findOneAlarm(alarmNo: number): PrismaPromise<alarm> {
-    return this.prisma.alarm.findFirst({ where: { no: alarmNo } });
+    return this.prisma.alarm.findUnique({ where: { no: alarmNo } });
   }
 
   createOneAlarm(
