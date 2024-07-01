@@ -16,6 +16,7 @@ export class AlarmsRepository {
         no: true,
         userNo: true,
         content: true,
+        url: true,
         status: true,
         createdAt: true,
       },
@@ -26,16 +27,26 @@ export class AlarmsRepository {
     });
   }
 
-  createOneAlarm(userNo: number, content: string): PrismaPromise<alarm> {
-    return this.prisma.alarm.create({ data: { userNo, content } });
+  findOneAlarm(alarmNo: number): PrismaPromise<alarm> {
+    return this.prisma.alarm.findFirst({ where: { no: alarmNo } });
   }
 
-  updateAlarmsStatusToTrueByUserNo(
+  createOneAlarm(
     userNo: number,
-  ): PrismaPromise<{ count: number }> {
+    content: string,
+    url: string,
+  ): PrismaPromise<alarm> {
+    return this.prisma.alarm.create({ data: { userNo, content, url } });
+  }
+
+  updateAlarmsStatusToTrue(userNo: number): PrismaPromise<{ count: number }> {
     return this.prisma.alarm.updateMany({
       data: { status: true },
       where: { userNo, status: false },
     });
+  }
+
+  deleteOneAlarmByAlarmNo(alarmNo: number): PrismaPromise<alarm> {
+    return this.prisma.alarm.delete({ where: { no: alarmNo } });
   }
 }

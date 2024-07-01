@@ -1,4 +1,11 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+} from "@nestjs/common";
 import { AlarmsService } from "./alarms.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { getAllAlarmsDto } from "./dtos/get-all-alarms.dto";
@@ -14,5 +21,11 @@ export class AlarmsController {
     const userNo = 1;
 
     return this.alarmsService.getAllAlarms(userNo, queryParams);
+  }
+
+  @Delete(":alarmNo")
+  deleteOneAlarm(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
+    const userNo = 1;
+    return this.alarmsService.deleteOneAlarm(userNo, alarmNo);
   }
 }

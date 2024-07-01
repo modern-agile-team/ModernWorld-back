@@ -1,4 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { AlarmsRepository } from "./alarms.repository";
 import { getAllAlarmsDto } from "./dtos/get-all-alarms.dto";
 
@@ -16,8 +20,22 @@ export class AlarmsService {
       skip,
     );
 
-    await this.alarmsRepository.updateAlarmsStatusToTrueByUserNo(userNo);
+    await this.alarmsRepository.updateAlarmsStatusToTrue(userNo);
 
     return alarms;
+  }
+
+  async deleteOneAlarm(userNo: number, alarmNo: number) {
+    const alarm = await this.alarmsRepository.findOneAlarm(alarmNo);
+
+    if (!alarm) {
+      throw new NotFoundException("This alarm doesn't exist.");
+    }
+
+    if (userNo !== alarm.userNo) {
+      throw new ForbiddenException("This alarm is not related with user.");
+    }
+
+    return this.alarmsRepository.deleteOneAlarmByAlarmNo(alarmNo);
   }
 }
