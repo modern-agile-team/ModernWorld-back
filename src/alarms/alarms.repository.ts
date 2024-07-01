@@ -12,14 +12,6 @@ export class AlarmsRepository {
     skip: number,
   ): PrismaPromise<alarm[]> {
     return this.prisma.alarm.findMany({
-      select: {
-        no: true,
-        userNo: true,
-        content: true,
-        url: true,
-        status: true,
-        createdAt: true,
-      },
       where: { userNo },
       take,
       skip,
