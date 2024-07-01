@@ -1,17 +1,19 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsPositive } from "class-validator";
+import { IsInt, IsOptional, IsPositive } from "class-validator";
 
 export class getAllAlarmsDto {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsInt()
   @IsPositive()
   @Type(() => Number)
-  take: number;
+  @IsOptional()
+  take: number = 3;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @IsInt()
   @IsPositive()
   @Type(() => Number)
-  page: number;
+  @IsOptional()
+  page: number = 1;
 }
