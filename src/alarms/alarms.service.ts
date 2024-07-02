@@ -4,25 +4,27 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { AlarmsRepository } from "./alarms.repository";
-import { getAllAlarmsDto } from "./dtos/get-all-alarms.dto";
+import { getAlarmsDto } from "./dtos/get-alarms.dto";
 
 @Injectable()
 export class AlarmsService {
   constructor(private readonly alarmsRepository: AlarmsRepository) {}
 
-  async getAllAlarms(userNo: number, queryParams: getAllAlarmsDto) {
+  async getAlarms(userNo: number, queryParams: getAlarmsDto) {
     const { take, page } = queryParams;
     const skip = take * (page - 1);
 
-    const alarms = await this.alarmsRepository.getAllAlarmsByUserNo(
+    const totalCount = await this.alarmsRepository.countAlarmsByUserNo(userNo);
+
+    const alarms = await this.alarmsRepository.getAlarmsByUserNo(
       userNo,
       take,
       skip,
     );
 
-    await this.alarmsRepository.updateAlarmsStatusToTrue(userNo);
+    const totalPage = Math.ceil(totalCount / take);
 
-    return alarms;
+    return { data: alarms, meta: { page, take, totalCount, totalPage } };
   }
 
   async deleteOneAlarm(userNo: number, alarmNo: number) {

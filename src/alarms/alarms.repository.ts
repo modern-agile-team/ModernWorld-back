@@ -1,12 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, alarm } from "@prisma/client";
+import { userNo } from "src/auth/auth.decorator";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class AlarmsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getAllAlarmsByUserNo(
+  countAlarmsByUserNo(userNo: number): PrismaPromise<number> {
+    return this.prisma.alarm.count({ where: { userNo } });
+  }
+
+  getAlarmsByUserNo(
     userNo: number,
     take: number,
     skip: number,

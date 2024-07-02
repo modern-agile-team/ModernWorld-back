@@ -4,11 +4,12 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Query,
 } from "@nestjs/common";
 import { AlarmsService } from "./alarms.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { getAllAlarmsDto } from "./dtos/get-all-alarms.dto";
+import { getAlarmsDto } from "./dtos/get-alarms.dto";
 
 @Controller("alarms")
 @ApiTags("Alarms")
@@ -17,11 +18,14 @@ export class AlarmsController {
 
   @Get()
   @ApiOperation({ summary: "알람 조회" })
-  getAllAlarms(@Query() queryParams: getAllAlarmsDto) {
+  getAlarms(@Query() queryParams: getAlarmsDto) {
     const userNo = 1;
 
-    return this.alarmsService.getAllAlarms(userNo, queryParams);
+    return this.alarmsService.getAlarms(userNo, queryParams);
   }
+
+  @Patch()
+  updateAlarmStatusToRead() {}
 
   @Delete(":alarmNo")
   @ApiOperation({ summary: "알람 삭제" })
