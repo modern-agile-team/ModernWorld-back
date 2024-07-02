@@ -13,25 +13,30 @@ export class AlarmsService {
   async getAlarms(userNo: number, queryParams: getAlarmsDto) {
     const { take, page } = queryParams;
     const skip = take * (page - 1);
-
     const totalCount = await this.alarmsRepository.countAlarmsByUserNo(userNo);
-
     const alarms = await this.alarmsRepository.getAlarmsByUserNo(
       userNo,
       take,
       skip,
     );
-
     const totalPage = Math.ceil(totalCount / take);
 
     return { data: alarms, meta: { page, take, totalCount, totalPage } };
   }
 
-  updateAlarmStatusToTrue(alarmNo: number) {
+  async updateAlarmStatusToTrue(alarmNo: number, userNo: number) {
+    await this.checkOneAlarmOfUser(alarmNo, userNo);
+
     return this.alarmsRepository.updateAlarmStatusToTrue(alarmNo);
   }
 
   async deleteOneAlarm(userNo: number, alarmNo: number) {
+    await this.checkOneAlarmOfUser(alarmNo, userNo);
+
+    return this.alarmsRepository.deleteOneAlarmByAlarmNo(alarmNo);
+  }
+
+  async checkOneAlarmOfUser(alarmNo: number, userNo: number) {
     const alarm = await this.alarmsRepository.findOneAlarm(alarmNo);
 
     if (!alarm) {
@@ -41,7 +46,5 @@ export class AlarmsService {
     if (userNo !== alarm.userNo) {
       throw new ForbiddenException("This alarm is not related with user.");
     }
-
-    return this.alarmsRepository.deleteOneAlarmByAlarmNo(alarmNo);
   }
 }
