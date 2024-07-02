@@ -17,7 +17,8 @@ import { TasksModule } from "./tasks/tasks.module";
 import { LikesModule } from "./likes/likes.module";
 import { LegendsModule } from "./legends/legends.module";
 import { CommonModule } from "./common/common.module";
-import { NeighborModule } from './neighbor/neighbor.module';
+import { NeighborModule } from "./neighbor/neighbor.module";
+import { SseModule } from "./sse/sse.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -37,6 +38,7 @@ import { NeighborModule } from './neighbor/neighbor.module';
     LegendsModule,
     CommonModule,
     NeighborModule,
+    SseModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
