@@ -11,13 +11,14 @@ export class AlarmsService {
   constructor(private readonly alarmsRepository: AlarmsRepository) {}
 
   async getAlarms(userNo: number, queryParams: PaginationDto) {
-    const { take, page } = queryParams;
+    const { take, page, orderBy } = queryParams;
     const skip = take * (page - 1);
     const totalCount = await this.alarmsRepository.countAlarmsByUserNo(userNo);
     const alarms = await this.alarmsRepository.getAlarmsByUserNo(
       userNo,
       take,
       skip,
+      orderBy,
     );
     const totalPage = Math.ceil(totalCount / take);
 

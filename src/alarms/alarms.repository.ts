@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, alarm } from "@prisma/client";
 import { userNo } from "src/auth/auth.decorator";
+import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -15,12 +16,13 @@ export class AlarmsRepository {
     userNo: number,
     take: number,
     skip: number,
+    orderBy: OrderBy,
   ): PrismaPromise<alarm[]> {
     return this.prisma.alarm.findMany({
       where: { userNo },
       take,
       skip,
-      orderBy: { no: "desc" },
+      orderBy: { no: orderBy },
     });
   }
 

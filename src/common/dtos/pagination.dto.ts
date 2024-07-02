@@ -20,7 +20,7 @@ export class PaginationDto {
     required: false,
     enum: OrderBy,
     default: OrderBy.DESC,
-    description: "ASC / DESC",
+    description: "asc / desc",
   })
   @IsEnum(OrderBy)
   orderBy: OrderBy = OrderBy.DESC;
