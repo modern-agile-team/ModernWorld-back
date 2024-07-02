@@ -8,13 +8,13 @@ export class PaginationDto {
   @IsInt()
   @IsPositive()
   @Type(() => Number)
-  page?: number = 1;
+  page: number = 1;
 
   @ApiPropertyOptional({ default: 10, description: "가져올 자료 수" })
   @IsInt()
   @IsPositive()
   @Type(() => Number)
-  take?: number = 10;
+  take: number = 10;
 
   @ApiPropertyOptional({
     enum: OrderBy,
@@ -22,5 +22,5 @@ export class PaginationDto {
     description: "asc / desc",
   })
   @IsEnum(OrderBy)
-  orderBy?: OrderBy = OrderBy.DESC;
+  orderBy: OrderBy = OrderBy.DESC;
 }
