@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { comment } from "@prisma/client";
+import { PrismaPromise, comment, reply } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class CommentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  createComment(
+  createOneComment(
     receiverNo: number,
     senderNo: number,
     content: string,
-  ): Promise<comment> {
+  ): PrismaPromise<comment> {
     return this.prisma.comment.create({
       data: {
         receiverNo,
@@ -20,13 +20,21 @@ export class CommentRepository {
     });
   }
 
-  getComment(
+  getOneComment(commentNo: number): PrismaPromise<comment> {
+    return this.prisma.comment.findUnique({
+      where: {
+        no: commentNo,
+      },
+    });
+  }
+
+  getManyComments(
     receiverNo: number,
-    commentPage: number,
+    skip: number,
     take: number,
-  ): Promise<comment[]> {
+  ): PrismaPromise<comment[]> {
     return this.prisma.comment.findMany({
-      skip: commentPage,
+      skip,
       take,
       orderBy: { no: "desc" },
       where: {
@@ -36,7 +44,7 @@ export class CommentRepository {
     });
   }
 
-  updateComment(id: number, content: string): Promise<comment> {
+  updateOneComment(id: number, content: string): PrismaPromise<comment> {
     return this.prisma.comment.update({
       where: {
         no: id,
@@ -47,10 +55,77 @@ export class CommentRepository {
     });
   }
 
-  softDeleteComment(id: number): Promise<comment> {
+  softDeleteOneComment(id: number): PrismaPromise<comment> {
     return this.prisma.comment.update({
       where: {
         no: id,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  }
+
+  createOneReply(
+    commentNo: number,
+    userNo: number,
+    content: string,
+  ): PrismaPromise<reply> {
+    return this.prisma.reply.create({
+      data: {
+        commentNo,
+        userNo,
+        content,
+      },
+    });
+  }
+
+  getOneReply(commentNo: number, replyNo: number): PrismaPromise<reply> {
+    return this.prisma.reply.findUnique({
+      where: {
+        no: replyNo,
+        commentNo,
+      },
+    });
+  }
+
+  getManyReplies(
+    commentNo: number,
+    skip: number,
+    take: number,
+  ): PrismaPromise<reply[]> {
+    return this.prisma.reply.findMany({
+      skip,
+      take,
+      orderBy: { no: "desc" },
+      where: {
+        commentNo,
+        deletedAt: null,
+      },
+    });
+  }
+
+  updateOneReply(
+    commentNo: number,
+    replyNo: number,
+    content: string,
+  ): PrismaPromise<reply> {
+    return this.prisma.reply.update({
+      where: {
+        no: replyNo,
+        commentNo,
+      },
+      data: {
+        content,
+      },
+    });
+  }
+
+  softDeleteOneReply(commentNo: number, replyNo: number): PrismaPromise<reply> {
+    return this.prisma.reply.update({
+      where: {
+        no: replyNo,
+        commentNo,
       },
       data: {
         deletedAt: new Date(),

@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt } from "class-validator";
+import { IsInt, IsPositive } from "class-validator";
 
 export class GetCommentDto {
   @ApiProperty({
@@ -10,6 +10,7 @@ export class GetCommentDto {
   })
   @Type(() => Number)
   @IsInt()
+  @IsPositive()
   page: number;
 
   @ApiProperty({
@@ -19,5 +20,6 @@ export class GetCommentDto {
   })
   @Type(() => Number)
   @IsInt()
+  @IsPositive()
   take: number;
 }

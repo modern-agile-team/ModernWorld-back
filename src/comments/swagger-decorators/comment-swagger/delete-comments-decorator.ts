@@ -68,7 +68,7 @@ export function ApiDeleteComment() {
         JSON: {
           example: {
             statusCode: 500,
-            message: "댓글을 삭제하는 과정 중 오류가 발생했습니다.",
+            message: "Internal server error",
           },
         },
       },

@@ -1,15 +1,15 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-export function ApiCreateComment() {
+export function ApiFindComments() {
   return applyDecorators(
     ApiOperation({
-      summary: "방명록 생성하는 API",
-      description: "방명록을 생성합니다.",
+      summary: "방명록 조회하는 API",
+      description: "방명록을 조회합니다.",
     }),
     ApiResponse({
-      status: 201,
-      description: "댓글을 성공적으로 생성한 경우",
+      status: 200,
+      description: "댓글을 성공적으로 조회한 경우",
       content: {
         JSON: {
           example: {},
@@ -45,13 +45,22 @@ export function ApiCreateComment() {
     }),
     ApiResponse({
       status: 500,
-      description: "방명록을 생성하는 데 오류가 발생한 경우",
+      description: "방명록을 조회하는 데 오류가 발생한 경우",
       content: {
         JSON: {
           example: {
             statusCode: 500,
-            message: "댓글을 생성하는 과정 중 오류가 발생했습니다.",
+            message: "Internal server error",
           },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 404,
+      description: "방명록이 DB에 존재하지 않는 경우",
+      content: {
+        JSON: {
+          example: { statusCode: 404, message: "존재하지 않는 방명록입니다." },
         },
       },
     }),
