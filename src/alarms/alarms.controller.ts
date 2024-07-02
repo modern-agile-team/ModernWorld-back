@@ -9,8 +9,7 @@ import {
 } from "@nestjs/common";
 import { AlarmsService } from "./alarms.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { getAlarmsDto } from "./dtos/get-alarms.dto";
-import { userNo } from "src/auth/auth.decorator";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Controller("alarms")
 @ApiTags("Alarms")
@@ -19,7 +18,7 @@ export class AlarmsController {
 
   @Get()
   @ApiOperation({ summary: "알람 조회" })
-  getAlarms(@Query() queryParams: getAlarmsDto) {
+  getAlarms(@Query() queryParams: PaginationDto) {
     const userNo = 1;
 
     return this.alarmsService.getAlarms(userNo, queryParams);

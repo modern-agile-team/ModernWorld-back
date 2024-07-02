@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { AlarmsRepository } from "./alarms.repository";
-import { getAlarmsDto } from "./dtos/get-alarms.dto";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Injectable()
 export class AlarmsService {
   constructor(private readonly alarmsRepository: AlarmsRepository) {}
 
-  async getAlarms(userNo: number, queryParams: getAlarmsDto) {
+  async getAlarms(userNo: number, queryParams: PaginationDto) {
     const { take, page } = queryParams;
     const skip = take * (page - 1);
     const totalCount = await this.alarmsRepository.countAlarmsByUserNo(userNo);
