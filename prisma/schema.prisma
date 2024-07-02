@@ -17,6 +17,18 @@ model achievement {
   userAchievement userAchievement[]
 }
 
+model alarm {
+  no        Int      @id @default(autoincrement()) @db.UnsignedInt
+  userNo    Int      @map("user_no") @db.UnsignedInt
+  content   String   @db.VarChar(500)
+  status    Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  url       String   @db.VarChar(300)
+  user      user     @relation(fields: [userNo], onDelete: Cascade, references: [no])
+
+  @@index([userNo], map: "user_no")
+}
+
 model character {
   no              Int               @id @default(autoincrement()) @db.UnsignedInt
   name            String            @db.VarChar(15)
@@ -205,6 +217,7 @@ model user {
   reply              reply[]
   token              token[]
   userAchievement    userAchievement[]
+  alarm              alarm[]
 }
 
 model userAchievement {

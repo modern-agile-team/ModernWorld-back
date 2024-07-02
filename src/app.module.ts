@@ -17,6 +17,7 @@ import { TasksModule } from "./tasks/tasks.module";
 import { LikesModule } from "./likes/likes.module";
 import { LegendsModule } from "./legends/legends.module";
 import { CommonModule } from "./common/common.module";
+import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SseModule } from "./sse/sse.module";
     TasksModule,
     LikesModule,
     LegendsModule,
+    AlarmsModule,
     CommonModule,
     SseModule,
   ],
