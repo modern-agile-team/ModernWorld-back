@@ -27,6 +27,10 @@ export class AlarmsService {
     return { data: alarms, meta: { page, take, totalCount, totalPage } };
   }
 
+  updateAlarmStatusToTrue(alarmNo: number) {
+    return this.alarmsRepository.updateAlarmStatusToTrue(alarmNo);
+  }
+
   async deleteOneAlarm(userNo: number, alarmNo: number) {
     const alarm = await this.alarmsRepository.findOneAlarm(alarmNo);
 

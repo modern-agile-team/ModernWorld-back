@@ -24,8 +24,11 @@ export class AlarmsController {
     return this.alarmsService.getAlarms(userNo, queryParams);
   }
 
-  @Patch()
-  updateAlarmStatusToRead() {}
+  @Patch(":alarmNo")
+  @ApiOperation({ summary: "알람 읽음으로 처리" })
+  updateAlarmStatusToRead(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
+    return this.alarmsService.updateAlarmStatusToTrue(alarmNo);
+  }
 
   @Delete(":alarmNo")
   @ApiOperation({ summary: "알람 삭제" })

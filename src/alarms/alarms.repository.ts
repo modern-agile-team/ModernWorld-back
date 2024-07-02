@@ -36,10 +36,10 @@ export class AlarmsRepository {
     return this.prisma.alarm.create({ data: { userNo, content, url } });
   }
 
-  updateAlarmsStatusToTrue(userNo: number): PrismaPromise<{ count: number }> {
-    return this.prisma.alarm.updateMany({
+  updateAlarmStatusToTrue(alarmNo: number): PrismaPromise<alarm> {
+    return this.prisma.alarm.update({
       data: { status: true },
-      where: { userNo, status: false },
+      where: { no: alarmNo },
     });
   }
 
