@@ -2,6 +2,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Patch,
@@ -33,6 +34,7 @@ export class AlarmsController {
   }
 
   @Delete(":alarmNo")
+  @HttpCode(204)
   @ApiOperation({ summary: "알람 삭제" })
   deleteOneAlarm(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
     const userNo = 1;
