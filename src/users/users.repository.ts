@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { PrismaPromise, user } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
-import { DomainEnum } from "./enum/domain.enum";
 
 @Injectable()
 export class UsersRepository {

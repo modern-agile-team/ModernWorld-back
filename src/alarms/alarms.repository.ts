@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, alarm } from "@prisma/client";
-import { userNo } from "src/auth/auth.decorator";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
