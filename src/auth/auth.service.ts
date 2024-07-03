@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 import axios from "axios";
 import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/token.service";
@@ -18,6 +22,7 @@ export class AuthService {
     private readonly usersRepository: UsersRepository,
     private readonly tokenService: TokenService,
     private readonly tokenRepository: TokenRepository,
+    private readonly logger: Logger,
   ) {}
   async naverLogin(authorizeCode: string) {
     try {
@@ -99,8 +104,7 @@ export class AuthService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      // 에러 처리
-      console.log(error);
+      this.logger.error(error);
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
       );
@@ -191,7 +195,7 @@ export class AuthService {
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
-      console.log(error);
+      this.logger.error(error);
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
       );

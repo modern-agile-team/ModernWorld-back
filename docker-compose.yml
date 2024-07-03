@@ -1,21 +1,21 @@
 version: "3"
 services:
-  # back:
-  #   image: cogeu/secret
-  #   volumes:
-  #     - /home/ubuntu/MA7/logs:/logs
-  #   ports:
-  #     - "3000:3000"
-  #   env_file:
-  #     - ./.env
+  back:
+    image: cogeu/secret
+    volumes:
+      - /home/ubuntu/MA7/logs:/logs
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
 
   redis:
     image: redis:7.2.5
-    # volumes:
-    #   - /home/ubuntu/MA7/redis:/usr/local/etc/redis
+    volumes:
+      - /home/ubuntu/MA7/redis:/usr/local/etc/redis
     env_file:
       - ./.env
-    # command: sh -c "redis-server /usr/local/etc/redis/redis.conf"
+    command: sh -c "redis-server /usr/local/etc/redis/redis.conf"
     ports:
       - "6379:6379"
     restart: always
