@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, legend } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { UpdateLegendType } from "./type/update-legend.type";
+import { UpdateLegendType } from "./types/update-legend.type";
 
 @Injectable()
 export class LegendsRepository {
