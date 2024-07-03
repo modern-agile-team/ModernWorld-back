@@ -6,11 +6,11 @@ import { CACHE_MANAGER } from "@nestjs/cache-manager";
 export class RedisService {
   constructor(@Inject(CACHE_MANAGER) private readonly tokenCache: Cache) {}
 
-  async getToken(key: string): Promise<any> {
-    return await this.tokenCache.get(key);
+  async getToken(key: string): Promise<string | undefined | null> {
+    return this.tokenCache.get(key);
   }
 
-  async setToken(key: string, token: string, ttl?: number): Promise<void> {
+  async setToken(key: string, token: string, ttl?: number) {
     await this.tokenCache.set(key, token, { ttl } as any);
   }
 

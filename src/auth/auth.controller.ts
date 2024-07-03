@@ -9,13 +9,17 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
-import { AccessTokenAuthGuard } from "./jwt.guard";
+import { RefreshTokenAuthGuard } from "./jwt.guard";
 import { userNo } from "./auth.decorator";
 import { Response } from "express";
+import { TokenService } from "./token.service";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   @Post("naver/login")
   @ApiOperation({ summary: "네이버 로그인" })
@@ -60,17 +64,32 @@ export class AuthController {
     }
     const token = await this.authService.kakaoLogin(code);
     res.cookie("refreshToken", token.refreshToken, {
-      domain: "localhost",
+      domain: "localhost", // 추후 프론트 서버 주소로 변경
       path: "/",
       httpOnly: true,
+      secure: false, // https 설정을 확인하지 않기 위해서 선언
     });
     return res.send(token);
   }
 
-  @UseGuards(AccessTokenAuthGuard)
-  @Get("test")
-  test(@userNo() userNo: number) {
-    console.log("test");
-    console.log(userNo);
+  @UseGuards(RefreshTokenAuthGuard)
+  @Get("new-access-token")
+  @ApiOperation({ summary: "액세스 토큰 재발급" })
+  @ApiQuery({
+    name: "refreshTOken",
+    description: "리프레쉬 토큰",
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "액세스 토큰 재발급 성공",
+    content: {
+      JSON: {
+        example: { accessToken: "액세스 토큰" },
+      },
+    },
+  })
+  async newAccessToken(@userNo() userNo: number) {
+    return await this.tokenService.createNewAccessToken(userNo);
   }
 }

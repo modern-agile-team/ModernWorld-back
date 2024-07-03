@@ -63,6 +63,10 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
       if (error.message === "invalid token") {
         console.log(error.message);
         throw new HttpException("invalid token", 400);
+      }
+      if (error.message === "invalid signature") {
+        console.log(error.message);
+        throw new HttpException("invalid signature", 400);
       } else {
         console.log(error.message);
         throw new HttpException("jwt error", 400);

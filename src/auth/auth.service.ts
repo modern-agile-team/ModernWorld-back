@@ -84,25 +84,25 @@ export class AuthService {
         user.no,
         socialAccessToken,
         socialRefreshToken,
-      );
+      ); // 이러면 매번 소셜 토큰들이 저장되어 추후 수정예정
 
       await this.tokenService.setRefreshToken(
         user.no.toString() + "-refreshToken",
         refreshToken,
-        604800,
+        60 * 60 * 24 * 7, // 7일
       );
       await this.tokenService.setAccessToken(
         user.no.toString() + "-accessToken",
         accessToken,
-        10800,
+        60 * 60 * 3, // 3시간
       );
 
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
+      console.log(error);
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
-        error.message,
       );
     }
   }
@@ -180,17 +180,18 @@ export class AuthService {
       await this.tokenService.setRefreshToken(
         user.no.toString() + "-refreshToken",
         refreshToken,
-        604800, // 7일
+        60 * 60 * 24 * 7, // 7일
       );
       await this.tokenService.setAccessToken(
         user.no.toString() + "-accessToken",
         accessToken,
-        10800, // 3시간
+        60 * 60 * 3, // 3시간
       );
 
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
+      console.log(error);
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
       );

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { TokenRepository } from "src/auth/token.repository";
 import { JwtService } from "@nestjs/jwt";
 import { RedisService } from "./redis.service";
@@ -29,11 +29,30 @@ export class TokenService {
     });
   }
 
-  async setRefreshToken(userNo: string, refreshToken: string, ttl: number) {
+  async createNewAccessToken(userNo: number) {
+    const refreshToken = this.getRefreshToken(`${userNo}-refreshToken`);
+    if (!refreshToken) {
+      throw new NotFoundException("리프레쉬 토큰이 존재하지 않습니다.");
+    }
+    const accessToken = this.createAccessToken(userNo);
+    const a = await this.setAccessToken(
+      `${userNo}-accessToken`,
+      accessToken,
+      60 * 60 * 3,
+    );
+
+    return { accessToken };
+  }
+
+  setRefreshToken(userNo: string, refreshToken: string, ttl: number) {
     return this.redisService.setToken(userNo, refreshToken, ttl);
   }
 
-  async setAccessToken(userNo: string, accessToken: string, ttl: number) {
+  setAccessToken(userNo: string, accessToken: string, ttl: number) {
     return this.redisService.setToken(userNo, accessToken, ttl);
+  }
+
+  async getRefreshToken(userNo: string) {
+    return this.redisService.getToken(userNo);
   }
 }
