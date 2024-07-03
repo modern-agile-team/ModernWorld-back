@@ -6,7 +6,7 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { ItemsModule } from "./items/items.module";
 import { InventoryModule } from "./inventory/inventory.module";
 import { UsersModule } from "./users/users.module";
-import { CommentModule } from "./comment/comment.module";
+import { CommentModule } from "./comments/comments.module";
 import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
 import { PostsModule } from "./posts/posts.module";
@@ -17,7 +17,10 @@ import { TasksModule } from "./tasks/tasks.module";
 import { AchievementsModule } from "./achievements/achievements.module";
 import { LikesModule } from "./likes/likes.module";
 import { LegendsModule } from "./legends/legends.module";
-import { UserAchievementsModule } from './user-achievements/user-achievements.module';
+import { CommonModule } from "./common/common.module";
+import { AlarmsModule } from "./alarms/alarms.module";
+import { SseModule } from "./sse/sse.module";
+import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -36,6 +39,9 @@ import { UserAchievementsModule } from './user-achievements/user-achievements.mo
     AchievementsModule,
     LikesModule,
     LegendsModule,
+    AlarmsModule,
+    CommonModule,
+    SseModule,
     UserAchievementsModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
