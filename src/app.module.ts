@@ -17,7 +17,7 @@ import { TasksModule } from "./tasks/tasks.module";
 import { AchievementsModule } from "./achievements/achievements.module";
 import { LikesModule } from "./likes/likes.module";
 import { LegendsModule } from "./legends/legends.module";
-import { CommonModule } from "./common/common.module";
+import { LoggerModule } from "./common/utils/logger/logger.module";
 import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
@@ -40,7 +40,7 @@ import { UserAchievementsModule } from "./user-achievements/user-achievements.mo
     LikesModule,
     LegendsModule,
     AlarmsModule,
-    CommonModule,
+    LoggerModule,
     SseModule,
     UserAchievementsModule,
   ],
