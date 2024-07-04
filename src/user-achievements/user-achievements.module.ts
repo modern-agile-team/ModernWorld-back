@@ -8,5 +8,6 @@ import { AchievementsModule } from "src/achievements/achievements.module";
   imports: [AchievementsModule],
   controllers: [UserAchievementsController],
   providers: [UserAchievementsRepository, UserAchievementsService],
+  exports: [UserAchievementsRepository],
 })
 export class UserAchievementsModule {}
