@@ -21,6 +21,7 @@ import { LoggerModule } from "./common/utils/logger/logger.module";
 import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
+import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -43,6 +44,7 @@ import { UserAchievementsModule } from "./user-achievements/user-achievements.mo
     LoggerModule,
     SseModule,
     UserAchievementsModule,
+    CommonModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
