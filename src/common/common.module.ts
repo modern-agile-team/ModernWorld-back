@@ -6,6 +6,7 @@ import { UserAchievementsModule } from "src/user-achievements/user-achievements.
 import { SseModule } from "src/sse/sse.module";
 import { AlarmsModule } from "src/alarms/alarms.module";
 import { CommonController } from "./common.controller";
+import { AchievementsModule } from "src/achievements/achievements.module";
 
 @Module({
   imports: [
@@ -14,8 +15,10 @@ import { CommonController } from "./common.controller";
     UserAchievementsModule,
     SseModule,
     AlarmsModule,
+    AchievementsModule,
   ],
   providers: [CommonService],
   exports: [CommonService],
+  controllers: [CommonController],
 })
 export class CommonModule {}
