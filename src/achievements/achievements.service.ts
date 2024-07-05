@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { AchievementsRepository } from "./achievements.repository";
 import { GetAchievementsDto } from "./dtos/get-achievements.dto";
+import { AchievemetWhere } from "./interfaces/get-achievements-where.interface";
 
 @Injectable()
 export class AchievementsService {
@@ -10,7 +11,7 @@ export class AchievementsService {
 
   getAchievements(queryParams: GetAchievementsDto) {
     const { name, level } = queryParams;
-    const where = { name: { contains: name }, level };
+    const where: AchievemetWhere = { name: { contains: name }, level };
 
     return this.achievementsRepository.getAchievements(where);
   }
