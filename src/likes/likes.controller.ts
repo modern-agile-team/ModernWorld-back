@@ -1,7 +1,15 @@
-import { Controller, Delete, Param, ParseIntPipe, Post } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Post,
+} from "@nestjs/common";
 import { LikesService } from "./likes.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateLike } from "./likes-swagger/create-like.decorator";
+import { ApiDeleteLike } from "./likes-swagger/delete-like.decorator";
 
 @Controller("likes")
 @ApiTags("Likes")
@@ -17,7 +25,8 @@ export class LikesController {
   }
 
   @Delete("users/:userNo")
-  @ApiOperation({ summary: "좋아요 삭제" })
+  @ApiDeleteLike()
+  @HttpCode(204)
   deleteOneLike(@Param("userNo", ParseIntPipe) receiverNo: number) {
     const tokenUserNo = 1;
 
