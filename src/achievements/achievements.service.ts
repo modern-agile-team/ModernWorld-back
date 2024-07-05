@@ -11,6 +11,7 @@ export class AchievementsService {
 
   getAchievements(queryParams: GetAchievementsDto) {
     const { name, level } = queryParams;
+    console.log(level);
     const where: AchievemetWhere = { name: { contains: name }, level };
 
     return this.achievementsRepository.getAchievements(where);
