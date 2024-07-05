@@ -29,7 +29,7 @@ export class CommonService {
     // type casting? assertion? 타입 단언 처음알았음..ㄷㄷ
     // 내 손모가지를 걸고 타입은 이거다.
 
-    const updatedLegend = await this.legendsRepository.updateLegendByUserNo(
+    const updatedLegend = await this.legendsRepository.updateOneLegendByUserNo(
       userNo,
       updateLegendCount,
     );

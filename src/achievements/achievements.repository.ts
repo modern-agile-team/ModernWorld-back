@@ -12,12 +12,15 @@ export class AchievementsRepository {
     });
   }
 
-  getOneAchievement(no: number): PrismaPromise<achievement> {
-    return this.prisma.achievement.findUnique({ where: { no } });
-  }
-
-  getAchievements(where: object): PrismaPromise<achievement[]> {
+  getAchievements(where: object): PrismaPromise<Omit<achievement, "name">[]> {
     return this.prisma.achievement.findMany({
+      select: {
+        no: true,
+        title: true,
+        description: true,
+        level: true,
+        point: true,
+      },
       where,
     });
   }
