@@ -1,13 +1,15 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { AchievementsLevelEnum } from "../enum/achievements.enum";
-import { IsEnum, IsOptional } from "class-validator";
+import { IsEnum } from "class-validator";
 
 export class GetAchievementsDto {
   @ApiProperty({ name: "name", required: false })
   name?: string;
 
-  @ApiProperty({ name: "level", required: false, enum: AchievementsLevelEnum })
-  @IsOptional()
+  @ApiPropertyOptional({
+    name: "level",
+    enum: AchievementsLevelEnum,
+  })
   @IsEnum(AchievementsLevelEnum)
   level?: AchievementsLevelEnum;
 }
