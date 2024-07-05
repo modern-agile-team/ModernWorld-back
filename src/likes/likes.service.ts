@@ -28,20 +28,17 @@ export class LikesService {
 
     //트랜잭션으로 묶을것.
 
-    await this.legendsRepository.updateUserLikeCount(receiverNo, 1);
+    this.legendsRepository.updateUserLikeCount(receiverNo, 1);
     return this.likesRepository.createOneLike(senderNo, receiverNo);
   }
 
   async deleteOneLike(senderNo: number, receiverNo: number) {
-    if (!(await this.usersRepository.findUserNicknameByUserNo(receiverNo)))
-      throw new NotFoundException("User doesn't exist.");
-
     if (!(await this.likesRepository.findOneLike(senderNo, receiverNo)))
       throw new NotFoundException("This like doesn't exist.");
 
     //트랜잭션 묶을것.
 
-    await this.legendsRepository.updateUserLikeCount(receiverNo, -1);
+    this.legendsRepository.updateUserLikeCount(receiverNo, -1);
     return this.likesRepository.deleteOneLike(senderNo, receiverNo);
   }
 }
