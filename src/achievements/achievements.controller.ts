@@ -10,7 +10,7 @@ export class AchievementsController {
 
   @Get()
   @ApiOperation({
-    summary: "업적 조회",
+    summary: "모든 업적 조회",
   })
   getAchievements(@Query() queryParams: GetAchievementsDto) {
     return this.achievementsService.getAchievements(queryParams);
