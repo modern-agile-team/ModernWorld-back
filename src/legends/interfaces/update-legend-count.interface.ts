@@ -1,11 +1,11 @@
 export interface UpdateLegendCount {
-  commentCount?: { increment: number };
+  commentCount: { increment: number };
 
-  likeCount?: { increment: number };
+  likeCount: { increment: number };
 
-  itemCount?: { increment: number };
+  itemCount: { increment: number };
 
-  presentCount?: { increment: number };
+  presentCount: { increment: number };
 
-  attendanceCount?: { increment: number };
+  attendanceCount: { increment: number };
 }

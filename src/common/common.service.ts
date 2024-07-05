@@ -18,15 +18,16 @@ export class CommonService {
     private readonly achievementsRepository: AchievementsRepository,
   ) {}
 
-  async recordLegendAndCheckAchievement(
+  async recordLegendAndCheckAchievement<T extends keyof UpdateLegendCount>(
     userNo: number,
     legendOneField: keyof UpdateLegendCount,
   ) {
     //유저가 해당하는 행위를 몇번 했는지 기록
-
-    const updateLegendCount: UpdateLegendCount = {
+    const updateLegendCount: Pick<UpdateLegendCount, T> = {
       [legendOneField]: { increment: 1 },
-    };
+    } as Pick<UpdateLegendCount, T>;
+    // type casting? assertion? 타입 단언 처음알았음..ㄷㄷ
+    // 내 손모가지를 걸고 타입은 이거다.
 
     const updatedLegend = await this.legendsRepository.updateLegendByUserNo(
       userNo,

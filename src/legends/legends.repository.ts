@@ -7,9 +7,9 @@ import { UpdateLegendCount } from "./interfaces/update-legend-count.interface";
 export class LegendsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  updateLegendByUserNo(
+  updateLegendByUserNo<T extends keyof UpdateLegendCount>(
     userNo: number,
-    data: UpdateLegendCount,
+    data: Pick<UpdateLegendCount, T>,
   ): PrismaPromise<legend> {
     return this.prisma.legend.update({
       data,
