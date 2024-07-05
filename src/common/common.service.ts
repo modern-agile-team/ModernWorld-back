@@ -33,20 +33,23 @@ export class CommonService {
       updateLegendCount,
     );
 
+    // 해당하는 개수 별로 흭득할수 있는 업적 설정
+    // 총 15개의 업적. 5(업적 종류) * 3(업적단계) legend table의 feild 값이10, 20, 40일떄 이벤트 발생
+    // achievement name은 ~Count1, ~Count2, ~Count3로 구성됨 사실 이러면 name의 역할은 DB 검색용 역할로 전락함
+    // 그러나 title(칭호)가 있으니까 프론트는 이거쓰면 됨ㅇㅇ
     switch (updatedLegend[`${legendOneField}`]) {
       case 10:
-        this.checkAchievementConditon(userNo, legendOneField + 1);
+        this.checkAchievementConditonAndGet(userNo, legendOneField + 1);
         break;
       case 20:
-        this.checkAchievementConditon(userNo, legendOneField + 2);
+        this.checkAchievementConditonAndGet(userNo, legendOneField + 2);
         break;
       case 40:
-        this.checkAchievementConditon(userNo, legendOneField + 3);
+        this.checkAchievementConditonAndGet(userNo, legendOneField + 3);
     }
-    return 0;
   }
 
-  private async checkAchievementConditon(
+  private async checkAchievementConditonAndGet(
     userNo: number,
     legendOneFieldWithNumber: string,
   ) {
@@ -78,7 +81,7 @@ export class CommonService {
       this.alarmsRepository.createOneAlarm(
         userNo,
         `업적 [${title}]을 달성했습니다!`,
-        "/user-achievements", // 해당 항목 반드시 유심히 볼것, 추후 변경 가능성 농후--------------------------------------------------------------------------------
+        "/user-achievements", // 해당 항목 반드시 유심히 볼것, 추후 변경 가능성 농후-------------------------------------------
       );
 
       //sse 알람 보내기
