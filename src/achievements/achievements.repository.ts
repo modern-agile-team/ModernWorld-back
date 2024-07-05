@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaPromise, achievement } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
+import { AchievemetWhere } from "./interfaces/get-achievements-where.interface";
 
 @Injectable()
 export class AchievementsRepository {
@@ -12,7 +13,9 @@ export class AchievementsRepository {
     });
   }
 
-  getAchievements(where: object): PrismaPromise<Omit<achievement, "name">[]> {
+  getAchievements(
+    where: AchievemetWhere,
+  ): PrismaPromise<Omit<achievement, "name">[]> {
     return this.prisma.achievement.findMany({
       select: {
         no: true,
