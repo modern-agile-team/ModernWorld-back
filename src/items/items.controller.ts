@@ -1,6 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { ItemsService } from "./items.service";
-import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GetUserAllItems } from "./dtos/get-user-all-items.dto";
 
 @Controller("items")
