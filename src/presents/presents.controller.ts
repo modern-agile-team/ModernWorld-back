@@ -14,6 +14,7 @@ import { PresentsService } from "./presents.service";
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo.enum";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
+import { CreateOnePresentDto } from "./dtos/create-present.dto";
 
 @Controller("presents")
 @ApiTags("Presents")
@@ -43,7 +44,6 @@ export class PresentsController {
   @ApiOperation({ summary: "특정 선물 가져오기 API" })
   @ApiParam({
     name: "presentNo",
-    required: true,
     example: 1,
   })
   getOnePresent(@Param("presentNo", ParseIntPipe) presentNo: number) {
@@ -52,24 +52,12 @@ export class PresentsController {
     return this.presentsService.getOnePresent(userNo, presentNo);
   }
 
-  //아 이건 진짜 짜치네ㄱ
-  @Post(":itemNo/users/:userNo")
+  @Post()
   @ApiOperation({ summary: "특정 선물 추가 API" })
-  @ApiParam({
-    name: "itemNo",
-    example: 1,
-  })
-  @ApiParam({
-    name: "userNo",
-    example: 1,
-  })
-  createOnePresent(
-    @Param("itemNo", ParseIntPipe) itemNo: number,
-    @Param("userNo", ParseIntPipe) receiverNo: number,
-  ) {
+  createOnePresent(@Body() body: CreateOnePresentDto) {
     const userNo = 1;
 
-    return this.presentsService.createOnePresent(userNo, itemNo, receiverNo);
+    return this.presentsService.createOnePresent(userNo, body);
   }
 
   @Patch(":presentNo")

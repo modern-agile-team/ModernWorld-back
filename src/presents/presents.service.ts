@@ -10,6 +10,7 @@ import { ItemsRepository } from "src/items/items.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { SenderReceiverNoField } from "./enum/present-senderReceiverNo.enum";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
+import { CreateOnePresentDto } from "./dtos/create-present.dto";
 
 @Injectable()
 export class PresentsService {
@@ -176,7 +177,7 @@ export class PresentsService {
     throw new ForbiddenException("This present is not related with you.");
   }
 
-  async createOnePresent(senderNo: number, itemNo: number, receiverNo: number) {
+  async createOnePresent(senderNo: number, body: CreateOnePresentDto) {
     /**
      *
      * 아이템을 특정유저에게 선물하는 로직
@@ -190,6 +191,8 @@ export class PresentsService {
      *
      * 4. present 에 추가 및 포인트 감소(presentsRepository) 트랜잭션으로 묶을것
      */
+
+    const { receiverNo, itemNo } = body;
 
     if (senderNo === receiverNo) {
       throw new ForbiddenException("User cannot gift themselves alone.");
