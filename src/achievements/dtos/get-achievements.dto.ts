@@ -3,8 +3,8 @@ import { AchievementLevelEnum } from "../enum/achievements.enum";
 import { IsEnum, IsOptional } from "class-validator";
 
 export class GetAchievementsDto {
-  @ApiPropertyOptional({ name: "name", default: "" })
-  name: string = "";
+  @ApiPropertyOptional({ name: "name" })
+  name?: string;
 
   @ApiPropertyOptional({
     name: "level",
