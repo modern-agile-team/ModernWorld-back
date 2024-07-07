@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsPositive } from "class-validator";
 
-export class CreateOnePresentDto {
-  @ApiProperty({ example: 1, minimum: 3 })
+export class CreatePresentDto {
+  @ApiProperty({ example: 5, minimum: 1 })
   @IsPositive()
   @IsInt()
   receiverNo: number;
