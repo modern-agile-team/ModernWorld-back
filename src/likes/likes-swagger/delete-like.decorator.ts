@@ -1,17 +1,20 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+} from "@nestjs/swagger";
 
 export function ApiDeleteLike() {
   return applyDecorators(
     ApiOperation({
       summary: "좋아요 삭제",
     }),
-    ApiResponse({
-      status: 204,
+    ApiNoContentResponse({
       description: "Success",
     }),
-    ApiResponse({
-      status: 404,
+    ApiNotFoundResponse({
       description: "해당하는 유저번호(receiver기준)의 좋아요가 없을 때",
       content: {
         JSON: {
@@ -23,8 +26,7 @@ export function ApiDeleteLike() {
         },
       },
     }),
-    ApiResponse({
-      status: 500,
+    ApiInternalServerErrorResponse({
       description: "Internal server error",
       content: {
         JSON: {
