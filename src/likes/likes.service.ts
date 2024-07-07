@@ -7,6 +7,8 @@ import {
 import { LikesRepository } from "./likes.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { CreateOneLikeDto } from "./dtos/create-one-like.dto";
+import { DeleteOneLikeDto } from "./dtos/delete-one-like.dto";
 
 @Injectable()
 export class LikesService {
@@ -16,7 +18,9 @@ export class LikesService {
     private readonly legendsRepository: LegendsRepository,
   ) {}
 
-  async createOneLike(senderNo: number, receiverNo: number) {
+  async createOneLike(senderNo: number, body: CreateOneLikeDto) {
+    const { receiverNo } = body;
+
     if (!(await this.usersRepository.findUserNicknameByUserNo(receiverNo)))
       throw new NotFoundException("User doesn't exist.");
 
@@ -32,7 +36,9 @@ export class LikesService {
     return this.likesRepository.createOneLike(senderNo, receiverNo);
   }
 
-  async deleteOneLike(senderNo: number, receiverNo: number) {
+  async deleteOneLike(senderNo: number, body: DeleteOneLikeDto) {
+    const { receiverNo } = body;
+
     if (!(await this.likesRepository.findOneLike(senderNo, receiverNo)))
       throw new NotFoundException("This like doesn't exist.");
 

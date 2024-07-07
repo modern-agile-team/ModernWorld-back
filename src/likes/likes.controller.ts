@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   HttpCode,
@@ -10,26 +11,28 @@ import { LikesService } from "./likes.service";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateLike } from "./likes-swagger/create-like.decorator";
 import { ApiDeleteLike } from "./likes-swagger/delete-like.decorator";
+import { CreateOneLikeDto } from "./dtos/create-one-like.dto";
+import { DeleteOneLikeDto } from "./dtos/delete-one-like.dto";
 
 @Controller("likes")
 @ApiTags("Likes")
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
-  @Post("users/:userNo")
+  @Post()
   @ApiCreateLike()
-  createOneLike(@Param("userNo", ParseIntPipe) receiverNo: number) {
+  createOneLike(@Body() body: CreateOneLikeDto) {
     const tokenUserNo = 1;
 
-    return this.likesService.createOneLike(tokenUserNo, receiverNo);
+    return this.likesService.createOneLike(tokenUserNo, body);
   }
 
-  @Delete("users/:userNo")
+  @Delete()
   @ApiDeleteLike()
   @HttpCode(204)
-  deleteOneLike(@Param("userNo", ParseIntPipe) receiverNo: number) {
+  deleteOneLike(@Body() body: DeleteOneLikeDto) {
     const tokenUserNo = 1;
 
-    return this.likesService.deleteOneLike(tokenUserNo, receiverNo);
+    return this.likesService.deleteOneLike(tokenUserNo, body);
   }
 }
