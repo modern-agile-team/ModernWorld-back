@@ -1,9 +1,9 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { ItemsService } from "./items.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { GetUserAllItems } from "./dtos/get-user-all-items.dto";
-import { ApiGetItems } from "./items-swagger/get-items.decorator.decorator";
-import { ApiGetOneItem } from "./items-swagger/get-one-item.decorator.decorator copy";
+import { ApiGetItems } from "./items-swagger/get-items.decorator";
+import { ApiGetOneItem } from "./items-swagger/get-one-item.decorator";
 
 @Controller("items")
 @ApiTags("Items")
