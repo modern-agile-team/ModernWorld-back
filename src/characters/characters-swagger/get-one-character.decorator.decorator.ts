@@ -13,7 +13,7 @@ export function ApiGetOneCharacter() {
       summary: "특정 캐릭터 불러오기 API",
       description: "특정 캐릭터를 불러옵니다.",
     }),
-    ApiProperty({ name: "characterNo", example: 22 }),
+    ApiProperty({ name: "characterNo" }),
     ApiOkResponse({
       status: 200,
       description: "Success",

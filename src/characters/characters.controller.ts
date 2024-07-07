@@ -2,6 +2,8 @@ import { Controller, Get, Param, ParseIntPipe, Query } from "@nestjs/common";
 import { CharactersService } from "./characters.service";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { GetCharactersDto } from "./dtos/get-characters.dto";
+import { ApiGetCharacters } from "./characters-swagger/get-characters.decorator";
+import { ApiGetOneCharacter } from "./characters-swagger/get-one-character.decorator.decorator";
 
 @Controller("characters")
 @ApiTags("Characters")
@@ -9,10 +11,7 @@ export class CharactersController {
   constructor(private readonly charactersServcie: CharactersService) {}
 
   @Get()
-  @ApiOperation({
-    summary: "캐릭터 가져오기 API",
-    description: "캐릭터를 불러옵니다.",
-  })
+  @ApiGetCharacters()
   getCharacters(
     @Query()
     queryParams: GetCharactersDto,
@@ -21,14 +20,7 @@ export class CharactersController {
   }
 
   @Get(":characterNo")
-  @ApiOperation({
-    summary: "특정 캐릭터 불러오기 API",
-    description: "특정 캐릭터를 불러옵니다.",
-  })
-  @ApiParam({
-    name: "characterNo",
-    example: 1,
-  })
+  @ApiGetOneCharacter()
   getOneCharacter(@Param("characterNo", ParseIntPipe) characterNo: number) {
     return this.charactersServcie.getOneCharacter(characterNo);
   }

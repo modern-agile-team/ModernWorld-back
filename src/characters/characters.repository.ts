@@ -7,10 +7,10 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class CharactersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOneCharacter(characterNo: number): PrismaPromise<character> {
+  getOneCharacter(no: number): PrismaPromise<character> {
     return this.prisma.character.findUnique({
       where: {
-        no: characterNo,
+        no,
       },
     });
   }
