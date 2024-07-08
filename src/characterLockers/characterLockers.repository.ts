@@ -4,7 +4,7 @@ import { Animal } from "src/common/enum/animal.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
-export class CharacterLockerRepository {
+export class CharacterLockersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   getUserAllCharacters(

@@ -11,7 +11,7 @@ import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
 import { PostsModule } from "./posts/posts.module";
 import { AuthModule } from "./auth/auth.module";
-import { CharacterLockerModule } from "./characterLocker/characterLocker.module";
+import { CharacterLockerModule } from "./characterLockers/characterLockers.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { TasksModule } from "./tasks/tasks.module";
 import { LikesModule } from "./likes/likes.module";

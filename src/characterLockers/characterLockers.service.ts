@@ -4,20 +4,23 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CharacterLockerRepository } from "./characterLocker.repository";
+import { CharacterLockersRepository } from "./characterLockers.repository";
 import { CharactersRepository } from "src/characters/characters.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { Animal } from "src/common/enum/animal.enum";
+import { GetUserCharactersDto } from "./dtos/get-user-characters.dto";
+import { CharacterNoDto } from "./dtos/character-no.dto";
 
 @Injectable()
-export class CharacterLockerService {
+export class CharacterLockersService {
   constructor(
-    private readonly characterLockerRepository: CharacterLockerRepository,
+    private readonly characterLockerRepository: CharacterLockersRepository,
     private readonly charactersRepository: CharactersRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  getUserAllCharacters(userNo: number, species: Animal, status: boolean) {
+  getUserAllCharacters(userNo: number, query: GetUserCharactersDto) {
+    const { status, species } = query;
+
     return this.characterLockerRepository.getUserAllCharacters(
       userNo,
       species,
@@ -25,7 +28,7 @@ export class CharacterLockerService {
     );
   }
 
-  async buyOneCharacter(userNo: number, characterNo: number) {
+  async createOneUserCharacter(userNo: number, body: CharacterNoDto) {
     /**
      * 유저가 캐릭터를 사는 로직
      * 1. 해당번호의 캐릭터가 캐릭터 테이블에 실제로 존재하는지 확인
@@ -40,6 +43,7 @@ export class CharacterLockerService {
      *
      * 4, 5 트랜잭션으로 묶을것...
      */
+    const { characterNo } = body;
 
     const character =
       await this.charactersRepository.getOneCharacter(characterNo);
@@ -64,12 +68,14 @@ export class CharacterLockerService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
-    await this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
+    this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
 
     return this.characterLockerRepository.addOneCharacter(userNo, characterNo);
   }
 
-  async updateCharacterStatus(userNo: number, characterNo: number) {
+  async updateCharacterStatus(userNo: number, body: CharacterNoDto) {
+    const { characterNo } = body;
+
     const character =
       await this.characterLockerRepository.findUserCharacterFromInventory(
         userNo,
