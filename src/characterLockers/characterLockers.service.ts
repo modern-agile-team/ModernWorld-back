@@ -28,9 +28,16 @@ export class CharacterLockersService {
     );
   }
 
-  async createOneUserCharacter(userNo: number, body: CharacterNoDto) {
+  async createUserOneCharacter(userNo: number, body: CharacterNoDto) {
     /**
      * 유저가 캐릭터를 사는 로직
+     *
+     * 0. 유저가 처음 캐릭터가 아예 없는지 확인(뉴비일경우)
+     *
+     * 0-1. 1~4 번 사이의 캐릭터는 공짜로 얻게끔 하기
+     *
+     * 0-2 해당 캐릭터 바로 사용하게끔 하기
+     *
      * 1. 해당번호의 캐릭터가 캐릭터 테이블에 실제로 존재하는지 확인
      *
      * 2. 이미 가지고 있는지 확인
@@ -44,6 +51,22 @@ export class CharacterLockersService {
      * 4, 5 트랜잭션으로 묶을것...
      */
     const { characterNo } = body;
+
+    if (
+      !(await this.characterLockerRepository.getUserAllCharacters(userNo))[0]
+    ) {
+      if (characterNo > 4) {
+        throw new ForbiddenException(
+          "Newbies can only select characters that are 4 or less.",
+        );
+      }
+
+      return this.characterLockerRepository.createOneCharacter(
+        userNo,
+        characterNo,
+        true,
+      );
+    }
 
     const character =
       await this.charactersRepository.getOneCharacter(characterNo);
@@ -68,9 +91,13 @@ export class CharacterLockersService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
+    // 트랜잭션
     this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
 
-    return this.characterLockerRepository.addOneCharacter(userNo, characterNo);
+    return this.characterLockerRepository.createOneCharacter(
+      userNo,
+      characterNo,
+    );
   }
 
   async updateCharacterStatus(userNo: number, body: CharacterNoDto) {

@@ -9,8 +9,8 @@ export class CharacterLockersRepository {
 
   getUserAllCharacters(
     userNo: number,
-    species: Animal,
-    status: boolean,
+    species?: Animal,
+    status?: boolean,
   ): PrismaPromise<characterLocker[]> {
     return this.prisma.characterLocker.findMany({
       select: {
@@ -32,12 +32,13 @@ export class CharacterLockersRepository {
     });
   }
 
-  addOneCharacter(
+  createOneCharacter(
     userNo: number,
     characterNo: number,
+    status?: boolean,
   ): PrismaPromise<characterLocker> {
     return this.prisma.characterLocker.create({
-      data: { characterNo, userNo },
+      data: { characterNo, userNo, status },
     });
   }
 

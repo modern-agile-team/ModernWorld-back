@@ -9,10 +9,11 @@ import {
   Query,
 } from "@nestjs/common";
 import { CharacterLockersService } from "./characterLockers.service";
-import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { GetUserCharactersDto } from "./dtos/get-user-characters.dto";
 import { CharacterNoDto } from "./dtos/character-no.dto";
 import { ApiGetUserCharacters } from "./characterLockers-swagger/get-user-characters.decorator";
+import { ApiCreateUserOneCharacter } from "./characterLockers-swagger/create-user-character.decorator";
 
 @Controller()
 @ApiTags("CharacterLockers")
@@ -31,14 +32,11 @@ export class CharacterLockersController {
   }
 
   @Post("users/characters")
-  @ApiOperation({
-    summary: "캐릭터 구매 API",
-    description: "캐릭터를 구매하여 characterLocker테이블에 등록합니다.",
-  })
-  createOneUserCharacter(@Body() body: CharacterNoDto) {
+  @ApiCreateUserOneCharacter()
+  createUserOneCharacter(@Body() body: CharacterNoDto) {
     const userNo = 1;
 
-    return this.characterLockerService.createOneUserCharacter(userNo, body);
+    return this.characterLockerService.createUserOneCharacter(userNo, body);
   }
 
   @Patch("users/characters")
