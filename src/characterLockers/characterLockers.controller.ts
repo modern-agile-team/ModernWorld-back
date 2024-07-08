@@ -12,6 +12,7 @@ import { CharacterLockersService } from "./characterLockers.service";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { GetUserCharactersDto } from "./dtos/get-user-characters.dto";
 import { CharacterNoDto } from "./dtos/character-no.dto";
+import { ApiGetUserCharacters } from "./characterLockers-swagger/get-user-characters.decorator";
 
 @Controller()
 @ApiTags("CharacterLockers")
@@ -21,14 +22,7 @@ export class CharacterLockersController {
   ) {}
 
   @Get("users/:userNo/characters")
-  @ApiOperation({
-    summary: "유저 캐릭터 조회 API",
-    description: "유저가 가지고 있는 캐릭터를 조회합니다.",
-  })
-  @ApiParam({
-    name: "userNo",
-    example: 1,
-  })
+  @ApiGetUserCharacters()
   getUserCharacters(
     @Param("userNo", ParseIntPipe) userNo: number,
     @Query() query: GetUserCharactersDto,

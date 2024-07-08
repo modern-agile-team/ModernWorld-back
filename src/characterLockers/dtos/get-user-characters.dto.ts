@@ -4,7 +4,7 @@ import { IsEnum, IsOptional } from "class-validator";
 import { Animal } from "src/common/enum/animal.enum";
 
 export class GetUserCharactersDto {
-  @ApiPropertyOptional({})
+  @ApiPropertyOptional({ description: "사용 여부" })
   @Type(() => Boolean)
   @IsOptional()
   status?: boolean;
