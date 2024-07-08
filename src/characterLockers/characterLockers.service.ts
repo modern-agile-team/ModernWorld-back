@@ -100,8 +100,8 @@ export class CharacterLockersService {
     );
   }
 
-  async updateCharacterStatus(userNo: number, body: CharacterNoDto) {
-    const { characterNo } = body;
+  async updateCharacterStatus(userNo: number, param: CharacterNoDto) {
+    const { characterNo } = param;
 
     const character =
       await this.characterLockerRepository.findUserCharacterFromInventory(
@@ -121,8 +121,7 @@ export class CharacterLockersService {
     );
 
     return this.characterLockerRepository.updateCharacterStatusToUse(
-      userNo,
-      characterNo,
+      character.no,
     );
   }
 }

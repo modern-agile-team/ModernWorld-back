@@ -42,13 +42,10 @@ export class CharacterLockersRepository {
     });
   }
 
-  updateCharacterStatusToUse(
-    userNo: number,
-    characterNo: number,
-  ): PrismaPromise<{ count: number }> {
-    return this.prisma.characterLocker.updateMany({
+  updateCharacterStatusToUse(no: number): PrismaPromise<characterLocker> {
+    return this.prisma.characterLocker.update({
       data: { status: true },
-      where: { userNo, characterNo },
+      where: { no },
     });
   }
 
