@@ -9,7 +9,7 @@ import {
   Query,
 } from "@nestjs/common";
 import { CharacterLockersService } from "./characterLockers.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { GetUserCharactersDto } from "./dtos/get-user-characters.dto";
 import { CharacterNoDto } from "./dtos/character-no.dto";
 import { ApiGetUserCharacters } from "./characterLockers-swagger/get-user-characters.decorator";
