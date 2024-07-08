@@ -1,7 +1,13 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { JwtDto } from "./jwt.dto";
+import { Request } from "express";
+import { TokenService } from "./token.service";
 
 @Injectable()
 export class AccessStrategy extends PassportStrategy(Strategy, "accessToken") {
@@ -26,18 +32,38 @@ export class RefreshStrategy extends PassportStrategy(
   Strategy,
   "refreshToken",
 ) {
-  constructor() {
+  constructor(private readonly tokenService: TokenService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_TOKEN_SECRET,
+      passReqToCallback: true,
     });
   }
 
-  async validate(payload: JwtDto) {
-    if (payload.sub !== "refreshToken") {
-      throw new BadRequestException("리프레시 토큰이 아닙니다.");
+  async validate(request: Request, payload: JwtDto) {
+    const authHeader = request.headers.authorization;
+    if (!authHeader) {
+      console.log("authHeader");
+      throw new BadRequestException("Authorization header is missing.");
     }
+
+    if (payload.sub !== "refreshToken") {
+      throw new BadRequestException("invalid token type");
+    }
+
+    const tokenFromRequest = authHeader.split(" ")[1];
+    const tokenFromRedis = await this.tokenService.getRefreshToken(
+      payload.userNo + "-refreshToken",
+    );
+    if (!tokenFromRedis) {
+      throw new NotFoundException("Token not found.");
+    }
+
+    if (tokenFromRequest !== tokenFromRedis) {
+      throw new NotFoundException("토큰이 일치하지 않습니다.");
+    }
+
     return { tokenType: payload.sub, no: payload.userNo };
   }
 }

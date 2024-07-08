@@ -29,11 +29,7 @@ export class TokenService {
     });
   }
 
-  createNewAccessToken(userNo: number) {
-    const refreshToken = this.getRefreshToken(`${userNo}-refreshToken`);
-    if (!refreshToken) {
-      throw new NotFoundException("리프레쉬 토큰이 존재하지 않습니다.");
-    }
+  async createNewAccessToken(userNo: number) {
     const accessToken = this.createAccessToken(userNo);
     this.setAccessToken(`${userNo}-accessToken`, accessToken, 60 * 60 * 3);
 
@@ -48,7 +44,7 @@ export class TokenService {
     return this.redisService.setToken(userNo, accessToken, ttl);
   }
 
-  async getRefreshToken(userNo: string) {
+  getRefreshToken(userNo: string) {
     return this.redisService.getToken(userNo);
   }
 }

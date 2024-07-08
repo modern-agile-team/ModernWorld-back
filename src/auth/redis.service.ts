@@ -6,7 +6,7 @@ import { CACHE_MANAGER } from "@nestjs/cache-manager";
 export class RedisService {
   constructor(@Inject(CACHE_MANAGER) private readonly tokenCache: Cache) {}
 
-  async getToken(key: string): Promise<string | undefined | null> {
+  getToken(key: string): Promise<string | undefined | null> {
     return this.tokenCache.get(key);
   }
 
