@@ -91,7 +91,7 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
       if (error.message === "Token not found.") {
         throw new NotFoundException("Token not found.");
       } else {
-        console.log(error.message);
+        console.log(error);
         throw new BadRequestException("jwt error");
       }
     }
