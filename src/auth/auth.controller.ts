@@ -8,7 +8,12 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+} from "@nestjs/swagger";
 import { RefreshTokenAuthGuard } from "./jwt.guard";
 import { userNo } from "./auth.decorator";
 import { Response } from "express";
@@ -75,11 +80,7 @@ export class AuthController {
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
   @ApiOperation({ summary: "액세스 토큰 재발급" })
-  @ApiQuery({
-    name: "refreshTOken",
-    description: "리프레쉬 토큰",
-    required: true,
-  })
+  @ApiBearerAuth("refresh-token")
   @ApiResponse({
     status: 200,
     description: "액세스 토큰 재발급 성공",

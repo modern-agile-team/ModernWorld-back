@@ -2,7 +2,6 @@ import {
   BadRequestException,
   ExecutionContext,
   HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -92,7 +91,7 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
       if (error.message === "Token not found.") {
         throw new NotFoundException("Token not found.");
       } else {
-        console.log(error);
+        console.log(error.message);
         throw new BadRequestException("jwt error");
       }
     }
