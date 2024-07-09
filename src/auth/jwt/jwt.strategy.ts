@@ -53,7 +53,11 @@ export class RefreshStrategy extends PassportStrategy(
 ) {
   constructor(private readonly tokenService: TokenService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (request) => {
+          return request?.cookies?.refreshToken;
+        },
+      ]),
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_TOKEN_SECRET,
       passReqToCallback: true,
@@ -61,8 +65,8 @@ export class RefreshStrategy extends PassportStrategy(
   }
 
   async validate(request: Request, payload: JwtDto) {
-    const authHeader = request.headers.authorization;
-    if (!authHeader) {
+    const tokenFromRequest = request.cookies.refreshToken;
+    if (!tokenFromRequest) {
       throw new BadRequestException("Authorization header is missing.");
     }
 
@@ -70,7 +74,6 @@ export class RefreshStrategy extends PassportStrategy(
       throw new BadRequestException("invalid token type");
     }
 
-    const tokenFromRequest = authHeader.split(" ")[1];
     const tokenFromRedis = await this.tokenService.getRefreshToken(
       payload.userNo + "-refreshToken",
     );

@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Query,
+  Req,
   Res,
   UseGuards,
 } from "@nestjs/common";
@@ -16,7 +17,7 @@ import {
 } from "@nestjs/swagger";
 import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from "./jwt/jwt.guard";
 import { userNo } from "./auth.decorator";
-import { Response } from "express";
+import { Response, Request } from "express";
 import { TokenService } from "./services/token.service";
 import { user } from "prisma/seeding/user";
 
@@ -31,6 +32,11 @@ export class AuthController {
   @ApiBearerAuth("access-token")
   async test(@userNo() userNo: number) {
     return userNo;
+  }
+  @Get("cookies")
+  getCookies(@Req() req: Request, @Res() res: Response) {
+    const cookies = req.cookies["refreshToken"];
+    return res.send(cookies);
   }
 
   @Post("naver/login")
