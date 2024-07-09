@@ -38,7 +38,10 @@ export class LikesService {
       },
     });
 
-    this.legendsRepository.updateUserLikeCount(receiverNo, 1);
+    this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
+      likeCount: { increment: 1 },
+    });
+
     return this.likesRepository.createOneLike(senderNo, receiverNo);
   }
 
