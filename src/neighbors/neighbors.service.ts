@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { CreateNeighborDto } from "./dto/create-neighbor.dto";
-import { UpdateNeighborDto } from "./dto/update-neighbor.dto";
-import { NeighborRepository } from "./neighbor.repository";
+import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
+import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
+import { NeighborRepository } from "./neighbors.repository";
 
 @Injectable()
 export class NeighborService {
@@ -20,5 +20,10 @@ export class NeighborService {
       senderNo,
       status,
     );
+  }
+
+  neighborApproval(body: UpdateNeighborDto) {
+    const { no, status } = body;
+    return this.neighborRepository.neighborApproval(no, status);
   }
 }

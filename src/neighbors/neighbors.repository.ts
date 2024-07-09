@@ -18,4 +18,15 @@ export class NeighborRepository {
       },
     });
   }
+
+  neighborApproval(no: number, status: boolean): PrismaPromise<neighbor> {
+    return this.prisma.neighbor.update({
+      where: {
+        no,
+      },
+      data: {
+        status,
+      },
+    });
+  }
 }
