@@ -1,1 +1,4 @@
-export class CreateNeighborDto {}
+export class CreateNeighborDto {
+  receiverNo: number;
+  status: boolean;
+}

@@ -14,4 +14,10 @@ import { UpdateNeighborDto } from "./dto/update-neighbor.dto";
 @Controller("neighbor")
 export class NeighborController {
   constructor(private readonly neighborService: NeighborService) {}
+
+  @Post()
+  neighborRequest(@Body() body: CreateNeighborDto) {
+    const userNo = 1;
+    return this.neighborService.neighborRequest(body, userNo);
+  }
 }
