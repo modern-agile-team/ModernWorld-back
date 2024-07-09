@@ -11,6 +11,17 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const authorization = request.headers["authorization"];
+    if (!authorization) {
+      throw new BadRequestException("jwt must be provided");
+    }
+    return super.canActivate(context);
+  }
+
   handleRequest(
     err: any,
     user: any,
@@ -27,22 +38,22 @@ export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
         throw err;
       }
 
-      throw new HttpException(info.message, 401);
+      throw new UnauthorizedException(info.message);
     } catch (error) {
       if (error.message === "jwt expired") {
-        console.log(error.message);
-        throw new HttpException("jwt expired", 401);
+        throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid token") {
-        console.log(error.message);
-        throw new HttpException("invalid token", 400);
+        throw new BadRequestException(error.message);
       }
       if (error.message === "invalid signature") {
-        console.log(error.message);
-        throw new HttpException("invalid signature", 400);
+        throw new BadRequestException(error.message);
+      }
+      if (error.message === "Token not found.") {
+        throw new NotFoundException(error.message);
       } else {
-        console.log(error.message);
-        throw new HttpException("jwt error", 400);
+        console.log(error);
+        throw new BadRequestException(error.message);
       }
     }
   }
@@ -80,16 +91,16 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
       throw new UnauthorizedException(info.message);
     } catch (error) {
       if (error.message === "jwt expired") {
-        throw new UnauthorizedException("jwt expired");
+        throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid token") {
-        throw new BadRequestException("invalid token");
+        throw new BadRequestException(error.message);
       }
       if (error.message === "invalid signature") {
-        throw new BadRequestException("invalid signature");
+        throw new BadRequestException(error.message);
       }
       if (error.message === "Token not found.") {
-        throw new NotFoundException("Token not found.");
+        throw new NotFoundException(error.message);
       } else {
         console.log(error);
         throw new BadRequestException("jwt error");

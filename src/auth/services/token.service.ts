@@ -45,4 +45,7 @@ export class TokenService {
   getRefreshToken(userNo: string) {
     return this.redisService.getToken(userNo);
   }
+  getAccessToken(userNo: string) {
+    return this.redisService.getToken(userNo);
+  }
 }

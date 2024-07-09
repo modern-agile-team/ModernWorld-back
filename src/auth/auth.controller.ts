@@ -14,10 +14,11 @@ import {
   ApiQuery,
   ApiResponse,
 } from "@nestjs/swagger";
-import { RefreshTokenAuthGuard } from "./jwt/jwt.guard";
+import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from "./jwt/jwt.guard";
 import { userNo } from "./auth.decorator";
 import { Response } from "express";
 import { TokenService } from "./services/token.service";
+import { user } from "prisma/seeding/user";
 
 @Controller("auth")
 export class AuthController {
@@ -25,6 +26,12 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly tokenService: TokenService,
   ) {}
+  @UseGuards(AccessTokenAuthGuard)
+  @Get("test")
+  @ApiBearerAuth("access-token")
+  async test(@userNo() userNo: number) {
+    return userNo;
+  }
 
   @Post("naver/login")
   @ApiOperation({ summary: "네이버 로그인" })
