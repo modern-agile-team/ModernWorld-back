@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
@@ -17,6 +18,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userRepository: UsersRepository,
+    private readonly logger: Logger,
   ) {}
 
   getUserNamePointTitleCharacter(userNo: number) {
@@ -77,20 +79,19 @@ export class UsersService {
 
     attendance[day][0] = true;
 
-    //짧게나마 트랜잭션을 구현했으나, 이는 나중에 좀더 수정해야 할듯함.
     try {
-      this.prisma.$transaction([
+      const [userAttendance] = await this.prisma.$transaction([
         this.userRepository.updateUserAttendance(userNo, attendance),
-
         this.userRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
         ),
       ]);
 
-      return true;
-    } catch (error) {
-      throw new InternalServerErrorException("transaction error.");
+      return userAttendance;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
     }
   }
 

@@ -14,6 +14,7 @@ import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decorator";
+import { ApiUpdateUserAttendance } from "./users-swagger/update-user-attendance.decorator";
 
 @Controller("users")
 @ApiTags("Users")
@@ -48,7 +49,7 @@ export class UsersController {
   }
 
   @Patch("/attendance")
-  @ApiOperation({ summary: "유저 출석부 체크 API" })
+  @ApiUpdateUserAttendance()
   updateUserAttendance() {
     const userNo = 1;
 
