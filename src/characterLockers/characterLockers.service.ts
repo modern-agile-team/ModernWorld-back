@@ -92,7 +92,7 @@ export class CharacterLockersService {
     }
 
     // 트랜잭션
-    this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
+    await this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
 
     return this.characterLockerRepository.createOneCharacter(
       userNo,
