@@ -11,6 +11,7 @@ import {
 import { AuthService } from "./services/auth.service";
 import {
   ApiBearerAuth,
+  ApiCookieAuth,
   ApiOperation,
   ApiQuery,
   ApiResponse,
@@ -93,7 +94,7 @@ export class AuthController {
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
   @ApiOperation({ summary: "액세스 토큰 재발급" })
-  @ApiBearerAuth("refresh-token")
+  @ApiCookieAuth("refresh-token")
   @ApiResponse({
     status: 200,
     description: "액세스 토큰 재발급 성공",

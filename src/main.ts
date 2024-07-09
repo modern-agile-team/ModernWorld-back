@@ -15,13 +15,13 @@ async function bootstrap() {
     .setTitle("Modern World API")
     .setDescription("API of Modern World")
     .setVersion("0.1")
-    .addBearerAuth(
+    .addCookieAuth(
+      "refreshToken-cookie",
       {
         type: "http",
-        scheme: "bearer",
-        name: "JWT",
-        description: "Enter JWT token",
-        in: "header",
+        in: "Header",
+        scheme: "Bearer",
+        description: "리프레시 토큰 입력",
       },
       "refresh-token",
     )
