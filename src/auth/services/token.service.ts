@@ -1,12 +1,10 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { TokenRepository } from "src/auth/token.repository";
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { RedisService } from "./redis.service";
+import { RedisService } from "../redis/redis.service";
 
 @Injectable()
 export class TokenService {
   constructor(
-    private readonly tokenRepository: TokenRepository,
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
   ) {}

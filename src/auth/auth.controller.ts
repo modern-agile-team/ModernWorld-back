@@ -7,17 +7,17 @@ import {
   Res,
   UseGuards,
 } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { AuthService } from "./services/auth.service";
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
   ApiResponse,
 } from "@nestjs/swagger";
-import { RefreshTokenAuthGuard } from "./jwt.guard";
+import { RefreshTokenAuthGuard } from "./jwt/jwt.guard";
 import { userNo } from "./auth.decorator";
 import { Response } from "express";
-import { TokenService } from "./token.service";
+import { TokenService } from "./services/token.service";
 
 @Controller("auth")
 export class AuthController {

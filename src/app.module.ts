@@ -19,7 +19,7 @@ import { LegendsModule } from "./legends/legends.module";
 import { CommonModule } from "./common/common.module";
 import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
-import { RedisModule } from "./auth/redis.module";
+import { RedisModule } from "./auth/redis/redis.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
