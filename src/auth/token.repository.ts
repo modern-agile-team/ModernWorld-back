@@ -9,14 +9,12 @@ export class TokenRepository {
     userNo: number,
     socialAccess: string,
     socialRefresh: string,
-    serviceRefresh: string,
   ) {
     return this.prisma.token.create({
       data: {
         userNo,
         socialAccess,
         socialRefresh,
-        serviceRefresh,
       },
     });
   }
