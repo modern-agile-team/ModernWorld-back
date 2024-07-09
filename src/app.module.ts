@@ -14,10 +14,15 @@ import { AuthModule } from "./auth/auth.module";
 import { CharacterLockerModule } from "./characterLockers/characterLockers.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { TasksModule } from "./tasks/tasks.module";
+import { AchievementsModule } from "./achievements/achievements.module";
 import { LikesModule } from "./likes/likes.module";
 import { LegendsModule } from "./legends/legends.module";
-import { CommonModule } from "./common/common.module";
+import { LoggerModule } from "./common/utils/logger/logger.module";
+import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
+import { RedisModule } from "./auth/redis.module";
+import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
+import { CommonModule } from "./common/common.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -33,10 +38,15 @@ import { SseModule } from "./sse/sse.module";
     AuthModule,
     CharacterLockerModule,
     TasksModule,
+    AchievementsModule,
     LikesModule,
     LegendsModule,
-    CommonModule,
+    AlarmsModule,
+    LoggerModule,
     SseModule,
+    UserAchievementsModule,
+    CommonModule,
+    RedisModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
