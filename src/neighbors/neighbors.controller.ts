@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from "@nestjs/common";
 import { NeighborService } from "./neighbors.service";
 import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
+import { getNeighborDto } from "./dtos/get-neighbors.dto";
 
 @Controller("neighbors")
 export class NeighborController {
@@ -21,11 +23,19 @@ export class NeighborController {
     return this.neighborService.neighborRequest(body, userNo);
   }
 
-  // @Get()
-  // getManyNeighbor()
+  @Get()
+  getMYNeighbors(@Query() queryParams: getNeighborDto) {
+    const userNo = 1;
+    return this.neighborService.getMyNeighbors(userNo, queryParams);
+  }
 
   @Patch()
   neighborApproval(@Body() body: UpdateNeighborDto) {
     return this.neighborService.neighborApproval(body);
+  }
+
+  @Delete(":neighborNo")
+  neighborRequestRefusalOrDelete(@Param("neighborNo") neighborNo: number) {
+    return this.neighborService.neighborRequestRefusalOrDelete(neighborNo);
   }
 }

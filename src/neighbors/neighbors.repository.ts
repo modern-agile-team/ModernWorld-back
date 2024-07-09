@@ -29,4 +29,28 @@ export class NeighborRepository {
       },
     });
   }
+
+  getMyNeighbors(
+    receiverNo: number,
+    skip: number,
+    take: number,
+  ): PrismaPromise<neighbor[]> {
+    return this.prisma.neighbor.findMany({
+      skip,
+      take,
+      orderBy: { no: "desc" },
+      where: {
+        receiverNo,
+        status: true,
+      },
+    });
+  }
+
+  neighborRequestRefusalOrDelete(neighborNo: number): PrismaPromise<neighbor> {
+    return this.prisma.neighbor.delete({
+      where: {
+        no: neighborNo,
+      },
+    });
+  }
 }
