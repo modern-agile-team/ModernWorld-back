@@ -2,60 +2,52 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
   Query,
 } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
-import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiParam, ApiTags } from "@nestjs/swagger";
 import { GetUserItemsDto } from "./dtos/get-user-items.dto";
 import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
+import { ApiGetUserItems } from "./inventory-swagger/get-user-items.decorator";
+import { ApiCreateUserItem } from "./inventory-swagger/create-user-item.decorator";
+import { ApiUpdateUserItem } from "./inventory-swagger/update-user-item.decorator";
+import { ItemNoDto } from "./dtos/item-no.dto";
 
-@Controller("inventory")
+@Controller()
 @ApiTags("Inventory")
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @Get("users/:userNo")
-  @ApiOperation({
-    summary: "유저의 인벤토리 조회 API",
-    description: "유저의 인벤토리를 조회합니다.",
-  })
+  @Get("users/:userNo/items")
   @ApiParam({ name: "userNo", example: 1 })
+  @ApiGetUserItems()
   getUserItems(
     @Param("userNo", ParseIntPipe) userNo: number,
-    @Query() queryParams: GetUserItemsDto,
+    @Query() query: GetUserItemsDto,
   ) {
-    return this.inventoryService.getUserItems(userNo, queryParams);
+    return this.inventoryService.getUserItems(userNo, query);
   }
 
-  @Post(":itemNo")
-  @HttpCode(204)
-  @ApiOperation({
-    summary: "아이템 구매 API",
-    description: "아이템을 구매하여 inventory테이블에 등록합니다.",
-  })
-  buyOneItem(@Param("itemNo", ParseIntPipe) itemNo: number) {
+  @Post("users/items")
+  @ApiCreateUserItem()
+  createUserOneItem(@Body() body: ItemNoDto) {
     const userNo = 1;
 
-    return this.inventoryService.buyOneItem(userNo, itemNo);
+    return this.inventoryService.createUserOneItem(userNo, body);
   }
 
-  @Patch(":itemNo")
-  @ApiOperation({
-    summary: "아이템 사용 / 사용안함 API",
-    description:
-      "사용시 같은 타입의 다른 아이템은 자동으로 사용해제 처리됩니다.",
-  })
+  @Put("users/items/:itemNo/status")
+  @ApiUpdateUserItem()
   updateItemStatus(
-    @Param("itemNo", ParseIntPipe) itemNo: number,
+    @Param() param: ItemNoDto,
     @Body() body: UpdateUserItemStatusDto,
   ) {
     const userNo = 1;
 
-    return this.inventoryService.updateItemStatus(userNo, itemNo, body);
+    return this.inventoryService.updateItemStatus(userNo, param, body);
   }
 }

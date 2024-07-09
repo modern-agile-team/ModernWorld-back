@@ -9,6 +9,7 @@ import { InventoryRepository } from "./inventory.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { GetUserItemsDto } from "./dtos/get-user-items.dto";
 import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
+import { ItemNoDto } from "./dtos/item-no.dto";
 
 @Injectable()
 export class InventoryService {
@@ -17,8 +18,9 @@ export class InventoryService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
-  getUserItems(userNo: number, queryParams: GetUserItemsDto) {
-    const { theme, status, itemName } = queryParams;
+  getUserItems(userNo: number, query: GetUserItemsDto) {
+    const { theme, status, itemName } = query;
+
     return this.inventoryRepository.getUserItems(
       userNo,
       theme,
@@ -27,7 +29,7 @@ export class InventoryService {
     );
   }
 
-  async buyOneItem(userNo: number, itemNo: number) {
+  async createUserOneItem(userNo: number, body: ItemNoDto) {
     /**
      * 아이템을 사는 로직
      *
@@ -43,6 +45,8 @@ export class InventoryService {
      *
      * 4번 5번의 과정은 트랜잭션을 한번에 묶자.
      */
+
+    const { itemNo } = body;
 
     const item = await this.itemsRepository.getOneItem(itemNo);
 
@@ -66,16 +70,15 @@ export class InventoryService {
     }
 
     // 두 로직 트랜잭션으로 나중에 묶을 것.
-    await this.inventoryRepository.addOneItem(userNo, itemNo);
 
     await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
 
-    return;
+    return this.inventoryRepository.createUserOneItem(userNo, itemNo);
   }
 
   async updateItemStatus(
     userNo: number,
-    itemNo: number,
+    param: ItemNoDto,
     body: UpdateUserItemStatusDto,
   ) {
     /**
@@ -83,6 +86,8 @@ export class InventoryService {
      * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
      * 이것 역시 트랜잭션을 이용할것
      */
+
+    const { itemNo } = param;
 
     const item = await this.inventoryRepository.findOneItem(userNo, itemNo);
 
@@ -93,7 +98,7 @@ export class InventoryService {
     const { status } = body;
 
     if (!status) {
-      return this.inventoryRepository.updateItemStatus(userNo, itemNo, status);
+      return this.inventoryRepository.updateItemStatus(item.no, status);
     }
 
     const { type } = await this.itemsRepository.getItemType(itemNo);
@@ -101,6 +106,6 @@ export class InventoryService {
     // 추후 트랜잭션
     await this.inventoryRepository.disuseOtherItems(userNo, type);
 
-    return this.inventoryRepository.updateItemStatus(userNo, itemNo, status);
+    return this.inventoryRepository.updateItemStatus(item.no, status);
   }
 }

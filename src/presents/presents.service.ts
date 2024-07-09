@@ -123,7 +123,7 @@ export class PresentsService {
         );
       }
 
-      await this.inventoryRepository.addOneItem(userNo, itemNo);
+      await this.inventoryRepository.createUserOneItem(userNo, itemNo);
 
       return this.presentRepository.updateOnePresentStatus(
         presentNo,
