@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 import axios from "axios";
 import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/token.service";
@@ -18,6 +22,7 @@ export class AuthService {
     private readonly usersRepository: UsersRepository,
     private readonly tokenService: TokenService,
     private readonly tokenRepository: TokenRepository,
+    private readonly logger: Logger,
   ) {}
   async naverLogin(authorizeCode: string) {
     try {
@@ -84,13 +89,22 @@ export class AuthService {
         user.no,
         socialAccessToken,
         socialRefreshToken,
+      ); // 이러면 매번 소셜 토큰들이 저장되어 추후 수정예정
+
+      await this.tokenService.setRefreshToken(
+        user.no.toString() + "-refreshToken",
         refreshToken,
+        60 * 60 * 24 * 7, // 7일
       );
-      // await this.tokenService.setRefreshToken(userUniqueNumber, refreshToken); //redis에 리프레시 토큰 저장로직(아직 미완)
+      await this.tokenService.setAccessToken(
+        user.no.toString() + "-accessToken",
+        accessToken,
+        60 * 60 * 3, // 3시간
+      );
 
       return { accessToken, refreshToken };
     } catch (error) {
-      // 에러 처리
+      this.logger.error(error);
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
       );
@@ -165,13 +179,26 @@ export class AuthService {
         user.no,
         socialAccessToken,
         socialRefreshToken,
-        refreshToken,
       );
+
+      await this.tokenService.setRefreshToken(
+        user.no.toString() + "-refreshToken",
+        refreshToken,
+        60 * 60 * 24 * 7, // 7일
+      );
+      await this.tokenService.setAccessToken(
+        user.no.toString() + "-accessToken",
+        accessToken,
+        60 * 60 * 3, // 3시간
+      );
+
       return { accessToken, refreshToken };
     } catch (error) {
-      console.log(error);
       // 에러 처리
-      throw new InternalServerErrorException(error);
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        "로그인 중 서버에러가 발생했습니다.",
+      );
     }
   }
 }
