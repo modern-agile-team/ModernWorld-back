@@ -32,7 +32,7 @@ export class LikesService {
 
     //트랜잭션으로 묶을것.
 
-    this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
+    await this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
       likeCount: { increment: 1 },
     });
 
@@ -47,7 +47,7 @@ export class LikesService {
 
     //트랜잭션 묶을것.
 
-    this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
+    await this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
       likeCount: {
         increment: -1,
       },
