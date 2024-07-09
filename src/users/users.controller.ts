@@ -13,6 +13,7 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
+import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decorator";
 
 @Controller("users")
 @ApiTags("Users")
@@ -20,7 +21,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get("/attendance")
-  @ApiOperation({ summary: "유저 출석부 조회 API" })
+  @ApiGetUserAttendance()
   getOneUserAttendance() {
     const userNo = 1;
 
