@@ -15,6 +15,7 @@ import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decorator";
 import { ApiUpdateUserAttendance } from "./users-swagger/update-user-attendance.decorator";
+import { ApiGetUsers } from "./users-swagger/get-users.decorator";
 
 @Controller("users")
 @ApiTags("Users")
@@ -30,7 +31,7 @@ export class UsersController {
   }
 
   @Get()
-  @ApiOperation({ summary: "유저 불러오기 API" })
+  @ApiGetUsers()
   getUsers(@Query() query: GetUsersByAnimalDto) {
     return this.usersService.getUsers(query);
   }
