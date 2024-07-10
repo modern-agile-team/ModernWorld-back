@@ -25,7 +25,7 @@ export class NeighborController {
 
   @Get()
   getMYNeighbors(@Query() queryParams: getNeighborDto) {
-    const userNo = 1;
+    const userNo = 2;
     return this.neighborService.getMyNeighbors(userNo, queryParams);
   }
 

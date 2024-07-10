@@ -31,16 +31,16 @@ export class NeighborRepository {
   }
 
   getMyNeighbors(
-    receiverNo: number,
-    skip: number,
+    userNo: number,
     take: number,
+    skip: number,
   ): PrismaPromise<neighbor[]> {
     return this.prisma.neighbor.findMany({
       skip,
       take,
       orderBy: { no: "desc" },
       where: {
-        receiverNo,
+        OR: [{ receiverNo: userNo }, { senderNo: userNo }],
         status: true,
       },
     });
