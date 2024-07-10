@@ -96,7 +96,7 @@ export class UsersService {
     }
   }
 
-  async updateUserNickname(userNo: number, body: UpdateUserNicknameDto) {
+  async createUserNickname(userNo: number, body: UpdateUserNicknameDto) {
     const { nickname: userName } =
       await this.userRepository.findUserNicknameByUserNo(userNo);
 
@@ -110,7 +110,7 @@ export class UsersService {
       await this.userRepository.findUserNicknameByNickname(nickname);
 
     if (duplicatedName) {
-      throw new ForbiddenException(`'${nickname}' is duplicated.`);
+      throw new ConflictException(`'${nickname}' is duplicated.`);
     }
 
     return this.userRepository.updateUserNickname(userNo, nickname);

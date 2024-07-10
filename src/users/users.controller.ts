@@ -7,6 +7,7 @@ import {
   Query,
   Patch,
   Put,
+  Post,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
@@ -17,6 +18,7 @@ import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decora
 import { ApiUpdateUserAttendance } from "./users-swagger/update-user-attendance.decorator";
 import { ApiGetUsers } from "./users-swagger/get-users.decorator";
 import { ApiGetUserNamePointAchievementTitle } from "./users-swagger/get-user-name-point-achievement.decorator";
+import { ApiCreateUserNickname } from "./users-swagger/create-user-nickname.decorator";
 
 @Controller("users")
 @ApiTags("Users")
@@ -53,12 +55,12 @@ export class UsersController {
     return this.usersService.updateUserAttendance(userNo);
   }
 
-  @Put("/nickname")
-  @ApiOperation({ summary: "유저 닉네임 변경 API" })
-  updateUserNickname(@Body() body: UpdateUserNicknameDto) {
+  @Post("/nickname")
+  @ApiCreateUserNickname()
+  createUserNickname(@Body() body: UpdateUserNicknameDto) {
     const userNo = 1;
 
-    return this.usersService.updateUserNickname(userNo, body);
+    return this.usersService.createUserNickname(userNo, body);
   }
 
   @Put("/description")
