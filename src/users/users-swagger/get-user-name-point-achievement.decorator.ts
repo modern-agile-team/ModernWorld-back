@@ -3,12 +3,19 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
 } from "@nestjs/swagger";
 
 export function ApiGetUserNamePointAchievementTitle() {
   return applyDecorators(
     ApiOperation({
       summary: "한 유저 조회",
+    }),
+
+    ApiParam({
+      name: "userNo",
+      example: 1,
+      description: "유저 번호",
     }),
 
     ApiOkResponse({
