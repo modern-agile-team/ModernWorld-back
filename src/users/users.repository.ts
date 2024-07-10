@@ -180,6 +180,10 @@ export class UsersRepository {
     });
   }
 
+  countUsers(where): PrismaPromise<number> {
+    return this.prisma.user.count({ where });
+  }
+
   getUsers(
     take: number,
     skip: number,
