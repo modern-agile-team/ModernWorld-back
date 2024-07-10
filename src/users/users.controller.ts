@@ -16,6 +16,7 @@ import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decorator";
 import { ApiUpdateUserAttendance } from "./users-swagger/update-user-attendance.decorator";
 import { ApiGetUsers } from "./users-swagger/get-users.decorator";
+import { ApiGetUserNamePointAchievementTitle } from "./users-swagger/get-user-name-point-achievement.decorator";
 
 @Controller("users")
 @ApiTags("Users")
@@ -37,7 +38,7 @@ export class UsersController {
   }
 
   @Get("/:userNo")
-  @ApiOperation({ summary: "특정 유저 불러오기 API" })
+  @ApiGetUserNamePointAchievementTitle()
   @ApiParam({
     name: "userNo",
     example: 1,
