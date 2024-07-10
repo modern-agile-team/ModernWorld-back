@@ -11,7 +11,8 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
-import { user_domain } from "@prisma/client";
+import { Prisma, user, user_domain } from "@prisma/client";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
 @Injectable()
 export class UsersService {
@@ -121,10 +122,9 @@ export class UsersService {
     return this.userRepository.updateUserDescription(userNo, description);
   }
 
-  async getUsers(queryParams: GetUsersByAnimalDto) {
-    const { pageNo, take, animal, orderByField, nickname } = queryParams;
-
-    const skip = (pageNo - 1) * take;
+  async getUsers(query: GetUsersByAnimalDto) {
+    const { page, take, animal, orderByField, nickname } = query;
+    const skip = (page - 1) * take;
 
     let where = {
       nickname: { contains: nickname },
@@ -140,19 +140,25 @@ export class UsersService {
     // [{ undefined(createdAt): "asc" }, { no: "desc" }]
     // [{ accummulationPoint: "desc" }, { no: "desc" }]
     // [{ legend: { likeCount: "desc" } }, { no: "desc" }]
-
     const orderBy =
       orderByField === "like"
         ? [{ legend: { likeCount: "desc" } }, { no: "desc" }]
         : [{ [orderByField || "createdAt"]: "desc" }, { no: "desc" }];
 
-    const result = await this.userRepository.getUsers(
+    const totalCount = await this.userRepository.countUsers(where);
+    const totalPage = Math.ceil(totalCount / take);
+    const users = await this.userRepository.getUsers(
       take,
       skip,
       orderBy,
       where,
     );
 
-    return result;
+    return new PaginationResponseDto(users, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 }
