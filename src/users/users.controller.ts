@@ -31,8 +31,8 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: "유저 불러오기 API" })
-  getUsers(@Query() queryParams: GetUsersByAnimalDto) {
-    return this.usersService.getUsers(queryParams);
+  getUsers(@Query() query: GetUsersByAnimalDto) {
+    return this.usersService.getUsers(query);
   }
 
   @Get("/:userNo")
