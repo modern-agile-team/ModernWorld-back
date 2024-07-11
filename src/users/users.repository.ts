@@ -149,6 +149,8 @@ export class UsersRepository {
     nickname: string;
     currentPoint: number;
     accumulationPoint: number;
+    description: string;
+    image: string;
     legend: { likeCount: number };
     characterLocker: { character: { image: string } }[];
     userAchievement: {
@@ -160,6 +162,8 @@ export class UsersRepository {
         nickname: true,
         currentPoint: true,
         accumulationPoint: true,
+        description: true,
+        image: true,
 
         legend: { select: { likeCount: true } },
 
