@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -41,7 +40,7 @@ export class UsersService {
     return result;
   }
 
-  async getUserAttendance(userNo: number) {
+  getUserAttendance(userNo: number) {
     return this.userRepository.getUserAttendance(userNo);
   }
 
@@ -116,7 +115,7 @@ export class UsersService {
     return this.userRepository.updateUserNickname(userNo, nickname);
   }
 
-  async updateUserDescription(userNo: number, body: UpdateUserDescriptionDto) {
+  updateUserDescription(userNo: number, body: UpdateUserDescriptionDto) {
     const { description } = body;
 
     return this.userRepository.updateUserDescription(userNo, description);
