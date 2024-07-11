@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { NeighborRepository } from "./neighbors.repository";
@@ -33,6 +37,14 @@ export class NeighborService {
         existRequestAndOpponentRequstOneMore.status,
       );
     }
+
+    const checkMyNeighbor = await this.neighborRepository.checkMyNeighbor(
+      receiverNo,
+      senderNo,
+    );
+    if (checkMyNeighbor) {
+      throw new BadRequestException("상대방과 이미 이웃입니다.");
+    }
     return this.neighborRepository.neighborRequest(
       receiverNo,
       senderNo,
@@ -42,23 +54,30 @@ export class NeighborService {
 
   async neighborApproval(body: UpdateNeighborDto) {
     const { no, status } = body;
-    const alreadyApproval = await this.neighborRepository.alreadyApproval(
-      no,
-      status,
-    );
+    const alreadyApproval = await this.neighborRepository.getOneNeighbor(no);
     if (alreadyApproval) {
       throw new BadRequestException("이미 승인 처리된 이웃요청입니다.");
     }
     return this.neighborRepository.neighborApproval(no, status);
   }
 
-  getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
+  async getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
     const { take, page } = queryParams;
     const skip = (page - 1) * take;
+    //await this.NeighborNotFound(userNo);
     return this.neighborRepository.getMyNeighbors(userNo, take, skip);
   }
 
-  neighborRequestRefusalOrDelete(neighboeNo: number) {
-    return this.neighborRepository.neighborRequestRefusalOrDelete(neighboeNo);
+  async neighborRequestRefusalOrDelete(neighborNo: number) {
+    await this.NeighborNotFound(neighborNo);
+    return this.neighborRepository.neighborRequestRefusalOrDelete(neighborNo);
+  }
+
+  async NeighborNotFound(neighborNo: number) {
+    const NeighborNotFound =
+      await this.neighborRepository.getOneNeighbor(neighborNo);
+    if (!NeighborNotFound) {
+      throw new NotFoundException("해당 이웃을 찾을 수 없습니다."); // error 메세지 수정 필요...
+    }
   }
 }

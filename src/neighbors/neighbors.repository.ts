@@ -67,10 +67,25 @@ export class NeighborRepository {
     });
   }
 
-  alreadyApproval(no: number, status: boolean): PrismaPromise<neighbor> {
+  getOneNeighbor(no: number): PrismaPromise<neighbor> {
     return this.prisma.neighbor.findFirst({
       where: {
         no,
+        status: true,
+      },
+    });
+  }
+
+  checkMyNeighbor(
+    receiverNo: number,
+    senderNo: number,
+  ): PrismaPromise<neighbor> {
+    return this.prisma.neighbor.findFirst({
+      where: {
+        OR: [
+          { receiverNo, senderNo },
+          { receiverNo: senderNo, senderNo: receiverNo },
+        ],
         status: true,
       },
     });
