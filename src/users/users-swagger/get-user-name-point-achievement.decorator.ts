@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -48,6 +49,19 @@ export function ApiGetUserNamePointAchievementTitle() {
                 },
               ],
             },
+          },
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description: "userNo가 숫자가 아닐경우",
+      content: {
+        JSON: {
+          example: {
+            message: "Validation failed (numeric string is expected)",
+            error: "Bad Request",
+            statusCode: 400,
           },
         },
       },
