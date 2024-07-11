@@ -8,7 +8,7 @@ import { getNeighborDto } from "./dtos/get-neighbors.dto";
 export class NeighborService {
   constructor(private readonly neighborRepository: NeighborRepository) {}
 
-  neighborRequest(body: CreateNeighborDto, senderNo: number) {
+  async neighborRequest(body: CreateNeighborDto, senderNo: number) {
     const { receiverNo, status } = body;
 
     if (receiverNo === senderNo) {
@@ -16,12 +16,22 @@ export class NeighborService {
         "본인이 본인에게 이웃 신청을 보낼 수 없습니다.",
       );
     }
-    const existNeighborRequst = this.neighborRepository.getOneNeighborRequest(
-      receiverNo,
-      senderNo,
-    );
+    const existNeighborRequst =
+      await this.neighborRepository.getOneNeighborRequest(receiverNo, senderNo);
+
     if (existNeighborRequst) {
       throw new BadRequestException("이미 이웃신청을 보냈습니다.");
+    }
+
+    const existRequestAndOpponentRequstOneMore = // 이미 이웃요청을 보냈는데 상대방이 친구 요청을 보냈을 때
+      await this.neighborRepository.getOneNeighborRequest(senderNo, receiverNo);
+
+    if (existRequestAndOpponentRequstOneMore) {
+      existRequestAndOpponentRequstOneMore.status = true; // 상태를 승인으로 바꿔준 다음 승인 함
+      return this.neighborRepository.neighborApproval(
+        existRequestAndOpponentRequstOneMore.no,
+        existRequestAndOpponentRequstOneMore.status,
+      );
     }
     return this.neighborRepository.neighborRequest(
       receiverNo,
@@ -30,8 +40,15 @@ export class NeighborService {
     );
   }
 
-  neighborApproval(body: UpdateNeighborDto) {
+  async neighborApproval(body: UpdateNeighborDto) {
     const { no, status } = body;
+    const alreadyApproval = await this.neighborRepository.alreadyApproval(
+      no,
+      status,
+    );
+    if (alreadyApproval) {
+      throw new BadRequestException("이미 승인 처리된 이웃요청입니다.");
+    }
     return this.neighborRepository.neighborApproval(no, status);
   }
 

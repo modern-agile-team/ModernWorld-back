@@ -19,7 +19,7 @@ export class NeighborController {
 
   @Post()
   neighborRequest(@Body() body: CreateNeighborDto) {
-    const userNo = 1;
+    const userNo = 8;
     return this.neighborService.neighborRequest(body, userNo);
   }
 

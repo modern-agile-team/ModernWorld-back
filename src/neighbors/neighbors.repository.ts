@@ -66,4 +66,13 @@ export class NeighborRepository {
       },
     });
   }
+
+  alreadyApproval(no: number, status: boolean): PrismaPromise<neighbor> {
+    return this.prisma.neighbor.findFirst({
+      where: {
+        no,
+        status: true,
+      },
+    });
+  }
 }
