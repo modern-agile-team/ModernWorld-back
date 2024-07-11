@@ -24,9 +24,11 @@ export function ApiGetUserNamePointAchievementTitle() {
         JSON: {
           example: {
             data: {
-              nickname: "1번닉네임",
+              nickname: "엄준식",
               currentPoint: 3000,
               accumulationPoint: 2100,
+              description: "1번소개",
+              image: "1번이미지",
               legend: {
                 likeCount: 60,
               },
