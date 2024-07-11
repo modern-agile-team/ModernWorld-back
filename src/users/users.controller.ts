@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
-import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decorator";
@@ -19,6 +19,7 @@ import { ApiUpdateUserAttendance } from "./users-swagger/update-user-attendance.
 import { ApiGetUsers } from "./users-swagger/get-users.decorator";
 import { ApiGetUserNamePointAchievementTitle } from "./users-swagger/get-user-name-point-achievement.decorator";
 import { ApiCreateUserNickname } from "./users-swagger/create-user-nickname.decorator";
+import { ApiUpdateUserDescription } from "./users-swagger/update-user-description.decorator";
 
 @Controller("users")
 @ApiTags("Users")
@@ -64,7 +65,7 @@ export class UsersController {
   }
 
   @Put("/description")
-  @ApiOperation({ summary: "유저 자기소개 변경 API" })
+  @ApiUpdateUserDescription()
   updateUserDescription(@Body() body: UpdateUserDescriptionDto) {
     const userNo = 1;
 
