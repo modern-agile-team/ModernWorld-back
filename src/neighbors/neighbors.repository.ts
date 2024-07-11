@@ -53,4 +53,17 @@ export class NeighborRepository {
       },
     });
   }
+
+  getOneNeighborRequest(
+    receiverNo: number,
+    senderNo: number,
+  ): PrismaPromise<neighbor> {
+    return this.prisma.neighbor.findFirst({
+      where: {
+        receiverNo,
+        senderNo,
+        status: false,
+      },
+    });
+  }
 }

@@ -13,8 +13,15 @@ export class NeighborService {
 
     if (receiverNo === senderNo) {
       throw new BadRequestException(
-        "본인이 본인에게 친구 신청을 보낼 수 없습니다.",
+        "본인이 본인에게 이웃 신청을 보낼 수 없습니다.",
       );
+    }
+    const existNeighborRequst = this.neighborRepository.getOneNeighborRequest(
+      receiverNo,
+      senderNo,
+    );
+    if (existNeighborRequst) {
+      throw new BadRequestException("이미 이웃신청을 보냈습니다.");
     }
     return this.neighborRepository.neighborRequest(
       receiverNo,
@@ -28,10 +35,10 @@ export class NeighborService {
     return this.neighborRepository.neighborApproval(no, status);
   }
 
-  getMyNeighbors(receiverNo: number, queryParams: getNeighborDto) {
+  getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
     const { take, page } = queryParams;
     const skip = (page - 1) * take;
-    return this.neighborRepository.getMyNeighbors(receiverNo, take, skip);
+    return this.neighborRepository.getMyNeighbors(userNo, take, skip);
   }
 
   neighborRequestRefusalOrDelete(neighboeNo: number) {
