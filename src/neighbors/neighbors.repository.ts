@@ -8,13 +8,11 @@ export class NeighborRepository {
   neighborRequest(
     receiverNo: number,
     senderNo: number,
-    status: boolean,
   ): PrismaPromise<neighbor> {
     return this.prisma.neighbor.create({
       data: {
         receiverNo,
         senderNo,
-        status,
       },
     });
   }

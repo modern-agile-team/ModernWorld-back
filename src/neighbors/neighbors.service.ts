@@ -13,7 +13,7 @@ export class NeighborService {
   constructor(private readonly neighborRepository: NeighborRepository) {}
 
   async neighborRequest(body: CreateNeighborDto, senderNo: number) {
-    const { receiverNo, status } = body;
+    const { receiverNo } = body;
 
     if (receiverNo === senderNo) {
       throw new BadRequestException(
@@ -27,7 +27,7 @@ export class NeighborService {
       throw new BadRequestException("이미 이웃신청을 보냈습니다.");
     }
 
-    const existRequestAndOpponentRequstOneMore = // 이미 이웃요청을 보냈는데 상대방이 친구 요청을 보냈을 때
+    const existRequestAndOpponentRequstOneMore = // 이미 이웃요청을 보냈는데 상대방이 친구 요청을 보냈을 때 변수명은 수정이 필요할 듯
       await this.neighborRepository.getOneNeighborRequest(senderNo, receiverNo);
 
     if (existRequestAndOpponentRequstOneMore) {
@@ -45,11 +45,7 @@ export class NeighborService {
     if (checkMyNeighbor) {
       throw new BadRequestException("상대방과 이미 이웃입니다.");
     }
-    return this.neighborRepository.neighborRequest(
-      receiverNo,
-      senderNo,
-      status,
-    );
+    return this.neighborRepository.neighborRequest(receiverNo, senderNo);
   }
 
   async neighborApproval(body: UpdateNeighborDto) {
