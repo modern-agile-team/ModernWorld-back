@@ -27,9 +27,9 @@ import { CommonModule } from "./common/common.module";
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
+    UserAchievementsModule,
     PrismaModule,
     ItemsModule,
-    UsersModule,
     InventoryModule,
     CommentModule,
     PresentsModule,
@@ -44,9 +44,9 @@ import { CommonModule } from "./common/common.module";
     AlarmsModule,
     LoggerModule,
     SseModule,
-    UserAchievementsModule,
     CommonModule,
     RedisModule,
+    UsersModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
