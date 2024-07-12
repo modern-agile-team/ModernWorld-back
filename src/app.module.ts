@@ -32,9 +32,8 @@ import { CommonModule } from "./common/common.module";
     AlarmsModule,
     PrismaModule,
     ItemsModule,
-    InventoryModule,
-    CommentModule,
     PresentsModule,
+    CommentModule,
     CharactersModule,
     PostsModule,
     AuthModule,
@@ -46,6 +45,7 @@ import { CommonModule } from "./common/common.module";
     SseModule,
     CommonModule,
     RedisModule,
+    InventoryModule,
     UsersModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
