@@ -11,14 +11,17 @@ import {
 import { AlarmsService } from "./alarms.service";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { ApiGetAlarms } from "./alarms-swagger/get-alarms.decorator";
+import { ApiUpdateAlarmStatusToRead } from "./alarms-swagger/update-alarm-status-to-read.decorator";
+import { ApiDeleteOneAlarm } from "./alarms-swagger/delete-one-alarm.decorator";
 
-@Controller("alarms")
+@Controller("users/alarms")
 @ApiTags("Alarms")
 export class AlarmsController {
   constructor(private readonly alarmsService: AlarmsService) {}
 
   @Get()
-  @ApiOperation({ summary: "알람 조회" })
+  @ApiGetAlarms()
   getAlarms(@Query() queryParams: PaginationDto) {
     const userNo = 1;
 
@@ -26,7 +29,7 @@ export class AlarmsController {
   }
 
   @Patch(":alarmNo")
-  @ApiOperation({ summary: "알람 읽음으로 처리" })
+  @ApiUpdateAlarmStatusToRead()
   updateAlarmStatusToRead(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
     const userNo = 1;
 
@@ -35,7 +38,7 @@ export class AlarmsController {
 
   @Delete(":alarmNo")
   @HttpCode(204)
-  @ApiOperation({ summary: "알람 삭제" })
+  @ApiDeleteOneAlarm()
   deleteOneAlarm(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
     const userNo = 1;
 
