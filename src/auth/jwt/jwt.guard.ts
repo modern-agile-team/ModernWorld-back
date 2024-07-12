@@ -5,12 +5,16 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  Logger,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Observable } from "rxjs";
 
 @Injectable()
 export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
+  constructor(private readonly logger: Logger) {
+    super();
+  }
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -52,7 +56,7 @@ export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
       if (error.message === "Token not found.") {
         throw new NotFoundException(error.message);
       } else {
-        console.log(error);
+        this.logger.error(error);
         throw new BadRequestException(error.message);
       }
     }
@@ -61,6 +65,9 @@ export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
 
 @Injectable()
 export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
+  constructor(private readonly logger: Logger) {
+    super();
+  }
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -102,7 +109,7 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
       if (error.message === "Token not found.") {
         throw new NotFoundException(error.message);
       } else {
-        console.log(error);
+        this.logger.error(error);
         throw new BadRequestException("jwt error");
       }
     }

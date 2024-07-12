@@ -27,7 +27,7 @@ export class AccessStrategy extends PassportStrategy(Strategy, "accessToken") {
     }
 
     if (payload.sub !== "accessToken") {
-      throw new BadRequestException("엑세스 토큰이 아닙니다.");
+      throw new BadRequestException("not access token type");
     }
 
     const tokenFromRequest = authHeader.split(" ")[1];
@@ -40,7 +40,7 @@ export class AccessStrategy extends PassportStrategy(Strategy, "accessToken") {
     }
 
     if (tokenFromRequest !== tokenFromRedis) {
-      throw new NotFoundException("토큰이 일치하지 않습니다.");
+      throw new NotFoundException("token is not matched.");
     }
     return { tokenType: payload.sub, no: payload.userNo };
   }
@@ -67,11 +67,11 @@ export class RefreshStrategy extends PassportStrategy(
   async validate(request: Request, payload: JwtDto) {
     const tokenFromRequest = request.cookies.refreshToken;
     if (!tokenFromRequest) {
-      throw new BadRequestException("Authorization header is missing.");
+      throw new BadRequestException("Cookie has no refresh token");
     }
 
     if (payload.sub !== "refreshToken") {
-      throw new BadRequestException("invalid token type");
+      throw new BadRequestException("not refresh token type");
     }
 
     const tokenFromRedis = await this.tokenService.getRefreshToken(
@@ -82,7 +82,7 @@ export class RefreshStrategy extends PassportStrategy(
     }
 
     if (tokenFromRequest !== tokenFromRedis) {
-      throw new NotFoundException("토큰이 일치하지 않습니다.");
+      throw new NotFoundException("token is not matched.");
     }
 
     return { tokenType: payload.sub, no: payload.userNo };

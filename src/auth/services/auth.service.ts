@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  UnauthorizedException,
 } from "@nestjs/common";
 import axios from "axios";
 import { UsersRepository } from "src/users/users.repository";
@@ -46,9 +47,7 @@ export class AuthService {
         )
       ).data;
       if (!token) {
-        throw new InternalServerErrorException(
-          "소셜 토큰 발급 중 에러가 발생했습니다.",
-        );
+        throw new UnauthorizedException("잘못된 인가 코드입니다.");
       }
       const socialAccessToken = token.access_token;
       const socialRefreshToken = token.refresh_token;
@@ -101,10 +100,12 @@ export class AuthService {
         accessToken,
         60 * 60 * 3, // 3시간
       );
-
       return { accessToken, refreshToken };
     } catch (error) {
       this.logger.error(error);
+      if (error.response) {
+        throw new UnauthorizedException("잘못된 인가 코드입니다.");
+      }
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
       );
@@ -137,9 +138,7 @@ export class AuthService {
         )
       ).data;
       if (!token) {
-        throw new InternalServerErrorException(
-          "소셜 토큰 발급 중 에러가 발생했습니다.",
-        );
+        throw new UnauthorizedException("잘못된 인가 코드입니다.");
       }
       const socialAccessToken = token.access_token;
       const socialRefreshToken = token.refresh_token;
@@ -191,11 +190,13 @@ export class AuthService {
         accessToken,
         60 * 60 * 3, // 3시간
       );
-
       return { accessToken, refreshToken };
     } catch (error) {
       // 에러 처리
       this.logger.error(error);
+      if (error.response) {
+        throw new UnauthorizedException("잘못된 인가 코드입니다.");
+      }
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
       );
