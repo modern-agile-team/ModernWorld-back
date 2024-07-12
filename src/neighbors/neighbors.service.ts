@@ -54,6 +54,7 @@ export class NeighborService {
 
   async neighborApproval(body: UpdateNeighborDto) {
     const { no, status } = body;
+    await this.NeighborNotFound(no);
     const alreadyApproval = await this.neighborRepository.getOneNeighbor(no);
     if (alreadyApproval) {
       throw new BadRequestException("이미 승인 처리된 이웃요청입니다.");
@@ -61,10 +62,9 @@ export class NeighborService {
     return this.neighborRepository.neighborApproval(no, status);
   }
 
-  async getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
+  getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
     const { take, page } = queryParams;
     const skip = (page - 1) * take;
-    //await this.NeighborNotFound(userNo);
     return this.neighborRepository.getMyNeighbors(userNo, take, skip);
   }
 
