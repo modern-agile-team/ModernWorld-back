@@ -10,6 +10,7 @@ import { UserAchievementsService } from "./user-achievements.service";
 import { ApiTags } from "@nestjs/swagger";
 import { updateUserAchievementStatusDto } from "./dtos/update-user-achievement-status.dto";
 import { ApiUpdateUserAchievementStatus } from "./userAchievements-swagger/update-user-achievement-status.decorator";
+import { ApiGetUserAchievements } from "./userAchievements-swagger/get-user-achievements.decorator";
 
 @Controller("users/achievements")
 @ApiTags("UserAchievements")
@@ -19,6 +20,7 @@ export class UserAchievementsController {
   ) {}
 
   @Get()
+  @ApiGetUserAchievements()
   getUserAchievements() {
     const userNo = 1;
 
