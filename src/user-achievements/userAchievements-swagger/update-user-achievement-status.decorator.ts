@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -32,6 +33,32 @@ export function ApiUpdateUserAchievementStatus() {
                 userNo: 1,
                 achievementNo: 6,
                 status: false,
+              },
+            },
+          },
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description: "Bad Request",
+      content: {
+        JSON: {
+          examples: {
+            ex1: {
+              summary: "body의 status가 boolean형태가 아닐때",
+              value: {
+                message: ["status must be a boolean value"],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+            ex2: {
+              summary: "param의 achievementNo가 number형태가 아닐때",
+              value: {
+                message: "Validation failed (numeric string is expected)",
+                error: "Bad Request",
+                statusCode: 400,
               },
             },
           },
