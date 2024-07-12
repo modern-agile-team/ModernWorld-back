@@ -8,7 +8,7 @@ export function BooleanTransform() {
     } else if (value === "false") {
       return false;
     } else {
-      throw new BadRequestException("Invalid boolean value");
+      throw new BadRequestException("Invalid boolean value.");
     }
   });
 }

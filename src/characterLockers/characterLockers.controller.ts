@@ -40,7 +40,6 @@ export class CharacterLockersController {
     return this.characterLockerService.createUserOneCharacter(userNo, body);
   }
 
-  //사실 body 로 stauts true false 받는게 맞긴한데 흠..
   @Put("users/characters/:characterNo/status")
   @ApiUpdateUserCharacter()
   updateCharacterStatus(@Param() param: CharacterNoDto) {

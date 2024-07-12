@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -22,6 +23,22 @@ export function ApiUpdateUserCharacter() {
             characterNo: 1,
             userNo: 1,
             status: true,
+          },
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description: "param의 characterNo가 양의 정수가 아닐때",
+      content: {
+        JSON: {
+          example: {
+            message: [
+              "characterNo must not be less than 1",
+              "characterNo must be an integer number",
+            ],
+            error: "Bad Request",
+            statusCode: 400,
           },
         },
       },

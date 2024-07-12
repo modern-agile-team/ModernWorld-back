@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -180,6 +181,41 @@ export function ApiGetUserCharacters() {
               },
             ],
           ],
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      content: {
+        JSON: {
+          examples: {
+            ex1: {
+              summary: "parma의 usermNo가 수가 아닐때",
+              value: {
+                message: "Validation failed (numeric string is expected)",
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+            ex2: {
+              summary: "query의 statuts가 boolean이 아닐때",
+              value: {
+                message: "Invalid boolean value.",
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+            ex3: {
+              summary: "query의 species가 Animal enum이 아닐 때",
+              value: {
+                message: [
+                  "species must be one of the following values: cat, dog",
+                ],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+          },
         },
       },
     }),
