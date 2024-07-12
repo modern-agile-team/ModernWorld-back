@@ -17,14 +17,16 @@ export class NeighborService {
 
     if (receiverNo === senderNo) {
       throw new BadRequestException(
-        "본인이 본인에게 이웃 신청을 보낼 수 없습니다.",
+        "이웃신청을 자기 자신에게 보낼 수 없습니다.",
       );
     }
     const existNeighborRequst =
       await this.neighborRepository.getOneNeighborRequest(receiverNo, senderNo);
 
     if (existNeighborRequst) {
-      throw new BadRequestException("이미 이웃신청을 보냈습니다.");
+      throw new BadRequestException(
+        "이미 해당 유저에게 이웃신청을 보냈습니다.",
+      );
     }
 
     const existRequestAndOpponentRequstOneMore = // 이미 이웃요청을 보냈는데 상대방이 친구 요청을 보냈을 때 변수명은 수정이 필요할 듯
