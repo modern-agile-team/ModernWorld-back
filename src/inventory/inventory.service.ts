@@ -78,7 +78,7 @@ export class InventoryService {
 
   async updateItemStatus(
     userNo: number,
-    param: ItemNoDto,
+    itemNo: number,
     body: UpdateUserItemStatusDto,
   ) {
     /**
@@ -86,8 +86,6 @@ export class InventoryService {
      * 즉, 사용할 아이템의 status를 true로 변경하고 기존의 아이템의 status를 false로 전환
      * 이것 역시 트랜잭션을 이용할것
      */
-
-    const { itemNo } = param;
 
     const item = await this.inventoryRepository.findOneItem(userNo, itemNo);
 

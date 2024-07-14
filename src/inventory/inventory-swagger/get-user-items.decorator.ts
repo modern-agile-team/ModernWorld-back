@@ -3,6 +3,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
 } from "@nestjs/swagger";
 
 export function ApiGetUserItems() {
@@ -11,6 +12,8 @@ export function ApiGetUserItems() {
       summary: "유저의 갖고있는 아이템 조회",
       description: "유저가 가지고있는 아이템을 가져옵니다.",
     }),
+
+    ApiParam({ name: "userNo", example: 1 }),
 
     ApiOkResponse({
       description: "Success",
