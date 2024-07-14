@@ -37,19 +37,14 @@ export class PresentsRepository {
     });
   }
 
-  getOnePresentWithItemUserInfo(presentNo: number): PrismaPromise<{
-    no: number;
-    status: present_status;
-    createdAt: Date;
-    item: { name: string };
-    userPresentSenderNo: { no: number; nickname: string };
-    userPresentReceiverNo: { no: number; nickname: string };
-  }> {
+  getUserOnePresentWithItemUserInfo(presentNo: number) {
     return this.prisma.present.findUnique({
       select: {
         no: true,
         status: true,
         createdAt: true,
+        senderDelete: true,
+        receiverDelete: true,
         item: { select: { name: true, image: true, description: true } },
         userPresentSenderNo: { select: { no: true, nickname: true } },
         userPresentReceiverNo: { select: { no: true, nickname: true } },
@@ -70,10 +65,18 @@ export class PresentsRepository {
     });
   }
 
-  updateOnePresentStatusFromUnreadToRead(
-    presentNo: number,
-  ): PrismaPromise<present> {
+  updateOnePresentStatusFromUnreadToRead(presentNo: number) {
     return this.prisma.present.update({
+      select: {
+        no: true,
+        status: true,
+        createdAt: true,
+        senderDelete: true,
+        receiverDelete: true,
+        item: { select: { name: true, image: true, description: true } },
+        userPresentSenderNo: { select: { no: true, nickname: true } },
+        userPresentReceiverNo: { select: { no: true, nickname: true } },
+      },
       data: { status: "read" },
       where: { no: presentNo, status: "unread" },
     });
