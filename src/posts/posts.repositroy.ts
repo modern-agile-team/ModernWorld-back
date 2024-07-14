@@ -6,71 +6,63 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class PostsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOnePostByNo(postNo: number): PrismaPromise<post> {
+  getOnePost(postNo: number): PrismaPromise<post> {
     return this.prisma.post.findUnique({ where: { no: postNo } });
   }
 
-  getPosts(where: object): PrismaPromise<
-    (Omit<post, "content" | "senderDelete" | "receiverDelete"> & {
-      userPostSenderNo: { nickname: string };
-      userPostReceiverNo: { nickname: string };
-    })[]
-  > {
+  getPosts(where: object) {
     return this.prisma.post.findMany({
       select: {
         no: true,
-        senderNo: true,
-        receiverNo: true,
         check: true,
         createdAt: true,
-        userPostSenderNo: { select: { nickname: true } },
-        userPostReceiverNo: { select: { nickname: true } },
+        userPostSenderNo: { select: { no: true, nickname: true } },
+        userPostReceiverNo: { select: { no: true, nickname: true } },
       },
       where,
     });
   }
 
-  getOnePostWithUser(postNo: number): PrismaPromise<
-    post & {
-      userPostSenderNo: { nickname: string };
-      userPostReceiverNo: { nickname: string };
-    }
-  > {
+  getOnePostWithUser(postNo: number) {
     return this.prisma.post.findUnique({
       select: {
         no: true,
-        senderNo: true,
-        receiverNo: true,
         content: true,
         check: true,
         createdAt: true,
         senderDelete: true,
         receiverDelete: true,
-        userPostSenderNo: { select: { nickname: true } },
-        userPostReceiverNo: { select: { nickname: true } },
+        userPostSenderNo: { select: { no: true, nickname: true } },
+        userPostReceiverNo: { select: { no: true, nickname: true } },
       },
       where: { no: postNo },
     });
   }
 
-  createOnePost(
-    senderNo: number,
-    receiverNo: number,
-    content: string,
-  ): PrismaPromise<post> {
+  createOnePost(senderNo: number, receiverNo: number, content: string) {
     return this.prisma.post.create({ data: { senderNo, receiverNo, content } });
   }
 
-  updateOnePostCheckToTrue(postNo: number): PrismaPromise<post> {
+  updateOnePostCheckToTrue(postNo: number) {
     return this.prisma.post.update({
+      select: {
+        no: true,
+        content: true,
+        check: true,
+        createdAt: true,
+        senderDelete: true,
+        receiverDelete: true,
+        userPostSenderNo: { select: { no: true, nickname: true } },
+        userPostReceiverNo: { select: { no: true, nickname: true } },
+      },
       data: { check: true },
       where: { no: postNo },
     });
   }
 
-  updateOnePresentToDeleteByUser(
+  updateOnePostToDeleteByUser(
     no: number,
-    senderReceiverDeleteField: string,
+    senderReceiverDeleteField: "senderDelete" | "receiverDelete",
   ): PrismaPromise<post> {
     return this.prisma.post.update({
       data: { [senderReceiverDeleteField]: true },

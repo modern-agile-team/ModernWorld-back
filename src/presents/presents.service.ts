@@ -17,7 +17,7 @@ import { UpdatePresentsStatusResponseDto } from "./dtos/update-presents-status-r
 @Injectable()
 export class PresentsService {
   constructor(
-    private readonly presentRepository: PresentsRepository,
+    private readonly presentsRepository: PresentsRepository,
     private readonly inventoryRepository: InventoryRepository,
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
@@ -42,12 +42,14 @@ export class PresentsService {
           ],
         };
 
-    return this.presentRepository.getPresents(where);
+    return this.presentsRepository.getPresents(where);
   }
 
   async getUserOnePresent(userNo: number, presentNo: number) {
     const present =
-      await this.presentRepository.getUserOnePresentWithItemUserInfo(presentNo);
+      await this.presentsRepository.getUserOnePresentWithItemUserInfo(
+        presentNo,
+      );
 
     if (!present) {
       throw new NotFoundException("This present doesn't exist.");
@@ -68,7 +70,7 @@ export class PresentsService {
 
     if (receiver.no === userNo && present.status === "unread") {
       const updatedPresent =
-        await this.presentRepository.updateOnePresentStatusFromUnreadToRead(
+        await this.presentsRepository.updateOnePresentStatusFromUnreadToRead(
           presentNo,
         );
 
@@ -100,7 +102,7 @@ export class PresentsService {
     const acceptReject = body.status;
 
     const { receiverNo, status, itemNo } =
-      await this.presentRepository.getOnePresent(presentNo);
+      await this.presentsRepository.getOnePresent(presentNo);
 
     if (userNo !== receiverNo) {
       throw new ForbiddenException(
@@ -128,7 +130,7 @@ export class PresentsService {
           item.price / 2,
         );
         const processedPresent =
-          await this.presentRepository.updateOnePresentStatus(
+          await this.presentsRepository.updateOnePresentStatus(
             presentNo,
             acceptReject,
           );
@@ -139,7 +141,7 @@ export class PresentsService {
       await this.inventoryRepository.createUserOneItem(userNo, itemNo);
 
       const processedPresent =
-        await this.presentRepository.updateOnePresentStatus(
+        await this.presentsRepository.updateOnePresentStatus(
           presentNo,
           acceptReject,
         );
@@ -148,7 +150,7 @@ export class PresentsService {
     }
 
     const processedPresent =
-      await this.presentRepository.updateOnePresentStatus(
+      await this.presentsRepository.updateOnePresentStatus(
         presentNo,
         acceptReject,
       );
@@ -156,44 +158,35 @@ export class PresentsService {
     return new UpdatePresentsStatusResponseDto(processedPresent);
   }
 
-  async updateOnePresentTodelete(userNo: number, presentNo: number) {
-    /**
-     * 매개변수에 해당하는 선물이 실제로 존재하는지 확인하고
-     *
-     * 존재하지 않거나 이미 발신/수신자 입장에서 삭제처리 되어있으면 에러 때리고
-     *
-     * 존재한다면 수/발신자 삭제 필드 에 따라 true로 설정
-     */
-
-    const present = await this.presentRepository.getOnePresent(presentNo);
+  async updateOnePresentToDelete(userNo: number, presentNo: number) {
+    const present = await this.presentsRepository.getOnePresent(presentNo);
 
     if (!present) {
-      throw new NotFoundException("Couldn't find this present.");
+      throw new NotFoundException("This present doesn't exist.");
     }
 
     const { senderNo, receiverNo, senderDelete, receiverDelete } = present;
 
-    if (userNo === senderNo) {
-      if (senderDelete === true) {
-        throw new ConflictException("Already deleted from sender.");
-      }
-
-      return this.presentRepository.updateOnePresentToDeleteByUser(
-        presentNo,
-        "senderDelete",
-      );
-    } else if (userNo === receiverNo) {
-      if (receiverDelete === true) {
-        throw new ConflictException("Already deleted from receiver.");
-      }
-
-      return this.presentRepository.updateOnePresentToDeleteByUser(
-        presentNo,
-        "receiverDelete",
-      );
+    if (userNo !== senderNo && userNo !== receiverNo) {
+      throw new ForbiddenException("This present is not related with you.");
     }
 
-    throw new ForbiddenException("This present is not related with you.");
+    const isSender = userNo === senderNo;
+
+    if (isSender && senderDelete) {
+      throw new ConflictException("Already deleted from sender.");
+    } else if (receiverDelete) {
+      throw new ConflictException("Already deleted from receiver.");
+    }
+
+    const senderReceiverDeleteField = isSender
+      ? "senderDelete"
+      : "receiverDelete";
+
+    return this.presentsRepository.updateOnePresentToDeleteByUser(
+      presentNo,
+      senderReceiverDeleteField,
+    );
   }
 
   async createOnePresent(
@@ -242,7 +235,7 @@ export class PresentsService {
     //트랜잭션 묶을것.
     await this.usersRepository.updateUserCurrentPoint(senderNo, -item.price);
 
-    return this.presentRepository.createOneItemToUser(
+    return this.presentsRepository.createOneItemToUser(
       senderNo,
       receiverNo,
       itemNo,

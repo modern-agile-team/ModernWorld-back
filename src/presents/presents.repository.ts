@@ -94,7 +94,7 @@ export class PresentsRepository {
 
   updateOnePresentToDeleteByUser(
     presentNo: number,
-    senderReceiverDeleteField: string,
+    senderReceiverDeleteField: "senderDelete" | "receiverDelete",
   ): PrismaPromise<present> {
     return this.prisma.present.update({
       data: { [senderReceiverDeleteField]: true },

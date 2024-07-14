@@ -1,24 +1,17 @@
-import { post, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { Exclude } from "class-transformer";
 import { PostsRepository } from "../posts.repositroy";
 
 type GetOnePostResponseType = Prisma.PromiseReturnType<
-  typeof PostsRepository.prototype.getOnePostByNo
+  typeof PostsRepository.prototype.getOnePostWithUser
 >;
 
 export class GetOnePostResponseDto {
-  constructor(
-    post: post & {
-      userPostSenderNo: { nickname: string };
-      userPostReceiverNo: { nickname: string };
-    },
-  ) {
+  constructor(post: GetOnePostResponseType) {
     Object.assign(this, post);
   }
 
   no: number;
-  senderNo: number;
-  receiverNo: number;
   content: string;
   check: boolean;
   createdAt: Date;
@@ -27,9 +20,11 @@ export class GetOnePostResponseDto {
   @Exclude()
   receiverDelete: boolean;
   userPostSenderNo: {
+    no: number;
     nickname: string;
   };
   userPostReceiverNo: {
+    no: number;
     nickname: string;
   };
 }

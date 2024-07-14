@@ -10,16 +10,16 @@ import {
   ApiParam,
 } from "@nestjs/swagger";
 
-export function ApiDeleteOnePresent() {
+export function ApiDeleteOnePost() {
   return applyDecorators(
     ApiOperation({
-      summary: "특정 선물 발신 / 수신 기준 삭제",
+      summary: "특정 쪽지 발신 / 수신 기준 삭제",
       description:
-        "한번 삭제하면 복구 불가, 그 사용자는 다시는 해당 선물을 볼수 없음",
+        "한번 삭제하면 복구 불가, 그 사용자는 다시는 해당 쪽지를 볼수 없음",
     }),
 
     ApiParam({
-      name: "presentNo",
+      name: "postNo",
       example: 1,
     }),
 
@@ -28,7 +28,7 @@ export function ApiDeleteOnePresent() {
     }),
 
     ApiBadRequestResponse({
-      description: "param의 presentNo가 양의 정수가 아닌경우",
+      description: "param의 postNo가 양의 정수가 아닌경우",
       content: {
         JSON: {
           example: {
@@ -42,11 +42,11 @@ export function ApiDeleteOnePresent() {
 
     ApiForbiddenResponse({
       description:
-        "해당하는 번호의 선물이 유저와 관계가 없을경우 (수신자, 발신자 어느 경우에도 해당되지 않는경우임)",
+        "해당하는 번호의 쪽지가 유저와 관계가 없을경우 (수신자, 발신자 어느 경우에도 해당되지 않는경우임)",
       content: {
         JSON: {
           example: {
-            message: "This present is not related with you.",
+            message: "This post is not related with you.",
             error: "Forbidden",
             statusCode: 403,
           },
@@ -55,11 +55,11 @@ export function ApiDeleteOnePresent() {
     }),
 
     ApiNotFoundResponse({
-      description: "해당하는 번호의 선물이 없는 경우",
+      description: "해당하는 번호의 쪽지가 없는 경우",
       content: {
         JSON: {
           example: {
-            message: "This present doesn't exist.",
+            message: "This post doesn't exist.",
             error: "Not Found",
             statusCode: 404,
           },

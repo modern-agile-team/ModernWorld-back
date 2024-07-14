@@ -10,7 +10,7 @@ import {
   Query,
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
-import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
 import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
@@ -82,6 +82,6 @@ export class PresentsController {
   ) {
     const userNo = 1;
 
-    return this.presentsService.updateOnePresentTodelete(userNo, presentNo);
+    return this.presentsService.updateOnePresentToDelete(userNo, presentNo);
   }
 }

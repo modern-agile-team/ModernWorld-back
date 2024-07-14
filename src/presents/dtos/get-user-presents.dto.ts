@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { SenderReceiverNoField } from "../enum/present-senderReceiverNo.enum";
+import { SenderReceiverNoField } from "../../common/enum/sender-receiver-no.enum";
 import { IsEnum, IsOptional } from "class-validator";
 
 export class GetUserPresentsDto {
