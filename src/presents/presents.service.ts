@@ -33,14 +33,14 @@ export class PresentsService {
           ? "senderDelete"
           : undefined;
 
-    let where = {};
-
-    if (type) {
-      where = {
-        [type]: userNo,
-        [senderReceiverDeleteField]: false,
-      };
-    }
+    const where = type
+      ? { [type]: userNo, [senderReceiverDeleteField]: false }
+      : {
+          OR: [
+            { senderNo: userNo, senderDelete: false },
+            { receiverNo: userNo, receiverDelete: false },
+          ],
+        };
 
     return this.presentRepository.getPresents(where);
   }
