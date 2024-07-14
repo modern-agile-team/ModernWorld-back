@@ -18,8 +18,8 @@ import { ApiCreateOnePresent } from "./presents-swagger/create-one-present.decor
 import { ApiGetUserPresents } from "./presents-swagger/get-user-presents.decorator";
 import { ApiGetUserOnePresent } from "./presents-swagger/get-user-one-present.decorator";
 import { ApiUpdatePresentStatus } from "./presents-swagger/update-present-status.decorator";
-import { ParsePositiveIntPipe } from "src/common/pipes/parsePositiveInt.pipe";
 import { ApiDeleteOnePresent } from "./presents-swagger/delete-one-present.decorator";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
 @Controller()
 @ApiTags("Presents")
