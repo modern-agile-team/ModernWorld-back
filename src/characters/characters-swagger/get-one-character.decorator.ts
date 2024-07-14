@@ -15,6 +15,7 @@ export function ApiGetOneCharacter() {
     }),
 
     ApiProperty({ name: "characterNo", example: 1 }),
+
     ApiOkResponse({
       status: 200,
       description: "Success",

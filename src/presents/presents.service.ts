@@ -2,6 +2,8 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { PresentsRepository } from "./presents.repository";
@@ -13,10 +15,13 @@ import { ItemNoDto } from "./dtos/item-no.dto";
 import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
 import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
 import { UpdatePresentsStatusResponseDto } from "./dtos/update-presents-status-response.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class PresentsService {
   constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
     private readonly presentsRepository: PresentsRepository,
     private readonly inventoryRepository: InventoryRepository,
     private readonly itemsRepository: ItemsRepository,
@@ -232,13 +237,20 @@ export class PresentsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    //트랜잭션 묶을것.
-    await this.usersRepository.updateUserCurrentPoint(senderNo, -item.price);
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.usersRepository.updateUserCurrentPoint(senderNo, -item.price),
+        this.presentsRepository.createOneItemToUser(
+          senderNo,
+          receiverNo,
+          itemNo,
+        ),
+      ]);
 
-    return this.presentsRepository.createOneItemToUser(
-      senderNo,
-      receiverNo,
-      itemNo,
-    );
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 }

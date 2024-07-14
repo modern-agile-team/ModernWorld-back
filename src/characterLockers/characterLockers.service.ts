@@ -2,6 +2,8 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { CharacterLockersRepository } from "./characterLockers.repository";
@@ -9,10 +11,13 @@ import { CharactersRepository } from "src/characters/characters.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { GetUserCharactersDto } from "./dtos/get-user-characters.dto";
 import { CharacterNoDto } from "./dtos/character-no.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class CharacterLockersService {
   constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
     private readonly characterLockerRepository: CharacterLockersRepository,
     private readonly charactersRepository: CharactersRepository,
     private readonly usersRepository: UsersRepository,
@@ -91,13 +96,17 @@ export class CharacterLockersService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
-    // 트랜잭션
-    await this.usersRepository.updateUserCurrentPoint(userNo, -character.price);
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.usersRepository.updateUserCurrentPoint(userNo, -character.price),
+        this.characterLockerRepository.createOneCharacter(userNo, characterNo),
+      ]);
 
-    return this.characterLockerRepository.createOneCharacter(
-      userNo,
-      characterNo,
-    );
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 
   async updateCharacterStatus(userNo: number, characterNo: number) {
@@ -111,15 +120,19 @@ export class CharacterLockersService {
       throw new NotFoundException("User doesn't have that character.");
     }
 
-    // 트랜잭션으로 묶어놓을것.
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.characterLockerRepository.disuseOtherCharacters(
+          userNo,
+          characterNo,
+        ),
+        this.characterLockerRepository.updateCharacterStatusToUse(character.no),
+      ]);
 
-    await this.characterLockerRepository.disuseOtherCharacters(
-      userNo,
-      characterNo,
-    );
-
-    return this.characterLockerRepository.updateCharacterStatusToUse(
-      character.no,
-    );
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 }

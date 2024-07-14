@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from "@nestjs/common";
 import { UserAchievementsRepository } from "./user-achievements.repository";
 import { updateUserAchievementStatusDto } from "./dtos/update-user-achievement-status.dto";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -6,6 +11,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 @Injectable()
 export class UserAchievementsService {
   constructor(
+    private readonly logger: Logger,
     private readonly prisma: PrismaService,
     private readonly userAchievementsRepository: UserAchievementsRepository,
   ) {}
@@ -35,19 +41,23 @@ export class UserAchievementsService {
         status,
       );
 
-    //트랜잭션으로 묶을것
-    const [, result] = await this.prisma.$transaction([
-      this.userAchievementsRepository.updateUserAchievementStatus(
-        userNo,
-        false,
-      ),
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.userAchievementsRepository.updateUserAchievementStatus(
+          userNo,
+          false,
+        ),
 
-      this.userAchievementsRepository.updateUserAchievementStatusByNo(
-        userAchievement.no,
-        status,
-      ),
-    ]);
+        this.userAchievementsRepository.updateUserAchievementStatusByNo(
+          userAchievement.no,
+          status,
+        ),
+      ]);
 
-    return result;
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 }

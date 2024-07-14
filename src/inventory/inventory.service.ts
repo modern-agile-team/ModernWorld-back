@@ -2,6 +2,8 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { ItemsRepository } from "src/items/items.repository";
@@ -10,10 +12,13 @@ import { UsersRepository } from "src/users/users.repository";
 import { GetUserItemsDto } from "./dtos/get-user-items.dto";
 import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class InventoryService {
   constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
     private readonly inventoryRepository: InventoryRepository,
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
@@ -69,11 +74,17 @@ export class InventoryService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
-    // 두 로직 트랜잭션으로 나중에 묶을 것.
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.usersRepository.updateUserCurrentPoint(userNo, -item.price),
+        this.inventoryRepository.createUserOneItem(userNo, itemNo),
+      ]);
 
-    await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
-
-    return this.inventoryRepository.createUserOneItem(userNo, itemNo);
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 
   async updateItemStatus(
@@ -101,9 +112,16 @@ export class InventoryService {
 
     const { type } = await this.itemsRepository.getItemType(itemNo);
 
-    // 추후 트랜잭션
-    await this.inventoryRepository.disuseOtherItems(userNo, type);
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.inventoryRepository.disuseOtherItems(userNo, type),
+        this.inventoryRepository.updateItemStatus(item.no, status),
+      ]);
 
-    return this.inventoryRepository.updateItemStatus(item.no, status);
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 }

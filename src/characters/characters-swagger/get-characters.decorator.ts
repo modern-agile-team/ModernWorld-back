@@ -12,6 +12,7 @@ export function ApiGetCharacters() {
       summary: "캐릭터 불러오기",
       description: "유저가 보유한 것과 상관없이 캐릭터만 불러옵니다.",
     }),
+
     ApiOkResponse({
       description: "Success",
       content: {
@@ -81,9 +82,9 @@ export function ApiGetCharacters() {
         },
       },
     }),
-    ApiBadRequestResponse({
-      description: "Animal Enum에 해당하지 않은 값을 넣었을 때",
 
+    ApiBadRequestResponse({
+      description: "cat, dog 이외의 값을 넣었을 때",
       content: {
         JSON: {
           example: {
@@ -94,6 +95,7 @@ export function ApiGetCharacters() {
         },
       },
     }),
+
     ApiInternalServerErrorResponse({
       description: "Internal server error",
       content: {
