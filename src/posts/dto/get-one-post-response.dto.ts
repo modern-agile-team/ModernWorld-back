@@ -1,7 +1,12 @@
-import { post } from "@prisma/client";
+import { post, Prisma } from "@prisma/client";
 import { Exclude } from "class-transformer";
+import { PostsRepository } from "../posts.repositroy";
 
-export class GetOnePostDto {
+type GetOnePostResponseType = Prisma.PromiseReturnType<
+  typeof PostsRepository.prototype.getOnePostByNo
+>;
+
+export class GetOnePostResponseDto {
   constructor(
     post: post & {
       userPostSenderNo: { nickname: string };
