@@ -190,9 +190,9 @@ export function ApiGetUserCharacters() {
         JSON: {
           examples: {
             ex1: {
-              summary: "parma의 usermNo가 수가 아닐때",
+              summary: "parma의 userNo가 양의 정수가 아닐때",
               value: {
-                message: "Validation failed (numeric string is expected)",
+                message: "Validation failed (positive int string is expected)",
                 error: "Bad Request",
                 statusCode: 400,
               },

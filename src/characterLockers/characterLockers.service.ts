@@ -100,9 +100,7 @@ export class CharacterLockersService {
     );
   }
 
-  async updateCharacterStatus(userNo: number, param: CharacterNoDto) {
-    const { characterNo } = param;
-
+  async updateCharacterStatus(userNo: number, characterNo: number) {
     const character =
       await this.characterLockerRepository.findUserCharacterFromInventory(
         userNo,

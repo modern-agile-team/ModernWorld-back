@@ -45,7 +45,7 @@ export function ApiCreateUserOneCharacter() {
         JSON: {
           examples: {
             ex1: {
-              summary: "characterNo가 양의 정수가 아닐 때",
+              summary: "body의 characterNo가 양의 정수가 아닐 때",
               value: {
                 message: [
                   "characterNo must not be less than 1",

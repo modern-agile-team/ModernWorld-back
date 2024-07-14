@@ -13,7 +13,8 @@ export function ApiGetOneCharacter() {
       summary: "특정 캐릭터 불러오기 API",
       description: "특정 캐릭터를 불러옵니다.",
     }),
-    ApiProperty({ name: "characterNo" }),
+
+    ApiProperty({ name: "characterNo", example: 1 }),
     ApiOkResponse({
       status: 200,
       description: "Success",
@@ -30,18 +31,20 @@ export function ApiGetOneCharacter() {
         },
       },
     }),
+
     ApiBadRequestResponse({
-      description: "characterNo가 정수 형태가 아닐 때",
+      description: "characterNo가 양의 정수가 아닐때",
       content: {
         JSON: {
           example: {
-            message: "Validation failed (numeric string is expected)",
+            message: "Validation failed (positive int string is expected)",
             error: "Bad Request",
             statusCode: 400,
           },
         },
       },
     }),
+
     ApiInternalServerErrorResponse({
       description: "Internal server error",
       content: {

@@ -33,10 +33,7 @@ export function ApiUpdateUserCharacter() {
       content: {
         JSON: {
           example: {
-            message: [
-              "characterNo must not be less than 1",
-              "characterNo must be an integer number",
-            ],
+            message: "Validation failed (positive int string is expected)",
             error: "Bad Request",
             statusCode: 400,
           },

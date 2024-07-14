@@ -1,30 +1,29 @@
-import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
+import { Controller, Delete, HttpCode, Param, Post } from "@nestjs/common";
 import { LikesService } from "./likes.service";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateLike } from "./likes-swagger/create-like.decorator";
 import { ApiDeleteLike } from "./likes-swagger/delete-like.decorator";
-import { CreateOneLikeDto } from "./dtos/create-one-like.dto";
-import { DeleteOneLikeDto } from "./dtos/delete-one-like.dto";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
-@Controller("likes")
+@Controller("users/:userNo/likes")
 @ApiTags("Likes")
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
   @Post()
   @ApiCreateLike()
-  createOneLike(@Body() body: CreateOneLikeDto) {
+  createOneLike(@Param("userNo", ParsePositiveIntPipe) receiverNo: number) {
     const tokenUserNo = 1;
 
-    return this.likesService.createOneLike(tokenUserNo, body);
+    return this.likesService.createOneLike(tokenUserNo, receiverNo);
   }
 
   @Delete()
   @ApiDeleteLike()
   @HttpCode(204)
-  deleteOneLike(@Body() body: DeleteOneLikeDto) {
+  deleteOneLike(@Param("userNo", ParsePositiveIntPipe) receiverNo: number) {
     const tokenUserNo = 1;
 
-    return this.likesService.deleteOneLike(tokenUserNo, body);
+    return this.likesService.deleteOneLike(tokenUserNo, receiverNo);
   }
 }

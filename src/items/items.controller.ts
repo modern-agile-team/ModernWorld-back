@@ -13,8 +13,8 @@ export class ItemsController {
 
   @Get()
   @ApiGetItems()
-  getItems(@Query() queryParms: GetUserAllItems) {
-    return this.itemsService.getItems(queryParms);
+  getItems(@Query() query: GetUserAllItems) {
+    return this.itemsService.getItems(query);
   }
 
   @Get(":itemNo")

@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Query,
   Patch,
   Put,
@@ -20,6 +19,7 @@ import { ApiGetUsers } from "./users-swagger/get-users.decorator";
 import { ApiGetUserNamePointAchievementTitle } from "./users-swagger/get-user-name-point-achievement.decorator";
 import { ApiCreateUserNickname } from "./users-swagger/create-user-nickname.decorator";
 import { ApiUpdateUserDescription } from "./users-swagger/update-user-description.decorator";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
 @Controller("users")
 @ApiTags("Users")
@@ -43,7 +43,7 @@ export class UsersController {
   @Get(":userNo")
   @ApiGetUserNamePointAchievementTitle()
   getUserNamePointAchievementTitle(
-    @Param("userNo", ParseIntPipe) userNo: number,
+    @Param("userNo", ParsePositiveIntPipe) userNo: number,
   ) {
     return this.usersService.getUserNamePointTitleCharacter(userNo);
   }

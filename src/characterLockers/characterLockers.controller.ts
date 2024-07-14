@@ -3,9 +3,8 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
 } from "@nestjs/common";
 import { CharacterLockersService } from "./characterLockers.service";
@@ -15,6 +14,7 @@ import { CharacterNoDto } from "./dtos/character-no.dto";
 import { ApiGetUserCharacters } from "./characterLockers-swagger/get-user-characters.decorator";
 import { ApiCreateUserOneCharacter } from "./characterLockers-swagger/create-user-character.decorator";
 import { ApiUpdateUserCharacter } from "./characterLockers-swagger/update-user-character.decorator";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
 @Controller()
 @ApiTags("CharacterLockers")
@@ -26,7 +26,7 @@ export class CharacterLockersController {
   @Get("users/:userNo/characters")
   @ApiGetUserCharacters()
   getUserCharacters(
-    @Param("userNo", ParseIntPipe) userNo: number,
+    @Param("userNo", ParsePositiveIntPipe) userNo: number,
     @Query() query: GetUserCharactersDto,
   ) {
     return this.characterLockerService.getUserAllCharacters(userNo, query);
@@ -40,11 +40,16 @@ export class CharacterLockersController {
     return this.characterLockerService.createUserOneCharacter(userNo, body);
   }
 
-  @Put("users/my/characters/:characterNo/status")
+  @Patch("users/my/characters/:characterNo")
   @ApiUpdateUserCharacter()
-  updateCharacterStatus(@Param() param: CharacterNoDto) {
+  updateCharacterStatus(
+    @Param("characterNo", ParsePositiveIntPipe) characterNo: number,
+  ) {
     const userNo = 1;
 
-    return this.characterLockerService.updateCharacterStatus(userNo, param);
+    return this.characterLockerService.updateCharacterStatus(
+      userNo,
+      characterNo,
+    );
   }
 }

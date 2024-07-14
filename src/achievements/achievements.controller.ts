@@ -11,7 +11,7 @@ export class AchievementsController {
 
   @Get()
   @ApiGetAchievements()
-  getAchievements(@Query() queryParams: GetAchievementsDto) {
-    return this.achievementsService.getAchievements(queryParams);
+  getAchievements(@Query() query: GetAchievementsDto) {
+    return this.achievementsService.getAchievements(query);
   }
 }
