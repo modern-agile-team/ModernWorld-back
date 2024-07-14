@@ -12,6 +12,7 @@ export function ApiGetOneItem() {
       summary: "특정 아이템 가져오기",
       description: "특정 아이템만 가져옵니다.",
     }),
+
     ApiOkResponse({
       description: "Success",
       content: {
@@ -29,12 +30,13 @@ export function ApiGetOneItem() {
         },
       },
     }),
+
     ApiBadRequestResponse({
-      description: "itemNo가 정수값이 아닐 경우",
+      description: "itemNo가 양의 정수가 아닐 경우",
       content: {
         JSON: {
           example: {
-            message: "Validation failed (numeric string is expected)",
+            message: "Validation failed (positive int string is expected)",
             error: "Bad Request",
             statusCode: 400,
           },
