@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpCode,
-  Param,
-  ParseIntPipe,
-  Post,
-} from "@nestjs/common";
+import { Body, Controller, Delete, HttpCode, Post } from "@nestjs/common";
 import { LikesService } from "./likes.service";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateLike } from "./likes-swagger/create-like.decorator";

@@ -32,7 +32,7 @@ export class CharacterLockersController {
     return this.characterLockerService.getUserAllCharacters(userNo, query);
   }
 
-  @Post("users/characters")
+  @Post("users/my/characters")
   @ApiCreateUserOneCharacter()
   createUserOneCharacter(@Body() body: CharacterNoDto) {
     const userNo = 1;
@@ -40,7 +40,7 @@ export class CharacterLockersController {
     return this.characterLockerService.createUserOneCharacter(userNo, body);
   }
 
-  @Put("users/characters/:characterNo/status")
+  @Put("users/my/characters/:characterNo/status")
   @ApiUpdateUserCharacter()
   updateCharacterStatus(@Param() param: CharacterNoDto) {
     const userNo = 1;

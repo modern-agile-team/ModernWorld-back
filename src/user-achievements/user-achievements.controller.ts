@@ -12,7 +12,7 @@ import { updateUserAchievementStatusDto } from "./dtos/update-user-achievement-s
 import { ApiUpdateUserAchievementStatus } from "./userAchievements-swagger/update-user-achievement-status.decorator";
 import { ApiGetUserAchievements } from "./userAchievements-swagger/get-user-achievements.decorator";
 
-@Controller("users/achievements")
+@Controller("users/my/achievements")
 @ApiTags("UserAchievements")
 export class UserAchievementsController {
   constructor(

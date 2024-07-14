@@ -26,7 +26,7 @@ import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 export class PresentsController {
   constructor(private readonly presentsService: PresentsService) {}
 
-  @Get("users/presents")
+  @Get("users/my/presents")
   @ApiGetUserPresents()
   getUserPresents(
     @Query()
@@ -37,7 +37,7 @@ export class PresentsController {
     return this.presentsService.getUserPresents(userNo, query);
   }
 
-  @Get("users/presents/:presentNo")
+  @Get("users/my/presents/:presentNo")
   @ApiGetUserOnePresent()
   getUserOnePresent(
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
@@ -58,7 +58,7 @@ export class PresentsController {
     return this.presentsService.createOnePresent(tokenUserNo, receiverNo, body);
   }
 
-  @Patch("users/presents/:presentNo")
+  @Patch("users/my/presents/:presentNo")
   @ApiUpdatePresentStatus()
   updatePresentStatus(
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
@@ -74,7 +74,7 @@ export class PresentsController {
     );
   }
 
-  @Delete("users/presents/:presentNo")
+  @Delete("users/my/presents/:presentNo")
   @ApiDeleteOnePresent()
   @HttpCode(204)
   deleteOnePresent(

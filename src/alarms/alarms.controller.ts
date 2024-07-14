@@ -9,13 +9,13 @@ import {
   Query,
 } from "@nestjs/common";
 import { AlarmsService } from "./alarms.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { ApiGetAlarms } from "./alarms-swagger/get-alarms.decorator";
 import { ApiUpdateAlarmStatusToRead } from "./alarms-swagger/update-alarm-status-to-read.decorator";
 import { ApiDeleteOneAlarm } from "./alarms-swagger/delete-one-alarm.decorator";
 
-@Controller("users/alarms")
+@Controller("users/my/alarms")
 @ApiTags("Alarms")
 export class AlarmsController {
   constructor(private readonly alarmsService: AlarmsService) {}

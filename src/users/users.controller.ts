@@ -26,7 +26,7 @@ import { ApiUpdateUserDescription } from "./users-swagger/update-user-descriptio
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get("/attendance")
+  @Get("my/attendance")
   @ApiGetUserAttendance()
   getOneUserAttendance() {
     const userNo = 1;
@@ -40,7 +40,7 @@ export class UsersController {
     return this.usersService.getUsers(query);
   }
 
-  @Get("/:userNo")
+  @Get(":userNo")
   @ApiGetUserNamePointAchievementTitle()
   getUserNamePointAchievementTitle(
     @Param("userNo", ParseIntPipe) userNo: number,
@@ -48,7 +48,7 @@ export class UsersController {
     return this.usersService.getUserNamePointTitleCharacter(userNo);
   }
 
-  @Patch("/attendance")
+  @Patch("my/attendance")
   @ApiUpdateUserAttendance()
   updateUserAttendance() {
     const userNo = 1;
@@ -56,7 +56,7 @@ export class UsersController {
     return this.usersService.updateUserAttendance(userNo);
   }
 
-  @Post("/nickname")
+  @Post("my/nickname")
   @ApiCreateUserNickname()
   createUserNickname(@Body() body: UpdateUserNicknameDto) {
     const userNo = 1;
@@ -64,7 +64,7 @@ export class UsersController {
     return this.usersService.createUserNickname(userNo, body);
   }
 
-  @Put("/description")
+  @Put("my/description")
   @ApiUpdateUserDescription()
   updateUserDescription(@Body() body: UpdateUserDescriptionDto) {
     const userNo = 1;
