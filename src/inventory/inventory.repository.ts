@@ -11,12 +11,11 @@ export class InventoryRepository {
     theme: string,
     status: boolean,
     itemName: string,
-  ): PrismaPromise<inventory[]> {
+  ) {
     return this.prisma.inventory.findMany({
       select: {
         no: true,
         userNo: true,
-        itemNo: true,
         createdAt: true,
         status: true,
         item: {
