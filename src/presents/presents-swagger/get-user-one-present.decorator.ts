@@ -3,6 +3,7 @@ import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -93,6 +94,19 @@ export function ApiGetUserOnePresent() {
                 statusCode: 403,
               },
             },
+          },
+        },
+      },
+    }),
+
+    ApiNotFoundResponse({
+      description: "해당 번호의 선물이 존재하지 않을 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "This present doesn't exist.",
+            error: "Not Found",
+            statusCode: 404,
           },
         },
       },

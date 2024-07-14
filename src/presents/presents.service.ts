@@ -49,6 +49,10 @@ export class PresentsService {
     const present =
       await this.presentRepository.getUserOnePresentWithItemUserInfo(presentNo);
 
+    if (!present) {
+      throw new NotFoundException("This present doesn't exist.");
+    }
+
     const { userPresentReceiverNo: receiver, userPresentSenderNo: sender } =
       present;
 
