@@ -8,7 +8,7 @@ import { PostsRepository } from "./posts.repositroy";
 import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
 import { CreateOnePostDto } from "./dto/create-post.dto";
 import { UsersRepository } from "src/users/users.repository";
-import { GetOnePostDto } from "./dto/get-one-post.dto";
+import { GetOnePostResponseDto } from "./dto/get-one-post-response.dto";
 
 @Injectable()
 export class PostsService {
@@ -68,7 +68,7 @@ export class PostsService {
       // 발신자이면 다른로직은 없음
     }
 
-    return new GetOnePostDto(post);
+    return new GetOnePostResponseDto(post);
   }
 
   async createOnePost(senderNo: number, body: CreateOnePostDto) {
