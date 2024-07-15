@@ -19,11 +19,11 @@ export function ApiDeleteOneAlarm() {
     }),
 
     ApiBadRequestResponse({
-      description: "parma의 alarmNo가 수가 아닐때",
+      description: "parma의 alarmNo가 양의 정수가 아닐때",
       content: {
         JSON: {
           example: {
-            message: "Validation failed (numeric string is expected)",
+            message: "Validation failed (positive int string is expected)",
             error: "Bad Request",
             statusCode: 400,
           },

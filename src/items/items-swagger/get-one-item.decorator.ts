@@ -43,6 +43,7 @@ export function ApiGetOneItem() {
         },
       },
     }),
+
     ApiInternalServerErrorResponse({
       description: "Internal server error",
       content: {

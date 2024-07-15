@@ -55,11 +55,11 @@ export function ApiGetUserNamePointAchievementTitle() {
     }),
 
     ApiBadRequestResponse({
-      description: "userNo가 숫자가 아닐경우",
+      description: "param의 userNo가 양의 정수가 아닐경우",
       content: {
         JSON: {
           example: {
-            message: "Validation failed (numeric string is expected)",
+            message: "Validation failed (positive int string is expected)",
             error: "Bad Request",
             statusCode: 400,
           },

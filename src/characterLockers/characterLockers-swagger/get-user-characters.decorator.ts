@@ -13,10 +13,12 @@ export function ApiGetUserCharacters() {
       summary: "유저의 캐릭터 불러오기",
       description: "유저가 보유한 캐릭터만 불러옵니다.",
     }),
+
     ApiParam({
       name: "userNo",
       example: 1,
     }),
+
     ApiOkResponse({
       description: "Success",
       content: {

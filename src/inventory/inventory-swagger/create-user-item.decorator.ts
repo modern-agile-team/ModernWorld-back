@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -25,6 +26,22 @@ export function ApiCreateUserItem() {
             itemNo: 12,
             createdAt: "2024-07-08T07:09:07.000Z",
             status: false,
+          },
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description: "body의 itemNo가 양의 정수가 아닐 경우",
+      content: {
+        JSON: {
+          example: {
+            message: [
+              "itemNo must be an integer number",
+              "itemNo must not be less than 1",
+            ],
+            error: "Bad Request",
+            statusCode: 400,
           },
         },
       },
