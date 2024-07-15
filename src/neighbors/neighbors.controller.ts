@@ -16,7 +16,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { ApiCraeteNeighbor } from "./swagger-decorators/create-neighbors.decorator";
 
 @Controller("neighbors")
-@ApiTags("Neighbors")
+@ApiTags("neighbors")
 export class NeighborController {
   constructor(private readonly neighborService: NeighborService) {}
 
