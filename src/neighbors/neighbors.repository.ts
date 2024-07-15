@@ -69,7 +69,6 @@ export class NeighborRepository {
     return this.prisma.neighbor.findFirst({
       where: {
         no,
-        status: true,
       },
     });
   }

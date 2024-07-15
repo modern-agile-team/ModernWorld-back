@@ -1,10 +1,10 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-export function ApiUpddateNeighobor() {
+export function ApiUpdateNeighobor() {
   return applyDecorators(
     ApiOperation({
-      summary: "이웃 신청 API",
+      summary: "이웃 승인 API",
       description: "이웃 신청을 승인하는 API입니다.",
     }),
     ApiResponse({
@@ -13,11 +13,11 @@ export function ApiUpddateNeighobor() {
       content: {
         JSON: {
           example: {
-            no: 17,
-            senderNo: 8,
-            receiverNo: 6,
-            status: false,
-            createdAt: "2024-07-12T13:40:39.000Z",
+            no: 3,
+            senderNo: 1,
+            receiverNo: 4,
+            status: true,
+            createdAt: "2024-07-15T10:52:38.000Z",
           },
         },
       },
@@ -25,29 +25,15 @@ export function ApiUpddateNeighobor() {
 
     ApiResponse({
       status: 400,
-      description: "Bad Request",
+      description: "이미 승인된 이웃 신청인 경우",
       content: {
         JSON: {
-          examples: {
+          example: {
             selfNeighborRequest: {
-              summary: "본인에게 이웃 신청을 보내는 경우",
+              summary: "이미 승인된 이웃 신청인 경우",
               value: {
                 statusCode: 400,
-                message: "이웃신청을 자기 자신에게 보낼 수 없습니다.",
-              },
-            },
-            existNeighborRequest: {
-              summary: "이미 이웃신청을 보낸 경우",
-              value: {
-                statusCode: 400,
-                message: "이미 해당 유저에게 이웃신청을 보냈습니다.",
-              },
-            },
-            checkMyNeighbor: {
-              summary: "상대방과 이미 이웃인 경우",
-              value: {
-                statusCode: 400,
-                message: "상대방과는 이미 이웃입니다.",
+                message: "이미 승인 처리된 이웃신청입니다.",
               },
             },
           },

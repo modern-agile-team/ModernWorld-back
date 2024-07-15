@@ -52,9 +52,8 @@ export class NeighborService {
 
   async neighborApproval(body: UpdateNeighborDto) {
     const { no, status } = body;
-    await this.NeighborNotFound(no);
     const alreadyApproval = await this.neighborRepository.getOneNeighbor(no);
-    if (alreadyApproval) {
+    if (alreadyApproval.status === true) {
       throw new BadRequestException("이미 승인 처리된 이웃요청입니다.");
     }
     return this.neighborRepository.neighborApproval(no, status);
@@ -67,15 +66,11 @@ export class NeighborService {
   }
 
   async neighborRequestRefusalOrDelete(neighborNo: number) {
-    await this.NeighborNotFound(neighborNo);
-    return this.neighborRepository.neighborRequestRefusalOrDelete(neighborNo);
-  }
-
-  async NeighborNotFound(neighborNo: number) {
     const NeighborNotFound =
       await this.neighborRepository.getOneNeighbor(neighborNo);
     if (!NeighborNotFound) {
-      throw new NotFoundException("해당 이웃을 찾을 수 없습니다."); // error 메세지 수정 필요...
+      throw new NotFoundException("해당 이웃을 찾을 수 없습니다.");
     }
+    return this.neighborRepository.neighborRequestRefusalOrDelete(neighborNo);
   }
 }
