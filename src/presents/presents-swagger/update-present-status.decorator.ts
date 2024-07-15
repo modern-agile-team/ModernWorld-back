@@ -23,7 +23,14 @@ export function ApiUpdatePresentStatus() {
       description: "Success",
       content: {
         JSON: {
-          example: {},
+          example: {
+            no: 2,
+            itemNo: 1,
+            senderNo: 5,
+            receiverNo: 1,
+            createdAt: "2024-07-01T05:00:46.000Z",
+            status: "accept",
+          },
         },
       },
     }),
