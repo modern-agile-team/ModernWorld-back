@@ -84,11 +84,20 @@ export class AuthService {
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
 
-      await this.tokenRepository.saveTokens(
-        user.no,
-        socialAccessToken,
-        socialRefreshToken,
-      ); // 이러면 매번 소셜 토큰들이 저장되어 추후 수정예정
+      const socialTokens = await this.tokenRepository.findToken(user.no);
+      if (socialTokens[0] === undefined) {
+        await this.tokenRepository.saveTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
+      } else {
+        await this.tokenRepository.updateTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
+      }
 
       await this.tokenService.setRefreshToken(
         user.no.toString() + "-refreshToken",
@@ -174,11 +183,21 @@ export class AuthService {
       }
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
-      await this.tokenRepository.saveTokens(
-        user.no,
-        socialAccessToken,
-        socialRefreshToken,
-      );
+
+      const socialTokens = await this.tokenRepository.findToken(user.no);
+      if (socialTokens[0] === undefined) {
+        await this.tokenRepository.saveTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
+      } else {
+        await this.tokenRepository.updateTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
+      }
 
       await this.tokenService.setRefreshToken(
         user.no.toString() + "-refreshToken",
