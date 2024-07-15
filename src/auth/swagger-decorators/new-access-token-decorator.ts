@@ -56,7 +56,7 @@ export function ApiNewAccessToken() {
                 error: "Bad Request",
                 statusCode: 400,
               },
-              description: "우리 서비스의 액세스 토큰이 아닌 경우",
+              description: "우리 서비스의 리프레시 토큰이 아닌 경우",
             },
             "jwt error": {
               value: {

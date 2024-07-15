@@ -63,7 +63,6 @@ export function ApiNaverLogin() {
       name: "code",
       description: "네이버 인가코드",
       required: true,
-      example: "aNUgOlLlmyxNehJjqW",
     }),
   );
 }

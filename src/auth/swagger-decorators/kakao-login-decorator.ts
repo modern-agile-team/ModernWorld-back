@@ -63,7 +63,6 @@ export function ApiKakaoLogin() {
       name: "code",
       description: "카카오 인가코드",
       required: true,
-      example: "aNUgOlLlmyxNehJjqW",
     }),
   );
 }
