@@ -13,11 +13,8 @@ export class CharactersController {
 
   @Get()
   @ApiGetCharacters()
-  getCharacters(
-    @Query()
-    queryParams: GetCharactersDto,
-  ) {
-    return this.charactersServcie.getCharacters(queryParams);
+  getCharacters(@Query() query: GetCharactersDto) {
+    return this.charactersServcie.getCharacters(query);
   }
 
   @Get(":characterNo")

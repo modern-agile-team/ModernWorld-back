@@ -22,10 +22,10 @@ export class AlarmsController {
 
   @Get()
   @ApiGetAlarms()
-  getAlarms(@Query() queryParams: PaginationDto) {
+  getAlarms(@Query() query: PaginationDto) {
     const userNo = 1;
 
-    return this.alarmsService.getAlarms(userNo, queryParams);
+    return this.alarmsService.getAlarms(userNo, query);
   }
 
   @Patch(":alarmNo")

@@ -12,8 +12,8 @@ import { alarm } from "@prisma/client";
 export class AlarmsService {
   constructor(private readonly alarmsRepository: AlarmsRepository) {}
 
-  async getAlarms(userNo: number, queryParams: PaginationDto) {
-    const { take, page, orderBy } = queryParams;
+  async getAlarms(userNo: number, query: PaginationDto) {
+    const { take, page, orderBy } = query;
     const skip = take * (page - 1);
     const totalCount = await this.alarmsRepository.countAlarmsByUserNo(userNo);
     const alarms = await this.alarmsRepository.getAlarmsByUserNo(
