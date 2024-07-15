@@ -79,6 +79,7 @@ export function ApiDeleteOnePresent() {
                 statusCode: 409,
               },
             },
+
             ex2: {
               summary: "수신자 입장에서 이미 삭제되어 있을 경우",
               value: {

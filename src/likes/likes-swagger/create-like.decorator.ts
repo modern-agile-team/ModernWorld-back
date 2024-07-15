@@ -3,10 +3,10 @@ import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOperation,
-  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
 export function ApiCreateLike() {
@@ -27,14 +27,14 @@ export function ApiCreateLike() {
       },
     }),
 
-    ApiUnauthorizedResponse({
+    ApiForbiddenResponse({
       description: "유저 본인한테 좋아요 한 경우",
       content: {
         JSON: {
           example: {
             message: "Users can't like themselves alone.",
             error: "Forbidden",
-            statusCode: 401,
+            statusCode: 403,
           },
         },
       },

@@ -54,9 +54,9 @@ export class PostsService {
     }
 
     if (userNo === receiver.no && post.receiverDelete) {
-      throw new ForbiddenException("This post was deleted from receiver.");
+      throw new NotFoundException("This post was deleted from receiver.");
     } else if (userNo === sender.no && post.senderDelete) {
-      throw new ForbiddenException("This post was deleted from sender.");
+      throw new NotFoundException("This post was deleted from sender.");
     }
 
     if (receiver.no === userNo && !post.check) {

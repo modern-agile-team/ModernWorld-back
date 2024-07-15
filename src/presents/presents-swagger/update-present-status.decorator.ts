@@ -36,13 +36,28 @@ export function ApiUpdatePresentStatus() {
     }),
 
     ApiBadRequestResponse({
-      description: "param의 presentNo가 양의 정수가 아닌 경우",
       content: {
         JSON: {
-          example: {
-            message: "Validation failed (positive int string is expected)",
-            error: "Bad Request",
-            statusCode: 400,
+          examples: {
+            ex1: {
+              summary: "param의 presentNo가 양의 정수가 아닌 경우",
+              value: {
+                message: "Validation failed (positive int string is expected)",
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+
+            ex2: {
+              summary: "body의 status가 해당 값에 해당하지 않은 경우",
+              value: {
+                message: [
+                  "status must be one of the following values: accept, reject",
+                ],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
           },
         },
       },

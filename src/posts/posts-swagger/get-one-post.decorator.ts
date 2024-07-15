@@ -56,17 +56,32 @@ export function ApiGetOnePost() {
     }),
 
     ApiForbiddenResponse({
+      description: "해당 쪽지가 유저와 관련이 없을 때",
+      content: {
+        JSON: {
+          example: {
+            description:
+              "userNo가 senderNo, receiverNo 둘중에 하나라도 해당되는게 없다면 반환합니다.",
+            value: {
+              message: "This post is not related with user.",
+              error: "Forbidden",
+              statusCode: 403,
+            },
+          },
+        },
+      },
+    }),
+
+    ApiNotFoundResponse({
       content: {
         JSON: {
           examples: {
             ex1: {
-              summary: "해당 쪽지가 유저와 관련이 없을 때",
-              description:
-                "userNo가 senderNo, receiverNo 둘중에 하나라도 해당되는게 없다면 반환합니다.",
+              summary: "해당 번호의 쪽지가 존재하지 않을 경우",
               value: {
-                message: "This post is not related with user.",
-                error: "Forbidden",
-                statusCode: 403,
+                message: "This post doesn't exist.",
+                error: "Not Found",
+                statusCode: 404,
               },
             },
 
@@ -75,8 +90,8 @@ export function ApiGetOnePost() {
               description: "발신자는 다시는 쪽지를 확인할 수 없습니다.",
               value: {
                 message: "This post was deleted from sender.",
-                error: "Forbidden",
-                statusCode: 403,
+                error: "Not Found",
+                statusCode: 404,
               },
             },
 
@@ -85,23 +100,10 @@ export function ApiGetOnePost() {
               description: "수신자는 다시는 쪽지를 확인할 수 없습니다.",
               value: {
                 message: "This post was deleted from receiver.",
-                error: "Forbidden",
-                statusCode: 403,
+                error: "Not Found",
+                statusCode: 404,
               },
             },
-          },
-        },
-      },
-    }),
-
-    ApiNotFoundResponse({
-      description: "해당 번호의 쪽지가 존재하지 않을 경우",
-      content: {
-        JSON: {
-          example: {
-            message: "This post doesn't exist.",
-            error: "Not Found",
-            statusCode: 404,
           },
         },
       },

@@ -3,7 +3,6 @@ import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
 } from "@nestjs/swagger";
@@ -11,8 +10,8 @@ import {
 export function ApiCreateUserNickname() {
   return applyDecorators(
     ApiOperation({
-      summary: "유저 닉네임 변경 API",
-      description: "사실 변경은 안되고 새로운 유저의 닉네임 생성용 api입니다.",
+      summary: "유저 닉네임 생성 API",
+      description: "닉네임 생성용 api입니다.",
     }),
 
     ApiCreatedResponse({
@@ -20,10 +19,8 @@ export function ApiCreateUserNickname() {
       content: {
         JSON: {
           example: {
-            data: {
-              no: 1,
-              nickname: "악질닉네임",
-            },
+            no: 1,
+            nickname: "악질닉네임",
           },
         },
       },
@@ -70,27 +67,27 @@ export function ApiCreateUserNickname() {
       },
     }),
 
-    ApiForbiddenResponse({
-      description: "유저가 이미 닉네임을 가지고 있는 경우",
-      content: {
-        JSON: {
-          example: {
-            message: "User already has a nickname.",
-            error: "Forbidden",
-            statusCode: 403,
-          },
-        },
-      },
-    }),
-
     ApiConflictResponse({
-      description: "해당 닉네임이 다른유저한테 이미 등록되어 있는경우",
       content: {
         JSON: {
-          example: {
-            message: "'2번닉네임' is duplicated.",
-            error: "Conflict",
-            statusCode: 409,
+          examples: {
+            ex1: {
+              summary: "해당 닉네임이 다른유저한테 이미 등록되어 있는경우",
+              value: {
+                message: "'2번닉네임' is duplicated.",
+                error: "Conflict",
+                statusCode: 409,
+              },
+            },
+
+            ex2: {
+              summary: "유저 본인이 이미 닉네임을 가지고 있는 경우",
+              value: {
+                message: "User already has a nickname.",
+                error: "Conflict",
+                statusCode: 409,
+              },
+            },
           },
         },
       },

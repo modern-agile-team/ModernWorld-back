@@ -100,7 +100,7 @@ export class UsersService {
       await this.userRepository.findUserNicknameByUserNo(userNo);
 
     if (userName) {
-      throw new ForbiddenException("User already has a nickname.");
+      throw new ConflictException("User already has a nickname.");
     }
 
     const { nickname } = body;

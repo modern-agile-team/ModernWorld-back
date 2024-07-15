@@ -68,9 +68,9 @@ export class PresentsService {
     }
 
     if (userNo === receiver.no && present.receiverDelete) {
-      throw new ForbiddenException("This present was deleted from receiver.");
+      throw new NotFoundException("This present was deleted from receiver.");
     } else if (userNo === sender.no && present.senderDelete) {
-      throw new ForbiddenException("This present was deleted from sender.");
+      throw new NotFoundException("This present was deleted from sender.");
     }
 
     if (receiver.no === userNo && present.status === "unread") {
