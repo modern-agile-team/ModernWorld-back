@@ -7,20 +7,16 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class CharactersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOneCharacter(characterNo: number): PrismaPromise<character> {
+  getOneCharacter(no: number): PrismaPromise<character> {
     return this.prisma.character.findUnique({
       where: {
-        no: characterNo,
+        no,
       },
     });
   }
 
-  getCharactersBySpeciesOrName(
-    species: Animal,
-    characterName: string,
-  ): PrismaPromise<Pick<character, "no" | "image" | "name">[]> {
+  getCharactersBySpeciesOrName(species: Animal, characterName: string) {
     return this.prisma.character.findMany({
-      select: { no: true, image: true, name: true },
       where: { species, name: { contains: characterName } },
     });
   }

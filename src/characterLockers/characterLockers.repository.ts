@@ -4,13 +4,13 @@ import { Animal } from "src/common/enum/animal.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
-export class CharacterLockerRepository {
+export class CharacterLockersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   getUserAllCharacters(
     userNo: number,
-    species: Animal,
-    status: boolean,
+    species?: Animal,
+    status?: boolean,
   ): PrismaPromise<characterLocker[]> {
     return this.prisma.characterLocker.findMany({
       select: {
@@ -32,22 +32,20 @@ export class CharacterLockerRepository {
     });
   }
 
-  addOneCharacter(
+  createOneCharacter(
     userNo: number,
     characterNo: number,
+    status?: boolean,
   ): PrismaPromise<characterLocker> {
     return this.prisma.characterLocker.create({
-      data: { characterNo, userNo },
+      data: { characterNo, userNo, status },
     });
   }
 
-  updateCharacterStatusToUse(
-    userNo: number,
-    characterNo: number,
-  ): PrismaPromise<{ count: number }> {
-    return this.prisma.characterLocker.updateMany({
+  updateCharacterStatusToUse(no: number): PrismaPromise<characterLocker> {
+    return this.prisma.characterLocker.update({
       data: { status: true },
-      where: { userNo, characterNo },
+      where: { no },
     });
   }
 

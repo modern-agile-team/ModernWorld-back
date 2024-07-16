@@ -5,10 +5,10 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PostsRepository } from "./posts.repositroy";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
-import { CreateOnePostDto } from "./dto/create-post.dto";
+import { PostContentDto } from "./dtos/post-content.dto";
 import { UsersRepository } from "src/users/users.repository";
-import { GetOnePostDto } from "./dto/get-one-post.dto";
+import { GetOnePostResponseDto } from "./dtos/get-one-post-response.dto";
+import { GetPostsDto } from "./dtos/get-posts.dto";
 
 @Injectable()
 export class PostsService {
@@ -17,22 +17,19 @@ export class PostsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  getPostsByUserNo(
-    userNo: number,
-    senderReceiverNoField: SenderReceiverNoField,
-  ) {
+  getUserPosts(userNo: number, query: GetPostsDto) {
+    //해당 로직 GetUserPresents로직과 같음 (중복)
+    const { type } = query;
+
     const senderReceiverDeleteField =
-      senderReceiverNoField === "receiverNo"
+      type === "receiverNo"
         ? "receiverDelete"
-        : senderReceiverNoField === "senderNo"
+        : type === "senderNo"
           ? "senderDelete"
           : undefined;
 
-    let where = senderReceiverDeleteField
-      ? {
-          [senderReceiverNoField]: userNo,
-          [senderReceiverDeleteField]: false,
-        }
+    const where = type
+      ? { [type]: userNo, [senderReceiverDeleteField]: false }
       : {
           OR: [
             { senderNo: userNo, senderDelete: false },
@@ -50,29 +47,34 @@ export class PostsService {
       throw new NotFoundException("This post doesn't exist.");
     }
 
-    if (userNo !== post.senderNo && userNo !== post.receiverNo) {
-      throw new ForbiddenException("This post is not related with you.");
+    const { userPostReceiverNo: receiver, userPostSenderNo: sender } = post;
+
+    if (receiver.no !== userNo && sender.no !== userNo) {
+      throw new ForbiddenException("This post is not related with user.");
     }
 
-    if (userNo === post.receiverNo) {
-      if (post.receiverDelete) {
-        throw new ForbiddenException("This post was deleted from receiver.");
-      }
-      // 수신자이면, 처음 조회할 경우 읽었다는걸 표시해야함
-      if (!post.check) {
+    if (userNo === receiver.no && post.receiverDelete) {
+      throw new NotFoundException("This post was deleted from receiver.");
+    } else if (userNo === sender.no && post.senderDelete) {
+      throw new NotFoundException("This post was deleted from sender.");
+    }
+
+    if (receiver.no === userNo && !post.check) {
+      const processedPost =
         await this.postsRepository.updateOnePostCheckToTrue(postNo);
-        post.check = true;
-      }
-    } else if (post.senderDelete) {
-      throw new ForbiddenException("This post was deleted from sender.");
-      // 발신자이면 다른로직은 없음
+
+      return new GetOnePostResponseDto(processedPost);
     }
 
-    return new GetOnePostDto(post);
+    return new GetOnePostResponseDto(post);
   }
 
-  async createOnePost(senderNo: number, body: CreateOnePostDto) {
-    const { userNo: receiverNo, content } = body;
+  async createOnePost(
+    senderNo: number,
+    receiverNo: number,
+    body: PostContentDto,
+  ) {
+    const { content } = body;
 
     if (senderNo === receiverNo) {
       throw new ForbiddenException("Users cannot post themselves alone.");
@@ -89,7 +91,7 @@ export class PostsService {
   }
 
   async updateOnePostToDelete(userNo: number, postNo: number) {
-    const post = await this.postsRepository.getOnePostByNo(postNo);
+    const post = await this.postsRepository.getOnePost(postNo);
 
     if (!post) {
       throw new NotFoundException("This post doesn't exist.");
@@ -113,7 +115,7 @@ export class PostsService {
       ? "senderDelete"
       : "receiverDelete";
 
-    return this.postsRepository.updateOnePresentToDeleteByUser(
+    return this.postsRepository.updateOnePostToDeleteByUser(
       postNo,
       senderReceiverDeleteField,
     );

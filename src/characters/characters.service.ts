@@ -6,8 +6,8 @@ import { GetCharactersDto } from "./dtos/get-characters.dto";
 export class CharactersService {
   constructor(private readonly charactersRepository: CharactersRepository) {}
 
-  getCharacters(queryParmas: GetCharactersDto): Promise<object> {
-    const { species, characterName } = queryParmas;
+  getCharacters(query: GetCharactersDto) {
+    const { species, characterName } = query;
 
     return this.charactersRepository.getCharactersBySpeciesOrName(
       species,
@@ -15,7 +15,7 @@ export class CharactersService {
     );
   }
 
-  getOneCharacter(characterNo: number): Promise<object> {
+  getOneCharacter(characterNo: number) {
     return this.charactersRepository.getOneCharacter(characterNo);
   }
 }

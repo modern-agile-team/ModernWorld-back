@@ -11,12 +11,11 @@ export class InventoryRepository {
     theme: string,
     status: boolean,
     itemName: string,
-  ): PrismaPromise<inventory[]> {
+  ) {
     return this.prisma.inventory.findMany({
       select: {
         no: true,
         userNo: true,
-        itemNo: true,
         createdAt: true,
         status: true,
         item: {
@@ -45,7 +44,7 @@ export class InventoryRepository {
     });
   }
 
-  addOneItem(userNo: number, itemNo: number): PrismaPromise<inventory> {
+  createUserOneItem(userNo: number, itemNo: number): PrismaPromise<inventory> {
     return this.prisma.inventory.create({
       data: {
         userNo,
@@ -54,16 +53,12 @@ export class InventoryRepository {
     });
   }
 
-  updateItemStatus(
-    userNo: number,
-    itemNo: number,
-    status: boolean,
-  ): PrismaPromise<{ count: number }> {
-    return this.prisma.inventory.updateMany({
+  updateItemStatus(no: number, status: boolean): PrismaPromise<inventory> {
+    return this.prisma.inventory.update({
       data: {
         status,
       },
-      where: { userNo, itemNo },
+      where: { no },
     });
   }
 

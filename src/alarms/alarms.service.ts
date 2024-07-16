@@ -12,8 +12,8 @@ import { alarm } from "@prisma/client";
 export class AlarmsService {
   constructor(private readonly alarmsRepository: AlarmsRepository) {}
 
-  async getAlarms(userNo: number, queryParams: PaginationDto) {
-    const { take, page, orderBy } = queryParams;
+  async getAlarms(userNo: number, query: PaginationDto) {
+    const { take, page, orderBy } = query;
     const skip = take * (page - 1);
     const totalCount = await this.alarmsRepository.countAlarmsByUserNo(userNo);
     const alarms = await this.alarmsRepository.getAlarmsByUserNo(
@@ -24,14 +24,12 @@ export class AlarmsService {
     );
     const totalPage = Math.ceil(totalCount / take);
 
-    // return { data: alarms, meta: { page, take, totalCount, totalPage } };
     return new PaginationResponseDto<alarm>(alarms, {
       page,
       take,
       totalCount,
       totalPage,
     });
-    // 해당 로직 괜찮을까요?
   }
 
   async updateAlarmStatusToTrue(alarmNo: number, userNo: number) {
