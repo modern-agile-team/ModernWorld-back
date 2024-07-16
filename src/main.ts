@@ -30,7 +30,7 @@ async function bootstrap() {
         type: "http",
         scheme: "bearer",
         name: "JWT",
-        description: "Enter JWT token",
+        description: "액세스 토큰 입력",
         in: "header",
       },
       "access-token",

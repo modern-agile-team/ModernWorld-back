@@ -24,17 +24,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly tokenService: TokenService,
   ) {}
-  @UseGuards(AccessTokenAuthGuard)
-  @Get("test")
-  @ApiBearerAuth("access-token")
-  async test(@userNo() userNo: number) {
-    return userNo;
-  }
-  @Get("cookies")
-  getCookies(@Req() req: Request, @Res() res: Response) {
-    const cookies = req.cookies["refreshToken"];
-    return res.send(cookies);
-  }
+
   @ApiNaverLogin()
   @Post("naver/login")
   async naverLogin(@Query("code") code: string, @Res() res: Response) {
