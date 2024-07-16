@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsOptional } from "class-validator";
+import { IsInt, IsPositive } from "class-validator";
 
 export class getNeighborDto {
   @ApiProperty({
@@ -11,7 +11,7 @@ export class getNeighborDto {
   })
   @Type(() => Number)
   @IsInt()
-  @IsOptional()
+  @IsPositive()
   take: number;
 
   @ApiProperty({
@@ -21,6 +21,6 @@ export class getNeighborDto {
   })
   @Type(() => Number)
   @IsInt()
-  @IsOptional()
+  @IsPositive()
   page: number;
 }

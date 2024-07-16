@@ -1,5 +1,10 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiInternalServerErrorResponse,
+  ApiOperation,
+  ApiResponse,
+} from "@nestjs/swagger";
 
 export function ApiGetNeighobor() {
   return applyDecorators(
@@ -33,7 +38,50 @@ export function ApiGetNeighobor() {
       },
     }),
 
-    ApiResponse({
+    ApiBadRequestResponse({
+      status: 400,
+      description: "Bad Request",
+      content: {
+        JSON: {
+          examples: {
+            ex1: {
+              summary: "page가 숫자가 아닐 때",
+              value: {
+                message: ["page must be an integer number"],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+            ex2: {
+              summary: "take가 숫자가 아닐 때",
+              value: {
+                message: ["take must be an integer number"],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+            ex3: {
+              summary: "take가 음수일 때",
+              value: {
+                message: ["take must be a positive number"],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+            ex4: {
+              summary: "page가 음수일 때",
+              value: {
+                message: ["page must be a positive number"],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+          },
+        },
+      },
+    }),
+
+    ApiInternalServerErrorResponse({
       status: 500,
       description: "서버 오류가 발생한 경우",
       content: {

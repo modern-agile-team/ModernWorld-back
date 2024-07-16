@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  HttpCode,
 } from "@nestjs/common";
 import { NeighborService } from "./neighbors.service";
 import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
@@ -45,6 +46,7 @@ export class NeighborController {
 
   @ApiDeleteNeighobor()
   @Delete(":neighborNo")
+  @HttpCode(204)
   neighborRequestRefusalOrDelete(@Param("neighborNo") neighborNo: number) {
     return this.neighborService.neighborRequestRefusalOrDelete(neighborNo);
   }

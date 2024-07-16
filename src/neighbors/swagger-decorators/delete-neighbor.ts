@@ -13,7 +13,7 @@ export function ApiDeleteNeighobor() {
       description: "이웃 승인을 거절하거나 이웃을 삭제하는 API입니다.",
     }),
     ApiResponse({
-      status: 201,
+      status: 204,
       description: "이웃 승인 거절 & 이웃을 삭제하는 데 성공한 경우",
       content: {
         JSON: {
