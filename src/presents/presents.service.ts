@@ -16,6 +16,8 @@ import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
 import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
 import { UpdatePresentsStatusResponseDto } from "./dtos/update-presents-status-response.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { CommonService } from "src/common/common.service";
+import { LegendsRepository } from "src/legends/legends.repository";
 
 @Injectable()
 export class PresentsService {
@@ -26,6 +28,8 @@ export class PresentsService {
     private readonly inventoryRepository: InventoryRepository,
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly legendsRepository: LegendsRepository,
+    private readonly commonService: CommonService,
   ) {}
 
   getUserPresents(userNo: number, query: GetUserPresentsDto) {
@@ -143,15 +147,27 @@ export class PresentsService {
         return new UpdatePresentsStatusResponseDto(processedPresent);
       }
 
-      await this.inventoryRepository.createUserOneItem(userNo, itemNo);
+      try {
+        const [, , processedPresent] = await this.prisma.$transaction([
+          this.legendsRepository.updateOneLegendByUserNo(userNo, {
+            itemCount: { increment: 1 },
+          }),
 
-      const processedPresent =
-        await this.presentsRepository.updateOnePresentStatus(
-          presentNo,
-          acceptReject,
-        );
+          this.inventoryRepository.createUserOneItem(userNo, itemNo),
 
-      return new UpdatePresentsStatusResponseDto(processedPresent);
+          this.presentsRepository.updateOnePresentStatus(
+            presentNo,
+            acceptReject,
+          ),
+        ]);
+
+        this.commonService.checkAchievementCondition(userNo, "itemCount");
+
+        return new UpdatePresentsStatusResponseDto(processedPresent);
+      } catch (err) {
+        this.logger.error(`transaction Error : ${err}`);
+        throw new InternalServerErrorException();
+      }
     }
 
     const processedPresent =
@@ -238,14 +254,21 @@ export class PresentsService {
     }
 
     try {
-      const [, result] = await this.prisma.$transaction([
+      const [, , result] = await this.prisma.$transaction([
+        this.legendsRepository.updateOneLegendByUserNo(senderNo, {
+          presentCount: { increment: 1 },
+        }),
+
         this.usersRepository.updateUserCurrentPoint(senderNo, -item.price),
+
         this.presentsRepository.createOneItemToUser(
           senderNo,
           receiverNo,
           itemNo,
         ),
       ]);
+
+      this.commonService.checkAchievementCondition(senderNo, "presentCount");
 
       return result;
     } catch (err) {
