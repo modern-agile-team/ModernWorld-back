@@ -10,6 +10,7 @@ import { LikesRepository } from "./likes.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { PrismaService } from "src/prisma/prisma.service";
+import { CommonService } from "src/common/common.service";
 
 @Injectable()
 export class LikesService {
@@ -19,6 +20,7 @@ export class LikesService {
     private readonly likesRepository: LikesRepository,
     private readonly usersRepository: UsersRepository,
     private readonly legendsRepository: LegendsRepository,
+    private readonly commonService: CommonService,
   ) {}
 
   async createOneLike(senderNo: number, receiverNo: number) {
@@ -38,6 +40,8 @@ export class LikesService {
         }),
         this.likesRepository.createOneLike(senderNo, receiverNo),
       ]);
+
+      this.commonService.checkAchievementCondition(receiverNo, "likeCount");
 
       return result;
     } catch (err) {
