@@ -107,7 +107,7 @@ export class AuthService {
       await this.tokenService.setAccessToken(
         user.no.toString() + "-accessToken",
         accessToken,
-        60 * 60 * 3, // 3시간
+        60 * 60 * 12, // 12시간
       );
       return { accessToken, refreshToken };
     } catch (error) {
@@ -207,7 +207,7 @@ export class AuthService {
       await this.tokenService.setAccessToken(
         user.no.toString() + "-accessToken",
         accessToken,
-        60 * 60 * 3, // 3시간
+        60 * 60 * 12, // 12시간
       );
       return { accessToken, refreshToken };
     } catch (error) {

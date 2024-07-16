@@ -13,7 +13,7 @@ export class TokenService {
     const payload = { sub: "accessToken", userNo };
 
     return this.jwtService.sign(payload, {
-      expiresIn: "3h",
+      expiresIn: "12h",
       secret: process.env.ACCESS_TOKEN_SECRET,
     });
   }
@@ -29,7 +29,7 @@ export class TokenService {
 
   async createNewAccessToken(userNo: number) {
     const accessToken = this.createAccessToken(userNo);
-    this.setAccessToken(`${userNo}-accessToken`, accessToken, 60 * 60 * 3);
+    this.setAccessToken(`${userNo}-accessToken`, accessToken, 60 * 60 * 12);
 
     return { accessToken };
   }
