@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
 import { RedisService } from "../redis/redis.service";
 
 @Injectable()
@@ -7,6 +8,7 @@ export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
+    private readonly configService: ConfigService,
   ) {}
 
   createAccessToken(userNo: number) {
@@ -14,7 +16,7 @@ export class TokenService {
 
     return this.jwtService.sign(payload, {
       expiresIn: "12h",
-      secret: process.env.ACCESS_TOKEN_SECRET,
+      secret: this.configService.get<string>("ACCESS_TOKEN_SECRET"),
     });
   }
 
@@ -23,7 +25,7 @@ export class TokenService {
 
     return this.jwtService.sign(payload, {
       expiresIn: "7d",
-      secret: process.env.REFRESH_TOKEN_SECRET,
+      secret: this.configService.get<string>("REFRESH_TOKEN_SECRET"),
     });
   }
 
@@ -45,6 +47,7 @@ export class TokenService {
   getRefreshToken(userNo: string) {
     return this.redisService.getToken(userNo);
   }
+
   getAccessToken(userNo: string) {
     return this.redisService.getToken(userNo);
   }

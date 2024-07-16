@@ -9,7 +9,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./services/auth.service";
-import { ApiBearerAuth } from "@nestjs/swagger";
 import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from "./jwt/jwt.guard";
 import { userNo } from "./auth.decorator";
 import { Response, Request } from "express";
