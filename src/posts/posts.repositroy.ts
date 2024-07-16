@@ -14,8 +14,9 @@ export class PostsRepository {
     return this.prisma.post.findMany({
       select: {
         no: true,
-        check: true,
+        content: true,
         createdAt: true,
+        check: true,
         userPostSenderNo: { select: { no: true, nickname: true } },
         userPostReceiverNo: { select: { no: true, nickname: true } },
       },
@@ -28,8 +29,8 @@ export class PostsRepository {
       select: {
         no: true,
         content: true,
-        check: true,
         createdAt: true,
+        check: true,
         senderDelete: true,
         receiverDelete: true,
         userPostSenderNo: { select: { no: true, nickname: true } },

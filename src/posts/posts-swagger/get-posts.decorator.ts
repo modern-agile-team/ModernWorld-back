@@ -22,8 +22,9 @@ export function ApiGetPosts() {
           example: [
             {
               no: 1,
-              check: false,
+              content: "엄준식비",
               createdAt: "2024-07-01T05:00:46.000Z",
+              check: false,
               userPostSenderNo: {
                 no: 1,
                 nickname: "1번 닉네임",
@@ -34,22 +35,10 @@ export function ApiGetPosts() {
               },
             },
             {
-              no: 2,
-              check: false,
-              createdAt: "2024-07-01T05:00:46.000Z",
-              userPostSenderNo: {
-                no: 1,
-                nickname: "1번 닉네임",
-              },
-              userPostReceiverNo: {
-                no: 3,
-                nickname: "3번닉네임",
-              },
-            },
-            {
               no: 3,
-              check: false,
+              content: "엄준식수",
               createdAt: "2024-07-01T05:00:46.000Z",
+              check: false,
               userPostSenderNo: {
                 no: 1,
                 nickname: "1번 닉네임",
@@ -61,8 +50,9 @@ export function ApiGetPosts() {
             },
             {
               no: 4,
-              check: false,
+              content: "엄준식기",
               createdAt: "2024-07-01T05:00:46.000Z",
+              check: false,
               userPostSenderNo: {
                 no: 1,
                 nickname: "1번 닉네임",
@@ -74,8 +64,9 @@ export function ApiGetPosts() {
             },
             {
               no: 5,
-              check: false,
+              content: "왕덕봉봉",
               createdAt: "2024-07-01T05:00:46.000Z",
+              check: false,
               userPostSenderNo: {
                 no: 2,
                 nickname: "2번닉네임",
@@ -87,8 +78,9 @@ export function ApiGetPosts() {
             },
             {
               no: 6,
-              check: true,
+              content: "왕덕봉덕",
               createdAt: "2024-07-01T05:00:46.000Z",
+              check: true,
               userPostSenderNo: {
                 no: 3,
                 nickname: "3번닉네임",
@@ -100,8 +92,9 @@ export function ApiGetPosts() {
             },
             {
               no: 7,
-              check: false,
+              content: "왕닭발",
               createdAt: "2024-07-01T05:00:46.000Z",
+              check: false,
               userPostSenderNo: {
                 no: 4,
                 nickname: "4번닉네임",
@@ -113,8 +106,9 @@ export function ApiGetPosts() {
             },
             {
               no: 8,
-              check: false,
+              content: "김뿡우",
               createdAt: "2024-07-14T11:50:55.000Z",
+              check: false,
               userPostSenderNo: {
                 no: 1,
                 nickname: "1번 닉네임",

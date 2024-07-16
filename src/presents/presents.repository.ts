@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AcceptReject, PresentStatus } from "./enum/present-status.enum";
-import { PrismaPromise, present, present_status } from "@prisma/client";
+import { PrismaPromise, present } from "@prisma/client";
 
 @Injectable()
 export class PresentsRepository {
@@ -13,22 +13,13 @@ export class PresentsRepository {
     });
   }
 
-  getPresents(where: object): PrismaPromise<
-    {
-      no: number;
-      status: present_status;
-      createdAt: Date;
-      item: { name: string };
-      userPresentSenderNo: { no: number; nickname: string };
-      userPresentReceiverNo: { no: number; nickname: string };
-    }[]
-  > {
+  getPresents(where: object) {
     return this.prisma.present.findMany({
       select: {
         no: true,
         status: true,
         createdAt: true,
-        item: { select: { name: true } },
+        item: { select: { name: true, image: true, description: true } },
         userPresentSenderNo: { select: { no: true, nickname: true } },
         userPresentReceiverNo: { select: { no: true, nickname: true } },
       },

@@ -23,6 +23,9 @@ export function ApiGetUserPresents() {
               createdAt: "2024-07-12T07:01:51.000Z",
               item: {
                 name: "1번 아이템",
+                image:
+                  "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
+                description: "1번 아이템 설명",
               },
               userPresentSenderNo: {
                 no: 1,
@@ -39,6 +42,9 @@ export function ApiGetUserPresents() {
               createdAt: "2024-07-12T06:39:29.000Z",
               item: {
                 name: "1번 아이템",
+                image:
+                  "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
+                description: "1번 아이템 설명",
               },
               userPresentSenderNo: {
                 no: 1,
@@ -55,6 +61,9 @@ export function ApiGetUserPresents() {
               createdAt: "2024-07-12T06:19:41.000Z",
               item: {
                 name: "4번 아이템",
+                image:
+                  "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+                description: "4번 아이템 설명",
               },
               userPresentSenderNo: {
                 no: 1,
@@ -66,59 +75,14 @@ export function ApiGetUserPresents() {
               },
             },
             {
-              no: 9,
-              status: "unread",
-              createdAt: "2024-07-01T05:00:46.000Z",
-              item: {
-                name: "3번 아이템",
-              },
-              userPresentSenderNo: {
-                no: 4,
-                nickname: "4번닉네임",
-              },
-              userPresentReceiverNo: {
-                no: 5,
-                nickname: "5번닉네임",
-              },
-            },
-            {
-              no: 8,
-              status: "unread",
-              createdAt: "2024-07-01T05:00:46.000Z",
-              item: {
-                name: "2번 아이템",
-              },
-              userPresentSenderNo: {
-                no: 3,
-                nickname: "3번닉네임",
-              },
-              userPresentReceiverNo: {
-                no: 4,
-                nickname: "4번닉네임",
-              },
-            },
-            {
-              no: 7,
-              status: "unread",
-              createdAt: "2024-07-01T05:00:46.000Z",
-              item: {
-                name: "1번 아이템",
-              },
-              userPresentSenderNo: {
-                no: 5,
-                nickname: "5번닉네임",
-              },
-              userPresentReceiverNo: {
-                no: 4,
-                nickname: "4번닉네임",
-              },
-            },
-            {
               no: 6,
               status: "unread",
               createdAt: "2024-07-01T05:00:46.000Z",
               item: {
                 name: "4번 아이템",
+                image:
+                  "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+                description: "4번 아이템 설명",
               },
               userPresentSenderNo: {
                 no: 1,
@@ -131,10 +95,13 @@ export function ApiGetUserPresents() {
             },
             {
               no: 5,
-              status: "read",
+              status: "unread",
               createdAt: "2024-07-01T05:00:46.000Z",
               item: {
                 name: "3번 아이템",
+                image:
+                  "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/beardoll.svg",
+                description: "3번 아이템 설명",
               },
               userPresentSenderNo: {
                 no: 4,
@@ -147,10 +114,13 @@ export function ApiGetUserPresents() {
             },
             {
               no: 4,
-              status: "unread",
+              status: "read",
               createdAt: "2024-07-01T05:00:46.000Z",
               item: {
                 name: "2번 아이템",
+                image:
+                  "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
+                description: "2번 아이템 설명",
               },
               userPresentSenderNo: {
                 no: 3,
@@ -167,6 +137,9 @@ export function ApiGetUserPresents() {
               createdAt: "2024-07-01T05:00:46.000Z",
               item: {
                 name: "1번 아이템",
+                image:
+                  "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
+                description: "1번 아이템 설명",
               },
               userPresentSenderNo: {
                 no: 2,
@@ -175,38 +148,6 @@ export function ApiGetUserPresents() {
               userPresentReceiverNo: {
                 no: 1,
                 nickname: "1번 닉네임",
-              },
-            },
-            {
-              no: 2,
-              status: "unread",
-              createdAt: "2024-07-01T05:00:46.000Z",
-              item: {
-                name: "1번 아이템",
-              },
-              userPresentSenderNo: {
-                no: 5,
-                nickname: "5번닉네임",
-              },
-              userPresentReceiverNo: {
-                no: 1,
-                nickname: "1번 닉네임",
-              },
-            },
-            {
-              no: 1,
-              status: "unread",
-              createdAt: "2024-07-01T05:00:46.000Z",
-              item: {
-                name: "1번 아이템",
-              },
-              userPresentSenderNo: {
-                no: 1,
-                nickname: "1번 닉네임",
-              },
-              userPresentReceiverNo: {
-                no: 2,
-                nickname: "2번닉네임",
               },
             },
           ],
