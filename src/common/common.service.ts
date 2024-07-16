@@ -1,8 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 import { AchievementsRepository } from "src/achievements/achievements.repository";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { UpdateLegendCount } from "src/legends/interfaces/update-legend-count.interface";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
 import { UserAchievementsRepository } from "src/user-achievements/user-achievements.repository";
 import { UsersRepository } from "src/users/users.repository";
@@ -16,6 +21,8 @@ export class CommonService {
     private readonly legendsRepository: LegendsRepository,
     private readonly usersAchievementsRepository: UserAchievementsRepository,
     private readonly achievementsRepository: AchievementsRepository,
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
   ) {}
 
   async recordLegendAndCheckAchievement<T extends keyof UpdateLegendCount>(
@@ -67,26 +74,33 @@ export class CommonService {
           legendOneFieldWithNumber,
         );
 
-      //관련로직 transaction으로 묶어놓기!!--------------------------------------
+      try {
+        await this.prisma.$transaction([
+          //유저 업적 테이블에 업적 추가
+          this.usersAchievementsRepository.createOneUserAchievement(userNo, no),
 
-      //유저 업적 테이블에 업적 추가
-      this.usersAchievementsRepository.createOneUserAchievement(userNo, no);
+          //유저 포인트 늘리기
+          this.usersRepository.updateUserCurrentPointAccumulationPoint(
+            userNo,
+            point,
+          ),
 
-      //유저 포인트 늘리기
-      this.usersRepository.updateUserCurrentPointAccumulationPoint(
+          //알람 테이블에 알람 추가
+          this.alarmsRepository.createOneAlarm(
+            userNo,
+            `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
+            "/users/my/achievements", // 해당 항목 반드시 유심히 볼것, 추후 변경 가능성 농후-------------------------------------------
+          ),
+        ]);
+      } catch (err) {
+        this.logger.error(`transaction Error : ${err}`);
+        throw new InternalServerErrorException();
+      }
+
+      this.sseService.sendSse(
         userNo,
-        point,
+        `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
       );
-
-      //알람 테이블에 알람 추가
-      this.alarmsRepository.createOneAlarm(
-        userNo,
-        `업적 [${title}]을 달성했습니다!`,
-        "/user-achievements", // 해당 항목 반드시 유심히 볼것, 추후 변경 가능성 농후-------------------------------------------
-      );
-
-      //sse 알람 보내기
-      this.sseService.sendSse(userNo, `업적 [${title}]을 달성했습니다!`);
     }
   }
 }
