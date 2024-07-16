@@ -6,7 +6,7 @@ export class GetCharactersDto {
   @ApiPropertyOptional({
     name: "species",
     enum: Animal,
-    example: "cat",
+    description: "강아지 / 고양이",
   })
   @IsEnum(Animal)
   @IsOptional()
@@ -14,7 +14,7 @@ export class GetCharactersDto {
 
   @ApiPropertyOptional({
     name: "characterName",
-    example: "캐릭터 이름",
+    description: "캐릭터 이름",
   })
   characterName?: string;
 }

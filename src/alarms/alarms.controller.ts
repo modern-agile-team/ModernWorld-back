@@ -4,30 +4,35 @@ import {
   Get,
   HttpCode,
   Param,
-  ParseIntPipe,
   Patch,
   Query,
 } from "@nestjs/common";
 import { AlarmsService } from "./alarms.service";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { ApiGetAlarms } from "./alarms-swagger/get-alarms.decorator";
+import { ApiUpdateAlarmStatusToRead } from "./alarms-swagger/update-alarm-status-to-read.decorator";
+import { ApiDeleteOneAlarm } from "./alarms-swagger/delete-one-alarm.decorator";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
-@Controller("alarms")
+@Controller("users/my/alarms")
 @ApiTags("Alarms")
 export class AlarmsController {
   constructor(private readonly alarmsService: AlarmsService) {}
 
   @Get()
-  @ApiOperation({ summary: "알람 조회" })
-  getAlarms(@Query() queryParams: PaginationDto) {
+  @ApiGetAlarms()
+  getAlarms(@Query() query: PaginationDto) {
     const userNo = 1;
 
-    return this.alarmsService.getAlarms(userNo, queryParams);
+    return this.alarmsService.getAlarms(userNo, query);
   }
 
   @Patch(":alarmNo")
-  @ApiOperation({ summary: "알람 읽음으로 처리" })
-  updateAlarmStatusToRead(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
+  @ApiUpdateAlarmStatusToRead()
+  updateAlarmStatusToRead(
+    @Param("alarmNo", ParsePositiveIntPipe) alarmNo: number,
+  ) {
     const userNo = 1;
 
     return this.alarmsService.updateAlarmStatusToTrue(alarmNo, userNo);
@@ -35,8 +40,8 @@ export class AlarmsController {
 
   @Delete(":alarmNo")
   @HttpCode(204)
-  @ApiOperation({ summary: "알람 삭제" })
-  deleteOneAlarm(@Param("alarmNo", ParseIntPipe) alarmNo: number) {
+  @ApiDeleteOneAlarm()
+  deleteOneAlarm(@Param("alarmNo", ParsePositiveIntPipe) alarmNo: number) {
     const userNo = 1;
 
     return this.alarmsService.deleteOneAlarm(userNo, alarmNo);

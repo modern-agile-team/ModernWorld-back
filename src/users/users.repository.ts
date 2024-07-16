@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, user } from "@prisma/client";
+import { PrismaPromise, user, user_domain } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
-import { DomainEnum } from "./enum/domain.enum";
 
 @Injectable()
 export class UsersRepository {
@@ -20,19 +19,14 @@ export class UsersRepository {
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: string,
+    domain: user_domain,
   ): PrismaPromise<user> {
     return this.prisma.user.create({
       data: {
         uniqueIdentifier,
         socialName,
         image,
-        domain:
-          domain === "naver"
-            ? "naver"
-            : domain === "google"
-              ? "google"
-              : "kakao",
+        domain,
       },
     });
   }
@@ -155,6 +149,8 @@ export class UsersRepository {
     nickname: string;
     currentPoint: number;
     accumulationPoint: number;
+    description: string;
+    image: string;
     legend: { likeCount: number };
     characterLocker: { character: { image: string } }[];
     userAchievement: {
@@ -166,6 +162,8 @@ export class UsersRepository {
         nickname: true,
         currentPoint: true,
         accumulationPoint: true,
+        description: true,
+        image: true,
 
         legend: { select: { likeCount: true } },
 
@@ -184,6 +182,10 @@ export class UsersRepository {
 
       where: { no: userNo },
     });
+  }
+
+  countUsers(where): PrismaPromise<number> {
+    return this.prisma.user.count({ where });
   }
 
   getUsers(

@@ -3,50 +3,62 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
-  ParseEnumPipe,
-  ParseIntPipe,
   Post,
   Query,
 } from "@nestjs/common";
 import { PostsService } from "./posts.service";
-import { SenderReceiverNoField } from "src/presents/enum/present-senderReceiverNo.enum";
-import { CreateOnePostDto } from "./dto/create-post.dto";
-import { ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { PostContentDto } from "./dtos/post-content.dto";
+import { ApiTags } from "@nestjs/swagger";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { ApiCreateOnePost } from "./posts-swagger/create-one-post.decorator";
+import { GetPostsDto } from "./dtos/get-posts.dto";
+import { ApiGetPosts } from "./posts-swagger/get-posts.decorator";
+import { ApiGetOnePost } from "./posts-swagger/get-one-post.decorator";
+import { ApiDeleteOnePost } from "./posts-swagger/delete-one-post.decorator";
 
-@Controller("posts")
+//해당 로직은 Presents와 동일한 부분이 많음. 해당 부분 참고할것
+@Controller()
 @ApiTags("Posts")
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get()
-  @ApiQuery({ name: "type", required: false, enum: SenderReceiverNoField })
+  @Get("users/my/posts")
+  @ApiGetPosts()
   getPosts(
-    @Query("type", new ParseEnumPipe(SenderReceiverNoField, { optional: true }))
-    senderReceiverNoField?: SenderReceiverNoField,
+    @Query()
+    query: GetPostsDto,
   ) {
     const userNo = 1;
 
-    return this.postsService.getPostsByUserNo(userNo, senderReceiverNoField);
+    return this.postsService.getUserPosts(userNo, query);
   }
 
-  @Get(":postNo")
-  @ApiParam({ name: "postNo", example: 1 })
-  getOnePost(@Param("postNo", ParseIntPipe) postNo: number) {
+  @Get("users/my/posts/:postNo")
+  @ApiGetOnePost()
+  getOnePost(@Param("postNo", ParsePositiveIntPipe) postNo: number) {
     const userNo = 1;
 
     return this.postsService.getOnePostByUserNo(userNo, postNo);
   }
 
-  @Post()
-  createPost(@Body() body: CreateOnePostDto) {
+  @Post("users/:userNo/posts")
+  @ApiCreateOnePost()
+  createOnePost(
+    @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
+    @Body()
+    body: PostContentDto,
+  ) {
     const tokenUserNo = 1;
 
-    return this.postsService.createOnePost(tokenUserNo, body);
+    return this.postsService.createOnePost(tokenUserNo, receiverNo, body);
   }
 
-  @Delete(":postNo")
-  deletePost(@Param("postNo", ParseIntPipe) postNo: number) {
+  @Delete("users/my/posts/:postNo")
+  @ApiDeleteOnePost()
+  @HttpCode(204)
+  deleteOnePost(@Param("postNo", ParsePositiveIntPipe) postNo: number) {
     const userNo = 1;
 
     return this.postsService.updateOnePostToDelete(userNo, postNo);

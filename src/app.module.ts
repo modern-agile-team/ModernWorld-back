@@ -11,36 +11,42 @@ import { PresentsModule } from "./presents/presents.module";
 import { CharactersModule } from "./characters/characters.module";
 import { PostsModule } from "./posts/posts.module";
 import { AuthModule } from "./auth/auth.module";
-import { CharacterLockerModule } from "./characterLocker/characterLocker.module";
+import { CharacterLockerModule } from "./characterLockers/characterLockers.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { TasksModule } from "./tasks/tasks.module";
+import { AchievementsModule } from "./achievements/achievements.module";
 import { LikesModule } from "./likes/likes.module";
 import { LegendsModule } from "./legends/legends.module";
-import { CommonModule } from "./common/common.module";
+import { LoggerModule } from "./common/utils/logger/logger.module";
 import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
 import { RedisModule } from "./auth/redis/redis.module";
+import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
+import { CommonModule } from "./common/common.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
+    UserAchievementsModule,
+    LegendsModule,
+    AlarmsModule,
     PrismaModule,
     ItemsModule,
-    UsersModule,
-    InventoryModule,
-    CommentModule,
     PresentsModule,
+    CommentModule,
     CharactersModule,
     PostsModule,
     AuthModule,
     CharacterLockerModule,
     TasksModule,
+    AchievementsModule,
     LikesModule,
-    LegendsModule,
-    AlarmsModule,
-    CommonModule,
+    LoggerModule,
     SseModule,
+    CommonModule,
     RedisModule,
+    InventoryModule,
+    UsersModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
