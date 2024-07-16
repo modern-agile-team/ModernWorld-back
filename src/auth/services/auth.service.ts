@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/services/token.service";
-import { TokenRepository } from "src/auth/repositorys/token.repository";
+import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()

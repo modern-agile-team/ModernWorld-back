@@ -3,7 +3,7 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./services/auth.service";
 import { UsersModule } from "src/users/users.module";
 import { TokenService } from "./services/token.service";
-import { TokenRepository } from "./repositorys/token.repository";
+import { TokenRepository } from "./repositories/token.repository";
 import { JwtModule } from "@nestjs/jwt";
 import { AccessStrategy, RefreshStrategy } from "./jwt/jwt.strategy";
 import { RedisModule } from "./redis/redis.module";
