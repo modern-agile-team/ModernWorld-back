@@ -57,7 +57,7 @@ export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
         throw new NotFoundException(error.message);
       } else {
         this.logger.error(error);
-        throw new BadRequestException("jwt error");
+        throw new UnauthorizedException("jwt error");
       }
     }
   }
@@ -110,7 +110,7 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
         throw new NotFoundException(error.message);
       } else {
         this.logger.error(error);
-        throw new BadRequestException("jwt error");
+        throw new UnauthorizedException("jwt error");
       }
     }
   }

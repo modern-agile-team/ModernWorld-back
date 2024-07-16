@@ -18,14 +18,6 @@ export function ApiNewAccessToken() {
       content: {
         JSON: {
           examples: {
-            "invalid token": {
-              value: {
-                message: "invalid token",
-                error: "Bad Request",
-                statusCode: 400,
-              },
-              description: "유효하지 않은 토큰인 경우",
-            },
             "Cookie has no refresh token": {
               value: {
                 message: "Cookie has no refresh token",
@@ -50,22 +42,6 @@ export function ApiNewAccessToken() {
               },
               description: "토큰이 제공되지 않은 경우",
             },
-            "invalid signature": {
-              value: {
-                message: "invalid signature",
-                error: "Bad Request",
-                statusCode: 400,
-              },
-              description: "우리 서비스의 리프레시 토큰이 아닌 경우",
-            },
-            "jwt error": {
-              value: {
-                message: "jwt error",
-                error: "Bad Request",
-                statusCode: 400,
-              },
-              description: "그 외 에러 (안진우에게 연락주세요..ㅎ)",
-            },
           },
         },
       },
@@ -76,6 +52,22 @@ export function ApiNewAccessToken() {
       content: {
         JSON: {
           examples: {
+            "invalid token": {
+              value: {
+                message: "invalid token",
+                error: "Unauthorized",
+                statusCode: 401,
+              },
+              description: "유효하지 않은 토큰인 경우",
+            },
+            "incorrect token": {
+              value: {
+                message: "incorrect token",
+                error: "Unauthorized",
+                statusCode: 401,
+              },
+              description: "우리 서비스의 리프레시 토큰이 아닌 경우",
+            },
             "jwt expired": {
               value: {
                 message: "jwt expired",
@@ -83,6 +75,14 @@ export function ApiNewAccessToken() {
                 statusCode: 401,
               },
               description: "만료된 토큰인 경우",
+            },
+            "jwt error": {
+              value: {
+                message: "jwt error",
+                error: "Unauthorized",
+                statusCode: 401,
+              },
+              description: "그 외 에러 (안진우에게 연락주세요..ㅎ)",
             },
           },
         },
