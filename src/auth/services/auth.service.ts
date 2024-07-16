@@ -72,7 +72,9 @@ export class AuthService {
       ).data;
 
       if (!userInfo) {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(
+          "소셜 유저 정보를 가져오는 데 실패했습니다.",
+        );
       }
 
       const userUniqueIdentifier = userInfo.response.id;
