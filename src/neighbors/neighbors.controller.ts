@@ -26,7 +26,7 @@ export class NeighborController {
   @ApiCraeteNeighbor()
   @Post()
   neighborRequest(@Body() body: CreateNeighborDto) {
-    const userNo = 8;
+    const userNo = 3;
     return this.neighborService.neighborRequest(body, userNo);
   }
 

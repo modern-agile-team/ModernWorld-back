@@ -1,5 +1,10 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiResponse,
+} from "@nestjs/swagger";
 
 export function ApiDeleteNeighobor() {
   return applyDecorators(
@@ -23,25 +28,21 @@ export function ApiDeleteNeighobor() {
       },
     }),
 
-    ApiResponse({
+    ApiNotFoundResponse({
       status: 404,
       description: "해당 이웃을 찾을 수 없는 경우",
       content: {
         JSON: {
           example: {
-            selfNeighborRequest: {
-              summary: "해당 이웃을 찾을 수 없는 경우",
-              value: {
-                statusCode: 404,
-                message: "해당 이웃을 찾을 수 없습니다.",
-              },
-            },
+            message: "해당 이웃을 찾을 수 없습니다.",
+            error: "Not Found",
+            statusCode: 404,
           },
         },
       },
     }),
 
-    ApiResponse({
+    ApiInternalServerErrorResponse({
       status: 500,
       description: "서버 오류가 발생한 경우",
       content: {

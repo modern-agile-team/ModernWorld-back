@@ -1,5 +1,11 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiInternalServerErrorResponse,
+  ApiOperation,
+  ApiResponse,
+} from "@nestjs/swagger";
 
 export function ApiUpdateNeighobor() {
   return applyDecorators(
@@ -23,25 +29,35 @@ export function ApiUpdateNeighobor() {
       },
     }),
 
-    ApiResponse({
-      status: 400,
-      description: "이미 승인된 이웃 신청인 경우",
+    ApiBadRequestResponse({
+      status: 404,
+      description: "존재하지 않는 이웃신청인 경우",
       content: {
         JSON: {
           example: {
-            selfNeighborRequest: {
-              summary: "이미 승인된 이웃 신청인 경우",
-              value: {
-                statusCode: 400,
-                message: "이미 승인 처리된 이웃신청입니다.",
-              },
-            },
+            message: "존재하지 않는 이웃요청입니다.",
+            error: "Not Found",
+            statusCode: 404,
           },
         },
       },
     }),
 
-    ApiResponse({
+    ApiConflictResponse({
+      status: 409,
+      description: "이미 승인된 이웃 신청인 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "이미 승인 처리된 이웃요청입니다.",
+            error: "Conflict",
+            statusCode: 409,
+          },
+        },
+      },
+    }),
+
+    ApiInternalServerErrorResponse({
       status: 500,
       description: "서버 오류가 발생한 경우",
       content: {
