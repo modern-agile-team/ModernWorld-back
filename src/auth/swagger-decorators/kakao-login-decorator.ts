@@ -47,8 +47,7 @@ export function ApiKakaoLogin() {
     }),
     ApiResponse({
       status: 500,
-      description:
-        "인가 코드는 유효하지만 로그인 시도 중 서버에서 에러가 발생한 경우",
+      description: "Internal server error",
       content: {
         JSON: {
           example: {

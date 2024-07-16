@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/services/token.service";
-import { TokenRepository } from "src/auth/repositotys/token.repository";
+import { TokenRepository } from "src/auth/repositorys/token.repository";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
@@ -72,9 +72,7 @@ export class AuthService {
       ).data;
 
       if (!userInfo) {
-        throw new InternalServerErrorException(
-          "소셜 유저 정보를 가져오는 데 실패했습니다.",
-        );
+        throw new InternalServerErrorException();
       }
 
       const userUniqueIdentifier = userInfo.response.id;

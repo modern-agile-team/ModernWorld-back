@@ -8,14 +8,18 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { JwtDto } from "./jwt.dto";
 import { Request } from "express";
 import { TokenService } from "../services/token.service";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AccessStrategy extends PassportStrategy(Strategy, "accessToken") {
-  constructor(private readonly tokenService: TokenService) {
+  constructor(
+    private readonly tokenService: TokenService,
+    private readonly configService: ConfigService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.ACCESS_TOKEN_SECRET,
+      secretOrKey: configService.get<string>("ACCESS_TOKEN_SECRET"),
       passReqToCallback: true,
     });
   }
@@ -51,7 +55,10 @@ export class RefreshStrategy extends PassportStrategy(
   Strategy,
   "refreshToken",
 ) {
-  constructor(private readonly tokenService: TokenService) {
+  constructor(
+    private readonly tokenService: TokenService,
+    private readonly configService: ConfigService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request) => {
@@ -59,7 +66,7 @@ export class RefreshStrategy extends PassportStrategy(
         },
       ]),
       ignoreExpiration: false,
-      secretOrKey: process.env.REFRESH_TOKEN_SECRET,
+      secretOrKey: configService.get<string>("REFRESH_TOKEN_SECRET"),
       passReqToCallback: true,
     });
   }

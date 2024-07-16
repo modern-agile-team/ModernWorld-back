@@ -48,16 +48,16 @@ export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
         throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid token") {
-        throw new BadRequestException(error.message);
+        throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid signature") {
-        throw new BadRequestException(error.message);
+        throw new UnauthorizedException("incorrect token");
       }
       if (error.message === "Token not found.") {
         throw new NotFoundException(error.message);
       } else {
         this.logger.error(error);
-        throw new BadRequestException(error.message);
+        throw new BadRequestException("jwt error");
       }
     }
   }
@@ -101,10 +101,10 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
         throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid token") {
-        throw new BadRequestException(error.message);
+        throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid signature") {
-        throw new BadRequestException(error.message);
+        throw new UnauthorizedException("incorrect token");
       }
       if (error.message === "Token not found.") {
         throw new NotFoundException(error.message);
