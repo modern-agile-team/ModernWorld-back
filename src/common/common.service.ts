@@ -25,27 +25,18 @@ export class CommonService {
     private readonly logger: Logger,
   ) {}
 
-  async recordLegendAndCheckAchievement<T extends keyof UpdateLegendCount>(
+  async checkAchievementCondition(
     userNo: number,
     legendOneField: keyof UpdateLegendCount,
   ) {
-    //유저가 해당하는 행위를 몇번 했는지 기록
-    const updateLegendCount = <Pick<UpdateLegendCount, T>>{
-      [legendOneField]: { increment: 1 },
-    };
-    // type casting? assertion? 타입 단언 처음알았음..ㄷㄷ
-    // 내 손모가지를 걸고 타입은 이거다.
-
-    const updatedLegend = await this.legendsRepository.updateOneLegendByUserNo(
-      userNo,
-      updateLegendCount,
-    );
+    const userLegend =
+      await this.legendsRepository.getAllLegendsByUserNo(userNo);
 
     // 해당하는 개수 별로 흭득할수 있는 업적 설정
     // 총 15개의 업적. 5(업적 종류) * 3(업적단계) legend table의 feild 값이10, 20, 40일떄 이벤트 발생
     // achievement name은 ~Count1, ~Count2, ~Count3로 구성됨 사실 이러면 name의 역할은 DB 검색용 역할로 전락함
     // 그러나 title(칭호)가 있으니까 프론트는 이거쓰면 됨ㅇㅇ
-    switch (updatedLegend[`${legendOneField}`]) {
+    switch (userLegend[`${legendOneField}`]) {
       case 10:
         this.checkAchievementConditonAndGet(userNo, legendOneField + 1);
         break;
