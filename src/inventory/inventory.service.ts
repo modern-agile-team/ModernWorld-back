@@ -2,6 +2,8 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { ItemsRepository } from "src/items/items.repository";
@@ -9,16 +11,21 @@ import { InventoryRepository } from "./inventory.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { GetUserItemsDto } from "./dtos/get-user-items.dto";
 import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
+import { ItemNoDto } from "./dtos/item-no.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class InventoryService {
   constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
     private readonly inventoryRepository: InventoryRepository,
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
   ) {}
-  getUserItems(userNo: number, queryParams: GetUserItemsDto) {
-    const { theme, status, itemName } = queryParams;
+  getUserItems(userNo: number, query: GetUserItemsDto) {
+    const { theme, status, itemName } = query;
+
     return this.inventoryRepository.getUserItems(
       userNo,
       theme,
@@ -27,7 +34,7 @@ export class InventoryService {
     );
   }
 
-  async buyOneItem(userNo: number, itemNo: number) {
+  async createUserOneItem(userNo: number, body: ItemNoDto) {
     /**
      * 아이템을 사는 로직
      *
@@ -43,6 +50,8 @@ export class InventoryService {
      *
      * 4번 5번의 과정은 트랜잭션을 한번에 묶자.
      */
+
+    const { itemNo } = body;
 
     const item = await this.itemsRepository.getOneItem(itemNo);
 
@@ -65,12 +74,17 @@ export class InventoryService {
       throw new ForbiddenException("User doesn't have enough point.");
     }
 
-    // 두 로직 트랜잭션으로 나중에 묶을 것.
-    await this.inventoryRepository.addOneItem(userNo, itemNo);
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.usersRepository.updateUserCurrentPoint(userNo, -item.price),
+        this.inventoryRepository.createUserOneItem(userNo, itemNo),
+      ]);
 
-    await this.usersRepository.updateUserCurrentPoint(userNo, -item.price);
-
-    return;
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 
   async updateItemStatus(
@@ -93,14 +107,21 @@ export class InventoryService {
     const { status } = body;
 
     if (!status) {
-      return this.inventoryRepository.updateItemStatus(userNo, itemNo, status);
+      return this.inventoryRepository.updateItemStatus(item.no, status);
     }
 
     const { type } = await this.itemsRepository.getItemType(itemNo);
 
-    // 추후 트랜잭션
-    await this.inventoryRepository.disuseOtherItems(userNo, type);
+    try {
+      const [, result] = await this.prisma.$transaction([
+        this.inventoryRepository.disuseOtherItems(userNo, type),
+        this.inventoryRepository.updateItemStatus(item.no, status),
+      ]);
 
-    return this.inventoryRepository.updateItemStatus(userNo, itemNo, status);
+      return result;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 }

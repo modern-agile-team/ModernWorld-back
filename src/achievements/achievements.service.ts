@@ -9,8 +9,8 @@ export class AchievementsService {
     private readonly achievementsRepository: AchievementsRepository,
   ) {}
 
-  getAchievements(queryParams: GetAchievementsDto) {
-    const { title, level } = queryParams;
+  getAchievements(query: GetAchievementsDto) {
+    const { title, level } = query;
     const where: AchievemetWhere = { name: { contains: title }, level };
 
     return this.achievementsRepository.getAchievements(where);

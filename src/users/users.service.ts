@@ -1,22 +1,24 @@
 import {
-  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  Logger,
 } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
-import { DomainEnum } from "./enum/domain.enum";
+import { Prisma, user, user_domain } from "@prisma/client";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly userRepository: UsersRepository,
+    private readonly logger: Logger,
   ) {}
 
   getUserNamePointTitleCharacter(userNo: number) {
@@ -27,7 +29,7 @@ export class UsersService {
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: DomainEnum,
+    domain: user_domain,
   ) {
     const result = await this.userRepository.createUser(
       uniqueIdentifier,
@@ -38,7 +40,7 @@ export class UsersService {
     return result;
   }
 
-  async getUserAttendance(userNo: number) {
+  getUserAttendance(userNo: number) {
     return this.userRepository.getUserAttendance(userNo);
   }
 
@@ -77,29 +79,28 @@ export class UsersService {
 
     attendance[day][0] = true;
 
-    //짧게나마 트랜잭션을 구현했으나, 이는 나중에 좀더 수정해야 할듯함.
     try {
-      this.prisma.$transaction([
+      const [userAttendance] = await this.prisma.$transaction([
         this.userRepository.updateUserAttendance(userNo, attendance),
-
         this.userRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
         ),
       ]);
 
-      return true;
-    } catch (error) {
-      throw new InternalServerErrorException("transaction error.");
+      return userAttendance;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
     }
   }
 
-  async updateUserNickname(userNo: number, body: UpdateUserNicknameDto) {
+  async createUserNickname(userNo: number, body: UpdateUserNicknameDto) {
     const { nickname: userName } =
       await this.userRepository.findUserNicknameByUserNo(userNo);
 
     if (userName) {
-      throw new ForbiddenException("User already has a nickname.");
+      throw new ConflictException("User already has a nickname.");
     }
 
     const { nickname } = body;
@@ -108,22 +109,21 @@ export class UsersService {
       await this.userRepository.findUserNicknameByNickname(nickname);
 
     if (duplicatedName) {
-      throw new ForbiddenException(`'${nickname}' is duplicated.`);
+      throw new ConflictException(`'${nickname}' is duplicated.`);
     }
 
     return this.userRepository.updateUserNickname(userNo, nickname);
   }
 
-  async updateUserDescription(userNo: number, body: UpdateUserDescriptionDto) {
+  updateUserDescription(userNo: number, body: UpdateUserDescriptionDto) {
     const { description } = body;
 
     return this.userRepository.updateUserDescription(userNo, description);
   }
 
-  async getUsers(queryParams: GetUsersByAnimalDto) {
-    const { pageNo, take, animal, orderByField, nickname } = queryParams;
-
-    const skip = (pageNo - 1) * take;
+  async getUsers(query: GetUsersByAnimalDto) {
+    const { page, take, animal, orderByField, nickname } = query;
+    const skip = (page - 1) * take;
 
     let where = {
       nickname: { contains: nickname },
@@ -139,19 +139,25 @@ export class UsersService {
     // [{ undefined(createdAt): "asc" }, { no: "desc" }]
     // [{ accummulationPoint: "desc" }, { no: "desc" }]
     // [{ legend: { likeCount: "desc" } }, { no: "desc" }]
-
     const orderBy =
       orderByField === "like"
         ? [{ legend: { likeCount: "desc" } }, { no: "desc" }]
         : [{ [orderByField || "createdAt"]: "desc" }, { no: "desc" }];
 
-    const result = await this.userRepository.getUsers(
+    const totalCount = await this.userRepository.countUsers(where);
+    const totalPage = Math.ceil(totalCount / take);
+    const users = await this.userRepository.getUsers(
       take,
       skip,
       orderBy,
       where,
     );
 
-    return result;
+    return new PaginationResponseDto(users, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 }

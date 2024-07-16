@@ -1,18 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsBoolean, IsInt, Min } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsBoolean } from "class-validator";
 
 export class updateUserAchievementStatusDto {
-  @ApiPropertyOptional({ name: "status" })
+  @ApiProperty()
   @IsBoolean()
   status: boolean;
-
-  @ApiProperty({
-    name: "achievementNo",
-    required: false,
-    example: 1,
-    minimum: 1,
-  })
-  @IsInt()
-  @Min(1)
-  achievementNo: number;
 }

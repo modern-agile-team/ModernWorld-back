@@ -1,15 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, Length } from "class-validator";
+import { Length } from "class-validator";
 
-export class CreateOnePostDto {
+export class PostContentDto {
   @ApiProperty({
-    example: 1,
-  })
-  @IsInt()
-  userNo: number;
-
-  @ApiProperty({
-    name: "content",
     example: "김뿡우",
     minLength: 1,
     maxLength: 100,

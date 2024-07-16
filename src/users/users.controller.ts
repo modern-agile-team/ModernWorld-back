@@ -3,24 +3,31 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Query,
   Patch,
   Put,
+  Post,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
-import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
+import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decorator";
+import { ApiUpdateUserAttendance } from "./users-swagger/update-user-attendance.decorator";
+import { ApiGetUsers } from "./users-swagger/get-users.decorator";
+import { ApiGetUserNamePointAchievementTitle } from "./users-swagger/get-user-name-point-achievement.decorator";
+import { ApiCreateUserNickname } from "./users-swagger/create-user-nickname.decorator";
+import { ApiUpdateUserDescription } from "./users-swagger/update-user-description.decorator";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
 @Controller("users")
 @ApiTags("Users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get("/attendance")
-  @ApiOperation({ summary: "유저 출석부 조회 API" })
+  @Get("my/attendance")
+  @ApiGetUserAttendance()
   getOneUserAttendance() {
     const userNo = 1;
 
@@ -28,42 +35,37 @@ export class UsersController {
   }
 
   @Get()
-  @ApiOperation({ summary: "유저 불러오기 API" })
-  getUsers(@Query() queryParams: GetUsersByAnimalDto) {
-    return this.usersService.getUsers(queryParams);
+  @ApiGetUsers()
+  getUsers(@Query() query: GetUsersByAnimalDto) {
+    return this.usersService.getUsers(query);
   }
 
-  @Get("/:userNo")
-  @ApiOperation({ summary: "특정 유저 불러오기 API" })
-  @ApiParam({
-    name: "userNo",
-    example: 1,
-    description: "유저 번호",
-  })
+  @Get(":userNo")
+  @ApiGetUserNamePointAchievementTitle()
   getUserNamePointAchievementTitle(
-    @Param("userNo", ParseIntPipe) userNo: number,
+    @Param("userNo", ParsePositiveIntPipe) userNo: number,
   ) {
     return this.usersService.getUserNamePointTitleCharacter(userNo);
   }
 
-  @Patch("/attendance")
-  @ApiOperation({ summary: "유저 출석부 체크 API" })
+  @Patch("my/attendance")
+  @ApiUpdateUserAttendance()
   updateUserAttendance() {
     const userNo = 1;
 
     return this.usersService.updateUserAttendance(userNo);
   }
 
-  @Put("/nickname")
-  @ApiOperation({ summary: "유저 닉네임 변경 API" })
-  updateUserNickname(@Body() body: UpdateUserNicknameDto) {
+  @Post("my/nickname")
+  @ApiCreateUserNickname()
+  createUserNickname(@Body() body: UpdateUserNicknameDto) {
     const userNo = 1;
 
-    return this.usersService.updateUserNickname(userNo, body);
+    return this.usersService.createUserNickname(userNo, body);
   }
 
-  @Put("/description")
-  @ApiOperation({ summary: "유저 자기소개 변경 API" })
+  @Put("my/description")
+  @ApiUpdateUserDescription()
   updateUserDescription(@Body() body: UpdateUserDescriptionDto) {
     const userNo = 1;
 

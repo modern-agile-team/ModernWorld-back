@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsPositive } from "class-validator";
 import { OrderBy } from "../enum/order-by.enum";
