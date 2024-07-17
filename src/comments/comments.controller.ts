@@ -20,8 +20,6 @@ import { ApiFindRelies } from "./swagger-decorators/reply-swagger/find-reply-dec
 import { ApiDeleteReply } from "./swagger-decorators/reply-swagger/delete-reply-decorate";
 import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply-decorate";
 import { ApiCreateReply } from "./swagger-decorators/reply-swagger/create-reply-decorater";
-import { CreateReplyDto } from "./dtos/replies-dtos/create-reply.dto";
-import { UpdateReplyDto } from "./dtos/replies-dtos/update-reply.dto";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 
@@ -74,7 +72,7 @@ export class CommentController {
   @ApiCreateReply()
   createOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
-    @Body() body: CreateReplyDto,
+    @Body() body: CommentContentDto,
   ) {
     const userNo = 1;
     return this.commentService.createOneReply(commentNo, userNo, body);
@@ -94,7 +92,7 @@ export class CommentController {
   updateOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
-    @Body() body: UpdateReplyDto,
+    @Body() body: CommentContentDto,
   ) {
     return this.commentService.updateOneReply(commentNo, replyNo, body);
   }
