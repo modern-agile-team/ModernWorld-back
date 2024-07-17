@@ -34,10 +34,11 @@ export class CommentController {
   @Post("users/:userNo/comments")
   createOneComment(
     @Param("userNo", ParseIntPipe) receiverNo: number,
-    @Body() content: CreateCommentDto,
+    @Body() body: CreateCommentDto,
   ) {
     const userNo = 1;
-    return this.commentService.createOneComment(receiverNo, userNo, content);
+
+    return this.commentService.createOneComment(receiverNo, userNo, body);
   }
 
   @Get("users/:userNo/comments")

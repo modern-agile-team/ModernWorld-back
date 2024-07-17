@@ -12,9 +12,9 @@ export class CommentService {
   createOneComment(
     receiverNo: number,
     senderNo: number,
-    createcontent: CreateCommentDto,
+    body: CreateCommentDto,
   ) {
-    const { content } = createcontent;
+    const { content } = body;
 
     return this.CommentRepository.createOneComment(
       receiverNo,
