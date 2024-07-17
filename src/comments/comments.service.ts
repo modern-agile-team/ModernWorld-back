@@ -149,7 +149,7 @@ export class CommentService {
       await this.commentRepository.findOneCommentNotDeleted(commentNo);
 
     if (!comment) {
-      throw new NotFoundException("해당 방명록은 존재하지 않습니다.");
+      throw new NotFoundException("There is no comment with that number.");
     }
 
     return comment;
@@ -159,7 +159,7 @@ export class CommentService {
     const reply = await this.commentRepository.findOneReplyNotDeleted(replyNo);
 
     if (!reply) {
-      throw new NotFoundException("해당 댓글은 존재하지 않습니다.");
+      throw new NotFoundException("There is no reply with that number.");
     }
 
     return reply;
