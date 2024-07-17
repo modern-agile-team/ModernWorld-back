@@ -52,10 +52,10 @@ export class CommentRepository {
     });
   }
 
-  updateOneComment(id: number, content: string) {
+  updateOneComment(no: number, content: string) {
     return this.prisma.comment.update({
       where: {
-        no: id,
+        no,
       },
       data: {
         content,
