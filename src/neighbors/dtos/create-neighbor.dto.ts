@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional } from "class-validator";
+import { IsInt, IsOptional, IsPositive } from "class-validator";
 
 export class CreateNeighborDto {
   @ApiProperty({
@@ -7,7 +7,7 @@ export class CreateNeighborDto {
     description: "이웃 요청을 받는 유저번호",
     example: 1,
   })
-  @IsOptional()
+  @IsPositive()
   @IsInt()
   receiverNo: number;
 }

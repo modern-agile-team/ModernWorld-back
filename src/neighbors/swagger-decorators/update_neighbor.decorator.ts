@@ -2,6 +2,7 @@ import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
   ApiResponse,
@@ -24,6 +25,20 @@ export function ApiUpdateNeighobor() {
             receiverNo: 4,
             status: true,
             createdAt: "2024-07-15T10:52:38.000Z",
+          },
+        },
+      },
+    }),
+
+    ApiForbiddenResponse({
+      status: 403,
+      description: "본인이 받은 이웃요청이 아닌 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "본인이 받은 이웃 요청이 아닙니다.",
+            error: "Forbidden",
+            statusCode: 403,
           },
         },
       },

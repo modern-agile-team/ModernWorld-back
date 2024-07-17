@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -9,10 +8,14 @@ import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { NeighborRepository } from "./neighbors.repository";
 import { getNeighborDto } from "./dtos/get-neighbors.dto";
+import { UsersRepository } from "src/users/users.repository";
 
 @Injectable()
 export class NeighborService {
-  constructor(private readonly neighborRepository: NeighborRepository) {}
+  constructor(
+    private readonly neighborRepository: NeighborRepository,
+    private readonly userRepository: UsersRepository,
+  ) {}
 
   async neighborRequest(body: CreateNeighborDto, senderNo: number) {
     const { receiverNo } = body;
@@ -22,6 +25,11 @@ export class NeighborService {
         "이웃신청을 자기 자신에게 보낼 수 없습니다.",
       );
     }
+    const user = await this.userRepository.findUserNicknameByUserNo(receiverNo);
+    if (!user) {
+      throw new NotFoundException("이웃 요청을 보낼 사람을 찾을 수 없습니다.");
+    }
+
     const existNeighborRequst =
       await this.neighborRepository.getOneNeighborRequest(receiverNo, senderNo);
 
@@ -50,16 +58,26 @@ export class NeighborService {
     return this.neighborRepository.neighborRequest(receiverNo, senderNo);
   }
 
-  async neighborApproval(body: UpdateNeighborDto) {
-    const { no, status } = body;
-    const alreadyApproval = await this.neighborRepository.getOneNeighbor(no);
+  async neighborApproval(
+    neighborNo: number,
+    userNo: number,
+    body: UpdateNeighborDto,
+  ) {
+    const { status } = body;
+    const alreadyApproval =
+      await this.neighborRepository.getOneNeighbor(neighborNo);
+
+    if (alreadyApproval.receiverNo !== userNo) {
+      throw new ForbiddenException("본인이 받은 이웃 요청이 아닙니다.");
+    }
     if (!alreadyApproval) {
       throw new NotFoundException("존재하지 않는 이웃요청입니다.");
     }
     if (alreadyApproval.status) {
       throw new ConflictException("이미 승인 처리된 이웃요청입니다.");
     }
-    return this.neighborRepository.neighborApproval(no, status);
+
+    return this.neighborRepository.neighborApproval(neighborNo, status);
   }
 
   getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
@@ -68,11 +86,19 @@ export class NeighborService {
     return this.neighborRepository.getMyNeighbors(userNo, take, skip);
   }
 
-  async neighborRequestRefusalOrDelete(neighborNo: number) {
+  async neighborRequestRefusalOrDelete(neighborNo: number, userNo: number) {
     const NeighborNotFound =
       await this.neighborRepository.getOneNeighbor(neighborNo);
     if (!NeighborNotFound) {
       throw new NotFoundException("해당 이웃을 찾을 수 없습니다.");
+    }
+    if (
+      NeighborNotFound.receiverNo !== userNo &&
+      NeighborNotFound.senderNo !== userNo
+    ) {
+      throw new ForbiddenException(
+        "이웃 요청 거절 및 삭제는 본인만 가능합니다.",
+      );
     }
     return this.neighborRepository.neighborRequestRefusalOrDelete(neighborNo);
   }

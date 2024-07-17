@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOperation,
@@ -23,6 +24,20 @@ export function ApiDeleteNeighobor() {
             receiverNo: 4,
             status: true,
             createdAt: "2024-07-15T10:52:38.000Z",
+          },
+        },
+      },
+    }),
+
+    ApiForbiddenResponse({
+      status: 403,
+      description: "이웃 요청 거절 및 삭제를 본인 아닌 사람이 하는 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "이웃 요청 거절 및 삭제는 본인만 가능합니다.",
+            error: "Forbidden",
+            statusCode: 403,
           },
         },
       },

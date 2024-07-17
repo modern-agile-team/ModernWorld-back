@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   HttpCode,
+  ParseIntPipe,
 } from "@nestjs/common";
 import { NeighborService } from "./neighbors.service";
 import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
@@ -27,27 +28,36 @@ export class NeighborController {
   @ApiCraeteNeighbor()
   @Post()
   neighborRequest(@Body() body: CreateNeighborDto) {
-    const userNo = 3;
+    const userNo = 1;
     return this.neighborService.neighborRequest(body, userNo);
   }
 
   @ApiGetNeighobor()
   @Get()
   getMYNeighbors(@Query() queryParams: getNeighborDto) {
-    const userNo = 2;
+    const userNo = 1;
     return this.neighborService.getMyNeighbors(userNo, queryParams);
   }
 
   @ApiUpdateNeighobor()
-  @Patch()
-  neighborApproval(@Body() body: UpdateNeighborDto) {
-    return this.neighborService.neighborApproval(body);
+  @Patch(":neighborNo")
+  neighborApproval(
+    @Param("neighborNo", ParseIntPipe) neighborNo: number,
+    @Body()
+    body: UpdateNeighborDto,
+  ) {
+    const userNo = 1;
+    return this.neighborService.neighborApproval(neighborNo, userNo, body);
   }
 
   @ApiDeleteNeighobor()
   @Delete(":neighborNo")
   @HttpCode(204)
   neighborRequestRefusalOrDelete(@Param("neighborNo") neighborNo: number) {
-    return this.neighborService.neighborRequestRefusalOrDelete(neighborNo);
+    const userNo = 1;
+    return this.neighborService.neighborRequestRefusalOrDelete(
+      neighborNo,
+      userNo,
+    );
   }
 }

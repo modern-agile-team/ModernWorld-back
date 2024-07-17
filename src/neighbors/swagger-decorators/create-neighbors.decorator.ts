@@ -4,6 +4,7 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOperation,
   ApiResponse,
 } from "@nestjs/swagger";
@@ -32,7 +33,7 @@ export function ApiCraeteNeighbor() {
             },
             existRequestReceiverSendRequest: {
               summary:
-                "이웃 요청이 존재하는 상황에서 상대방도 이웃요철을 보낸 경우",
+                "이웃 요청이 존재하는 상황에서 상대방도 이웃요청을 보낸 경우",
               value: {
                 no: 12,
                 senderNo: 8,
@@ -74,13 +75,27 @@ export function ApiCraeteNeighbor() {
       },
     }),
 
+    ApiNotFoundResponse({
+      status: 404,
+      description: "친구 요청을 보낼 사람이 존재하지 않을 때",
+      content: {
+        JSON: {
+          example: {
+            message: "이웃 요청을 보낼 사람을 찾을 수 없습니다.",
+            error: "Not Found",
+            statusCode: 404,
+          },
+        },
+      },
+    }),
+
     ApiConflictResponse({
       status: 409,
       description: "Conflict Error",
       content: {
         JSON: {
           examples: {
-            alreadyRequest: {
+            ex1: {
               summary: "이미 이웃 신청을 보낸 경우",
               value: {
                 message: "이미 해당 유저에게 이웃신청을 보냈습니다.",
@@ -88,7 +103,7 @@ export function ApiCraeteNeighbor() {
                 statusCode: 409,
               },
             },
-            alreadyFriend: {
+            ex2: {
               summary: "상대방과 이미 이웃인 경우",
               value: {
                 message: "상대방과 이미 이웃입니다.",
