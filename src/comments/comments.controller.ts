@@ -96,7 +96,9 @@ export class CommentController {
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
     @Body() body: CommentContentDto,
   ) {
-    return this.commentService.updateOneReply(commentNo, replyNo, body);
+    const userNo = 1;
+
+    return this.commentService.updateOneReply(userNo, commentNo, replyNo, body);
   }
 
   @Delete("comments/:commentNo/replies/:replyNo")
@@ -106,6 +108,8 @@ export class CommentController {
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
   ) {
-    return this.commentService.softDeleteOneReply(commentNo, replyNo);
+    const userNo = 1;
+
+    return this.commentService.softDeleteOneReply(userNo, commentNo, replyNo);
   }
 }
