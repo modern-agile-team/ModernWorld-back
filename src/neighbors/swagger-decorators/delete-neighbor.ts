@@ -35,7 +35,8 @@ export function ApiDeleteNeighobor() {
       content: {
         JSON: {
           example: {
-            message: "이웃 요청 거절 및 삭제는 본인만 가능합니다.",
+            message:
+              "You can only delete the neighbor request you received and your neighbor.",
             error: "Forbidden",
             statusCode: 403,
           },
@@ -49,7 +50,7 @@ export function ApiDeleteNeighobor() {
       content: {
         JSON: {
           example: {
-            message: "해당 이웃을 찾을 수 없습니다.",
+            message: "No neighbor found",
             error: "Not Found",
             statusCode: 404,
           },

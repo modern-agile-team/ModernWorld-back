@@ -36,7 +36,7 @@ export function ApiUpdateNeighobor() {
       content: {
         JSON: {
           example: {
-            message: "본인이 받은 이웃 요청이 아닙니다.",
+            message: "This is not a neighbor request you received.",
             error: "Forbidden",
             statusCode: 403,
           },
@@ -50,7 +50,7 @@ export function ApiUpdateNeighobor() {
       content: {
         JSON: {
           example: {
-            message: "존재하지 않는 이웃요청입니다.",
+            message: "Non-existent neighbor request.",
             error: "Not Found",
             statusCode: 404,
           },
@@ -64,7 +64,8 @@ export function ApiUpdateNeighobor() {
       content: {
         JSON: {
           example: {
-            message: "이미 승인 처리된 이웃요청입니다.",
+            message:
+              "This is a neighbor request that has already been approved.",
             error: "Conflict",
             statusCode: 409,
           },

@@ -21,20 +21,22 @@ export class NeighborService {
     const { receiverNo } = body;
 
     if (receiverNo === senderNo) {
-      throw new ForbiddenException(
-        "이웃신청을 자기 자신에게 보낼 수 없습니다.",
-      );
+      throw new ForbiddenException("Users cannot neighbor themselves alone.");
     }
     const user = await this.userRepository.findUserNicknameByUserNo(receiverNo);
     if (!user) {
-      throw new NotFoundException("이웃 요청을 보낼 사람을 찾을 수 없습니다.");
+      throw new NotFoundException(
+        "Can't find anyone to receive neighbor requests.",
+      );
     }
 
     const existNeighborRequst =
       await this.neighborRepository.getOneNeighborRequest(receiverNo, senderNo);
 
     if (existNeighborRequst) {
-      throw new ConflictException("이미 해당 유저에게 이웃신청을 보냈습니다.");
+      throw new ConflictException(
+        "You have already sent a neighbor request to this user.",
+      );
     }
 
     const existRequestAndOpponentRequstOneMore = // 이미 이웃요청을 보냈는데 상대방이 친구 요청을 보냈을 때 변수명은 수정이 필요할 듯
@@ -53,7 +55,7 @@ export class NeighborService {
       senderNo,
     );
     if (checkMyNeighbor) {
-      throw new ConflictException("상대방과 이미 이웃입니다.");
+      throw new ConflictException("The other person are already neighbors.");
     }
     return this.neighborRepository.neighborRequest(receiverNo, senderNo);
   }
@@ -68,13 +70,17 @@ export class NeighborService {
       await this.neighborRepository.getOneNeighbor(neighborNo);
 
     if (alreadyApproval.receiverNo !== userNo) {
-      throw new ForbiddenException("본인이 받은 이웃 요청이 아닙니다.");
+      throw new ForbiddenException(
+        "This is not a neighbor request you received.",
+      );
     }
     if (!alreadyApproval) {
-      throw new NotFoundException("존재하지 않는 이웃요청입니다.");
+      throw new NotFoundException("Non-existent neighbor request.");
     }
     if (alreadyApproval.status) {
-      throw new ConflictException("이미 승인 처리된 이웃요청입니다.");
+      throw new ConflictException(
+        "This is a neighbor request that has already been approved.",
+      );
     }
 
     return this.neighborRepository.neighborApproval(neighborNo, status);
@@ -90,14 +96,14 @@ export class NeighborService {
     const NeighborNotFound =
       await this.neighborRepository.getOneNeighbor(neighborNo);
     if (!NeighborNotFound) {
-      throw new NotFoundException("해당 이웃을 찾을 수 없습니다.");
+      throw new NotFoundException("No neighbor found");
     }
     if (
       NeighborNotFound.receiverNo !== userNo &&
       NeighborNotFound.senderNo !== userNo
     ) {
       throw new ForbiddenException(
-        "이웃 요청 거절 및 삭제는 본인만 가능합니다.",
+        "You can only delete the neighbor request you received and your neighbor.",
       );
     }
     return this.neighborRepository.neighborRequestRefusalOrDelete(neighborNo);

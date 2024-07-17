@@ -67,7 +67,7 @@ export function ApiCraeteNeighbor() {
       content: {
         JSON: {
           example: {
-            message: "이웃신청을 자기 자신에게 보낼 수 없습니다.",
+            message: "Users cannot neighbor themselves alone.",
             error: "Forbidden",
             statusCode: 403,
           },
@@ -81,7 +81,7 @@ export function ApiCraeteNeighbor() {
       content: {
         JSON: {
           example: {
-            message: "이웃 요청을 보낼 사람을 찾을 수 없습니다.",
+            message: "Can't find anyone to receive neighbor requests.",
             error: "Not Found",
             statusCode: 404,
           },
@@ -98,7 +98,8 @@ export function ApiCraeteNeighbor() {
             ex1: {
               summary: "이미 이웃 신청을 보낸 경우",
               value: {
-                message: "이미 해당 유저에게 이웃신청을 보냈습니다.",
+                message:
+                  "You have already sent a neighbor request to this user.",
                 error: "Conflict",
                 statusCode: 409,
               },
@@ -106,7 +107,7 @@ export function ApiCraeteNeighbor() {
             ex2: {
               summary: "상대방과 이미 이웃인 경우",
               value: {
-                message: "상대방과 이미 이웃입니다.",
+                message: "The other person are already neighbors.",
                 error: "Conflict",
                 statusCode: 409,
               },
