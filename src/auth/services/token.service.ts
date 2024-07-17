@@ -1,22 +1,22 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { TokenRepository } from "src/auth/token.repository";
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { RedisService } from "./redis.service";
+import { ConfigService } from "@nestjs/config";
+import { RedisService } from "../redis/redis.service";
 
 @Injectable()
 export class TokenService {
   constructor(
-    private readonly tokenRepository: TokenRepository,
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
+    private readonly configService: ConfigService,
   ) {}
 
   createAccessToken(userNo: number) {
     const payload = { sub: "accessToken", userNo };
 
     return this.jwtService.sign(payload, {
-      expiresIn: "3h",
-      secret: process.env.ACCESS_TOKEN_SECRET,
+      expiresIn: "12h",
+      secret: this.configService.get<string>("ACCESS_TOKEN_SECRET"),
     });
   }
 
@@ -25,13 +25,13 @@ export class TokenService {
 
     return this.jwtService.sign(payload, {
       expiresIn: "7d",
-      secret: process.env.REFRESH_TOKEN_SECRET,
+      secret: this.configService.get<string>("REFRESH_TOKEN_SECRET"),
     });
   }
 
   async createNewAccessToken(userNo: number) {
     const accessToken = this.createAccessToken(userNo);
-    this.setAccessToken(`${userNo}-accessToken`, accessToken, 60 * 60 * 3);
+    this.setAccessToken(`${userNo}-accessToken`, accessToken, 60 * 60 * 12);
 
     return { accessToken };
   }
@@ -45,6 +45,10 @@ export class TokenService {
   }
 
   getRefreshToken(userNo: string) {
+    return this.redisService.getToken(userNo);
+  }
+
+  getAccessToken(userNo: string) {
     return this.redisService.getToken(userNo);
   }
 }

@@ -5,51 +5,16 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  Logger,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Observable } from "rxjs";
 
 @Injectable()
 export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
-  handleRequest(
-    err: any,
-    user: any,
-    info: { message: string | Record<string, any> },
-    context: ExecutionContext,
-  ) {
-    try {
-      if (user) {
-        return super.handleRequest(err, user, info, context);
-      }
-
-      if (err instanceof HttpException) {
-        console.log(err.message);
-        throw err;
-      }
-
-      throw new HttpException(info.message, 401);
-    } catch (error) {
-      if (error.message === "jwt expired") {
-        console.log(error.message);
-        throw new HttpException("jwt expired", 401);
-      }
-      if (error.message === "invalid token") {
-        console.log(error.message);
-        throw new HttpException("invalid token", 400);
-      }
-      if (error.message === "invalid signature") {
-        console.log(error.message);
-        throw new HttpException("invalid signature", 400);
-      } else {
-        console.log(error.message);
-        throw new HttpException("jwt error", 400);
-      }
-    }
+  constructor(private readonly logger: Logger) {
+    super();
   }
-}
-
-@Injectable()
-export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -80,19 +45,72 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
       throw new UnauthorizedException(info.message);
     } catch (error) {
       if (error.message === "jwt expired") {
-        throw new UnauthorizedException("jwt expired");
+        throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid token") {
-        throw new BadRequestException("invalid token");
+        throw new UnauthorizedException(error.message);
       }
       if (error.message === "invalid signature") {
-        throw new BadRequestException("invalid signature");
+        throw new UnauthorizedException("incorrect token");
       }
       if (error.message === "Token not found.") {
-        throw new NotFoundException("Token not found.");
+        throw new NotFoundException(error.message);
       } else {
-        console.log(error);
-        throw new BadRequestException("jwt error");
+        this.logger.error(error);
+        throw new UnauthorizedException("jwt error");
+      }
+    }
+  }
+}
+
+@Injectable()
+export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
+  constructor(private readonly logger: Logger) {
+    super();
+  }
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const authorization = request.cookies["refreshToken"];
+    if (!authorization) {
+      throw new BadRequestException("jwt must be provided");
+    }
+    return super.canActivate(context);
+  }
+
+  handleRequest(
+    err: any,
+    user: any,
+    info: { message: string | Record<string, any> },
+    context: ExecutionContext,
+  ) {
+    try {
+      if (user) {
+        return super.handleRequest(err, user, info, context);
+      }
+
+      if (err instanceof HttpException) {
+        console.log(err.message);
+        throw err;
+      }
+
+      throw new UnauthorizedException(info.message);
+    } catch (error) {
+      if (error.message === "jwt expired") {
+        throw new UnauthorizedException(error.message);
+      }
+      if (error.message === "invalid token") {
+        throw new UnauthorizedException(error.message);
+      }
+      if (error.message === "invalid signature") {
+        throw new UnauthorizedException("incorrect token");
+      }
+      if (error.message === "Token not found.") {
+        throw new NotFoundException(error.message);
+      } else {
+        this.logger.error(error);
+        throw new UnauthorizedException("jwt error");
       }
     }
   }

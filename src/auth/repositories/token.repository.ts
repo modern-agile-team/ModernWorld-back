@@ -18,4 +18,28 @@ export class TokenRepository {
       },
     });
   }
+
+  async findToken(userNo: number) {
+    return this.prisma.token.findMany({
+      where: {
+        userNo,
+      },
+    });
+  }
+
+  async updateTokens(
+    userNo: number,
+    socialAccess: string,
+    socialRefresh: string,
+  ) {
+    return this.prisma.token.updateMany({
+      where: {
+        userNo,
+      },
+      data: {
+        socialAccess,
+        socialRefresh,
+      },
+    });
+  }
 }
