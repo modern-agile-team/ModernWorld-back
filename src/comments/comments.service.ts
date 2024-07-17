@@ -5,7 +5,6 @@ import {
 } from "@nestjs/common";
 import { CommentRepository } from "./comments.repository";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
-import { GetReplyDto } from "./dtos/replies-dtos/get-reply.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
@@ -92,12 +91,24 @@ export class CommentService {
 
     const { take, page, orderBy } = query;
     const skip = take * (page - 1);
-    // const totalCount =
-    // await this.commentRepository.countCommentsByUserNo(receiverNo);
+    const totalCount =
+      await this.commentRepository.countRepliesByCommentNo(commentNo);
 
-    // const totalPage = Math.ceil(totalCount / take);
+    const totalPage = Math.ceil(totalCount / take);
 
-    return this.commentRepository.getManyReplies(commentNo, skip, take);
+    const replies = await this.commentRepository.getManyReplies(
+      commentNo,
+      skip,
+      take,
+      orderBy,
+    );
+
+    return new PaginationResponseDto(replies, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 
   async updateOneReply(
