@@ -1,10 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, comment, reply } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class CommentRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  countCommentsByUserNo(receiverNo: number) {
+    return this.prisma.comment.count({ where: { receiverNo } });
+  }
 
   createOneComment(receiverNo: number, senderNo: number, content: string) {
     return this.prisma.comment.create({
