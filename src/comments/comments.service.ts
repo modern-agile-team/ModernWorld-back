@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CommentRepository } from "./comments.repository";
 import { CreateCommentDto } from "./dtos/comment-dtos/create-comment.dto";
 import { UpdateCommentDto } from "./dtos/comment-dtos/update-comment.dto";
@@ -47,9 +51,17 @@ export class CommentService {
     });
   }
 
-  async updateOneComment(commentNo: number, body: UpdateCommentDto) {
+  async updateOneComment(
+    userNo: number,
+    commentNo: number,
+    body: UpdateCommentDto,
+  ) {
     const { content } = body;
-    await this.commentNotFound(commentNo);
+    const { senderNo } = await this.commentNotFound(commentNo);
+
+    if (userNo !== senderNo) {
+      throw new ForbiddenException("User can update only their comment.");
+    }
 
     return this.commentRepository.updateOneComment(commentNo, content);
   }
