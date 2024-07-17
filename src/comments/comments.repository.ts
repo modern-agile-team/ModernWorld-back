@@ -20,7 +20,7 @@ export class CommentRepository {
     });
   }
 
-  getOneComment(commentNo: number) {
+  findOneCommentNotDeleted(commentNo: number) {
     return this.prisma.comment.findUnique({
       where: {
         no: commentNo,
