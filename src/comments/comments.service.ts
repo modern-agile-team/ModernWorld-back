@@ -107,6 +107,8 @@ export class CommentService {
     if (!comment) {
       throw new NotFoundException("해당 방명록은 존재하지 않습니다.");
     }
+
+    return comment;
   }
 
   async replyNotFound(commentNo: number, replyNo: number) {
