@@ -35,6 +35,13 @@ export class CommentRepository {
     orderBy: OrderBy,
   ) {
     return this.prisma.comment.findMany({
+      select: {
+        no: true,
+        content: true,
+        createdAt: true,
+        userCommentReceiverNo: { select: { no: true, nickname: true } },
+        userCommentSenderNo: { select: { no: true, nickname: true } },
+      },
       skip,
       take,
       orderBy: { no: orderBy },
