@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Query,
-  ParseIntPipe,
   Delete,
 } from "@nestjs/common";
 import { CommentService } from "./comments.service";
@@ -25,6 +24,7 @@ import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply-
 import { ApiCreateReply } from "./swagger-decorators/reply-swagger/create-reply-decorater";
 import { CreateReplyDto } from "./dtos/replies-dtos/create-reply.dto";
 import { UpdateReplyDto } from "./dtos/replies-dtos/update-reply.dto";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
 @Controller()
 @ApiTags("Comments & Replies")
@@ -33,7 +33,7 @@ export class CommentController {
   @ApiCreateComment()
   @Post("users/:userNo/comments")
   createOneComment(
-    @Param("userNo", ParseIntPipe) receiverNo: number,
+    @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body() body: CreateCommentDto,
   ) {
     const userNo = 1;
@@ -44,7 +44,7 @@ export class CommentController {
   @Get("users/:userNo/comments")
   @ApiFindComments()
   getManyComments(
-    @Param("receiverNo", ParseIntPipe) receiverNo: number,
+    @Param("receiverNo", ParsePositiveIntPipe) receiverNo: number,
     @Query() queryParams: GetCommentDto,
   ) {
     return this.commentService.getManyComments(receiverNo, queryParams);
@@ -53,7 +53,7 @@ export class CommentController {
   @Patch("users/:userNo/comments/:commentNo")
   @ApiUpdateComment()
   updatOneComment(
-    @Param("commentNo", ParseIntPipe) commentNo: number,
+    @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() content: UpdateCommentDto,
   ) {
     return this.commentService.updateOneComment(commentNo, content);
@@ -61,14 +61,16 @@ export class CommentController {
 
   @Delete("users/:userNo/comments/:commentNo")
   @ApiDeleteComment()
-  softDeleteOneComment(@Param("commentNo", ParseIntPipe) commentNo: number) {
+  softDeleteOneComment(
+    @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
+  ) {
     return this.commentService.softDeleteOneComment(commentNo);
   }
 
   @Post("comments/:commentNo/replies")
   @ApiCreateReply()
   createOneReply(
-    @Param("commentNo", ParseIntPipe) commentNo: number,
+    @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() content: CreateReplyDto,
   ) {
     const userNo = 1;
@@ -78,7 +80,7 @@ export class CommentController {
   @Get("comments/:commentNo/replies")
   @ApiFindRelies()
   getManyReplies(
-    @Param("commentNo", ParseIntPipe) commentNo: number,
+    @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Query() queryParams: GetReplyDto,
   ) {
     return this.commentService.getManyReplies(commentNo, queryParams);
@@ -87,8 +89,8 @@ export class CommentController {
   @Patch("comments/:commentNo/replies/:replyNo")
   @ApiUpdateReply()
   updateOneReply(
-    @Param("commentNo", ParseIntPipe) commentNo: number,
-    @Param("replyNo", ParseIntPipe) replyNo: number,
+    @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
+    @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
     @Body() content: UpdateReplyDto,
   ) {
     return this.commentService.updateOneReply(commentNo, replyNo, content);
@@ -97,8 +99,8 @@ export class CommentController {
   @Delete("comments/:commentNo/replies/:replyNo")
   @ApiDeleteReply()
   softDeleteOneReply(
-    @Param("commentNo", ParseIntPipe) commentNo: number,
-    @Param("replyNo", ParseIntPipe) replyNo: number,
+    @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
+    @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
   ) {
     return this.commentService.softDeleteOneReply(commentNo, replyNo);
   }
