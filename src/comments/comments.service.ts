@@ -118,14 +118,14 @@ export class CommentService {
   ) {
     const { content } = body;
     await this.findOneCommentNotDeleted(commentNo);
-    await this.replyNotFound(commentNo, replyNo);
+    await this.findOneReplyNotDeleted(replyNo);
 
     return this.commentRepository.updateOneReply(commentNo, replyNo, content);
   }
 
   async softDeleteOneReply(commentNo: number, replyNo: number) {
     await this.findOneCommentNotDeleted(commentNo);
-    await this.replyNotFound(commentNo, replyNo);
+    await this.findOneReplyNotDeleted(replyNo);
     const deleteReply = await this.commentRepository.softDeleteOneReply(
       commentNo,
       replyNo,
@@ -145,8 +145,8 @@ export class CommentService {
     return comment;
   }
 
-  async replyNotFound(commentNo: number, replyNo: number) {
-    const reply = await this.commentRepository.getOneReply(commentNo, replyNo);
+  async findOneReplyNotDeleted(replyNo: number) {
+    const reply = await this.commentRepository.findOneReplyNotDeleted(replyNo);
 
     if (!reply) {
       throw new NotFoundException("해당 댓글은 존재하지 않습니다.");

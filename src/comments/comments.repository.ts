@@ -90,11 +90,11 @@ export class CommentRepository {
     });
   }
 
-  getOneReply(commentNo: number, replyNo: number) {
+  findOneReplyNotDeleted(replyNo: number) {
     return this.prisma.reply.findUnique({
       where: {
         no: replyNo,
-        commentNo,
+        deletedAt: null,
       },
     });
   }
