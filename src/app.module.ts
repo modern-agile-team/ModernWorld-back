@@ -20,7 +20,7 @@ import { LegendsModule } from "./legends/legends.module";
 import { LoggerModule } from "./common/utils/logger/logger.module";
 import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
-import { RedisModule } from "./auth/redis.module";
+import { RedisModule } from "./auth/redis/redis.module";
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
 import { CommonModule } from "./common/common.module";
 @Module({

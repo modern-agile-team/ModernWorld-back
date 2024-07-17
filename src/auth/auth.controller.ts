@@ -4,20 +4,18 @@ import {
   Get,
   Post,
   Query,
+  Req,
   Res,
   UseGuards,
 } from "@nestjs/common";
-import { AuthService } from "./auth.service";
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiQuery,
-  ApiResponse,
-} from "@nestjs/swagger";
-import { RefreshTokenAuthGuard } from "./jwt.guard";
+import { AuthService } from "./services/auth.service";
+import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from "./jwt/jwt.guard";
 import { userNo } from "./auth.decorator";
-import { Response } from "express";
-import { TokenService } from "./token.service";
+import { Response, Request } from "express";
+import { TokenService } from "./services/token.service";
+import { ApiNaverLogin } from "./swagger-decorators/naver-login-decorator";
+import { ApiKakaoLogin } from "./swagger-decorators/kakao-login-decorator";
+import { ApiNewAccessToken } from "./swagger-decorators/new-access-token.decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -25,19 +23,9 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly tokenService: TokenService,
   ) {}
-
+ 
+  @ApiNaverLogin()
   @Post("naver/login")
-  @ApiOperation({ summary: "네이버 로그인" })
-  @ApiQuery({ name: "code", description: "인가 코드", required: true })
-  @ApiResponse({
-    status: 200,
-    description: "네이버 로그인 성공",
-    content: {
-      JSON: {
-        example: { accessToken: "액세스 토큰", refreshToken: "리프레쉬 토큰" },
-      },
-    },
-  })
   async naverLogin(@Query("code") code: string, @Res() res: Response) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
@@ -47,22 +35,14 @@ export class AuthController {
       domain: "localhost",
       path: "/",
       httpOnly: true,
+      secure: false, // https 설정을 확인하지 않기 위해서 선언 
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
     return res.send(token);
   }
 
+  @ApiKakaoLogin()
   @Post("kakao/login")
-  @ApiOperation({ summary: "카카오 로그인" })
-  @ApiQuery({ name: "code", description: "인가 코드", required: true })
-  @ApiResponse({
-    status: 200,
-    description: "카카오 로그인 성공",
-    content: {
-      JSON: {
-        example: { accessToken: "액세스 토큰", refreshToken: "리프레쉬 토큰" },
-      },
-    },
-  })
   async kakaoLogin(@Query("code") code: string, @Res() res: Response) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
@@ -73,23 +53,13 @@ export class AuthController {
       path: "/",
       httpOnly: true,
       secure: false, // https 설정을 확인하지 않기 위해서 선언
+      maxAge: 1000 * 60 * 60 * 24 * 7
     });
     return res.send(token);
   }
-
+  @ApiNewAccessToken()
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
-  @ApiOperation({ summary: "액세스 토큰 재발급" })
-  @ApiBearerAuth("refresh-token")
-  @ApiResponse({
-    status: 200,
-    description: "액세스 토큰 재발급 성공",
-    content: {
-      JSON: {
-        example: { accessToken: "액세스 토큰" },
-      },
-    },
-  })
   async newAccessToken(@userNo() userNo: number) {
     return await this.tokenService.createNewAccessToken(userNo);
   }
