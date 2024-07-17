@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -27,11 +28,16 @@ export class CommentRepository {
     });
   }
 
-  getManyComments(receiverNo: number, skip: number, take: number) {
+  getManyComments(
+    receiverNo: number,
+    skip: number,
+    take: number,
+    orderBy: OrderBy,
+  ) {
     return this.prisma.comment.findMany({
       skip,
       take,
-      orderBy: { no: "desc" },
+      orderBy: { no: orderBy },
       where: {
         receiverNo,
         deletedAt: null,

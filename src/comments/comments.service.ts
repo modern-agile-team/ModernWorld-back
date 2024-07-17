@@ -4,6 +4,7 @@ import { CreateCommentDto } from "./dtos/comment-dtos/create-comment.dto";
 import { UpdateCommentDto } from "./dtos/comment-dtos/update-comment.dto";
 import { GetReplyDto } from "./dtos/replies-dtos/get-reply.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
 @Injectable()
 export class CommentService {
@@ -26,9 +27,24 @@ export class CommentService {
   async getManyComments(receiverNo: number, query: PaginationDto) {
     const { take, page, orderBy } = query;
     const skip = take * (page - 1);
-    // const totalCount = await this.CommRepository.countAlarmsByUserNo(userNo);
+    const totalCount =
+      await this.commentRepository.countCommentsByUserNo(receiverNo);
 
-    return this.commentRepository.getManyComments(receiverNo, skip, take);
+    const totalPage = Math.ceil(totalCount / take);
+
+    const comments = await this.commentRepository.getManyComments(
+      receiverNo,
+      skip,
+      take,
+      orderBy,
+    );
+
+    return new PaginationResponseDto(comments, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 
   async updateOneComment(commentNo: number, body: UpdateCommentDto) {
