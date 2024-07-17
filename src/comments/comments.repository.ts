@@ -10,6 +10,10 @@ export class CommentRepository {
     return this.prisma.comment.count({ where: { receiverNo } });
   }
 
+  countRepliesByCommentNo(commentNo: number) {
+    return this.prisma.reply.count({ where: { commentNo } });
+  }
+
   createOneComment(receiverNo: number, senderNo: number, content: string) {
     return this.prisma.comment.create({
       data: {
@@ -101,11 +105,16 @@ export class CommentRepository {
     });
   }
 
-  getManyReplies(commentNo: number, skip: number, take: number) {
+  getManyReplies(
+    commentNo: number,
+    skip: number,
+    take: number,
+    orderBy: OrderBy,
+  ) {
     return this.prisma.reply.findMany({
       skip,
       take,
-      orderBy: { no: "desc" },
+      orderBy: { no: orderBy },
       where: {
         commentNo,
         deletedAt: null,
