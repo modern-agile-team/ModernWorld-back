@@ -3,6 +3,7 @@ import { AppModule } from "./app.module";
 import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { winstonLogger } from "./common/utils/logger/logger.config";
+import * as cookieParser from "cookie-parser";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -14,13 +15,13 @@ async function bootstrap() {
     .setTitle("Modern World API")
     .setDescription("API of Modern World")
     .setVersion("0.1")
-    .addBearerAuth(
+    .addCookieAuth(
+      "refreshToken-cookie",
       {
         type: "http",
-        scheme: "bearer",
-        name: "JWT",
-        description: "Enter JWT token",
-        in: "header",
+        in: "Header",
+        scheme: "Bearer",
+        description: "리프레시 토큰 입력",
       },
       "refresh-token",
     )
@@ -29,7 +30,7 @@ async function bootstrap() {
         type: "http",
         scheme: "bearer",
         name: "JWT",
-        description: "Enter JWT token",
+        description: "액세스 토큰 입력",
         in: "header",
       },
       "access-token",
@@ -41,7 +42,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
+  app.use(cookieParser());
   await app.listen(3000);
 }
 bootstrap();
