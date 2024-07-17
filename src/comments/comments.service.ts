@@ -147,8 +147,11 @@ export class CommentService {
 
   async replyNotFound(commentNo: number, replyNo: number) {
     const reply = await this.commentRepository.getOneReply(commentNo, replyNo);
+
     if (!reply) {
       throw new NotFoundException("해당 댓글은 존재하지 않습니다.");
     }
+
+    return reply;
   }
 }
