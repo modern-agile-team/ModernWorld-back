@@ -24,6 +24,7 @@ export class CommentRepository {
     return this.prisma.comment.findUnique({
       where: {
         no: commentNo,
+        deletedAt: null,
       },
     });
   }
