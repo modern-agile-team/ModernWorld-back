@@ -60,13 +60,6 @@ export class CommentRepository {
 
   updateOneComment(no: number, content: string) {
     return this.prisma.comment.update({
-      select: {
-        no: true,
-        content: true,
-        createdAt: true,
-        commentReceiver: { select: { no: true, nickname: true } },
-        commentSender: { select: { no: true, nickname: true } },
-      },
       where: {
         no,
       },
