@@ -116,11 +116,10 @@ export class CommentRepository {
     });
   }
 
-  updateOneReply(commentNo: number, replyNo: number, content: string) {
+  updateOneReply(no: number, content: string) {
     return this.prisma.reply.update({
       where: {
-        no: replyNo,
-        commentNo,
+        no,
       },
       data: {
         content,
@@ -128,11 +127,10 @@ export class CommentRepository {
     });
   }
 
-  softDeleteOneReply(commentNo: number, replyNo: number) {
+  softDeleteOneReply(no: number) {
     return this.prisma.reply.update({
       where: {
-        no: replyNo,
-        commentNo,
+        no,
       },
       data: {
         deletedAt: new Date(),
