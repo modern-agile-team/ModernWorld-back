@@ -15,7 +15,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateComment } from "./swagger-decorators/comment-swagger/create-comment.decorator";
 import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments.decorator";
 import { ApiUpdateComment } from "./swagger-decorators/comment-swagger/update-comment.decorator";
-import { ApiDeleteComment } from "./swagger-decorators/comment-swagger/delete-comments.decorator";
+import { ApiDeleteOneComment } from "./swagger-decorators/comment-swagger/delete-one-comment.decorator";
 import { ApiFindRelies } from "./swagger-decorators/reply-swagger/find-reply.decorator";
 import { ApiDeleteReply } from "./swagger-decorators/reply-swagger/delete-reply.decorator";
 import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply.decorator";
@@ -60,7 +60,7 @@ export class CommentController {
   }
 
   @Delete("users/my/comments/:commentNo")
-  @ApiDeleteComment()
+  @ApiDeleteOneComment()
   @HttpCode(204)
   softDeleteOneComment(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
