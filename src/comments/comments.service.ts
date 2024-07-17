@@ -4,8 +4,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { CommentRepository } from "./comments.repository";
-import { CreateCommentDto } from "./dtos/comment-dtos/create-comment.dto";
-import { UpdateCommentDto } from "./dtos/comment-dtos/update-comment.dto";
+import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { GetReplyDto } from "./dtos/replies-dtos/get-reply.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
@@ -17,7 +16,7 @@ export class CommentService {
   createOneComment(
     receiverNo: number,
     senderNo: number,
-    body: CreateCommentDto,
+    body: CommentContentDto,
   ) {
     const { content } = body;
 
@@ -54,7 +53,7 @@ export class CommentService {
   async updateOneComment(
     userNo: number,
     commentNo: number,
-    body: UpdateCommentDto,
+    body: CommentContentDto,
   ) {
     const { content } = body;
     const { senderNo } = await this.commentNotFound(commentNo);
@@ -75,7 +74,7 @@ export class CommentService {
   async createOneReply(
     commentNo: number,
     userNo: number,
-    body: CreateCommentDto,
+    body: CommentContentDto,
   ) {
     const { content } = body;
     await this.commentNotFound(commentNo);
@@ -94,7 +93,7 @@ export class CommentService {
   async updateOneReply(
     commentNo: number,
     replyNo: number,
-    body: UpdateCommentDto,
+    body: CommentContentDto,
   ) {
     const { content } = body;
     await this.commentNotFound(commentNo);

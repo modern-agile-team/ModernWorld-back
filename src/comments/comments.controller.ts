@@ -9,8 +9,7 @@ import {
   Delete,
 } from "@nestjs/common";
 import { CommentService } from "./comments.service";
-import { CreateCommentDto } from "./dtos/comment-dtos/create-comment.dto";
-import { UpdateCommentDto } from "./dtos/comment-dtos/update-comment.dto";
+import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateComment } from "./swagger-decorators/comment-swagger/create-comment-decorator";
 import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments-decorator";
@@ -34,7 +33,7 @@ export class CommentController {
   @Post("users/:userNo/comments")
   createOneComment(
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
-    @Body() body: CreateCommentDto,
+    @Body() body: CommentContentDto,
   ) {
     const userNo = 1;
 
@@ -54,7 +53,7 @@ export class CommentController {
   @ApiUpdateComment()
   updatOneComment(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
-    @Body() body: UpdateCommentDto,
+    @Body() body: CommentContentDto,
   ) {
     const userNo = 1;
 
