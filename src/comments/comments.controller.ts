@@ -15,7 +15,6 @@ import { ApiCreateComment } from "./swagger-decorators/comment-swagger/create-co
 import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments-decorator";
 import { ApiUpdateComment } from "./swagger-decorators/comment-swagger/update-comment-decorator";
 import { ApiDeleteComment } from "./swagger-decorators/comment-swagger/delete-comments-decorator";
-import { GetReplyDto } from "./dtos/replies-dtos/get-reply.dto";
 import { ApiFindRelies } from "./swagger-decorators/reply-swagger/find-reply-decorate";
 import { ApiDeleteReply } from "./swagger-decorators/reply-swagger/delete-reply-decorate";
 import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply-decorate";
