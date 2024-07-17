@@ -112,26 +112,36 @@ export class CommentService {
   }
 
   async updateOneReply(
+    senderNo: number,
     commentNo: number,
     replyNo: number,
     body: CommentContentDto,
   ) {
-    const { content } = body;
     await this.findOneCommentNotDeleted(commentNo);
-    await this.findOneReplyNotDeleted(replyNo);
+    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
 
-    return this.commentRepository.updateOneReply(commentNo, replyNo, content);
+    const { content } = body;
+
+    if (senderNo !== userNo) {
+      throw new ForbiddenException("User can update only their reply.");
+    }
+
+    return this.commentRepository.updateOneReply(replyNo, content);
   }
 
-  async softDeleteOneReply(commentNo: number, replyNo: number) {
+  async softDeleteOneReply(
+    senderNo: number,
+    commentNo: number,
+    replyNo: number,
+  ) {
     await this.findOneCommentNotDeleted(commentNo);
-    await this.findOneReplyNotDeleted(replyNo);
-    const deleteReply = await this.commentRepository.softDeleteOneReply(
-      commentNo,
-      replyNo,
-    );
+    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
 
-    return deleteReply;
+    if (senderNo !== userNo) {
+      throw new ForbiddenException("User can update only their reply.");
+    }
+
+    return await this.commentRepository.softDeleteOneReply(replyNo);
   }
 
   async findOneCommentNotDeleted(commentNo: number) {
