@@ -44,19 +44,19 @@ export class CommentController {
   @Get("users/:userNo/comments")
   @ApiFindComments()
   getManyComments(
-    @Param("receiverNo", ParsePositiveIntPipe) receiverNo: number,
-    @Query() queryParams: GetCommentDto,
+    @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
+    @Query() query: GetCommentDto,
   ) {
-    return this.commentService.getManyComments(receiverNo, queryParams);
+    return this.commentService.getManyComments(receiverNo, query);
   }
 
   @Patch("users/:userNo/comments/:commentNo")
   @ApiUpdateComment()
   updatOneComment(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
-    @Body() content: UpdateCommentDto,
+    @Body() body: UpdateCommentDto,
   ) {
-    return this.commentService.updateOneComment(commentNo, content);
+    return this.commentService.updateOneComment(commentNo, body);
   }
 
   @Delete("users/:userNo/comments/:commentNo")
@@ -71,19 +71,19 @@ export class CommentController {
   @ApiCreateReply()
   createOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
-    @Body() content: CreateReplyDto,
+    @Body() body: CreateReplyDto,
   ) {
     const userNo = 1;
-    return this.commentService.createOneReply(commentNo, userNo, content);
+    return this.commentService.createOneReply(commentNo, userNo, body);
   }
 
   @Get("comments/:commentNo/replies")
   @ApiFindRelies()
   getManyReplies(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
-    @Query() queryParams: GetReplyDto,
+    @Query() query: GetReplyDto,
   ) {
-    return this.commentService.getManyReplies(commentNo, queryParams);
+    return this.commentService.getManyReplies(commentNo, query);
   }
 
   @Patch("comments/:commentNo/replies/:replyNo")
@@ -91,9 +91,9 @@ export class CommentController {
   updateOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
-    @Body() content: UpdateReplyDto,
+    @Body() body: UpdateReplyDto,
   ) {
-    return this.commentService.updateOneReply(commentNo, replyNo, content);
+    return this.commentService.updateOneReply(commentNo, replyNo, body);
   }
 
   @Delete("comments/:commentNo/replies/:replyNo")

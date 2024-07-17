@@ -23,14 +23,14 @@ export class CommentService {
     );
   }
 
-  getManyComments(receiverNo: number, queryParams: GetCommentDto) {
-    const { page, take } = queryParams;
+  getManyComments(receiverNo: number, query: GetCommentDto) {
+    const { page, take } = query;
     const skip = (page - 1) * take;
     return this.CommentRepository.getManyComments(receiverNo, skip, take);
   }
 
-  async updateOneComment(commentNo: number, createcontent: UpdateCommentDto) {
-    const { content } = createcontent;
+  async updateOneComment(commentNo: number, body: UpdateCommentDto) {
+    const { content } = body;
     await this.commentNotFound(commentNo);
     return this.CommentRepository.updateOneComment(commentNo, content);
   }
@@ -43,15 +43,15 @@ export class CommentService {
   async createOneReply(
     commentNo: number,
     userNo: number,
-    createContent: CreateCommentDto,
+    body: CreateCommentDto,
   ) {
-    const { content } = createContent;
+    const { content } = body;
     await this.commentNotFound(commentNo);
     return this.CommentRepository.createOneReply(commentNo, userNo, content);
   }
 
-  async getManyReplies(commentNo: number, queryParams: GetReplyDto) {
-    const { page, take } = queryParams;
+  async getManyReplies(commentNo: number, query: GetReplyDto) {
+    const { page, take } = query;
     await this.commentNotFound(commentNo);
     const skip = (page - 1) * take;
     return this.CommentRepository.getManyReplies(commentNo, skip, take);
@@ -60,9 +60,9 @@ export class CommentService {
   async updateOneReply(
     commentNo: number,
     replyNo: number,
-    replyContent: UpdateCommentDto,
+    body: UpdateCommentDto,
   ) {
-    const { content } = replyContent;
+    const { content } = body;
     await this.commentNotFound(commentNo);
     await this.replyNotFound(commentNo, replyNo);
     return this.CommentRepository.updateOneReply(commentNo, replyNo, content);
