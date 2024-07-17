@@ -12,7 +12,7 @@ import {
 import { CommentService } from "./comments.service";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { ApiTags } from "@nestjs/swagger";
-import { ApiCreateComment } from "./swagger-decorators/comment-swagger/create-comment.decorator";
+import { ApiCreateOneComment } from "./swagger-decorators/comment-swagger/create-one-comment.decorator";
 import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments.decorator";
 import { ApiUpdateComment } from "./swagger-decorators/comment-swagger/update-comment.decorator";
 import { ApiDeleteOneComment } from "./swagger-decorators/comment-swagger/delete-one-comment.decorator";
@@ -28,7 +28,7 @@ import { PaginationDto } from "src/common/dtos/pagination.dto";
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @ApiCreateComment()
+  @ApiCreateOneComment()
   @Post("users/:userNo/comments")
   createOneComment(
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,

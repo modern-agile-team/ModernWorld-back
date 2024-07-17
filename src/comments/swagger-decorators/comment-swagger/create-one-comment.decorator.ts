@@ -6,7 +6,7 @@ import {
   ApiOperation,
 } from "@nestjs/swagger";
 
-export function ApiCreateComment() {
+export function ApiCreateOneComment() {
   return applyDecorators(
     ApiOperation({
       summary: "방명록 생성하는 API",
