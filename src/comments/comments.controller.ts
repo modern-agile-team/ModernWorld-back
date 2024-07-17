@@ -83,7 +83,7 @@ export class CommentController {
   @ApiFindRelies()
   getManyReplies(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
-    @Query() query: GetReplyDto,
+    @Query() query: PaginationDto,
   ) {
     return this.commentService.getManyReplies(commentNo, query);
   }
