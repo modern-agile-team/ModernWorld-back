@@ -60,12 +60,14 @@ export class CommentController {
     return this.commentService.updateOneComment(userNo, commentNo, body);
   }
 
-  @Delete("users/:userNo/comments/:commentNo")
+  @Delete("users/my/comments/:commentNo")
   @ApiDeleteComment()
   softDeleteOneComment(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
   ) {
-    return this.commentService.softDeleteOneComment(commentNo);
+    const userNo = 1;
+
+    return this.commentService.softDeleteOneComment(userNo, commentNo);
   }
 
   @Post("comments/:commentNo/replies")

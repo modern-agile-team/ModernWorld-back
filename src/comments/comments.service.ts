@@ -65,10 +65,14 @@ export class CommentService {
     return this.commentRepository.updateOneComment(commentNo, content);
   }
 
-  async softDeleteOneComment(commentNo: number) {
-    await this.commentNotFound(commentNo);
+  async softDeleteOneComment(userNo: number, commentNo: number) {
+    const { senderNo } = await this.commentNotFound(commentNo);
 
-    return this.commentRepository.softDeleteOneComment(commentNo);
+    if (userNo !== senderNo) {
+      throw new ForbiddenException("User can delete only their comment.");
+    }
+
+    return this.commentRepository.updateCommentToDelete(commentNo);
   }
 
   async createOneReply(

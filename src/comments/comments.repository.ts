@@ -71,10 +71,10 @@ export class CommentRepository {
     });
   }
 
-  softDeleteOneComment(id: number) {
+  updateCommentToDelete(no: number) {
     return this.prisma.comment.update({
       where: {
-        no: id,
+        no,
       },
       data: {
         deletedAt: new Date(),
