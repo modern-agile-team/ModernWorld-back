@@ -11,7 +11,6 @@ import {
 import { CommentService } from "./comments.service";
 import { CreateCommentDto } from "./dtos/comment-dtos/create-comment.dto";
 import { UpdateCommentDto } from "./dtos/comment-dtos/update-comment.dto";
-import { GetCommentDto } from "./dtos/comment-dtos/get-comment.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateComment } from "./swagger-decorators/comment-swagger/create-comment-decorator";
 import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments-decorator";
@@ -25,6 +24,7 @@ import { ApiCreateReply } from "./swagger-decorators/reply-swagger/create-reply-
 import { CreateReplyDto } from "./dtos/replies-dtos/create-reply.dto";
 import { UpdateReplyDto } from "./dtos/replies-dtos/update-reply.dto";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Controller()
 @ApiTags("Comments & Replies")
@@ -44,10 +44,10 @@ export class CommentController {
   @Get("users/:userNo/comments")
   @ApiFindComments()
   getManyComments(
-    @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
-    @Query() query: GetCommentDto,
+    @Param("userNo", ParsePositiveIntPipe) userNo: number,
+    @Query() query: PaginationDto,
   ) {
-    return this.commentService.getManyComments(receiverNo, query);
+    return this.commentService.getManyComments(userNo, query);
   }
 
   @Patch("users/:userNo/comments/:commentNo")
