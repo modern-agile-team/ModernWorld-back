@@ -20,14 +20,11 @@ import { LegendsModule } from "./legends/legends.module";
 import { LoggerModule } from "./common/utils/logger/logger.module";
 import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
-<<<<<<< HEAD
-=======
 import { RedisModule } from "./auth/redis/redis.module";
->>>>>>> 1ddaf01613b1b3231f909e4e279e083065817759
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
 import { CommonModule } from "./common/common.module";
 import { NeighborModule } from "./neighbors/neighbors.module";
-import { RedisModule } from "./auth/redis.module";
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
