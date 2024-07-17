@@ -1,5 +1,9 @@
 import { applyDecorators } from "@nestjs/common";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import {
+  ApiInternalServerErrorResponse,
+  ApiOperation,
+  ApiResponse,
+} from "@nestjs/swagger";
 
 export function ApiDeleteComment() {
   return applyDecorators(
@@ -16,15 +20,7 @@ export function ApiDeleteComment() {
         },
       },
     }),
-    ApiResponse({
-      status: 401,
-      description: "우리 서비스의 액세스 토큰이 아닌 경우",
-      content: {
-        JSON: {
-          example: { statusCode: 401, message: "유효하지 않은 토큰입니다." },
-        },
-      },
-    }),
+
     ApiResponse({
       status: 404,
       description: "방명록이 DB에 존재하지 않는 경우",
@@ -34,6 +30,7 @@ export function ApiDeleteComment() {
         },
       },
     }),
+
     ApiResponse({
       status: 403,
       description: "만료된 액세스 토큰인 경우",
@@ -43,6 +40,7 @@ export function ApiDeleteComment() {
         },
       },
     }),
+
     ApiResponse({
       status: 400,
       description: "액세스 토큰이 제공되지 않은 경우",
@@ -52,6 +50,7 @@ export function ApiDeleteComment() {
         },
       },
     }),
+
     ApiResponse({
       status: 401,
       description: "본인의 방명록이 아닌 경우",
@@ -61,9 +60,9 @@ export function ApiDeleteComment() {
         },
       },
     }),
-    ApiResponse({
-      status: 500,
-      description: "방명록을 삭제하는 데 오류가 발생한 경우",
+
+    ApiInternalServerErrorResponse({
+      description: "Internal server error",
       content: {
         JSON: {
           example: {
