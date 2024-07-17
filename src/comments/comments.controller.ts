@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   Delete,
+  HttpCode,
 } from "@nestjs/common";
 import { CommentService } from "./comments.service";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
@@ -59,6 +60,7 @@ export class CommentController {
 
   @Delete("users/my/comments/:commentNo")
   @ApiDeleteComment()
+  @HttpCode(204)
   softDeleteOneComment(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
   ) {
@@ -99,6 +101,7 @@ export class CommentController {
 
   @Delete("comments/:commentNo/replies/:replyNo")
   @ApiDeleteReply()
+  @HttpCode(204)
   softDeleteOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
