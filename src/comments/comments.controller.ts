@@ -27,6 +27,7 @@ import { PaginationDto } from "src/common/dtos/pagination.dto";
 @ApiTags("Comments & Replies")
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
+
   @ApiCreateComment()
   @Post("users/:userNo/comments")
   createOneComment(
