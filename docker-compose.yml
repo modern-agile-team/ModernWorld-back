@@ -19,23 +19,3 @@ services:
     ports:
       - "6379:6379"
     restart: always
-#   neo4j:
-#     container_name: neo4j
-#     image: neo4j
-#     ports:
-#       - "7474:7474"
-#       - "7687:7687"
-#     environment:
-#       - NEO4J_AUTH=${NEO4J_AUTH}
-#     volumes:
-#       - neo4j-data:/data
-#       - neo4j-logs:/logs
-#       - neo4j-import:/var/lib/neo4j/import
-#       - neo4j-plugins:/plugins
-
-# volumes:
-#   db-data:
-#   neo4j-data:
-#   neo4j-logs:
-#   neo4j-import:
-#   neo4j-plugins:

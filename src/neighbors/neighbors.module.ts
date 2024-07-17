@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
-import { NeighborService } from "./neighbors.service";
-import { NeighborController } from "./neighbors.controller";
-import { NeighborRepository } from "./neighbors.repository";
+import { NeighborsService } from "./neighbors.service";
+import { NeighborsController } from "./neighbors.controller";
+import { NeighborsRepository } from "./neighbors.repository";
 import { UsersModule } from "src/users/users.module";
 
 @Module({
-  controllers: [NeighborController],
-  providers: [NeighborService, NeighborRepository],
+  controllers: [NeighborsController],
+  providers: [NeighborsService, NeighborsRepository],
   imports: [UsersModule],
 })
 export class NeighborModule {}

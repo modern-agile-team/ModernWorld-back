@@ -10,7 +10,7 @@ import {
   HttpCode,
   ParseIntPipe,
 } from "@nestjs/common";
-import { NeighborService } from "./neighbors.service";
+import { NeighborsService } from "./neighbors.service";
 import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { getNeighborDto } from "./dtos/get-neighbors.dto";
@@ -22,21 +22,21 @@ import { ApiDeleteNeighobor } from "./swagger-decorators/delete-neighbor";
 
 @Controller("neighbors")
 @ApiTags("neighbors")
-export class NeighborController {
-  constructor(private readonly neighborService: NeighborService) {}
+export class NeighborsController {
+  constructor(private readonly neighborsService: NeighborsService) {}
 
   @ApiCraeteNeighbor()
   @Post()
   neighborRequest(@Body() body: CreateNeighborDto) {
     const userNo = 1;
-    return this.neighborService.neighborRequest(body, userNo);
+    return this.neighborsService.neighborRequest(body, userNo);
   }
 
   @ApiGetNeighobor()
   @Get()
   getMYNeighbors(@Query() queryParams: getNeighborDto) {
     const userNo = 1;
-    return this.neighborService.getMyNeighbors(userNo, queryParams);
+    return this.neighborsService.getMyNeighbors(userNo, queryParams);
   }
 
   @ApiUpdateNeighobor()
@@ -47,7 +47,7 @@ export class NeighborController {
     body: UpdateNeighborDto,
   ) {
     const userNo = 1;
-    return this.neighborService.neighborApproval(neighborNo, userNo, body);
+    return this.neighborsService.neighborApproval(neighborNo, userNo, body);
   }
 
   @ApiDeleteNeighobor()
@@ -55,7 +55,7 @@ export class NeighborController {
   @HttpCode(204)
   neighborRequestRefusalOrDelete(@Param("neighborNo") neighborNo: number) {
     const userNo = 1;
-    return this.neighborService.neighborRequestRefusalOrDelete(
+    return this.neighborsService.neighborRequestRefusalOrDelete(
       neighborNo,
       userNo,
     );

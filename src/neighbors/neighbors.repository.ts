@@ -3,7 +3,7 @@ import { neighbor, PrismaPromise } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
-export class NeighborRepository {
+export class NeighborsRepository {
   constructor(private readonly prisma: PrismaService) {}
   neighborRequest(
     receiverNo: number,
