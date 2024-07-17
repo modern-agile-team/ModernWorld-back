@@ -50,13 +50,15 @@ export class CommentController {
     return this.commentService.getManyComments(userNo, query);
   }
 
-  @Patch("users/:userNo/comments/:commentNo")
+  @Patch("users/my/comments/:commentNo")
   @ApiUpdateComment()
   updatOneComment(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() body: UpdateCommentDto,
   ) {
-    return this.commentService.updateOneComment(commentNo, body);
+    const userNo = 1;
+
+    return this.commentService.updateOneComment(userNo, commentNo, body);
   }
 
   @Delete("users/:userNo/comments/:commentNo")
