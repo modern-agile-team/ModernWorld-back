@@ -75,6 +75,7 @@ export class CommentController {
     @Body() body: CommentContentDto,
   ) {
     const userNo = 1;
+
     return this.commentService.createOneReply(commentNo, userNo, body);
   }
 

@@ -56,7 +56,7 @@ export class CommentService {
     body: CommentContentDto,
   ) {
     const { content } = body;
-    const { senderNo } = await this.commentNotFound(commentNo);
+    const { senderNo } = await this.findOneComment(commentNo);
 
     if (userNo !== senderNo) {
       throw new ForbiddenException("User can update only their comment.");
@@ -66,7 +66,7 @@ export class CommentService {
   }
 
   async softDeleteOneComment(userNo: number, commentNo: number) {
-    const { senderNo } = await this.commentNotFound(commentNo);
+    const { senderNo } = await this.findOneComment(commentNo);
 
     if (userNo !== senderNo) {
       throw new ForbiddenException("User can delete only their comment.");
@@ -81,14 +81,14 @@ export class CommentService {
     body: CommentContentDto,
   ) {
     const { content } = body;
-    await this.commentNotFound(commentNo);
+    await this.findOneComment(commentNo);
 
     return this.commentRepository.createOneReply(commentNo, userNo, content);
   }
 
   async getManyReplies(commentNo: number, query: GetReplyDto) {
     const { page, take } = query;
-    await this.commentNotFound(commentNo);
+    await this.findOneComment(commentNo);
     const skip = (page - 1) * take;
 
     return this.commentRepository.getManyReplies(commentNo, skip, take);
@@ -100,14 +100,14 @@ export class CommentService {
     body: CommentContentDto,
   ) {
     const { content } = body;
-    await this.commentNotFound(commentNo);
+    await this.findOneComment(commentNo);
     await this.replyNotFound(commentNo, replyNo);
 
     return this.commentRepository.updateOneReply(commentNo, replyNo, content);
   }
 
   async softDeleteOneReply(commentNo: number, replyNo: number) {
-    await this.commentNotFound(commentNo);
+    await this.findOneComment(commentNo);
     await this.replyNotFound(commentNo, replyNo);
     const deleteReply = await this.commentRepository.softDeleteOneReply(
       commentNo,
@@ -117,7 +117,7 @@ export class CommentService {
     return deleteReply;
   }
 
-  async commentNotFound(commentNo: number) {
+  async findOneComment(commentNo: number) {
     const comment = await this.commentRepository.getOneComment(commentNo);
     if (!comment) {
       throw new NotFoundException("해당 방명록은 존재하지 않습니다.");
