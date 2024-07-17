@@ -44,6 +44,7 @@ export class CommentRepository {
         no: true,
         content: true,
         createdAt: true,
+        _count: { select: { reply: { where: { deletedAt: null } } } },
         commentReceiver: { select: { no: true, nickname: true } },
         commentSender: { select: { no: true, nickname: true } },
       },
