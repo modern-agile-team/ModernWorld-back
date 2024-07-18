@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CommentSendReceive } from "./interfaces/comments.interface";
 
 @Injectable()
 export class CommentRepository {
