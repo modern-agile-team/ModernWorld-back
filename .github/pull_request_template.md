@@ -1,11 +1,3 @@
----
-name: Pull Request template
-about: This is a Pull Request template
-title: ""
-labels: ""
-assignees: ""
----
-
 ## 관련 이슈
 
 #(번호)
