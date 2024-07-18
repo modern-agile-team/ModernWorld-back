@@ -10,5 +10,5 @@ export class CommentsPaginationDto extends PaginationDto {
   })
   @IsEnum(SenderReceiverNoField)
   @IsOptional()
-  type: SenderReceiverNoField;
+  type?: SenderReceiverNoField;
 }
