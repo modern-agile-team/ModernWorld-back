@@ -5,26 +5,29 @@ import {
   ApiResponse,
 } from "@nestjs/swagger";
 
-export function ApiCreateReply() {
+export function ApiDeleteOneReply() {
   return applyDecorators(
     ApiOperation({
-      summary: "방명록의 댓글을 생성하는 API",
-      description: "방명록의 댓글을 생성합니다.",
+      summary: "방명록의 댓글 삭제하는 API",
+      description: "방명록의 댓글을 삭제합니다.",
     }),
 
     ApiResponse({
-      status: 201,
-      description: "방명록의 댓글을 성공적으로 생성한 경우",
+      status: 200,
+      description: "댓글을 성공적으로 삭제한 경우",
       content: {
         JSON: {
-          example: {
-            no: 27,
-            commentNo: 11,
-            userNo: 1,
-            content: "asd",
-            createdAt: "2024-06-26T08:38:00.000Z",
-            deletedAt: null,
-          },
+          example: {},
+        },
+      },
+    }),
+
+    ApiResponse({
+      status: 401,
+      description: "본인의 댓글이 아닌 경우",
+      content: {
+        JSON: {
+          example: { statusCode: 401, message: "본인의 댓글이 아닙니다." },
         },
       },
     }),

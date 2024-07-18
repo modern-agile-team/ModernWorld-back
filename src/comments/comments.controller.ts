@@ -16,10 +16,10 @@ import { ApiCreateOneComment } from "./swagger-decorators/comment-swagger/create
 import { ApiGetComments } from "./swagger-decorators/comment-swagger/get-comments.decorator";
 import { ApiUpdateComment } from "./swagger-decorators/comment-swagger/update-comment.decorator";
 import { ApiDeleteOneComment } from "./swagger-decorators/comment-swagger/delete-one-comment.decorator";
-import { ApiFindRelies } from "./swagger-decorators/reply-swagger/find-reply.decorator";
-import { ApiDeleteReply } from "./swagger-decorators/reply-swagger/delete-reply.decorator";
-import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply.decorator";
-import { ApiCreateReply } from "./swagger-decorators/reply-swagger/create-reply.decorator";
+import { ApiGetRelies } from "./swagger-decorators/reply-swagger/get-replies.decorator";
+import { ApiDeleteOneReply } from "./swagger-decorators/reply-swagger/delete-one-reply.decorator";
+import { ApiUpdateOneReply } from "./swagger-decorators/reply-swagger/update-one-reply.decorator";
+import { ApiCreateOneReply } from "./swagger-decorators/reply-swagger/create-one-reply.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
@@ -72,7 +72,7 @@ export class CommentController {
   }
 
   @Post("comments/:commentNo/replies")
-  @ApiCreateReply()
+  @ApiCreateOneReply()
   createOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() body: CommentContentDto,
@@ -83,7 +83,7 @@ export class CommentController {
   }
 
   @Get("comments/:commentNo/replies")
-  @ApiFindRelies()
+  @ApiGetRelies()
   getManyReplies(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Query() query: PaginationDto,
@@ -92,7 +92,7 @@ export class CommentController {
   }
 
   @Patch("comments/:commentNo/replies/:replyNo")
-  @ApiUpdateReply()
+  @ApiUpdateOneReply()
   updateOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
@@ -104,7 +104,7 @@ export class CommentController {
   }
 
   @Delete("comments/:commentNo/replies/:replyNo")
-  @ApiDeleteReply()
+  @ApiDeleteOneReply()
   @HttpCode(204)
   softDeleteOneReply(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
