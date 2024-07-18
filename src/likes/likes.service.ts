@@ -70,4 +70,10 @@ export class LikesService {
       throw new InternalServerErrorException();
     }
   }
+
+  async findOneLike(senderNo: number, receiverNo: number) {
+    return (await this.likesRepository.findOneLike(senderNo, receiverNo))
+      ? true
+      : false;
+  }
 }
