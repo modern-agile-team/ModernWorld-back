@@ -1,33 +1,79 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOperation,
-  ApiResponse,
 } from "@nestjs/swagger";
 
 export function ApiDeleteOneReply() {
   return applyDecorators(
-    ApiOperation({
-      summary: "방명록의 댓글 삭제하는 API",
-      description: "방명록의 댓글을 삭제합니다.",
-    }),
+    ApiOperation({ summary: "content의 reply 삭제" }),
 
-    ApiResponse({
-      status: 200,
-      description: "댓글을 성공적으로 삭제한 경우",
+    ApiNoContentResponse({ description: "Success" }),
+
+    ApiBadRequestResponse({
       content: {
         JSON: {
-          example: {},
+          examples: {
+            ex1: {
+              summary: "param의 commentNo가 양의 정수가 아닌 경우",
+              value: {
+                message: "Validation failed (positive int string is expected)",
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+
+            ex2: {
+              summary: "param의 replyNo가 양의 정수가 아닌 경우",
+              value: {
+                message: "Validation failed (positive int string is expected)",
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+          },
         },
       },
     }),
 
-    ApiResponse({
-      status: 401,
-      description: "본인의 댓글이 아닌 경우",
+    ApiForbiddenResponse({
       content: {
         JSON: {
-          example: { statusCode: 401, message: "본인의 댓글이 아닙니다." },
+          example: {
+            message: "User can delete only their reply.",
+            error: "Forbidden",
+            statusCode: 403,
+          },
+        },
+      },
+    }),
+
+    ApiNotFoundResponse({
+      content: {
+        JSON: {
+          examples: {
+            ex1: {
+              summary: "해당 번호의 commentNo가 존재하지 않는 경우",
+              value: {
+                message: "There is no comment with that number.",
+                error: "Not Found",
+                statusCode: 404,
+              },
+            },
+
+            ex2: {
+              summary: "해당 번호의 replyNo가 존재하지 않는 경우",
+              value: {
+                message: "There is no reply with that number.",
+                error: "Not Found",
+                statusCode: 404,
+              },
+            },
+          },
         },
       },
     }),

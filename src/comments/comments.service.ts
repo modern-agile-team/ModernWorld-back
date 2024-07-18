@@ -152,7 +152,7 @@ export class CommentService {
     const { userNo } = await this.findOneReplyNotDeleted(replyNo);
 
     if (senderNo !== userNo) {
-      throw new ForbiddenException("User can update only their reply.");
+      throw new ForbiddenException("User can delete only their reply.");
     }
 
     return await this.commentRepository.softDeleteOneReply(replyNo);

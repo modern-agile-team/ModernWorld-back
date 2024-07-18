@@ -1,6 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -94,6 +95,19 @@ export function ApiGetRelies() {
                 statusCode: 400,
               },
             },
+          },
+        },
+      },
+    }),
+
+    ApiForbiddenResponse({
+      description: "유저 본인 걸 삭제하려는게 아닌 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "User can delete only their reply.",
+            error: "Forbidden",
+            statusCode: 403,
           },
         },
       },
