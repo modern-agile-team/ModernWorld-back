@@ -10,7 +10,7 @@ import {
 
 export function ApiDeleteOneReply() {
   return applyDecorators(
-    ApiOperation({ summary: "content의 reply 삭제" }),
+    ApiOperation({ summary: "comment의 reply 삭제" }),
 
     ApiNoContentResponse({ description: "Success" }),
 
@@ -41,6 +41,7 @@ export function ApiDeleteOneReply() {
     }),
 
     ApiForbiddenResponse({
+      description: "유저 본인 걸 삭제하려는게 아닌 경우",
       content: {
         JSON: {
           example: {

@@ -10,10 +10,7 @@ import {
 
 export function ApiDeleteOneComment() {
   return applyDecorators(
-    ApiOperation({
-      summary: "방명록 삭제하는 API",
-      description: "방명록을 삭제합니다.",
-    }),
+    ApiOperation({ summary: "comment 삭제" }),
 
     ApiNoContentResponse({ description: "Success" }),
 
@@ -31,7 +28,7 @@ export function ApiDeleteOneComment() {
     }),
 
     ApiForbiddenResponse({
-      description: "본인의 방명록이 아닌 경우",
+      description: "본인의 comment가 아닌 경우",
       content: {
         JSON: {
           example: {

@@ -2,20 +2,16 @@ import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
 } from "@nestjs/swagger";
 
 export function ApiGetComments() {
   return applyDecorators(
-    ApiOperation({
-      summary: "방명록 조회하는 API",
-      description: "방명록을 조회합니다.",
-    }),
+    ApiOperation({ summary: "comment 조회" }),
 
-    ApiResponse({
-      status: 200,
-      description: "댓글을 성공적으로 조회한 경우",
+    ApiOkResponse({
+      description: "Success",
       content: {
         JSON: {
           examples: {

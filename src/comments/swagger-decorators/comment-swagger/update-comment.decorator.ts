@@ -10,13 +10,10 @@ import {
 
 export function ApiUpdateComment() {
   return applyDecorators(
-    ApiOperation({
-      summary: "방명록 수정하는 API",
-      description: "방명록을 수정합니다.",
-    }),
+    ApiOperation({ summary: "comment 수정" }),
 
     ApiOkResponse({
-      description: "comment를 성공적으로 수정한 경우",
+      description: "Success",
       content: {
         JSON: {
           example: {
@@ -73,7 +70,7 @@ export function ApiUpdateComment() {
     }),
 
     ApiNotFoundResponse({
-      description: "해당 번호의 comment가 존재하지 않는 경우 (삭제한 경우)",
+      description: "해당 번호의 comment가 존재하지 않는 경우",
       content: {
         JSON: {
           example: {

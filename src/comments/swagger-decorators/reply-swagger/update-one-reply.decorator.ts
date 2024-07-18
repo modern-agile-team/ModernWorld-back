@@ -10,13 +10,10 @@ import {
 
 export function ApiUpdateOneReply() {
   return applyDecorators(
-    ApiOperation({
-      summary: "방명록의 댓글을 수정하는 API",
-      description: "방명록의 댓글을 수정합니다.",
-    }),
+    ApiOperation({ summary: "comment의 reply 수정" }),
 
     ApiOkResponse({
-      description: "reply를 성공적으로 수정한 경우",
+      description: "Success",
       content: {
         JSON: {
           example: {

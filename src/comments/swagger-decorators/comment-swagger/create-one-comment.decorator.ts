@@ -8,13 +8,10 @@ import {
 
 export function ApiCreateOneComment() {
   return applyDecorators(
-    ApiOperation({
-      summary: "방명록 생성하는 API",
-      description: "방명록을 생성합니다.",
-    }),
+    ApiOperation({ summary: "comment 생성" }),
 
     ApiCreatedResponse({
-      description: "댓글을 성공적으로 생성한 경우",
+      description: "Success",
       content: {
         JSON: {
           example: {

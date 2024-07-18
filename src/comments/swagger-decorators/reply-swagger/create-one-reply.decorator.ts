@@ -9,7 +9,7 @@ import {
 
 export function ApiCreateOneReply() {
   return applyDecorators(
-    ApiOperation({ summary: "comment의 reply 추가" }),
+    ApiOperation({ summary: "comment의 reply 생성" }),
 
     ApiOkResponse({
       description: "Success",

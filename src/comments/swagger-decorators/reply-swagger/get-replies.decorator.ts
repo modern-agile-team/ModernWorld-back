@@ -13,7 +13,7 @@ export function ApiGetRelies() {
     ApiOperation({ summary: "comment의 reply 조회" }),
 
     ApiOkResponse({
-      description: "reply를 성공적으로 조회한 경우",
+      description: "Success",
       content: {
         JSON: {
           example: {
