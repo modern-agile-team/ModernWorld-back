@@ -9,16 +9,40 @@ import {
 
 export function ApiGetRelies() {
   return applyDecorators(
-    ApiOperation({
-      summary: "comment의 reply 조회",
-      description: "방명록의 댓글을 조회합니다.",
-    }),
+    ApiOperation({ summary: "comment의 reply 조회" }),
 
     ApiOkResponse({
       description: "reply를 성공적으로 조회한 경우",
       content: {
         JSON: {
-          example: {},
+          example: {
+            data: [
+              {
+                no: 5,
+                content: "댓글의 댓글",
+                createdAt: "2024-07-01T05:00:46.000Z",
+                user: {
+                  no: 1,
+                  nickname: "1번 닉네임",
+                },
+              },
+              {
+                no: 4,
+                content: "댓글의 댓글",
+                createdAt: "2024-07-01T05:00:46.000Z",
+                user: {
+                  no: 1,
+                  nickname: "1번 닉네임",
+                },
+              },
+            ],
+            meta: {
+              page: 1,
+              take: 2,
+              totalCount: 3,
+              totalPage: 2,
+            },
+          },
         },
       },
     }),
