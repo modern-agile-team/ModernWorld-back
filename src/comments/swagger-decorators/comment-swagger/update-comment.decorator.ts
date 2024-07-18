@@ -1,8 +1,11 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
 } from "@nestjs/swagger";
 
 export function ApiUpdateComment() {
@@ -11,22 +14,73 @@ export function ApiUpdateComment() {
       summary: "방명록 수정하는 API",
       description: "방명록을 수정합니다.",
     }),
-    ApiResponse({
-      status: 200,
-      description: "댓글을 성공적으로 수정한 경우",
+
+    ApiOkResponse({
+      description: "comment를 성공적으로 수정한 경우",
       content: {
         JSON: {
-          example: {},
+          example: {
+            no: 94,
+            receiverNo: 2,
+            senderNo: 1,
+            content: "어떻게 사람이름이 엄준식",
+            createdAt: "2024-07-17T01:55:56.000Z",
+            deletedAt: null,
+          },
         },
       },
     }),
 
-    ApiResponse({
-      status: 404,
-      description: "방명록이 DB에 존재하지 않는 경우",
+    ApiBadRequestResponse({
       content: {
         JSON: {
-          example: { statusCode: 404, message: "존재하지 않는 방명록입니다." },
+          examples: {
+            ex1: {
+              summary: "param의 commentNo가 양의 정수가 아닌 경우",
+              value: {
+                message: "Validation failed (positive int string is expected)",
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+
+            ex2: {
+              summary: "body의 content가 1자 이상 100자 이하가 아닌 경우",
+              value: {
+                message: [
+                  "content must be longer than or equal to 1 and shorter than or equal to 100 characters",
+                ],
+                error: "Bad Request",
+                statusCode: 400,
+              },
+            },
+          },
+        },
+      },
+    }),
+
+    ApiForbiddenResponse({
+      description: "본인의 comment가 아닌 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "User can update only their comment.",
+            error: "Forbidden",
+            statusCode: 403,
+          },
+        },
+      },
+    }),
+
+    ApiNotFoundResponse({
+      description: "해당 번호의 comment가 존재하지 않는 경우 (삭제한 경우)",
+      content: {
+        JSON: {
+          example: {
+            message: "There is no comment with that number.",
+            error: "Not Found",
+            statusCode: 404,
+          },
         },
       },
     }),
