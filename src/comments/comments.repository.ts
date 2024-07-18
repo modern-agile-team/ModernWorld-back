@@ -1,13 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
+import { CommentSendReceive } from "./interfaces/comments.interface";
 
 @Injectable()
 export class CommentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  countCommentsByUserNo(receiverNo: number) {
-    return this.prisma.comment.count({ where: { receiverNo } });
+  countCommentsByUserNo(where: object) {
+    return this.prisma.comment.count({
+      where,
+    });
   }
 
   countRepliesByCommentNo(commentNo: number) {
@@ -33,12 +36,7 @@ export class CommentRepository {
     });
   }
 
-  getManyComments(
-    receiverNo: number,
-    skip: number,
-    take: number,
-    orderBy: OrderBy,
-  ) {
+  getManyComments(skip: number, take: number, orderBy: OrderBy, where: object) {
     return this.prisma.comment.findMany({
       select: {
         no: true,
@@ -51,10 +49,7 @@ export class CommentRepository {
       skip,
       take,
       orderBy: { no: orderBy },
-      where: {
-        receiverNo,
-        deletedAt: null,
-      },
+      where,
     });
   }
 

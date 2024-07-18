@@ -7,6 +7,7 @@ import { CommentRepository } from "./comments.repository";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
+import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
 
 @Injectable()
 export class CommentService {
@@ -26,19 +27,32 @@ export class CommentService {
     );
   }
 
-  async getManyComments(receiverNo: number, query: PaginationDto) {
-    const { take, page, orderBy } = query;
+  async getManyComments(userNo: number, query: CommentsPaginationDto) {
+    const { take, page, orderBy, type } = query;
     const skip = take * (page - 1);
+
+    const where = type
+      ? {
+          [type]: userNo,
+          deletedAt: null,
+        }
+      : {
+          OR: [
+            { senderNo: userNo, deletedAt: null },
+            { receiverNo: userNo, deletedAt: null },
+          ],
+        };
+
     const totalCount =
-      await this.commentRepository.countCommentsByUserNo(receiverNo);
+      await this.commentRepository.countCommentsByUserNo(where);
 
     const totalPage = Math.ceil(totalCount / take);
 
     const comments = await this.commentRepository.getManyComments(
-      receiverNo,
       skip,
       take,
       orderBy,
+      where,
     );
 
     return new PaginationResponseDto(comments, {

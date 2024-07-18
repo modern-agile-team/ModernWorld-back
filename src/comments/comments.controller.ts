@@ -13,7 +13,7 @@ import { CommentService } from "./comments.service";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCreateOneComment } from "./swagger-decorators/comment-swagger/create-one-comment.decorator";
-import { ApiFindComments } from "./swagger-decorators/comment-swagger/find-comments.decorator";
+import { ApiGetComments } from "./swagger-decorators/comment-swagger/get-comments.decorator";
 import { ApiUpdateComment } from "./swagger-decorators/comment-swagger/update-comment.decorator";
 import { ApiDeleteOneComment } from "./swagger-decorators/comment-swagger/delete-one-comment.decorator";
 import { ApiFindRelies } from "./swagger-decorators/reply-swagger/find-reply.decorator";
@@ -22,6 +22,7 @@ import { ApiUpdateReply } from "./swagger-decorators/reply-swagger/update-reply.
 import { ApiCreateReply } from "./swagger-decorators/reply-swagger/create-reply.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
 
 @Controller()
 @ApiTags("Comments & Replies")
@@ -40,10 +41,10 @@ export class CommentController {
   }
 
   @Get("users/:userNo/comments")
-  @ApiFindComments()
+  @ApiGetComments()
   getManyComments(
     @Param("userNo", ParsePositiveIntPipe) userNo: number,
-    @Query() query: PaginationDto,
+    @Query() query: CommentsPaginationDto,
   ) {
     return this.commentService.getManyComments(userNo, query);
   }
