@@ -5,7 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 @Injectable()
 export class NeighborsRepository {
   constructor(private readonly prisma: PrismaService) {}
-  neighborRequest(
+  createNeighbor(
     receiverNo: number,
     senderNo: number,
   ): PrismaPromise<neighbor> {
@@ -17,7 +17,7 @@ export class NeighborsRepository {
     });
   }
 
-  neighborApproval(no: number, status: boolean): PrismaPromise<neighbor> {
+  updateNeighbor(no: number, status: boolean): PrismaPromise<neighbor> {
     return this.prisma.neighbor.update({
       where: {
         no,
@@ -44,7 +44,9 @@ export class NeighborsRepository {
     });
   }
 
-  neighborRequestRefusalOrDelete(neighborNo: number): PrismaPromise<neighbor> {
+  rejectNeighborRequestOrDeleteNeighbor(
+    neighborNo: number,
+  ): PrismaPromise<neighbor> {
     return this.prisma.neighbor.delete({
       where: {
         no: neighborNo,

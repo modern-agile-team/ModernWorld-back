@@ -20,42 +20,43 @@ import { ApiGetNeighobor } from "./swagger-decorators/get_neighbor.decorator";
 import { ApiUpdateNeighobor } from "./swagger-decorators/update_neighbor.decorator";
 import { ApiDeleteNeighobor } from "./swagger-decorators/delete-neighbor";
 
-@Controller("neighbors")
+@Controller()
 @ApiTags("neighbors")
 export class NeighborsController {
   constructor(private readonly neighborsService: NeighborsService) {}
 
   @ApiCraeteNeighbor()
-  @Post()
-  neighborRequest(@Body() body: CreateNeighborDto) {
-    const userNo = 1;
-    return this.neighborsService.neighborRequest(body, userNo);
+  @Post("users/:userNo/neighbor")
+  createNeighbor(@Param() userNo: number, @Body() body: CreateNeighborDto) {
+    return this.neighborsService.createNeighbor(body, userNo);
   }
 
   @ApiGetNeighobor()
   @Get()
-  getMYNeighbors(@Query() queryParams: getNeighborDto) {
+  getMyNeighbors(@Query() queryParams: getNeighborDto) {
     const userNo = 1;
     return this.neighborsService.getMyNeighbors(userNo, queryParams);
   }
 
   @ApiUpdateNeighobor()
-  @Patch(":neighborNo")
-  neighborApproval(
+  @Patch("users/by/neighbors/:neighborNo")
+  updateNeighbor(
     @Param("neighborNo", ParseIntPipe) neighborNo: number,
     @Body()
     body: UpdateNeighborDto,
   ) {
     const userNo = 1;
-    return this.neighborsService.neighborApproval(neighborNo, userNo, body);
+    return this.neighborsService.updateNeighbor(neighborNo, userNo, body);
   }
 
   @ApiDeleteNeighobor()
-  @Delete(":neighborNo")
+  @Delete("users/my/neighbor/:neighborNo")
   @HttpCode(204)
-  neighborRequestRefusalOrDelete(@Param("neighborNo") neighborNo: number) {
+  rejectNeighborRequestOrDeleteNeighbor(
+    @Param("neighborNo") neighborNo: number,
+  ) {
     const userNo = 1;
-    return this.neighborsService.neighborRequestRefusalOrDelete(
+    return this.neighborsService.rejectNeighborRequestOrDeleteNeighbor(
       neighborNo,
       userNo,
     );

@@ -17,7 +17,7 @@ export class NeighborsService {
     private readonly userRepository: UsersRepository,
   ) {}
 
-  async neighborRequest(body: CreateNeighborDto, senderNo: number) {
+  async createNeighbor(body: CreateNeighborDto, senderNo: number) {
     const { receiverNo } = body;
 
     const checkMyNeighbor = await this.neighborsRepository.checkMyNeighbor(
@@ -25,7 +25,7 @@ export class NeighborsService {
       senderNo,
     );
     if (checkMyNeighbor) {
-      throw new ConflictException("The other person are already neighbors.");
+      throw new ConflictException("The other person is already neighbors.");
     }
 
     if (receiverNo === senderNo) {
@@ -50,47 +50,45 @@ export class NeighborsService {
       );
     }
 
-    const existRequestAndOpponentRequstOneMore = // 이미 이웃요청을 보냈는데 상대방이 친구 요청을 보냈을 때 변수명은 수정이 필요할 듯
+    const existRequestAndOpponentRequstOneMore =
       await this.neighborsRepository.getOneNeighborRequest(
         senderNo,
         receiverNo,
       );
 
     if (existRequestAndOpponentRequstOneMore) {
-      existRequestAndOpponentRequstOneMore.status = true; // 상태를 승인으로 바꿔준 다음 승인 함
-      return this.neighborsRepository.neighborApproval(
+      return this.neighborsRepository.updateNeighbor(
         existRequestAndOpponentRequstOneMore.no,
-        existRequestAndOpponentRequstOneMore.status,
+        true,
       );
     }
 
-    return this.neighborsRepository.neighborRequest(receiverNo, senderNo);
+    return this.neighborsRepository.createNeighbor(receiverNo, senderNo);
   }
 
-  async neighborApproval(
+  async updateNeighbor(
     neighborNo: number,
     userNo: number,
     body: UpdateNeighborDto,
   ) {
     const { status } = body;
-    const alreadyApproval =
-      await this.neighborsRepository.getOneNeighbor(neighborNo);
+    const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
 
-    if (alreadyApproval.receiverNo !== userNo) {
+    if (neighbor.receiverNo !== userNo) {
       throw new ForbiddenException(
         "This is not a neighbor request you received.",
       );
     }
-    if (!alreadyApproval) {
+    if (!neighbor) {
       throw new NotFoundException("Non-existent neighbor request.");
     }
-    if (alreadyApproval.status) {
+    if (neighbor.status) {
       throw new ConflictException(
         "This is a neighbor request that has already been approved.",
       );
     }
 
-    return this.neighborsRepository.neighborApproval(neighborNo, status);
+    return this.neighborsRepository.updateNeighbor(neighborNo, status);
   }
 
   getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
@@ -99,20 +97,21 @@ export class NeighborsService {
     return this.neighborsRepository.getMyNeighbors(userNo, take, skip);
   }
 
-  async neighborRequestRefusalOrDelete(neighborNo: number, userNo: number) {
-    const NeighborNotFound =
-      await this.neighborsRepository.getOneNeighbor(neighborNo);
-    if (!NeighborNotFound) {
+  async rejectNeighborRequestOrDeleteNeighbor(
+    neighborNo: number,
+    userNo: number,
+  ) {
+    const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
+    if (!neighbor) {
       throw new NotFoundException("No neighbor found");
     }
-    if (
-      NeighborNotFound.receiverNo !== userNo &&
-      NeighborNotFound.senderNo !== userNo
-    ) {
+    if (neighbor.receiverNo !== userNo && neighbor.senderNo !== userNo) {
       throw new ForbiddenException(
         "You can only delete the neighbor request you received and your neighbor.",
       );
     }
-    return this.neighborsRepository.neighborRequestRefusalOrDelete(neighborNo);
+    return this.neighborsRepository.rejectNeighborRequestOrDeleteNeighbor(
+      neighborNo,
+    );
   }
 }
