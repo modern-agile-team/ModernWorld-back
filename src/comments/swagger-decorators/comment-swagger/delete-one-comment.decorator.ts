@@ -30,19 +30,6 @@ export function ApiDeleteOneComment() {
       },
     }),
 
-    ApiNotFoundResponse({
-      description: "해당 번호의 방명록이 존재하지 않는 경우",
-      content: {
-        JSON: {
-          example: {
-            message: "There is no comment with that number.",
-            error: "Not Found",
-            statusCode: 404,
-          },
-        },
-      },
-    }),
-
     ApiForbiddenResponse({
       description: "본인의 방명록이 아닌 경우",
       content: {
@@ -51,6 +38,19 @@ export function ApiDeleteOneComment() {
             message: "User can delete only their comment.",
             error: "Forbidden",
             statusCode: 403,
+          },
+        },
+      },
+    }),
+
+    ApiNotFoundResponse({
+      description: "해당 번호의 방명록이 존재하지 않는 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "There is no comment with that number.",
+            error: "Not Found",
+            statusCode: 404,
           },
         },
       },
