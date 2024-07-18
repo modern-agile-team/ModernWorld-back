@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsPositive } from "class-validator";
+import { IsInt, IsPositive } from "class-validator";
 
 export class CreateNeighborDto {
   @ApiProperty({

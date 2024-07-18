@@ -13,12 +13,13 @@ import {
 import { NeighborsService } from "./neighbors.service";
 import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
-import { getNeighborDto } from "./dtos/get-neighbors.dto";
+
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCraeteNeighbor } from "./swagger-decorators/create-neighbors.decorator";
 import { ApiGetNeighobor } from "./swagger-decorators/get_neighbor.decorator";
 import { ApiUpdateNeighobor } from "./swagger-decorators/update_neighbor.decorator";
 import { ApiDeleteNeighobor } from "./swagger-decorators/delete-neighbor";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Controller()
 @ApiTags("neighbors")
@@ -32,8 +33,8 @@ export class NeighborsController {
   }
 
   @ApiGetNeighobor()
-  @Get()
-  getMyNeighbors(@Query() queryParams: getNeighborDto) {
+  @Get("neighbors")
+  getMyNeighbors(@Query() queryParams: PaginationDto) {
     const userNo = 1;
     return this.neighborsService.getMyNeighbors(userNo, queryParams);
   }

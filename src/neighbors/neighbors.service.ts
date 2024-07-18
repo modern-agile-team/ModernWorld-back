@@ -7,8 +7,10 @@ import {
 import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { NeighborsRepository } from "./neighbors.repository";
-import { getNeighborDto } from "./dtos/get-neighbors.dto";
+
 import { UsersRepository } from "src/users/users.repository";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Injectable()
 export class NeighborsService {
@@ -91,10 +93,22 @@ export class NeighborsService {
     return this.neighborsRepository.updateNeighbor(neighborNo, status);
   }
 
-  getMyNeighbors(userNo: number, queryParams: getNeighborDto) {
-    const { take, page } = queryParams;
+  async getMyNeighbors(userNo: number, queryParams: PaginationDto) {
+    const { page, take } = queryParams;
     const skip = (page - 1) * take;
-    return this.neighborsRepository.getMyNeighbors(userNo, take, skip);
+    const totalCount = await this.neighborsRepository.countNeighbor(userNo);
+    const totalPage = Math.ceil(totalCount / take);
+    const neighbor = await this.neighborsRepository.getMyNeighbors(
+      userNo,
+      skip,
+      take,
+    );
+    return new PaginationResponseDto(neighbor, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 
   async rejectNeighborRequestOrDeleteNeighbor(
