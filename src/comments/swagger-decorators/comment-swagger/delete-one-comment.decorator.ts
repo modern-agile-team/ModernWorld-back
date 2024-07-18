@@ -44,7 +44,7 @@ export function ApiDeleteOneComment() {
     }),
 
     ApiNotFoundResponse({
-      description: "해당 번호의 방명록이 존재하지 않는 경우",
+      description: "해당 번호의 comment가 존재하지 않는 경우",
       content: {
         JSON: {
           example: {
