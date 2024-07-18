@@ -15,9 +15,11 @@ const dailyOptions = (
     maxsize: 100 * 1024 * 1024,
     maxFiles: 14,
     format: winstonFormat.combine(
+      winstonFormat.errors({ stack: true }),
       winstonFormat.uncolorize(),
       winstonFormat.printf(
-        (info) => `${info.timestamp} ${info.level} : ${info.message}`,
+        (info) =>
+          `${info.timestamp} ${info.level} : ${info.message} ${info.stack}`,
       ),
     ),
   };
@@ -26,13 +28,14 @@ const dailyOptions = (
 export const winstonLogger = WinstonModule.createLogger({
   level: "info",
   format: winstonFormat.combine(
+    winstonFormat.errors({ stack: true }),
     winstonFormat.colorize({ level: true }),
     winstonFormat.prettyPrint(),
     winstonFormat.label({ label: "[ModernWorld]" }),
     winstonFormat.timestamp({ format: "| YYYY-MM-DD HH:mm:ss |" }),
     winstonFormat.printf(
       (info) =>
-        `${info.label} ${info.timestamp} ${info.level} : ${info.message}`,
+        `${info.label} ${info.timestamp} ${info.level} : ${info.message} ${info.stack}`,
     ),
   ),
 
