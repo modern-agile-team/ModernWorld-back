@@ -245,4 +245,49 @@ export class AuthService {
       );
     }
   }
+  // async kakaoLogout(userNo: number) {
+  //   try {
+  //     const socialTokens = await this.tokenRepository.findToken(userNo);
+  //     if (socialTokens[0] === undefined) {
+  //       throw new UnauthorizedException("로그아웃할 유저가 없습니다.");
+  //     }
+
+  //     const socialAccessToken = socialTokens[0].socialAccess;
+  //     const socialRefreshToken = socialTokens[0].socialRefresh;
+
+  //     const socialAccessTokenUserInfo = (
+  //       await axios.get("https://kapi.kakao.com/v1/user/access_token_info", {
+  //         headers: {
+  //           Authorization: `Bearer ${socialAccessToken}`,
+  //         },
+  //       })
+  //     ).data;
+  //     if(socialAccessTokenUserInfo.status === 401) {
+
+  //     }
+
+  //     await axios.post(
+  //       "https://kapi.kakao.com/v1/user/logout",
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${socialAccessToken}`,
+  //         },
+  //       },
+  //     );
+
+  //     await this.tokenRepository.deleteTokens(userNo);
+  //     await this.tokenService.deleteRefreshToken(
+  //       userNo.toString() + "-refreshToken",
+  //     );
+  //     await this.tokenService.deleteAccessToken(
+  //       userNo.toString() + "-accessToken",
+  //     );
+  //   } catch (error) {
+  //     this.logger.error(error);
+  //     throw new InternalServerErrorException(
+  //       "로그아웃 중 서버에러가 발생했습니다.",
+  //     );
+  //   }
+  // }
 }

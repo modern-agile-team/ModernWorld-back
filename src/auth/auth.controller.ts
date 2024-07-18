@@ -23,7 +23,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly tokenService: TokenService,
   ) {}
- 
+
   @ApiNaverLogin()
   @Post("naver/login")
   async naverLogin(@Query("code") code: string, @Res() res: Response) {
@@ -35,7 +35,7 @@ export class AuthController {
       domain: "localhost",
       path: "/",
       httpOnly: true,
-      secure: false, // https 설정을 확인하지 않기 위해서 선언 
+      secure: false, // https 설정을 확인하지 않기 위해서 선언
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
     return res.send(token);
@@ -53,7 +53,7 @@ export class AuthController {
       path: "/",
       httpOnly: true,
       secure: false, // https 설정을 확인하지 않기 위해서 선언
-      maxAge: 1000 * 60 * 60 * 24 * 7
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
     return res.send(token);
   }
@@ -63,4 +63,10 @@ export class AuthController {
   async newAccessToken(@userNo() userNo: number) {
     return await this.tokenService.createNewAccessToken(userNo);
   }
+
+  // @UseGuards(AccessTokenAuthGuard)
+  // @Post("kakao/logout")
+  // async kakaoLogout(@userNo() userNo: number) {
+  //   await this.authService.kakaoLogout(userNo);
+  // }
 }
