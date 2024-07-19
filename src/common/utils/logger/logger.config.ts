@@ -15,10 +15,15 @@ const dailyOptions = (
     maxsize: 100 * 1024 * 1024,
     maxFiles: 14,
     format: winstonFormat.combine(
+      winstonFormat.errors({ stack: true }),
       winstonFormat.uncolorize(),
-      winstonFormat.printf(
-        (info) => `${info.timestamp} ${info.level} : ${info.message}`,
-      ),
+      winstonFormat.printf((info) => {
+        if (info.stack) {
+          return `${info.label} ${info.timestamp} ${info.level} : ${info.message} ${info.stack} \n Error: ${info.response?.data.error} \n Error_description: ${info.response?.data.error_description}\n Error_error_code: ${info.response?.data.error_code}`;
+        }
+
+        return `${info.timestamp} ${info.level} : ${info.message}`;
+      }),
     ),
   };
 };
@@ -26,14 +31,18 @@ const dailyOptions = (
 export const winstonLogger = WinstonModule.createLogger({
   level: "info",
   format: winstonFormat.combine(
+    winstonFormat.errors({ stack: true }),
     winstonFormat.colorize({ level: true }),
     winstonFormat.prettyPrint(),
     winstonFormat.label({ label: "[ModernWorld]" }),
     winstonFormat.timestamp({ format: "| YYYY-MM-DD HH:mm:ss |" }),
-    winstonFormat.printf(
-      (info) =>
-        `${info.label} ${info.timestamp} ${info.level} : ${info.message}`,
-    ),
+    winstonFormat.printf((info) => {
+      if (info.stack) {
+        return `${info.label} ${info.timestamp} ${info.level} : ${info.message} ${info.stack} \n Error: ${info.response?.data.error} \n Error_description: ${info.response?.data.error_description}\n Error_error_code: ${info.response?.data.error_code}`;
+      }
+
+      return `${info.timestamp} ${info.level} : ${info.message}`;
+    }),
   ),
 
   transports: [

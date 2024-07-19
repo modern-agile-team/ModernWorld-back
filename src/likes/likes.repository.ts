@@ -6,18 +6,15 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class LikesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findOneLike(senderNo: number, receiverNo: number): PrismaPromise<like> {
+  findOneLike(senderNo: number, receiverNo: number) {
     return this.prisma.like.findFirst({ where: { senderNo, receiverNo } });
   }
 
-  createOneLike(senderNo: number, receiverNo: number): PrismaPromise<like> {
+  createOneLike(senderNo: number, receiverNo: number) {
     return this.prisma.like.create({ data: { senderNo, receiverNo } });
   }
 
-  deleteOneLike(
-    senderNo: number,
-    receiverNo: number,
-  ): PrismaPromise<{ count: number }> {
-    return this.prisma.like.deleteMany({ where: { senderNo, receiverNo } });
+  deleteOneLike(no: number) {
+    return this.prisma.like.delete({ where: { no } });
   }
 }
