@@ -7,9 +7,11 @@ import {
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Response } from "express";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class CookieInterceptor implements NestInterceptor {
+  constructor(private readonly configService: ConfigService) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
@@ -19,7 +21,7 @@ export class CookieInterceptor implements NestInterceptor {
         if (refreshToken) {
           response.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            domain: "localhost",
+            domain: this.configService.get<string>("COOKIE_DOMAIN"),
             secure: false,
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
           });
