@@ -20,6 +20,7 @@ export class AuthService {
   private state: string;
   private userInfoUrl: string;
   private redirect_uri: string;
+  private newUser: boolean;
 
   constructor(
     private readonly usersRepository: UsersRepository,
@@ -39,6 +40,7 @@ export class AuthService {
       );
       this.code = authorizeCode;
       this.state = "test";
+      this.newUser = false;
 
       const token = (
         await axios.post(
@@ -90,6 +92,7 @@ export class AuthService {
           userInfo.response.profile_image,
           "naver",
         );
+        this.newUser = true;
       }
 
       const accessToken = this.tokenService.createAccessToken(user.no);
@@ -121,10 +124,11 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken };
+      return { accessToken, refreshToken, newUser: this.newUser };
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
+        this.logger.error(error.response.data);
         throw new UnauthorizedException("잘못된 인가 코드입니다.");
       }
       throw new InternalServerErrorException(
@@ -145,6 +149,7 @@ export class AuthService {
         "KAKAO_CLIENT_CALLBACK_URL",
       );
       this.code = authorizeCode;
+      this.newUser = false;
 
       const token = (
         await axios.post(
@@ -154,7 +159,6 @@ export class AuthService {
             client_id: this.client_id,
             client_secret: this.client_secret,
             code: this.code,
-            state: this.state,
             redirect_uri: this.redirect_uri,
           },
           {
@@ -203,8 +207,12 @@ export class AuthService {
           userProperties.profile_image,
           "kakao",
         );
+        this.newUser = true;
       }
-
+      console.log(user);
+      if (user.nickname === null) {
+        this.newUser = true;
+      }
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
 
@@ -234,10 +242,11 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken };
+      return { accessToken, refreshToken, newUser: this.newUser }; // 리턴에 newUser 추가
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
+        this.logger.error(error.response.data);
         throw new UnauthorizedException("잘못된 인가 코드입니다.");
       }
       throw new InternalServerErrorException(
