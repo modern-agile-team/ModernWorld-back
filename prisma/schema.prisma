@@ -47,6 +47,7 @@ model characterLocker {
   character   character @relation(fields: [characterNo], references: [no], onDelete: Cascade, map: "character_locker_ibfk_1")
   user        user      @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "character_locker_ibfk_2")
 
+  @@unique([userNo, characterNo])
   @@index([characterNo], map: "character_no")
   @@index([userNo], map: "user_no")
   @@map("character_locker")
@@ -76,6 +77,7 @@ model inventory {
   user      user     @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "inventory_ibfk_1")
   item      item     @relation(fields: [itemNo], references: [no], onDelete: Cascade, map: "inventory_ibfk_2")
 
+  @@unique([userNo, itemNo])
   @@index([itemNo], map: "item_no")
   @@index([userNo], map: "user_no")
 }
@@ -109,6 +111,7 @@ model like {
   userLikeSenderNo   user @relation("like_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "like_ibfk_1")
   userLikeReceiverNo user @relation("like_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "like_ibfk_2")
 
+  @@unique([receiverNo, senderNo], map: "receiver_no_sender_no")
   @@index([receiverNo], map: "receiver_no")
   @@index([senderNo], map: "sender_no")
 }
@@ -228,6 +231,7 @@ model userAchievement {
   user          user        @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_1")
   achievement   achievement @relation(fields: [achievementNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_2")
 
+  @@unique([userNo, achievementNo])
   @@index([achievementNo], map: "achievement_no")
   @@index([userNo], map: "user_no")
   @@map("user_achievement")
