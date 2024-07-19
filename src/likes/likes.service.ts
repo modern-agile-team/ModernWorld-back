@@ -35,10 +35,10 @@ export class LikesService {
 
     try {
       const [, result] = await this.prisma.$transaction([
+        this.likesRepository.createOneLike(senderNo, receiverNo),
         this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: { increment: 1 },
         }),
-        this.likesRepository.createOneLike(senderNo, receiverNo),
       ]);
 
       this.commonService.checkAchievementCondition(receiverNo, "likeCount");
@@ -51,17 +51,18 @@ export class LikesService {
   }
 
   async deleteOneLike(senderNo: number, receiverNo: number) {
-    if (!(await this.likesRepository.findOneLike(senderNo, receiverNo)))
-      throw new NotFoundException("This like doesn't exist.");
+    const { no } = await this.likesRepository.findOneLike(senderNo, receiverNo);
+
+    if (!no) throw new NotFoundException("This like doesn't exist.");
 
     try {
       const [, result] = await this.prisma.$transaction([
+        this.likesRepository.deleteOneLike(no),
         this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: {
             increment: -1,
           },
         }),
-        this.likesRepository.deleteOneLike(senderNo, receiverNo),
       ]);
 
       return result;
