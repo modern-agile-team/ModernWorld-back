@@ -119,8 +119,8 @@ model neighbor {
   receiverNo             Int      @map("receiver_no") @db.UnsignedInt
   status                 Boolean  @default(false)
   createdAt              DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @map("created_at") @db.DateTime(0)
-  userNeighborSenderNo   user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
-  userNeighborReceiverNo user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
+  NeighborSenderNo       user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
+  NeighborReceiverNo     user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
 
   @@index([receiverNo], map: "receiver_no")
   @@index([senderNo], map: "sender_no")

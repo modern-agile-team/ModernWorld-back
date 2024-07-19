@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { NeighborsRepository } from "./neighbors.repository";
 
@@ -19,9 +18,7 @@ export class NeighborsService {
     private readonly userRepository: UsersRepository,
   ) {}
 
-  async createNeighbor(body: CreateNeighborDto, senderNo: number) {
-    const { receiverNo } = body;
-
+  async createNeighbor(senderNo: number, receiverNo: number) {
     const checkMyNeighbor = await this.neighborsRepository.checkMyNeighbor(
       receiverNo,
       senderNo,
@@ -76,14 +73,16 @@ export class NeighborsService {
     const { status } = body;
     const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
 
+    if (!neighbor) {
+      throw new NotFoundException("Non-existent neighbor request.");
+    }
+
     if (neighbor.receiverNo !== userNo) {
       throw new ForbiddenException(
         "This is not a neighbor request you received.",
       );
     }
-    if (!neighbor) {
-      throw new NotFoundException("Non-existent neighbor request.");
-    }
+
     if (neighbor.status) {
       throw new ConflictException(
         "This is a neighbor request that has already been approved.",
@@ -93,15 +92,17 @@ export class NeighborsService {
     return this.neighborsRepository.updateNeighbor(neighborNo, status);
   }
 
-  async getMyNeighbors(userNo: number, queryParams: PaginationDto) {
-    const { page, take } = queryParams;
+  async getMyNeighbors(userNo: number, query: PaginationDto) {
+    const { page, take, orderBy } = query;
     const skip = (page - 1) * take;
     const totalCount = await this.neighborsRepository.countNeighbor(userNo);
     const totalPage = Math.ceil(totalCount / take);
+
     const neighbor = await this.neighborsRepository.getMyNeighbors(
       userNo,
       skip,
       take,
+      orderBy,
     );
     return new PaginationResponseDto(neighbor, {
       page,

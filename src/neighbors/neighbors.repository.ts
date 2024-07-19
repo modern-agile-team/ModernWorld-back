@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { neighbor, PrismaPromise } from "@prisma/client";
+import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -17,10 +18,17 @@ export class NeighborsRepository {
     });
   }
 
-  updateNeighbor(no: number, status: boolean): PrismaPromise<neighbor> {
+  updateNeighbor(neighborNo: number, status: boolean) {
     return this.prisma.neighbor.update({
+      select: {
+        no: true,
+        NeighborSenderNo: { select: { no: true, nickname: true } },
+        NeighborReceiverNo: { select: { no: true, nickname: true } },
+        createdAt: true,
+        status: true,
+      },
       where: {
-        no,
+        no: neighborNo,
       },
       data: {
         status,
@@ -28,17 +36,18 @@ export class NeighborsRepository {
     });
   }
 
-  getMyNeighbors(userNo: number, skip: number, take: number) {
+  getMyNeighbors(userNo: number, skip: number, take: number, orderBy: OrderBy) {
     return this.prisma.neighbor.findMany({
       select: {
         no: true,
-        userNeighborSenderNo: { select: { no: true, nickname: true } },
-        userNeighborReceiverNo: { select: { no: true, nickname: true } },
+        NeighborSenderNo: { select: { no: true, nickname: true } },
+        NeighborReceiverNo: { select: { no: true, nickname: true } },
         createdAt: true,
+        status: true,
       },
       skip,
       take,
-      orderBy: { no: "desc" },
+      orderBy: { no: orderBy },
       where: {
         OR: [{ receiverNo: userNo }, { senderNo: userNo }],
         status: true,

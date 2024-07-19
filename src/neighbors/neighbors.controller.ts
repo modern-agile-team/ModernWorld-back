@@ -28,15 +28,16 @@ export class NeighborsController {
 
   @ApiCraeteNeighbor()
   @Post("users/:userNo/neighbor")
-  createNeighbor(@Param() userNo: number, @Body() body: CreateNeighborDto) {
-    return this.neighborsService.createNeighbor(body, userNo);
+  createNeighbor(@Param("userNo") userNo: number) {
+    const senderNo = 1;
+    return this.neighborsService.createNeighbor(senderNo, userNo);
   }
 
   @ApiGetNeighobor()
   @Get("neighbors")
-  getMyNeighbors(@Query() queryParams: PaginationDto) {
+  getMyNeighbors(@Query() query: PaginationDto) {
     const userNo = 1;
-    return this.neighborsService.getMyNeighbors(userNo, queryParams);
+    return this.neighborsService.getMyNeighbors(userNo, query);
   }
 
   @ApiUpdateNeighobor()
@@ -46,7 +47,7 @@ export class NeighborsController {
     @Body()
     body: UpdateNeighborDto,
   ) {
-    const userNo = 1;
+    const userNo = 3;
     return this.neighborsService.updateNeighbor(neighborNo, userNo, body);
   }
 
