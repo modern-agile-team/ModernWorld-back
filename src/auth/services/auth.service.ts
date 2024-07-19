@@ -128,7 +128,6 @@ export class AuthService {
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
-        this.logger.error(error.response.data);
         throw new UnauthorizedException("잘못된 인가 코드입니다.");
       }
       throw new InternalServerErrorException(
@@ -246,7 +245,6 @@ export class AuthService {
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
-        this.logger.error(error.response.data);
         throw new UnauthorizedException("잘못된 인가 코드입니다.");
       }
       throw new InternalServerErrorException(
