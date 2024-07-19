@@ -208,7 +208,6 @@ export class AuthService {
         );
         this.newUser = true;
       }
-      console.log(user);
       if (user.nickname === null) {
         this.newUser = true;
       }
