@@ -13,6 +13,8 @@ import { GetUserItemsDto } from "./dtos/get-user-items.dto";
 import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
 import { PrismaService } from "src/prisma/prisma.service";
+import { LegendsRepository } from "src/legends/legends.repository";
+import { CommonService } from "src/common/common.service";
 
 @Injectable()
 export class InventoryService {
@@ -22,6 +24,8 @@ export class InventoryService {
     private readonly inventoryRepository: InventoryRepository,
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly legendsRepository: LegendsRepository,
+    private readonly commonService: CommonService,
   ) {}
   getUserItems(userNo: number, query: GetUserItemsDto) {
     const { theme, status, itemName } = query;
@@ -76,9 +80,16 @@ export class InventoryService {
 
     try {
       const [, result] = await this.prisma.$transaction([
+        this.legendsRepository.updateOneLegendByUserNo(userNo, {
+          itemCount: { increment: 1 },
+        }),
+
         this.usersRepository.updateUserCurrentPoint(userNo, -item.price),
+
         this.inventoryRepository.createUserOneItem(userNo, itemNo),
       ]);
+
+      this.commonService.checkAchievementCondition(userNo, "itemCount");
 
       return result;
     } catch (err) {

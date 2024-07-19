@@ -1,16 +1,22 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, comment, reply } from "@prisma/client";
+import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class CommentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  createOneComment(
-    receiverNo: number,
-    senderNo: number,
-    content: string,
-  ): PrismaPromise<comment> {
+  countCommentsByUserNo(where: object) {
+    return this.prisma.comment.count({
+      where,
+    });
+  }
+
+  countRepliesByCommentNo(commentNo: number) {
+    return this.prisma.reply.count({ where: { commentNo } });
+  }
+
+  createOneComment(receiverNo: number, senderNo: number, content: string) {
     return this.prisma.comment.create({
       data: {
         receiverNo,
@@ -20,34 +26,36 @@ export class CommentRepository {
     });
   }
 
-  getOneComment(commentNo: number): PrismaPromise<comment> {
+  findOneCommentNotDeleted(commentNo: number) {
     return this.prisma.comment.findUnique({
       where: {
         no: commentNo,
-      },
-    });
-  }
-
-  getManyComments(
-    receiverNo: number,
-    skip: number,
-    take: number,
-  ): PrismaPromise<comment[]> {
-    return this.prisma.comment.findMany({
-      skip,
-      take,
-      orderBy: { no: "desc" },
-      where: {
-        receiverNo,
         deletedAt: null,
       },
     });
   }
 
-  updateOneComment(id: number, content: string): PrismaPromise<comment> {
+  getManyComments(skip: number, take: number, orderBy: OrderBy, where: object) {
+    return this.prisma.comment.findMany({
+      select: {
+        no: true,
+        content: true,
+        createdAt: true,
+        commentReceiver: { select: { no: true, nickname: true } },
+        commentSender: { select: { no: true, nickname: true } },
+        _count: { select: { reply: { where: { deletedAt: null } } } },
+      },
+      skip,
+      take,
+      orderBy: { no: orderBy },
+      where,
+    });
+  }
+
+  updateOneComment(no: number, content: string) {
     return this.prisma.comment.update({
       where: {
-        no: id,
+        no,
       },
       data: {
         content,
@@ -55,10 +63,10 @@ export class CommentRepository {
     });
   }
 
-  softDeleteOneComment(id: number): PrismaPromise<comment> {
+  updateCommentToDelete(no: number) {
     return this.prisma.comment.update({
       where: {
-        no: id,
+        no,
       },
       data: {
         deletedAt: new Date(),
@@ -66,11 +74,7 @@ export class CommentRepository {
     });
   }
 
-  createOneReply(
-    commentNo: number,
-    userNo: number,
-    content: string,
-  ): PrismaPromise<reply> {
+  createOneReply(commentNo: number, userNo: number, content: string) {
     return this.prisma.reply.create({
       data: {
         commentNo,
@@ -80,11 +84,11 @@ export class CommentRepository {
     });
   }
 
-  getOneReply(commentNo: number, replyNo: number): PrismaPromise<reply> {
+  findOneReplyNotDeleted(replyNo: number) {
     return this.prisma.reply.findUnique({
       where: {
         no: replyNo,
-        commentNo,
+        deletedAt: null,
       },
     });
   }
@@ -93,11 +97,18 @@ export class CommentRepository {
     commentNo: number,
     skip: number,
     take: number,
-  ): PrismaPromise<reply[]> {
+    orderBy: OrderBy,
+  ) {
     return this.prisma.reply.findMany({
+      select: {
+        no: true,
+        content: true,
+        createdAt: true,
+        user: { select: { no: true, nickname: true } },
+      },
       skip,
       take,
-      orderBy: { no: "desc" },
+      orderBy: { no: orderBy },
       where: {
         commentNo,
         deletedAt: null,
@@ -105,15 +116,10 @@ export class CommentRepository {
     });
   }
 
-  updateOneReply(
-    commentNo: number,
-    replyNo: number,
-    content: string,
-  ): PrismaPromise<reply> {
+  updateOneReply(no: number, content: string) {
     return this.prisma.reply.update({
       where: {
-        no: replyNo,
-        commentNo,
+        no,
       },
       data: {
         content,
@@ -121,11 +127,10 @@ export class CommentRepository {
     });
   }
 
-  softDeleteOneReply(commentNo: number, replyNo: number): PrismaPromise<reply> {
+  softDeleteOneReply(no: number) {
     return this.prisma.reply.update({
       where: {
-        no: replyNo,
-        commentNo,
+        no,
       },
       data: {
         deletedAt: new Date(),

@@ -1,94 +1,181 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CommentRepository } from "./comments.repository";
-import { CreateCommentDto } from "./dtos/comment-dtos/create-comment.dto";
-import { UpdateCommentDto } from "./dtos/comment-dtos/update-comment.dto";
-import { GetCommentDto } from "./dtos/comment-dtos/get-comment.dto";
-import { GetReplyDto } from "./dtos/replies-dtos/get-reply.dto";
+import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
+import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly CommentRepository: CommentRepository) {}
+  constructor(private readonly commentRepository: CommentRepository) {}
 
   createOneComment(
     receiverNo: number,
     senderNo: number,
-    createcontent: CreateCommentDto,
+    body: CommentContentDto,
   ) {
-    const { content } = createcontent;
+    const { content } = body;
 
-    return this.CommentRepository.createOneComment(
+    return this.commentRepository.createOneComment(
       receiverNo,
       senderNo,
       content,
     );
   }
 
-  getManyComments(receiverNo: number, queryParams: GetCommentDto) {
-    const { page, take } = queryParams;
-    const skip = (page - 1) * take;
-    return this.CommentRepository.getManyComments(receiverNo, skip, take);
+  async getManyComments(userNo: number, query: CommentsPaginationDto) {
+    const { take, page, orderBy, type } = query;
+    const skip = take * (page - 1);
+
+    const where = type
+      ? {
+          [type]: userNo,
+          deletedAt: null,
+        }
+      : {
+          OR: [
+            { senderNo: userNo, deletedAt: null },
+            { receiverNo: userNo, deletedAt: null },
+          ],
+        };
+
+    const totalCount =
+      await this.commentRepository.countCommentsByUserNo(where);
+
+    const totalPage = Math.ceil(totalCount / take);
+
+    const comments = await this.commentRepository.getManyComments(
+      skip,
+      take,
+      orderBy,
+      where,
+    );
+
+    return new PaginationResponseDto(comments, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 
-  async updateOneComment(commentNo: number, createcontent: UpdateCommentDto) {
-    const { content } = createcontent;
-    await this.commentNotFound(commentNo);
-    return this.CommentRepository.updateOneComment(commentNo, content);
+  async updateOneComment(
+    userNo: number,
+    commentNo: number,
+    body: CommentContentDto,
+  ) {
+    const { content } = body;
+    const { senderNo } = await this.findOneCommentNotDeleted(commentNo);
+
+    if (userNo !== senderNo) {
+      throw new ForbiddenException("User can update only their comment.");
+    }
+
+    return this.commentRepository.updateOneComment(commentNo, content);
   }
 
-  async softDeleteOneComment(commentNo: number) {
-    await this.commentNotFound(commentNo);
-    return this.CommentRepository.softDeleteOneComment(commentNo);
+  async softDeleteOneComment(userNo: number, commentNo: number) {
+    const { senderNo } = await this.findOneCommentNotDeleted(commentNo);
+
+    if (userNo !== senderNo) {
+      throw new ForbiddenException("User can delete only their comment.");
+    }
+
+    return this.commentRepository.updateCommentToDelete(commentNo);
   }
 
   async createOneReply(
     commentNo: number,
     userNo: number,
-    createContent: CreateCommentDto,
+    body: CommentContentDto,
   ) {
-    const { content } = createContent;
-    await this.commentNotFound(commentNo);
-    return this.CommentRepository.createOneReply(commentNo, userNo, content);
+    await this.findOneCommentNotDeleted(commentNo);
+
+    const { content } = body;
+
+    return this.commentRepository.createOneReply(commentNo, userNo, content);
   }
 
-  async getManyReplies(commentNo: number, queryParams: GetReplyDto) {
-    const { page, take } = queryParams;
-    await this.commentNotFound(commentNo);
-    const skip = (page - 1) * take;
-    return this.CommentRepository.getManyReplies(commentNo, skip, take);
+  async getManyReplies(commentNo: number, query: PaginationDto) {
+    await this.findOneCommentNotDeleted(commentNo);
+
+    const { take, page, orderBy } = query;
+    const skip = take * (page - 1);
+    const totalCount =
+      await this.commentRepository.countRepliesByCommentNo(commentNo);
+
+    const totalPage = Math.ceil(totalCount / take);
+
+    const replies = await this.commentRepository.getManyReplies(
+      commentNo,
+      skip,
+      take,
+      orderBy,
+    );
+
+    return new PaginationResponseDto(replies, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 
   async updateOneReply(
+    senderNo: number,
     commentNo: number,
     replyNo: number,
-    replyContent: UpdateCommentDto,
+    body: CommentContentDto,
   ) {
-    const { content } = replyContent;
-    await this.commentNotFound(commentNo);
-    await this.replyNotFound(commentNo, replyNo);
-    return this.CommentRepository.updateOneReply(commentNo, replyNo, content);
+    await this.findOneCommentNotDeleted(commentNo);
+    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
+
+    const { content } = body;
+
+    if (senderNo !== userNo) {
+      throw new ForbiddenException("User can update only their reply.");
+    }
+
+    return this.commentRepository.updateOneReply(replyNo, content);
   }
 
-  async softDeleteOneReply(commentNo: number, replyNo: number) {
-    await this.commentNotFound(commentNo);
-    await this.replyNotFound(commentNo, replyNo);
-    const deleteReply = await this.CommentRepository.softDeleteOneReply(
-      commentNo,
-      replyNo,
-    );
-    return deleteReply;
+  async softDeleteOneReply(
+    senderNo: number,
+    commentNo: number,
+    replyNo: number,
+  ) {
+    await this.findOneCommentNotDeleted(commentNo);
+    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
+
+    if (senderNo !== userNo) {
+      throw new ForbiddenException("User can delete only their reply.");
+    }
+
+    return await this.commentRepository.softDeleteOneReply(replyNo);
   }
 
-  async commentNotFound(commentNo: number) {
-    const comment = await this.CommentRepository.getOneComment(commentNo);
+  async findOneCommentNotDeleted(commentNo: number) {
+    const comment =
+      await this.commentRepository.findOneCommentNotDeleted(commentNo);
+
     if (!comment) {
-      throw new NotFoundException("해당 방명록은 존재하지 않습니다.");
+      throw new NotFoundException("There is no comment with that number.");
     }
+
+    return comment;
   }
 
-  async replyNotFound(commentNo: number, replyNo: number) {
-    const reply = await this.CommentRepository.getOneReply(commentNo, replyNo);
+  async findOneReplyNotDeleted(replyNo: number) {
+    const reply = await this.commentRepository.findOneReplyNotDeleted(replyNo);
+
     if (!reply) {
-      throw new NotFoundException("해당 댓글은 존재하지 않습니다.");
+      throw new NotFoundException("There is no reply with that number.");
     }
+
+    return reply;
   }
 }
