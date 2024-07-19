@@ -15,6 +15,7 @@ export function ApiNaverLogin() {
           example: {
             accessToken: "여기에 액세스 토큰",
             refreshToken: "여기에 리프레시 토큰",
+            newUser: "여기에 신규 유저 여부(false = 기존유저, true = 신규유저)",
           },
         },
       },
