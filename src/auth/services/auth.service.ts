@@ -242,7 +242,7 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken, newUser: this.newUser }; // 리턴에 newUser 추가
+      return { accessToken, refreshToken, newUser: this.newUser };
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
