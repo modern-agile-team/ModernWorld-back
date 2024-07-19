@@ -19,7 +19,7 @@ export class CookieInterceptor implements NestInterceptor {
         if (refreshToken) {
           response.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            domain: "localhost",
+            domain: "localhost", // env 설정으로 바꿔야함
             secure: false,
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
           });

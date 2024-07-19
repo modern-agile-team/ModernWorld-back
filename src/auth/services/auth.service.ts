@@ -121,7 +121,7 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken };
+      return { accessToken, refreshToken }; // 유저가 닉네임을 가지고 있는지 없는지 boolen 값으로 리턴하는 로직을 추가 ex) {isuser: true}
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
