@@ -53,15 +53,15 @@ model characterLocker {
 }
 
 model comment {
-  no                    Int       @id @default(autoincrement()) @db.UnsignedInt
-  receiverNo            Int?      @map("receiver_no") @db.UnsignedInt
-  senderNo              Int?      @map("sender_no") @db.UnsignedInt
-  content               String    @db.VarChar(300)
-  createdAt             DateTime  @default(now()) @map("created_at") @db.DateTime(0)
-  deletedAt             DateTime? @map("deleted_at") @db.DateTime(0)
-  userCommentSenderNo   user?     @relation("comment_sender_noTouser", fields: [senderNo], references: [no], map: "comment_ibfk_1")
-  userCommentReceiverNo user?     @relation("comment_receiver_noTouser", fields: [receiverNo], references: [no], map: "comment_ibfk_2")
-  reply                 reply[]
+  no              Int       @id @default(autoincrement()) @db.UnsignedInt
+  receiverNo      Int?      @map("receiver_no") @db.UnsignedInt
+  senderNo        Int?      @map("sender_no") @db.UnsignedInt
+  content         String    @db.VarChar(300)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt       DateTime? @map("deleted_at") @db.DateTime(0)
+  commentSender   user?     @relation("comment_sender_noTouser", fields: [senderNo], references: [no], map: "comment_ibfk_1")
+  commentReceiver user?     @relation("comment_receiver_noTouser", fields: [receiverNo], references: [no], map: "comment_ibfk_2")
+  reply           reply[]
 
   @@index([receiverNo], map: "receiver_no")
   @@index([senderNo], map: "sender_no")
