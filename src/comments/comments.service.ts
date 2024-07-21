@@ -1,6 +1,8 @@
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { CommentRepository } from "./comments.repository";
@@ -8,23 +10,42 @@ import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
+import { CommonService } from "src/common/common.service";
+import { PrismaService } from "src/prisma/prisma.service";
+import { LegendsRepository } from "src/legends/legends.repository";
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly commentRepository: CommentRepository) {}
+  constructor(
+    private readonly commentRepository: CommentRepository,
+    private readonly commonService: CommonService,
+    private readonly legendsService: LegendsRepository,
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
+  ) {}
 
-  createOneComment(
+  async createOneComment(
     receiverNo: number,
     senderNo: number,
     body: CommentContentDto,
   ) {
     const { content } = body;
 
-    return this.commentRepository.createOneComment(
-      receiverNo,
-      senderNo,
-      content,
-    );
+    try {
+      const [comment] = await this.prisma.$transaction([
+        this.commentRepository.createOneComment(receiverNo, senderNo, content),
+        this.legendsService.updateOneLegendByUserNo(senderNo, {
+          commentCount: { increment: 1 },
+        }),
+      ]);
+
+      this.commonService.checkAchievementCondition(senderNo, "commentCount");
+
+      return comment;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
   }
 
   async getManyComments(userNo: number, query: CommentsPaginationDto) {
@@ -97,7 +118,21 @@ export class CommentService {
 
     const { content } = body;
 
-    return this.commentRepository.createOneReply(commentNo, userNo, content);
+    try {
+      const [reply] = await this.prisma.$transaction([
+        this.commentRepository.createOneReply(commentNo, userNo, content),
+        this.legendsService.updateOneLegendByUserNo(userNo, {
+          commentCount: { increment: 1 },
+        }),
+      ]);
+
+      this.commonService.checkAchievementCondition(userNo, "commentCount");
+
+      return reply;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+    }
   }
 
   async getManyReplies(commentNo: number, query: PaginationDto) {
