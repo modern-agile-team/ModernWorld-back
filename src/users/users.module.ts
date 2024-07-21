@@ -1,11 +1,12 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { UsersController } from "./users.controller";
 import { UsersService } from "./users.service";
-import { UsersRepository as UsersRepository } from "./users.repository";
-import { SseModule } from "src/sse/sse.module";
+import { UsersRepository } from "./users.repository";
+import { CommonModule } from "src/common/common.module";
+import { LegendsModule } from "src/legends/legends.module";
 
 @Module({
-  imports: [SseModule],
+  imports: [forwardRef(() => CommonModule), LegendsModule],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository],
   exports: [UsersRepository],
