@@ -27,7 +27,7 @@ export class CommonService {
 
   async checkAchievementCondition(
     userNo: number,
-    legendOneField: keyof UpdateLegendCount,
+    legendField: keyof UpdateLegendCount,
   ) {
     const userLegend =
       await this.legendsRepository.getAllLegendsByUserNo(userNo);
@@ -36,33 +36,33 @@ export class CommonService {
     // 총 15개의 업적. 5(업적 종류) * 3(업적단계) legend table의 feild 값이10, 20, 40일떄 이벤트 발생
     // achievement name은 ~Count1, ~Count2, ~Count3로 구성됨 사실 이러면 name의 역할은 DB 검색용 역할로 전락함
     // 그러나 title(칭호)가 있으니까 프론트는 이거쓰면 됨ㅇㅇ
-    switch (userLegend[`${legendOneField}`]) {
+    switch (userLegend[`${legendField}`]) {
       case 10:
-        this.checkAchievementConditonAndGet(userNo, legendOneField + 1);
+        this.checkAchievementAndGet(userNo, legendField + 1);
         break;
       case 20:
-        this.checkAchievementConditonAndGet(userNo, legendOneField + 2);
+        this.checkAchievementAndGet(userNo, legendField + 2);
         break;
       case 40:
-        this.checkAchievementConditonAndGet(userNo, legendOneField + 3);
+        this.checkAchievementAndGet(userNo, legendField + 3);
     }
   }
 
-  private async checkAchievementConditonAndGet(
+  private async checkAchievementAndGet(
     userNo: number,
-    legendOneFieldWithNumber: string,
+    legendFieldWithNumber: string,
   ) {
     if (
       //해당 하는 업적을 가지고 있는지 확인
       !(await this.usersAchievementsRepository.findOneAchievementByName(
         userNo,
-        legendOneFieldWithNumber,
+        legendFieldWithNumber,
       ))
     ) {
       //해당 업적 정보얻기
       const { no, point, title } =
         await this.achievementsRepository.getAchievementNoByName(
-          legendOneFieldWithNumber,
+          legendFieldWithNumber,
         );
 
       try {
