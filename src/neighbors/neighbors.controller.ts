@@ -11,15 +11,14 @@ import {
   ParseIntPipe,
 } from "@nestjs/common";
 import { NeighborsService } from "./neighbors.service";
-import { CreateNeighborDto } from "./dtos/create-neighbor.dto";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
-
 import { ApiTags } from "@nestjs/swagger";
-import { ApiCraeteNeighbor } from "./swagger-decorators/create-neighbors.decorator";
-import { ApiGetNeighobor } from "./swagger-decorators/get_neighbor.decorator";
-import { ApiUpdateNeighobor } from "./swagger-decorators/update_neighbor.decorator";
-import { ApiDeleteNeighobor } from "./swagger-decorators/delete-neighbor";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { ApiCraeteNeighbor } from "./swagger-decorators/create-one-neighbors.decorator";
+import { ApiGetNeighobor } from "./swagger-decorators/get-neighbor.decorator";
+import { ApiUpdateNeighobor } from "./swagger-decorators/updat-one-neighbor.decorator";
+import { ApiDeleteNeighobor } from "./swagger-decorators/delete-one-neighbor.decorator";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 
 @Controller()
 @ApiTags("neighbors")
@@ -28,22 +27,23 @@ export class NeighborsController {
 
   @ApiCraeteNeighbor()
   @Post("users/:userNo/neighbor")
-  createNeighbor(@Param("userNo") userNo: number) {
+  createNeighbor(@Param("userNo", ParsePositiveIntPipe) userNo: number) {
     const senderNo = 1;
     return this.neighborsService.createNeighbor(senderNo, userNo);
   }
 
   @ApiGetNeighobor()
   @Get("neighbors")
-  getMyNeighbors(@Query() query: PaginationDto) {
+  getMyNeighbors(@Query() query: NeighborsPaginationDto) {
     const userNo = 1;
     return this.neighborsService.getMyNeighbors(userNo, query);
   }
 
+  //@Get("")
   @ApiUpdateNeighobor()
   @Patch("users/by/neighbors/:neighborNo")
   updateNeighbor(
-    @Param("neighborNo", ParseIntPipe) neighborNo: number,
+    @Param("neighborNo", ParsePositiveIntPipe) neighborNo: number,
     @Body()
     body: UpdateNeighborDto,
   ) {
@@ -55,7 +55,7 @@ export class NeighborsController {
   @Delete("users/my/neighbor/:neighborNo")
   @HttpCode(204)
   rejectNeighborRequestOrDeleteNeighbor(
-    @Param("neighborNo") neighborNo: number,
+    @Param("neighborNo", ParsePositiveIntPipe) neighborNo: number,
   ) {
     const userNo = 1;
     return this.neighborsService.rejectNeighborRequestOrDeleteNeighbor(

@@ -2,22 +2,21 @@ import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOperation,
-  ApiResponse,
 } from "@nestjs/swagger";
 
 export function ApiCraeteNeighbor() {
   return applyDecorators(
     ApiOperation({
-      summary: "이웃 신청 API",
-      description: "이웃 신청을 보내는 API입니다.",
+      summary: "이웃 생성 API",
     }),
-    ApiResponse({
-      status: 201,
-      description: "created",
+
+    ApiCreatedResponse({
+      description: "Success",
       content: {
         JSON: {
           examples: {
@@ -48,12 +47,11 @@ export function ApiCraeteNeighbor() {
     }),
 
     ApiBadRequestResponse({
-      status: 400,
-      description: "수신자 고유 번호가 숫자 아닐 때",
+      description: "param의 userNo가 양의 정수가 아닌 경우",
       content: {
         JSON: {
           example: {
-            message: ["receiverNo must be an integer number"],
+            message: "Validation failed (positive int string is expected)",
             error: "Bad Request",
             statusCode: 400,
           },
@@ -62,7 +60,6 @@ export function ApiCraeteNeighbor() {
     }),
 
     ApiForbiddenResponse({
-      status: 403,
       description: "본인에게 이웃 신청을 보낸 경우",
       content: {
         JSON: {
@@ -76,7 +73,6 @@ export function ApiCraeteNeighbor() {
     }),
 
     ApiNotFoundResponse({
-      status: 404,
       description: "친구 요청을 보낼 사람이 존재하지 않을 때",
       content: {
         JSON: {
@@ -90,7 +86,6 @@ export function ApiCraeteNeighbor() {
     }),
 
     ApiConflictResponse({
-      status: 409,
       description: "Conflict Error",
       content: {
         JSON: {
@@ -118,7 +113,6 @@ export function ApiCraeteNeighbor() {
     }),
 
     ApiInternalServerErrorResponse({
-      status: 500,
       description: "서버 오류가 발생한 경우",
       content: {
         JSON: {

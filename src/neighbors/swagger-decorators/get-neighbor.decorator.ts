@@ -2,19 +2,17 @@ import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
 } from "@nestjs/swagger";
 
 export function ApiGetNeighobor() {
   return applyDecorators(
     ApiOperation({
-      summary: "이웃을 불러오는 API",
-      description: "이웃을 불러오는 API입니다.",
+      summary: "neighbor 조회",
     }),
-    ApiResponse({
-      status: 201,
-      description: "이웃을 불러오는 데 성공한 경우",
+    ApiOkResponse({
+      description: "Success",
       content: {
         JSON: {
           example: [
