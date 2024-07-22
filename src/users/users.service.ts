@@ -1,6 +1,5 @@
 import {
   ConflictException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -12,6 +11,8 @@ import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 import { Prisma, user, user_domain } from "@prisma/client";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
+import { CommonService } from "src/common/common.service";
+import { LegendsRepository } from "src/legends/legends.repository";
 
 @Injectable()
 export class UsersService {
@@ -19,6 +20,8 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly userRepository: UsersRepository,
     private readonly logger: Logger,
+    private readonly commonService: CommonService,
+    private readonly legendsRepository: LegendsRepository,
   ) {}
 
   getUserNamePointTitleCharacter(userNo: number) {
@@ -82,11 +85,18 @@ export class UsersService {
     try {
       const [userAttendance] = await this.prisma.$transaction([
         this.userRepository.updateUserAttendance(userNo, attendance),
+
         this.userRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
         ),
+
+        this.legendsRepository.updateOneLegendByUserNo(userNo, {
+          attendanceCount: { increment: 1 },
+        }),
       ]);
+
+      this.commonService.checkAchievementCondition(userNo, "attendanceCount");
 
       return userAttendance;
     } catch (err) {
