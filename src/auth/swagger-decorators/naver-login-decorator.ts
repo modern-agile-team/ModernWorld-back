@@ -39,7 +39,7 @@ export function ApiNaverLogin() {
       content: {
         JSON: {
           example: {
-            message: "유효하지 않은 인가코드입니다.",
+            message: "Invalid authorization code.",
             error: "Unauthorized",
             statusCode: 401,
           },

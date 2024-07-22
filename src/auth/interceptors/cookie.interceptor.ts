@@ -22,7 +22,8 @@ export class CookieInterceptor implements NestInterceptor {
           response.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             domain: this.configService.get<string>("COOKIE_DOMAIN"),
-            secure: false,
+            secure: true,
+            sameSite: "none",
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
           });
         }
