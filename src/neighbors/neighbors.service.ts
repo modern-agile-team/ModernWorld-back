@@ -9,6 +9,7 @@ import { NeighborsRepository } from "./neighbors.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Injectable()
 export class NeighborsService {
@@ -125,8 +126,8 @@ export class NeighborsService {
     });
   }
 
-  async getMyNeighbors(userNo: number, query: NeighborsPaginationDto) {
-    const { page, take, orderBy, type } = query;
+  async getMyNeighbors(userNo: number, query: PaginationDto) {
+    const { page, take, orderBy } = query;
     const skip = (page - 1) * take;
     const totalCount = await this.neighborsRepository.countNeighbor(userNo);
     const totalPage = Math.ceil(totalCount / take);

@@ -19,6 +19,7 @@ import { ApiDeleteNeighobor } from "./swagger-decorators/delete-one-neighbor.dec
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 import { ApiGetNeighoborRequsets } from "./swagger-decorators/get-neighbor-requests.decorator";
+import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Controller()
 @ApiTags("neighbors")
@@ -34,7 +35,7 @@ export class NeighborsController {
 
   @ApiGetNeighobor()
   @Get("neighbors")
-  getMyNeighbors(@Query() query: NeighborsPaginationDto) {
+  getMyNeighbors(@Query() query: PaginationDto) {
     const userNo = 1;
     return this.neighborsService.getMyNeighbors(userNo, query);
   }
