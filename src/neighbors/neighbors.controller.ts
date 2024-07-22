@@ -8,7 +8,6 @@ import {
   Delete,
   Query,
   HttpCode,
-  ParseIntPipe,
 } from "@nestjs/common";
 import { NeighborsService } from "./neighbors.service";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
@@ -19,6 +18,7 @@ import { ApiUpdateNeighobor } from "./swagger-decorators/updat-one-neighbor.deco
 import { ApiDeleteNeighobor } from "./swagger-decorators/delete-one-neighbor.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
+import { ApiGetNeighoborRequsets } from "./swagger-decorators/get-neighbor-requests.decorator";
 
 @Controller()
 @ApiTags("neighbors")
@@ -28,7 +28,7 @@ export class NeighborsController {
   @ApiCraeteNeighbor()
   @Post("users/:userNo/neighbor")
   createNeighbor(@Param("userNo", ParsePositiveIntPipe) userNo: number) {
-    const senderNo = 1;
+    const senderNo = 27;
     return this.neighborsService.createNeighbor(senderNo, userNo);
   }
 
@@ -39,7 +39,13 @@ export class NeighborsController {
     return this.neighborsService.getMyNeighbors(userNo, query);
   }
 
-  //@Get("")
+  @ApiGetNeighoborRequsets()
+  @Get("neigbors/requests")
+  getMyNeighborRequests(@Query() query: NeighborsPaginationDto) {
+    const userNo = 1;
+    return this.neighborsService.getMyNeighborRequests(userNo, query);
+  }
+
   @ApiUpdateNeighobor()
   @Patch("users/by/neighbors/:neighborNo")
   updateNeighbor(
@@ -47,7 +53,7 @@ export class NeighborsController {
     @Body()
     body: UpdateNeighborDto,
   ) {
-    const userNo = 3;
+    const userNo = 1;
     return this.neighborsService.updateNeighbor(neighborNo, userNo, body);
   }
 

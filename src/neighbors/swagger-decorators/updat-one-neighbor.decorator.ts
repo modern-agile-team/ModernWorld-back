@@ -31,7 +31,6 @@ export function ApiUpdateNeighobor() {
     }),
 
     ApiForbiddenResponse({
-      status: 403,
       description: "본인이 받은 이웃요청이 아닌 경우",
       content: {
         JSON: {
@@ -45,7 +44,6 @@ export function ApiUpdateNeighobor() {
     }),
 
     ApiBadRequestResponse({
-      status: 404,
       description: "존재하지 않는 이웃신청인 경우",
       content: {
         JSON: {
@@ -59,7 +57,6 @@ export function ApiUpdateNeighobor() {
     }),
 
     ApiConflictResponse({
-      status: 409,
       description: "이미 승인된 이웃 신청인 경우",
       content: {
         JSON: {
@@ -74,7 +71,6 @@ export function ApiUpdateNeighobor() {
     }),
 
     ApiInternalServerErrorResponse({
-      status: 500,
       description: "서버 오류가 발생한 경우",
       content: {
         JSON: {

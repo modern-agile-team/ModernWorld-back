@@ -37,7 +37,6 @@ export function ApiGetNeighobor() {
     }),
 
     ApiBadRequestResponse({
-      status: 400,
       description: "Bad Request",
       content: {
         JSON: {
@@ -80,7 +79,6 @@ export function ApiGetNeighobor() {
     }),
 
     ApiInternalServerErrorResponse({
-      status: 500,
       description: "서버 오류가 발생한 경우",
       content: {
         JSON: {

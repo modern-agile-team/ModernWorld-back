@@ -109,4 +109,30 @@ export class NeighborsRepository {
       },
     });
   }
+
+  countNeighborRequestByUserNo(where: object) {
+    return this.prisma.neighbor.count({ where });
+  }
+
+  getMyNeighborRequests(
+    userNo: number,
+    skip: number,
+    take: number,
+    orderBy: OrderBy,
+    where: object,
+  ) {
+    return this.prisma.neighbor.findMany({
+      select: {
+        no: true,
+        NeighborSenderNo: { select: { no: true, nickname: true } },
+        NeighborReceiverNo: { select: { no: true, nickname: true } },
+        createdAt: true,
+        status: true,
+      },
+      skip,
+      take,
+      orderBy: { no: orderBy },
+      where,
+    });
+  }
 }

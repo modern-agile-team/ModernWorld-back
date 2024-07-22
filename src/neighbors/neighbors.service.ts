@@ -6,7 +6,6 @@ import {
 } from "@nestjs/common";
 import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { NeighborsRepository } from "./neighbors.repository";
-
 import { UsersRepository } from "src/users/users.repository";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
@@ -90,6 +89,40 @@ export class NeighborsService {
     }
 
     return this.neighborsRepository.updateNeighbor(neighborNo, status);
+  }
+
+  async getMyNeighborRequests(userNo: number, query: NeighborsPaginationDto) {
+    const { page, take, orderBy, type } = query;
+
+    let where = type
+      ? {
+          [type]: userNo,
+          status: false,
+        }
+      : {
+          OR: [{ receiverNo: userNo }, { senderNo: userNo }],
+          status: false,
+        };
+
+    const skip = (page - 1) * take;
+    const totalCount =
+      await this.neighborsRepository.countNeighborRequestByUserNo(where);
+    const totalPage = Math.ceil(totalCount / take);
+
+    const neighborRequest =
+      await this.neighborsRepository.getMyNeighborRequests(
+        userNo,
+        skip,
+        take,
+        orderBy,
+        where,
+      );
+    return new PaginationResponseDto(neighborRequest, {
+      page,
+      take,
+      totalCount,
+      totalPage,
+    });
   }
 
   async getMyNeighbors(userNo: number, query: NeighborsPaginationDto) {
