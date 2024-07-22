@@ -57,7 +57,7 @@ export class AuthService {
       ).data;
 
       if (!token) {
-        throw new UnauthorizedException("잘못된 인가 코드입니다.");
+        throw new UnauthorizedException("Invalid authorization code.");
       }
 
       const socialAccessToken = token.access_token;
@@ -75,7 +75,7 @@ export class AuthService {
 
       if (!userInfo) {
         throw new InternalServerErrorException(
-          "소셜 유저 정보를 가져오는 데 실패했습니다.",
+          "Failed to retrieve social user information.",
         );
       }
 
@@ -128,7 +128,7 @@ export class AuthService {
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
-        throw new UnauthorizedException("잘못된 인가 코드입니다.");
+        throw new UnauthorizedException("Invalid authorization code.");
       }
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
@@ -169,7 +169,7 @@ export class AuthService {
       ).data;
 
       if (!token) {
-        throw new UnauthorizedException("잘못된 인가 코드입니다.");
+        throw new UnauthorizedException("Invalid authorization code.");
       }
 
       const socialAccessToken = token.access_token;
@@ -187,7 +187,7 @@ export class AuthService {
 
       if (!userInfo) {
         throw new InternalServerErrorException(
-          "소셜 유저 정보를 가져오는 데 실패했습니다.",
+          "Failed to retrieve social user information",
         );
       }
 
@@ -244,7 +244,7 @@ export class AuthService {
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
-        throw new UnauthorizedException("잘못된 인가 코드입니다.");
+        throw new UnauthorizedException("Invalid authorization code.");
       }
       throw new InternalServerErrorException(
         "로그인 중 서버에러가 발생했습니다.",
