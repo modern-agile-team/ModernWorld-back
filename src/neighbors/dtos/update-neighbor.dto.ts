@@ -3,9 +3,9 @@ import { IsBoolean } from "class-validator";
 
 export class UpdateNeighborDto {
   @ApiProperty({
-    description: "이웃인지 아닌지 상태를 알려줌",
-    example: true,
+    description: "이웃 / 이웃 아님 상태",
+    default: true,
   })
   @IsBoolean()
-  status: boolean;
+  status: boolean = true;
 }

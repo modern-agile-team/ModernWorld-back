@@ -9,7 +9,6 @@ import { NeighborsRepository } from "./neighbors.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
 
 @Injectable()
 export class NeighborsService {
@@ -37,27 +36,27 @@ export class NeighborsService {
       );
     }
 
-    const existNeighborRequst =
+    const existNeighborRequest =
       await this.neighborsRepository.getOneNeighborRequest(
         receiverNo,
         senderNo,
       );
 
-    if (existNeighborRequst) {
+    if (existNeighborRequest) {
       throw new ConflictException(
         "You have already sent a neighbor request to this user.",
       );
     }
 
-    const existRequestAndOpponentRequstOneMore =
+    const existRequestAndOpponentRequestOneMore =
       await this.neighborsRepository.getOneNeighborRequest(
         senderNo,
         receiverNo,
       );
 
-    if (existRequestAndOpponentRequstOneMore) {
+    if (existRequestAndOpponentRequestOneMore) {
       return this.neighborsRepository.updateNeighbor(
-        existRequestAndOpponentRequstOneMore.no,
+        existRequestAndOpponentRequestOneMore.no,
         true,
       );
     }
@@ -92,53 +91,44 @@ export class NeighborsService {
     return this.neighborsRepository.updateNeighbor(neighborNo, status);
   }
 
-  async getMyNeighborRequests(userNo: number, query: NeighborsPaginationDto) {
-    const { page, take, orderBy, type } = query;
+  async getMyNeighbors(userNo: number, query: NeighborsPaginationDto) {
+    const { page, take, orderBy, status, type } = query;
 
-    let where = type
-      ? {
-          [type]: userNo,
-          status: false,
-        }
-      : {
-          OR: [{ receiverNo: userNo }, { senderNo: userNo }],
-          status: false,
-        };
+    let where =
+      type && !status
+        ? {
+            [type]: userNo,
+            status,
+          }
+        : {
+            OR: [{ receiverNo: userNo }, { senderNo: userNo }],
+            status,
+          };
 
     const skip = (page - 1) * take;
-    const totalCount =
-      await this.neighborsRepository.countNeighborRequestByUserNo(where);
+    const totalCount = await this.neighborsRepository.countNeighbor(where);
     const totalPage = Math.ceil(totalCount / take);
 
-    const neighborRequest =
-      await this.neighborsRepository.getMyNeighborRequests(
-        userNo,
-        skip,
-        take,
-        orderBy,
-        where,
-      );
-    return new PaginationResponseDto(neighborRequest, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
-  }
-
-  async getMyNeighbors(userNo: number, query: PaginationDto) {
-    const { page, take, orderBy } = query;
-    const skip = (page - 1) * take;
-    const totalCount = await this.neighborsRepository.countNeighbor(userNo);
-    const totalPage = Math.ceil(totalCount / take);
-
-    const neighbor = await this.neighborsRepository.getMyNeighbors(
-      userNo,
+    const neighbors = await this.neighborsRepository.getMyNeighbors(
       skip,
       take,
       orderBy,
+      where,
     );
-    return new PaginationResponseDto(neighbor, {
+
+    const fillteredNeighbors = neighbors.map((neighbor) => {
+      if (neighbor.neighborSenderNo.no === userNo) {
+        {
+          const { neighborSenderNo, ...fitteredNeighbor } = neighbor;
+          return fitteredNeighbor;
+        }
+      } else if (neighbor.neighborReceiverNo.no === userNo) {
+        const { neighborReceiverNo, ...fitteredNeighbor } = neighbor;
+        return fitteredNeighbor;
+      }
+    });
+
+    return new PaginationResponseDto(fillteredNeighbors, {
       page,
       take,
       totalCount,
@@ -146,10 +136,7 @@ export class NeighborsService {
     });
   }
 
-  async rejectNeighborRequestOrDeleteNeighbor(
-    neighborNo: number,
-    userNo: number,
-  ) {
+  async DeleteNeighborRequestOrNeighbor(neighborNo: number, userNo: number) {
     const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
     if (!neighbor) {
       throw new NotFoundException("No neighbor found");
@@ -159,8 +146,6 @@ export class NeighborsService {
         "You can only delete the neighbor request you received and your neighbor.",
       );
     }
-    return this.neighborsRepository.rejectNeighborRequestOrDeleteNeighbor(
-      neighborNo,
-    );
+    return this.neighborsRepository.DeleteNeighborRequestOrNeighbor(neighborNo);
   }
 }

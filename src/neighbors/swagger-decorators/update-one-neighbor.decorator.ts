@@ -4,27 +4,32 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiOkResponse,
   ApiOperation,
-  ApiResponse,
 } from "@nestjs/swagger";
 
-export function ApiUpdateNeighobor() {
+export function ApiUpdateNeighbor() {
   return applyDecorators(
     ApiOperation({
       summary: "이웃 승인 API",
       description: "이웃 신청을 승인하는 API입니다.",
     }),
-    ApiResponse({
-      status: 201,
+    ApiOkResponse({
       description: "이웃 승인을 성공한 경우",
       content: {
         JSON: {
           example: {
-            no: 3,
-            senderNo: 1,
-            receiverNo: 4,
+            no: 19,
+            neighborSenderNo: {
+              no: 10,
+              nickname: "10번닉네임",
+            },
+            neighborReceiverNo: {
+              no: 1,
+              nickname: "1번닉네임",
+            },
+            createdAt: "2024-07-22T16:02:00.000Z",
             status: true,
-            createdAt: "2024-07-15T10:52:38.000Z",
           },
         },
       },

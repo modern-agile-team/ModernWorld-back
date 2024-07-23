@@ -8,7 +8,7 @@ import {
   ApiOperation,
 } from "@nestjs/swagger";
 
-export function ApiDeleteNeighobor() {
+export function ApiDeleteNeighbor() {
   return applyDecorators(
     ApiOperation({
       summary: "이웃 승인 거절하거나 이웃 삭제 API",

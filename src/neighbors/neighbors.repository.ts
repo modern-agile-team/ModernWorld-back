@@ -22,8 +22,8 @@ export class NeighborsRepository {
     return this.prisma.neighbor.update({
       select: {
         no: true,
-        NeighborSenderNo: { select: { no: true, nickname: true } },
-        NeighborReceiverNo: { select: { no: true, nickname: true } },
+        neighborSenderNo: { select: { no: true, nickname: true } },
+        neighborReceiverNo: { select: { no: true, nickname: true } },
         createdAt: true,
         status: true,
       },
@@ -36,28 +36,23 @@ export class NeighborsRepository {
     });
   }
 
-  getMyNeighbors(userNo: number, skip: number, take: number, orderBy: OrderBy) {
+  getMyNeighbors(skip: number, take: number, orderBy: OrderBy, where: object) {
     return this.prisma.neighbor.findMany({
       select: {
         no: true,
-        NeighborSenderNo: { select: { no: true, nickname: true } },
-        NeighborReceiverNo: { select: { no: true, nickname: true } },
+        neighborSenderNo: { select: { no: true, nickname: true } },
+        neighborReceiverNo: { select: { no: true, nickname: true } },
         createdAt: true,
         status: true,
       },
       skip,
       take,
       orderBy: { no: orderBy },
-      where: {
-        OR: [{ receiverNo: userNo }, { senderNo: userNo }],
-        status: true,
-      },
+      where,
     });
   }
 
-  rejectNeighborRequestOrDeleteNeighbor(
-    neighborNo: number,
-  ): PrismaPromise<neighbor> {
+  DeleteNeighborRequestOrNeighbor(neighborNo: number): PrismaPromise<neighbor> {
     return this.prisma.neighbor.delete({
       where: {
         no: neighborNo,
@@ -79,7 +74,7 @@ export class NeighborsRepository {
   }
 
   getOneNeighbor(no: number): PrismaPromise<neighbor> {
-    return this.prisma.neighbor.findFirst({
+    return this.prisma.neighbor.findUnique({
       where: {
         no,
       },
@@ -101,37 +96,8 @@ export class NeighborsRepository {
     });
   }
 
-  countNeighbor(userNo: number): PrismaPromise<number> {
+  countNeighbor(where: object): PrismaPromise<number> {
     return this.prisma.neighbor.count({
-      where: {
-        OR: [{ receiverNo: userNo }, { senderNo: userNo }],
-        status: true,
-      },
-    });
-  }
-
-  countNeighborRequestByUserNo(where: object) {
-    return this.prisma.neighbor.count({ where });
-  }
-
-  getMyNeighborRequests(
-    userNo: number,
-    skip: number,
-    take: number,
-    orderBy: OrderBy,
-    where: object,
-  ) {
-    return this.prisma.neighbor.findMany({
-      select: {
-        no: true,
-        NeighborSenderNo: { select: { no: true, nickname: true } },
-        NeighborReceiverNo: { select: { no: true, nickname: true } },
-        createdAt: true,
-        status: true,
-      },
-      skip,
-      take,
-      orderBy: { no: orderBy },
       where,
     });
   }
