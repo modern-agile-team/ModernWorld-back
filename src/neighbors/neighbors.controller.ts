@@ -35,7 +35,6 @@ export class NeighborsController {
   @Get("users/my/neighbors")
   getMyNeighbors(@Query() query: NeighborsPaginationDto) {
     const userNo = 1;
-    console.log(query);
     return this.neighborsService.getMyNeighbors(userNo, query);
   }
 
@@ -53,11 +52,11 @@ export class NeighborsController {
   @ApiDeleteNeighbor()
   @Delete("users/my/neighbors/:neighborNo")
   @HttpCode(204)
-  DeleteNeighborRequestOrNeighbor(
+  deleteNeighborRelationAndRequest(
     @Param("neighborNo", ParsePositiveIntPipe) neighborNo: number,
   ) {
     const userNo = 1;
-    return this.neighborsService.DeleteNeighborRequestOrNeighbor(
+    return this.neighborsService.deleteNeighborRelationAndRequest(
       neighborNo,
       userNo,
     );

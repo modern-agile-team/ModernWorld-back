@@ -52,7 +52,9 @@ export class NeighborsRepository {
     });
   }
 
-  DeleteNeighborRequestOrNeighbor(neighborNo: number): PrismaPromise<neighbor> {
+  deleteNeighborRelationAndRequest(
+    neighborNo: number,
+  ): PrismaPromise<neighbor> {
     return this.prisma.neighbor.delete({
       where: {
         no: neighborNo,

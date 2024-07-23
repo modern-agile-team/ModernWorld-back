@@ -136,7 +136,7 @@ export class NeighborsService {
     });
   }
 
-  async DeleteNeighborRequestOrNeighbor(neighborNo: number, userNo: number) {
+  async deleteNeighborRelationAndRequest(neighborNo: number, userNo: number) {
     const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
     if (!neighbor) {
       throw new NotFoundException("No neighbor found");
@@ -146,6 +146,8 @@ export class NeighborsService {
         "You can only delete the neighbor request you received and your neighbor.",
       );
     }
-    return this.neighborsRepository.DeleteNeighborRequestOrNeighbor(neighborNo);
+    return this.neighborsRepository.deleteNeighborRelationAndRequest(
+      neighborNo,
+    );
   }
 }
