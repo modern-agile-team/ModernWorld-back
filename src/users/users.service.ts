@@ -9,7 +9,7 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
-import { Prisma, user, user_domain } from "@prisma/client";
+import { Prisma, UserDomain } from "@prisma/client";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
@@ -33,7 +33,7 @@ export class UsersService {
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: user_domain,
+    domain: UserDomain,
   ) {
     const result = await this.userRepository.createUser(
       uniqueIdentifier,

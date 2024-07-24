@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, user, user_domain } from "@prisma/client";
+import { UserDomain } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -18,7 +18,7 @@ export class UsersRepository {
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: user_domain,
+    domain: UserDomain,
   ) {
     return this.prisma.user.create({
       data: {
