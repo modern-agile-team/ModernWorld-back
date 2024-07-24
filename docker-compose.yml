@@ -42,7 +42,7 @@ services:
       - /home/ubuntu/MA7/certbot/log:/var/log/letsencrypt
 
     # 실제 서비스용 인증 발급
-    entrypoint: "/bin/sh -c 'trap exit TERM; if [ ! -e /etc/letsencrypt/live/modern-world.shop/fullchain.pem ]; then certbot certonly --webroot --webroot-path=/var/www/certbot -d modern-world.shop -d api.modern-world.shop --email jo1814@naver.com --agree-tos --no-eff-email; fi; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; if [ ! -e /etc/letsencrypt/live/도메인.com/fullchain.pem ]; then certbot certonly --webroot --webroot-path=/var/www/certbot -d 도메인.com --email jo1814@naver.com --agree-tos --no-eff-email; fi; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
     # 테스트용 인증 발급
-    # entrypoint: "/bin/sh -c 'trap exit TERM; if [ ! -e /etc/letsencrypt/live/modern-world.shop/fullchain.pem ]; then certbot certonly --staging --webroot --webroot-path=/var/www/certbot -d modern-world.shop -d api.modern-world.shop --email jo1814@naver.com --agree-tos --no-eff-email; fi; while :; do certbot renew --staging; sleep 12h & wait $${!}; done;'"
+    # entrypoint: "/bin/sh -c 'trap exit TERM; if [ ! -e /etc/letsencrypt/live/도메인.com/fullchain.pem ]; then certbot certonly --staging --webroot --webroot-path=/var/www/certbot -d 도메인.com --email jo1814@naver.com --agree-tos --no-eff-email; fi; while :; do certbot renew --staging; sleep 12h & wait $${!}; done;'"
