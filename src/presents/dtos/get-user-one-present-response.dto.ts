@@ -1,4 +1,4 @@
-import { present_status, Prisma } from "@prisma/client";
+import { PresentStatus, Prisma } from "@prisma/client";
 import { Exclude } from "class-transformer";
 import { PresentsRepository } from "../presents.repository";
 
@@ -12,7 +12,7 @@ export class GetUserOnePresentResponseDto {
   }
 
   no: number;
-  status: present_status;
+  status: PresentStatus;
   createdAt: Date;
   @Exclude()
   senderDelete: boolean;
