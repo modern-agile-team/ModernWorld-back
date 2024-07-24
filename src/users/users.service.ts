@@ -28,6 +28,7 @@ export class UsersService {
     return this.userRepository.getUserNamePointTitleCharacter(userNo);
   }
 
+  // 이거 안쓰는 거임 ----------------------------------
   async createUser(
     uniqueIdentifier: string,
     socialName: string,
@@ -140,6 +141,7 @@ export class UsersService {
       characterLocker: animal
         ? { some: { status: true, character: { species: animal } } }
         : {},
+      deletedAt: null,
     };
 
     // [{ undefined(createdAt): "asc" }, { no: "desc" }]
