@@ -94,7 +94,7 @@ export class NeighborsService {
   async getMyNeighbors(userNo: number, query: NeighborsPaginationDto) {
     const { page, take, orderBy, status, type } = query;
 
-    let where =
+    const where =
       type && !status
         ? {
             [type]: userNo,
