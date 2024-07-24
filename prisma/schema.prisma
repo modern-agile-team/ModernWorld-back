@@ -117,13 +117,13 @@ model like {
 }
 
 model neighbor {
-  no                     Int      @id @default(autoincrement()) @db.UnsignedInt
-  senderNo               Int      @map("sender_no") @db.UnsignedInt
-  receiverNo             Int      @map("receiver_no") @db.UnsignedInt
-  status                 Boolean  @default(false)
-  createdAt              DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @map("created_at") @db.DateTime(0)
-  neighborSenderNo       user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
-  neighborReceiverNo     user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
+  no                 Int      @id @default(autoincrement()) @db.UnsignedInt
+  senderNo           Int      @map("sender_no") @db.UnsignedInt
+  receiverNo         Int      @map("receiver_no") @db.UnsignedInt
+  status             Boolean  @default(false)
+  createdAt          DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @map("created_at") @db.DateTime(0)
+  neighborSenderNo   user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
+  neighborReceiverNo user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
 
   @@index([receiverNo], map: "receiver_no")
   @@index([senderNo], map: "sender_no")
