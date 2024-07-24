@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { CommonService } from "./common.service";
 import { UsersModule } from "src/users/users.module";
 import { LegendsModule } from "src/legends/legends.module";
@@ -9,7 +9,7 @@ import { AchievementsModule } from "src/achievements/achievements.module";
 
 @Module({
   imports: [
-    UsersModule,
+    forwardRef(() => UsersModule),
     LegendsModule,
     UserAchievementsModule,
     SseModule,
