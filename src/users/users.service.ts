@@ -135,16 +135,12 @@ export class UsersService {
     const { page, take, animal, orderByField, nickname } = query;
     const skip = (page - 1) * take;
 
-    let where = {
-      nickname: { contains: nickname },
-      characterLocker: {},
+    const where = {
+      nickname: { contains: nickname, not: null },
+      characterLocker: animal
+        ? { some: { status: true, character: { species: animal } } }
+        : {},
     };
-
-    if (animal) {
-      where.characterLocker = {
-        some: { status: true, character: { species: animal } },
-      };
-    }
 
     // [{ undefined(createdAt): "asc" }, { no: "desc" }]
     // [{ accummulationPoint: "desc" }, { no: "desc" }]
@@ -152,7 +148,7 @@ export class UsersService {
     const orderBy =
       orderByField === "like"
         ? [{ legend: { likeCount: "desc" } }, { no: "desc" }]
-        : [{ [orderByField || "createdAt"]: "desc" }, { no: "desc" }];
+        : [{ [orderByField]: "desc" }, { no: "desc" }];
 
     const totalCount = await this.userRepository.countUsers(where);
     const totalPage = Math.ceil(totalCount / take);

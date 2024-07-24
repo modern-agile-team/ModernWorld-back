@@ -193,21 +193,12 @@ export class UsersRepository {
     skip: number,
     orderBy: object,
     where: { nickname: {}; characterLocker: {} },
-  ): PrismaPromise<
-    {
-      nickname: string;
-      accumulationPoint: number;
-      description: string;
-      createdAt: Date;
-      legend: { likeCount: number };
-      characterLocker: { character: { image: string } }[];
-      userAchievement: { achievement: { title: string; level: string } }[];
-    }[]
-  > {
+  ) {
     return this.prisma.user.findMany({
       take: take,
       skip: skip,
       select: {
+        no: true,
         nickname: true,
         description: true,
         createdAt: true,

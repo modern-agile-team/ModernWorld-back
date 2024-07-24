@@ -15,12 +15,13 @@ export class GetUsersByAnimalDto extends OmitType(PaginationDto, ["orderBy"]) {
 
   @ApiPropertyOptional({
     enum: orderByField,
+    default: "createdAt",
     description:
       "정렬 종류를 결정합니다. 값이 정해지지 않을시, 유저를 최신순으로 불러옵니다.",
   })
   @IsOptional()
   @IsEnum(orderByField)
-  orderByField?: orderByField;
+  orderByField?: orderByField = orderByField.CREATEDAT;
 
   @ApiPropertyOptional({
     description: "검색할 유저 이름",
