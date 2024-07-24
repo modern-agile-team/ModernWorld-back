@@ -178,12 +178,11 @@ model reply {
 }
 
 model token {
-  no             Int     @id @default(autoincrement()) @db.UnsignedInt
-  userNo         Int     @map("user_no") @db.UnsignedInt
-  socialAccess   String? @map("social_access") @db.VarChar(300)
-  socialRefresh  String? @map("social_refresh") @db.VarChar(300)
-  serviceRefresh String? @map("service_refresh") @db.VarChar(300)
-  user           user    @relation(fields: [userNo], references: [no])
+  no            Int     @id @default(autoincrement()) @db.UnsignedInt
+  userNo        Int     @unique @map("user_no") @db.UnsignedInt
+  socialAccess  String? @map("social_access") @db.VarChar(300)
+  socialRefresh String? @map("social_refresh") @db.VarChar(300)
+  user          user    @relation(fields: [userNo], references: [no])
 
   @@index([userNo], map: "user_no")
 }
