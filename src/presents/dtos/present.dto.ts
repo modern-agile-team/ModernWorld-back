@@ -1,4 +1,4 @@
-import { present_status } from "@prisma/client";
+import { PresentStatus } from "@prisma/client";
 
 export class presentDto<T> {
   constructor(present: T) {
@@ -10,7 +10,7 @@ export class presentDto<T> {
   senderNo: number | null;
   receiverNo: number | null;
   createdAt: Date;
-  status: present_status;
+  status: PresentStatus;
   senderDelete: boolean;
   receiverDelete: boolean;
 }

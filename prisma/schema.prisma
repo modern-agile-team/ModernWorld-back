@@ -12,7 +12,7 @@ model achievement {
   name            String            @db.VarChar(20)
   description     String            @db.VarChar(100)
   title           String            @db.VarChar(20)
-  level           achievement_level
+  level           AchievementLevel
   point           Int               @db.UnsignedInt
   userAchievement userAchievement[]
 }
@@ -117,13 +117,13 @@ model like {
 }
 
 model neighbor {
-  no                     Int      @id @default(autoincrement()) @db.UnsignedInt
-  senderNo               Int      @map("sender_no") @db.UnsignedInt
-  receiverNo             Int      @map("receiver_no") @db.UnsignedInt
-  status                 Boolean  @default(false)
-  createdAt              DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @map("created_at") @db.DateTime(0)
-  neighborSenderNo       user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
-  neighborReceiverNo     user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
+  no                 Int      @id @default(autoincrement()) @db.UnsignedInt
+  senderNo           Int      @map("sender_no") @db.UnsignedInt
+  receiverNo         Int      @map("receiver_no") @db.UnsignedInt
+  status             Boolean  @default(false)
+  createdAt          DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @map("created_at") @db.DateTime(0)
+  neighborSenderNo   user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
+  neighborReceiverNo user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
 
   @@index([receiverNo], map: "receiver_no")
   @@index([senderNo], map: "sender_no")
@@ -146,17 +146,17 @@ model post {
 }
 
 model present {
-  no                    Int            @id @default(autoincrement()) @db.UnsignedInt
-  itemNo                Int            @map("item_no") @db.UnsignedInt
-  senderNo              Int?           @map("sender_no") @db.UnsignedInt
-  receiverNo            Int?           @map("receiver_no") @db.UnsignedInt
-  createdAt             DateTime       @default(now()) @map("created_at") @db.DateTime(0)
-  status                present_status @default(unread)
-  senderDelete          Boolean        @default(false) @map("sender_delete")
-  receiverDelete        Boolean        @default(false) @map("receiver_delete")
-  item                  item           @relation(fields: [itemNo], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "present_ibfk_1")
-  userPresentSenderNo   user?          @relation("present_sender_noTouser", fields: [senderNo], references: [no], map: "present_ibfk_2")
-  userPresentReceiverNo user?          @relation("present_receiver_noTouser", fields: [receiverNo], references: [no], map: "present_ibfk_3")
+  no                    Int           @id @default(autoincrement()) @db.UnsignedInt
+  itemNo                Int           @map("item_no") @db.UnsignedInt
+  senderNo              Int?          @map("sender_no") @db.UnsignedInt
+  receiverNo            Int?          @map("receiver_no") @db.UnsignedInt
+  createdAt             DateTime      @default(now()) @map("created_at") @db.DateTime(0)
+  status                PresentStatus @default(unread)
+  senderDelete          Boolean       @default(false) @map("sender_delete")
+  receiverDelete        Boolean       @default(false) @map("receiver_delete")
+  item                  item          @relation(fields: [itemNo], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "present_ibfk_1")
+  userPresentSenderNo   user?         @relation("present_sender_noTouser", fields: [senderNo], references: [no], map: "present_ibfk_2")
+  userPresentReceiverNo user?         @relation("present_receiver_noTouser", fields: [receiverNo], references: [no], map: "present_ibfk_3")
 
   @@index([itemNo], map: "item_no")
   @@index([receiverNo], map: "receiver_no")
@@ -178,31 +178,30 @@ model reply {
 }
 
 model token {
-  no             Int     @id @default(autoincrement()) @db.UnsignedInt
-  userNo         Int     @map("user_no") @db.UnsignedInt
-  socialAccess   String? @map("social_access") @db.VarChar(300)
-  socialRefresh  String? @map("social_refresh") @db.VarChar(300)
-  serviceRefresh String? @map("service_refresh") @db.VarChar(300)
-  user           user    @relation(fields: [userNo], references: [no])
+  no            Int     @id @default(autoincrement()) @db.UnsignedInt
+  userNo        Int     @unique @map("user_no") @db.UnsignedInt
+  socialAccess  String? @map("social_access") @db.VarChar(300)
+  socialRefresh String? @map("social_refresh") @db.VarChar(300)
+  user          user    @relation(fields: [userNo], references: [no])
 
   @@index([userNo], map: "user_no")
 }
 
 model user {
-  no                Int         @id @default(autoincrement()) @db.UnsignedInt
-  nickname          String?     @unique(map: "nickname") @db.VarChar(10)
-  currentPoint      Int         @default(0) @map("current_point") @db.UnsignedInt
-  accumulationPoint Int         @default(0) @map("accumulation_point") @db.UnsignedInt
-  description       String?     @db.VarChar(150)
+  no                Int        @id @default(autoincrement()) @db.UnsignedInt
+  nickname          String?    @unique(map: "nickname") @db.VarChar(10)
+  currentPoint      Int        @default(0) @map("current_point") @db.UnsignedInt
+  accumulationPoint Int        @default(0) @map("accumulation_point") @db.UnsignedInt
+  description       String?    @db.VarChar(150)
   attendance        Json?
-  status            Boolean     @default(false)
-  createdAt         DateTime    @default(now()) @map("created_at") @db.DateTime(0)
-  deletedAt         DateTime?   @map("deleted_at") @db.DateTime(0)
-  admin             Boolean     @default(false)
-  uniqueIdentifier  String      @unique(map: "unique_identifier") @map("unique_identifier") @db.VarChar(300)
-  socialName        String      @map("social_name") @db.VarChar(200)
-  image             String?     @default("https://wang0514.s3.ap-northeast-2.amazonaws.com/page/BaseProfileImage/pngwing.com.png") @db.VarChar(300)
-  domain            user_domain
+  status            Boolean    @default(false)
+  createdAt         DateTime   @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt         DateTime?  @map("deleted_at") @db.DateTime(0)
+  admin             Boolean    @default(false)
+  uniqueIdentifier  String     @unique(map: "unique_identifier") @map("unique_identifier") @db.VarChar(300)
+  socialName        String     @map("social_name") @db.VarChar(200)
+  image             String?    @default("https://wang0514.s3.ap-northeast-2.amazonaws.com/page/BaseProfileImage/pngwing.com.png") @db.VarChar(300)
+  domain            UserDomain
 
   characterLocker    characterLocker[]
   commentSenderNo    comment[]         @relation("comment_sender_noTouser")
@@ -237,21 +236,27 @@ model userAchievement {
   @@map("user_achievement")
 }
 
-enum achievement_level {
-  one
-  two
-  three
+enum AchievementLevel {
+  one   @map("one")
+  two   @map("two")
+  three @map("three")
+
+  @@map("achievement_level")
 }
 
-enum present_status {
-  unread
-  read
-  accept
-  reject
+enum PresentStatus {
+  unread @map("unread")
+  read   @map("read")
+  accept @map("accept")
+  reject @map("reject")
+
+  @@map("present_status")
 }
 
-enum user_domain {
-  naver
-  kakao
-  google
+enum UserDomain {
+  naver  @map("naver")
+  kakao  @map("kakao")
+  google @map("google")
+
+  @@map("user_domain")
 }

@@ -9,7 +9,7 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
-import { Prisma, user, user_domain } from "@prisma/client";
+import { Prisma, UserDomain } from "@prisma/client";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
@@ -28,11 +28,12 @@ export class UsersService {
     return this.userRepository.getUserNamePointTitleCharacter(userNo);
   }
 
+  // 이거 안쓰는 거임 ----------------------------------
   async createUser(
     uniqueIdentifier: string,
     socialName: string,
     image: string,
-    domain: user_domain,
+    domain: UserDomain,
   ) {
     const result = await this.userRepository.createUser(
       uniqueIdentifier,
@@ -135,24 +136,18 @@ export class UsersService {
     const { page, take, animal, orderByField, nickname } = query;
     const skip = (page - 1) * take;
 
-    let where = {
-      nickname: { contains: nickname },
-      characterLocker: {},
+    const where = {
+      nickname: { contains: nickname, not: null },
+      characterLocker: animal
+        ? { some: { status: true, character: { species: animal } } }
+        : {},
+      deletedAt: null,
     };
 
-    if (animal) {
-      where.characterLocker = {
-        some: { status: true, character: { species: animal } },
-      };
-    }
-
-    // [{ undefined(createdAt): "asc" }, { no: "desc" }]
-    // [{ accummulationPoint: "desc" }, { no: "desc" }]
-    // [{ legend: { likeCount: "desc" } }, { no: "desc" }]
     const orderBy =
       orderByField === "like"
         ? [{ legend: { likeCount: "desc" } }, { no: "desc" }]
-        : [{ [orderByField || "createdAt"]: "desc" }, { no: "desc" }];
+        : [{ [orderByField]: "desc" }, { no: "desc" }];
 
     const totalCount = await this.userRepository.countUsers(where);
     const totalPage = Math.ceil(totalCount / take);
