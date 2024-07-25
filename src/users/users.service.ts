@@ -144,9 +144,6 @@ export class UsersService {
       deletedAt: null,
     };
 
-    // [{ undefined(createdAt): "asc" }, { no: "desc" }]
-    // [{ accummulationPoint: "desc" }, { no: "desc" }]
-    // [{ legend: { likeCount: "desc" } }, { no: "desc" }]
     const orderBy =
       orderByField === "like"
         ? [{ legend: { likeCount: "desc" } }, { no: "desc" }]
