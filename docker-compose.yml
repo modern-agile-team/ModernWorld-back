@@ -19,3 +19,30 @@ services:
     ports:
       - "6379:6379"
     restart: always
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /home/ubuntu/MA7/certbot/www:/var/www/certbot
+      - /home/ubuntu/MA7/certbot/conf:/etc/letsencrypt
+      - /home/ubuntu/MA7/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /home/ubuntu/MA7/nginx/log:/var/log/nginx
+    restart: always
+
+  certbot:
+    depends_on:
+      - nginx
+    image: certbot/certbot:latest
+    volumes:
+      - /home/ubuntu/MA7/certbot/www:/var/www/certbot
+      - /home/ubuntu/MA7/certbot/conf:/etc/letsencrypt
+      - /home/ubuntu/MA7/certbot/log:/var/log/letsencrypt
+
+    # 실제 서비스용 인증 발급
+    entrypoint: "/bin/sh -c 'trap exit TERM; if [ ! -e /etc/letsencrypt/live/도메인.com/fullchain.pem ]; then certbot certonly --webroot --webroot-path=/var/www/certbot -d 도메인.com --email jo1814@naver.com --agree-tos --no-eff-email; fi; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+    # 테스트용 인증 발급
+    # entrypoint: "/bin/sh -c 'trap exit TERM; if [ ! -e /etc/letsencrypt/live/도메인.com/fullchain.pem ]; then certbot certonly --staging --webroot --webroot-path=/var/www/certbot -d 도메인.com --email jo1814@naver.com --agree-tos --no-eff-email; fi; while :; do certbot renew --staging; sleep 12h & wait $${!}; done;'"
