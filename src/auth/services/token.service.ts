@@ -51,4 +51,12 @@ export class TokenService {
   getAccessToken(userNo: string) {
     return this.redisService.getToken(userNo);
   }
+
+  delRefreshToken(userNo: string) {
+    return this.redisService.delToken(userNo);
+  }
+
+  delAccessToken(userNo: string) {
+    return this.redisService.delToken(userNo);
+  }
 }
