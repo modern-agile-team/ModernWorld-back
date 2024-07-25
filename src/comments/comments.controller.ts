@@ -8,6 +8,7 @@ import {
   Query,
   Delete,
   HttpCode,
+  UseGuards,
 } from "@nestjs/common";
 import { CommentService } from "./comments.service";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
@@ -23,6 +24,8 @@ import { ApiCreateOneReply } from "./swagger-decorators/reply-swagger/create-one
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
+import { userNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("Comments & Replies")
@@ -31,17 +34,18 @@ export class CommentController {
 
   @ApiCreateOneComment()
   @Post("users/:userNo/comments")
+  @UseGuards(AccessTokenAuthGuard)
   createOneComment(
+    @userNo() senderNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body() body: CommentContentDto,
   ) {
-    const userNo = 1;
-
-    return this.commentService.createOneComment(receiverNo, userNo, body);
+    return this.commentService.createOneComment(receiverNo, senderNo, body);
   }
 
   @Get("users/:userNo/comments")
   @ApiGetComments()
+  @UseGuards(AccessTokenAuthGuard)
   getManyComments(
     @Param("userNo", ParsePositiveIntPipe) userNo: number,
     @Query() query: CommentsPaginationDto,
@@ -51,39 +55,40 @@ export class CommentController {
 
   @Patch("users/my/comments/:commentNo")
   @ApiUpdateComment()
+  @UseGuards(AccessTokenAuthGuard)
   updatOneComment(
+    @userNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() body: CommentContentDto,
   ) {
-    const userNo = 1;
-
     return this.commentService.updateOneComment(userNo, commentNo, body);
   }
 
   @Delete("users/my/comments/:commentNo")
   @ApiDeleteOneComment()
   @HttpCode(204)
+  @UseGuards(AccessTokenAuthGuard)
   softDeleteOneComment(
+    @userNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
   ) {
-    const userNo = 1;
-
     return this.commentService.softDeleteOneComment(userNo, commentNo);
   }
 
   @Post("comments/:commentNo/replies")
   @ApiCreateOneReply()
+  @UseGuards(AccessTokenAuthGuard)
   createOneReply(
+    @userNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() body: CommentContentDto,
   ) {
-    const userNo = 1;
-
     return this.commentService.createOneReply(commentNo, userNo, body);
   }
 
   @Get("comments/:commentNo/replies")
   @ApiGetRelies()
+  @UseGuards(AccessTokenAuthGuard)
   getManyReplies(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Query() query: PaginationDto,
@@ -93,25 +98,25 @@ export class CommentController {
 
   @Patch("comments/:commentNo/replies/:replyNo")
   @ApiUpdateOneReply()
+  @UseGuards(AccessTokenAuthGuard)
   updateOneReply(
+    @userNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
     @Body() body: CommentContentDto,
   ) {
-    const userNo = 1;
-
     return this.commentService.updateOneReply(userNo, commentNo, replyNo, body);
   }
 
   @Delete("comments/:commentNo/replies/:replyNo")
   @ApiDeleteOneReply()
   @HttpCode(204)
+  @UseGuards(AccessTokenAuthGuard)
   softDeleteOneReply(
+    @userNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
   ) {
-    const userNo = 1;
-
     return this.commentService.softDeleteOneReply(userNo, commentNo, replyNo);
   }
 }

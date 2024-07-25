@@ -1,6 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNoContentResponse,
@@ -90,5 +91,7 @@ export function ApiDeleteOneReply() {
         },
       },
     }),
+
+    ApiBearerAuth("access-token"),
   );
 }
