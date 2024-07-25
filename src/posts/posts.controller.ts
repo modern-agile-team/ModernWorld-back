@@ -30,6 +30,7 @@ export class PostsController {
 
   @Get("users/my/posts")
   @ApiGetPosts()
+  @UseGuards(AccessTokenAuthGuard)
   getPosts(
     @userNo() userNo: number,
     @Query()
