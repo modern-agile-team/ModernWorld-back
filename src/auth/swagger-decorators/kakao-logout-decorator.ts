@@ -25,21 +25,21 @@ export function ApiKakaoLogout() {
       content: {
         JSON: {
           examples: {
-            "Cookie has no refresh token": {
+            "Authorization header is missing.": {
               value: {
-                message: "Cookie has no refresh token",
+                message: "Authorization header is missing.",
                 error: "Bad Request",
                 statusCode: 400,
               },
-              description: "쿠키에 리프레시 토큰이 없는 경우",
+              description: "헤더에 액세스 토큰이 없는 경우",
             },
-            "not refresh token type": {
+            "not access token type": {
               value: {
-                message: "not refresh token type",
+                message: "not access token type",
                 error: "Bad Request",
                 statusCode: 400,
               },
-              description: "토큰 타입이 리프레시 토큰이 아닌 경우",
+              description: "토큰 타입이 액세스 토큰이 아닌 경우",
             },
             "jwt must be provided": {
               value: {
@@ -73,7 +73,7 @@ export function ApiKakaoLogout() {
                 error: "Unauthorized",
                 statusCode: 401,
               },
-              description: "우리 서비스의 리프레시 토큰이 아닌 경우",
+              description: "우리 서비스의 토큰이 아닌 경우",
             },
             "jwt expired": {
               value: {
@@ -107,7 +107,7 @@ export function ApiKakaoLogout() {
                 error: "Not Found",
                 statusCode: 404,
               },
-              description: "리프레시 토큰이 Redis에 없는 경우",
+              description: "액세스 토큰이 Redis에 없는 경우",
             },
             "token is not matched.": {
               value: {
@@ -118,6 +118,19 @@ export function ApiKakaoLogout() {
               description:
                 "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
             },
+          },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 500,
+      description: "Internal server error",
+      content: {
+        JSON: {
+          example: {
+            message: "로그아웃 중 서버에러가 발생했습니다.",
+            error: "Internal Server Error",
+            statusCode: 500,
           },
         },
       },

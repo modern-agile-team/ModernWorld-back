@@ -251,6 +251,23 @@ export class AuthService {
       );
     }
   }
+  async naverLogout(userNo: number) {
+    try {
+      await this.tokenRepository.deleteTokens(userNo);
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+      return { message: "네이버 로그아웃 성공" };
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        "로그아웃 중 서버에러가 발생했습니다.",
+      );
+    }
+  }
 
   async kakaoLogout(userNo: number) {
     try {
@@ -270,7 +287,6 @@ export class AuthService {
           },
         },
       );
-      console.log(socialAccessTokenUserInfo.status);
       if (socialAccessTokenUserInfo.status === 401) {
         const newKakaoAccessToken =
           await this.tokenService.createNewkakaoAccessToken(socialRefreshToken);
