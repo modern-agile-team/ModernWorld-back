@@ -4,23 +4,23 @@ import { Subject } from "rxjs";
 @Injectable()
 export class SseService {
   // Map 객체를 만든다.
-  private notifications = new Map<string, Subject<string>>();
+  private notifications = new Map<string, Subject<object>>();
   //string타입의 key를 갖고, Subject<string> 타입의 value를 갖는 Map 객체 생성.
 
   //SSE 연결을 위한 메서드
-  getSubject(userNo: string): Subject<string> {
+  getSubject(userNo: string): Subject<object> {
     // Map 객체의 has 메서드는 해당 key가 없다면 false 있다면 true 반환
     // 만약 userNo로 된 Map객체가 없다면
     if (!this.notifications.has(userNo)) {
       // Map객체의 set메서드를 통해 { userNo : Subject<string> } 형태의 Map객체를 생성한다.
-      this.notifications.set(userNo, new Subject<string>());
+      this.notifications.set(userNo, new Subject<object>());
     }
     // Map객체의 get메서드를 통해 key가 userNo인 것의 value를 반환한다.
     // 즉, Subject<string>이 반환됨
     return this.notifications.get(userNo);
   }
 
-  sendSse(userNo: number, content: string) {
+  sendSse(userNo: number, content: { data: string; url: string }) {
     // subject 객체를 얻어서
     const subject = this.getSubject(`${userNo}`);
 
