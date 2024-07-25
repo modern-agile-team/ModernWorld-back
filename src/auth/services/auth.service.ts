@@ -251,6 +251,7 @@ export class AuthService {
       );
     }
   }
+
   async kakaoLogout(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
@@ -258,18 +259,22 @@ export class AuthService {
         throw new UnauthorizedException("로그아웃할 유저가 없습니다.");
       }
 
-      const socialAccessToken = socialTokens[0].socialAccess;
+      let socialAccessToken = socialTokens[0].socialAccess;
       const socialRefreshToken = socialTokens[0].socialRefresh;
 
-      const socialAccessTokenUserInfo = (
-        await axios.get("https://kapi.kakao.com/v1/user/access_token_info", {
+      const socialAccessTokenUserInfo = await axios.get(
+        "https://kapi.kakao.com/v1/user/access_token_info",
+        {
           headers: {
             Authorization: `Bearer ${socialAccessToken}`,
           },
-        })
-      ).data;
+        },
+      );
+      console.log(socialAccessTokenUserInfo.status);
       if (socialAccessTokenUserInfo.status === 401) {
-        throw new UnauthorizedException("유효하지 않은 토큰입니다.");
+        const newKakaoAccessToken =
+          await this.tokenService.createNewkakaoAccessToken(socialRefreshToken);
+        socialAccessToken = newKakaoAccessToken.access_token;
       }
 
       await axios.post(

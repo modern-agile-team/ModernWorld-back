@@ -1,7 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { RedisService } from "../redis/redis.service";
+import axios from "axios";
 
 @Injectable()
 export class TokenService {
@@ -9,6 +14,7 @@ export class TokenService {
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
+    private readonly logger: Logger,
   ) {}
 
   createAccessToken(userNo: number) {
@@ -34,6 +40,32 @@ export class TokenService {
     this.setAccessToken(`${userNo}-accessToken`, accessToken, 60 * 60 * 12);
 
     return { accessToken };
+  }
+  async createNewkakaoAccessToken(socialRefreshToken: string) {
+    try {
+      return (
+        await axios.post(
+          "https://kauth.kakao.com/oauth/token",
+          {
+            grant_type: "refresh_token",
+            client_id: this.configService.get<string>("KAKAO_CLIENT_ID"),
+            refresh_token: socialRefreshToken,
+            client_secret: this.configService.get<string>("KAKAO_CLIENT"),
+          },
+          {
+            headers: {
+              "Content-type":
+                "Content-type: application/x-www-form-urlencoded;charset=utf-8",
+            },
+          },
+        )
+      ).data;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        "카카오 액세스 토큰 재발급 중 서버에러가 발생했습니다.",
+      );
+    }
   }
 
   setRefreshToken(userNo: string, refreshToken: string, ttl: number) {
