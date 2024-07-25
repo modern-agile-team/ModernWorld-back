@@ -26,6 +26,15 @@ export class UsersRepository {
         socialName,
         image,
         domain,
+        attendance: {
+          "0": [false, 100],
+          "1": [false, 200],
+          "2": [false, 300],
+          "3": [false, 200],
+          "4": [false, 400],
+          "5": [false, 300],
+          "6": [false, 300],
+        },
       },
     });
   }
