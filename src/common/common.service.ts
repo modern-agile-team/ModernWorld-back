@@ -88,10 +88,10 @@ export class CommonService {
         throw new InternalServerErrorException();
       }
 
-      this.sseService.sendSse(
-        userNo,
-        `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
-      );
+      this.sseService.sendSse(userNo, {
+        data: `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
+        url: "/users/my/achievements",
+      });
     }
   }
 }

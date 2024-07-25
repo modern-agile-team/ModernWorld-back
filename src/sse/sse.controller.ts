@@ -1,6 +1,14 @@
-import { Controller, Logger, MessageEvent, Param, Sse } from "@nestjs/common";
-import { Observable, map } from "rxjs";
+import {
+  Controller,
+  Logger,
+  MessageEvent,
+  Param,
+  Post,
+  Sse,
+} from "@nestjs/common";
+import { Observable, map, startWith } from "rxjs";
 import { SseService } from "./sse.service";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 
 @Controller("sse")
 export class SseController {
@@ -16,9 +24,18 @@ export class SseController {
     const notifications$ = this.sseService.getSubject(userNo);
 
     return notifications$.pipe(
+      startWith("Connected"),
       map((message) => {
         return { data: message };
       }),
     );
+  }
+
+  @Post(":userNo")
+  asdf(@Param("userNo", ParsePositiveIntPipe) userNo: number) {
+    return this.sseService.sendSse(userNo, {
+      data: `${userNo}번 유저에게 보내는 sse`,
+      url: "test",
+    });
   }
 }
