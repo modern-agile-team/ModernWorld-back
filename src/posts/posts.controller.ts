@@ -19,7 +19,7 @@ import { ApiGetPosts } from "./posts-swagger/get-posts.decorator";
 import { ApiGetOnePost } from "./posts-swagger/get-one-post.decorator";
 import { ApiDeleteOnePost } from "./posts-swagger/delete-one-post.decorator";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 //해당 로직은 Presents와 동일한 부분이 많음. 해당 부분 참고할것
 @Controller()
@@ -32,7 +32,7 @@ export class PostsController {
   @ApiGetPosts()
   @UseGuards(AccessTokenAuthGuard)
   getPosts(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Query()
     query: GetPostsDto,
   ) {
@@ -43,7 +43,7 @@ export class PostsController {
   @ApiGetOnePost()
   @UseGuards(AccessTokenAuthGuard)
   getOnePost(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("postNo", ParsePositiveIntPipe) postNo: number,
   ) {
     return this.postsService.getOnePostByUserNo(userNo, postNo);
@@ -53,7 +53,7 @@ export class PostsController {
   @ApiCreateOnePost()
   @UseGuards(AccessTokenAuthGuard)
   createOnePost(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body()
     body: PostContentDto,
@@ -66,7 +66,7 @@ export class PostsController {
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
   deleteOnePost(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("postNo", ParsePositiveIntPipe) postNo: number,
   ) {
     return this.postsService.updateOnePostToDelete(userNo, postNo);

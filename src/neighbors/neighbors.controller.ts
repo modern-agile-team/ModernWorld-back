@@ -20,7 +20,7 @@ import { ApiDeleteNeighbor } from "./swagger-decorators/delete-one-neighbor.deco
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("neighbors")
@@ -31,7 +31,7 @@ export class NeighborsController {
   @Post("users/:userNo/neighbor")
   @UseGuards(AccessTokenAuthGuard)
   createNeighbor(
-    @userNo() senderNo: number,
+    @UserNo() senderNo: number,
     @Param("userNo", ParsePositiveIntPipe) userNo: number,
   ) {
     return this.neighborsService.createNeighbor(senderNo, userNo);
@@ -41,7 +41,7 @@ export class NeighborsController {
   @Get("users/my/neighbors")
   @UseGuards(AccessTokenAuthGuard)
   getMyNeighbors(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Query() query: NeighborsPaginationDto,
   ) {
     return this.neighborsService.getMyNeighbors(userNo, query);
@@ -51,7 +51,7 @@ export class NeighborsController {
   @Patch("users/by/neighbors/:neighborNo")
   @UseGuards(AccessTokenAuthGuard)
   updateNeighbor(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("neighborNo", ParsePositiveIntPipe) neighborNo: number,
     @Body()
     body: UpdateNeighborDto,
@@ -64,7 +64,7 @@ export class NeighborsController {
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
   deleteNeighborRelationAndRequest(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("neighborNo", ParsePositiveIntPipe) neighborNo: number,
   ) {
     return this.neighborsService.deleteNeighborRelationAndRequest(

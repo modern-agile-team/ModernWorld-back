@@ -6,7 +6,7 @@ import { ApiUpdateUserAchievementStatus } from "./userAchievements-swagger/updat
 import { ApiGetUserAchievements } from "./userAchievements-swagger/get-user-achievements.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller("users/my/achievements")
 @ApiTags("UserAchievements")
@@ -18,7 +18,7 @@ export class UserAchievementsController {
   @Get()
   @ApiGetUserAchievements()
   @UseGuards(AccessTokenAuthGuard)
-  getUserAchievements(@userNo() userNo: number) {
+  getUserAchievements(@UserNo() userNo: number) {
     return this.userAchievementsService.getUserAchievements(userNo);
   }
 
@@ -26,7 +26,7 @@ export class UserAchievementsController {
   @ApiUpdateUserAchievementStatus()
   @UseGuards(AccessTokenAuthGuard)
   updateUserAchievementStatus(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("achievementNo", ParsePositiveIntPipe) achievementNo: number,
     @Body()
     body: updateUserAchievementStatusDto,

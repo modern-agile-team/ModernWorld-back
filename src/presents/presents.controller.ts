@@ -22,7 +22,7 @@ import { ApiUpdatePresentStatus } from "./presents-swagger/update-present-status
 import { ApiDeleteOnePresent } from "./presents-swagger/delete-one-present.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("Presents")
@@ -33,7 +33,7 @@ export class PresentsController {
   @ApiGetUserPresents()
   @UseGuards(AccessTokenAuthGuard)
   getUserPresents(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Query()
     query: GetUserPresentsDto,
   ) {
@@ -44,7 +44,7 @@ export class PresentsController {
   @ApiGetUserOnePresent()
   @UseGuards(AccessTokenAuthGuard)
   getUserOnePresent(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
   ) {
     return this.presentsService.getUserOnePresent(userNo, presentNo);
@@ -54,7 +54,7 @@ export class PresentsController {
   @ApiCreateOnePresent()
   @UseGuards(AccessTokenAuthGuard)
   createOnePresent(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body() body: ItemNoDto,
   ) {
@@ -65,7 +65,7 @@ export class PresentsController {
   @ApiUpdatePresentStatus()
   @UseGuards(AccessTokenAuthGuard)
   updatePresentStatus(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
     @Body()
     body: PresentAcceptRejectDto,
@@ -82,7 +82,7 @@ export class PresentsController {
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
   deleteOnePresent(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
   ) {
     return this.presentsService.updateOnePresentToDelete(userNo, presentNo);

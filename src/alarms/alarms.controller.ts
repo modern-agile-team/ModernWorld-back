@@ -16,7 +16,7 @@ import { ApiUpdateAlarmStatusToRead } from "./alarms-swagger/update-alarm-status
 import { ApiDeleteOneAlarm } from "./alarms-swagger/delete-one-alarm.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller("users/my/alarms")
 @ApiTags("Alarms")
@@ -26,7 +26,7 @@ export class AlarmsController {
   @Get()
   @ApiGetAlarms()
   @UseGuards(AccessTokenAuthGuard)
-  getAlarms(@userNo() userNo: number, @Query() query: PaginationDto) {
+  getAlarms(@UserNo() userNo: number, @Query() query: PaginationDto) {
     return this.alarmsService.getAlarms(userNo, query);
   }
 
@@ -34,7 +34,7 @@ export class AlarmsController {
   @ApiUpdateAlarmStatusToRead()
   @UseGuards(AccessTokenAuthGuard)
   updateAlarmStatusToRead(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("alarmNo", ParsePositiveIntPipe) alarmNo: number,
   ) {
     return this.alarmsService.updateAlarmStatusToTrue(alarmNo, userNo);
@@ -45,7 +45,7 @@ export class AlarmsController {
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
   deleteOneAlarm(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("alarmNo", ParsePositiveIntPipe) alarmNo: number,
   ) {
     return this.alarmsService.deleteOneAlarm(userNo, alarmNo);

@@ -25,7 +25,7 @@ import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("Comments & Replies")
@@ -36,7 +36,7 @@ export class CommentController {
   @Post("users/:userNo/comments")
   @UseGuards(AccessTokenAuthGuard)
   createOneComment(
-    @userNo() senderNo: number,
+    @UserNo() senderNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body() body: CommentContentDto,
   ) {
@@ -57,7 +57,7 @@ export class CommentController {
   @ApiUpdateComment()
   @UseGuards(AccessTokenAuthGuard)
   updatOneComment(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() body: CommentContentDto,
   ) {
@@ -69,7 +69,7 @@ export class CommentController {
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
   softDeleteOneComment(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
   ) {
     return this.commentService.softDeleteOneComment(userNo, commentNo);
@@ -79,7 +79,7 @@ export class CommentController {
   @ApiCreateOneReply()
   @UseGuards(AccessTokenAuthGuard)
   createOneReply(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Body() body: CommentContentDto,
   ) {
@@ -100,7 +100,7 @@ export class CommentController {
   @ApiUpdateOneReply()
   @UseGuards(AccessTokenAuthGuard)
   updateOneReply(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
     @Body() body: CommentContentDto,
@@ -113,7 +113,7 @@ export class CommentController {
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
   softDeleteOneReply(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Param("replyNo", ParsePositiveIntPipe) replyNo: number,
   ) {

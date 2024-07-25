@@ -17,7 +17,7 @@ import { ApiCreateUserOneCharacter } from "./characterLockers-swagger/create-use
 import { ApiUpdateUserCharacter } from "./characterLockers-swagger/update-user-character.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("CharacterLockers")
@@ -40,7 +40,7 @@ export class CharacterLockersController {
   @ApiCreateUserOneCharacter()
   @UseGuards(AccessTokenAuthGuard)
   createUserOneCharacter(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Body() body: CharacterNoDto,
   ) {
     return this.characterLockerService.createUserOneCharacter(userNo, body);
@@ -50,7 +50,7 @@ export class CharacterLockersController {
   @ApiUpdateUserCharacter()
   @UseGuards(AccessTokenAuthGuard)
   updateCharacterStatus(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("characterNo", ParsePositiveIntPipe) characterNo: number,
   ) {
     return this.characterLockerService.updateCharacterStatus(

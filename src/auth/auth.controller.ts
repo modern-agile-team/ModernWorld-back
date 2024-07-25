@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./services/auth.service";
 import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from "./jwt/jwt.guard";
-import { userNo } from "./auth.decorator";
+import { UserNo } from "./auth.decorator";
 import { TokenService } from "./services/token.service";
 import { ApiNaverLogin } from "./swagger-decorators/naver-login-decorator";
 import { ApiKakaoLogin } from "./swagger-decorators/kakao-login-decorator";
@@ -47,7 +47,7 @@ export class AuthController {
   @ApiNewAccessToken()
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
-  async newAccessToken(@userNo() userNo: number) {
+  async newAccessToken(@UserNo() userNo: number) {
     return await this.tokenService.createNewAccessToken(userNo);
   }
 }

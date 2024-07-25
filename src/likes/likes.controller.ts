@@ -14,7 +14,7 @@ import { ApiDeleteLike } from "./likes-swagger/delete-like.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { ApiFindOneLike } from "./likes-swagger/find-one-like.decorator";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("Likes")
@@ -25,7 +25,7 @@ export class LikesController {
   @ApiCreateLike()
   @UseGuards(AccessTokenAuthGuard)
   createOneLike(
-    @userNo() senderNo: number,
+    @UserNo() senderNo: number,
     @Param("userNo", ParsePositiveIntPipe)
     receiverNo: number,
   ) {
@@ -37,7 +37,7 @@ export class LikesController {
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
   deleteOneLike(
-    @userNo() senderNo: number,
+    @UserNo() senderNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
   ) {
     return this.likesService.deleteOneLike(senderNo, receiverNo);
@@ -47,7 +47,7 @@ export class LikesController {
   @ApiFindOneLike()
   @UseGuards(AccessTokenAuthGuard)
   findOneLike(
-    @userNo() senderNo: number,
+    @UserNo() senderNo: number,
     @Param("receiverNo", ParsePositiveIntPipe) receiverNo: number,
   ) {
     return this.likesService.findOneLike(senderNo, receiverNo);

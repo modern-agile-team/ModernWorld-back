@@ -22,7 +22,7 @@ import { ApiCreateUserNickname } from "./users-swagger/create-user-nickname.deco
 import { ApiUpdateUserDescription } from "./users-swagger/update-user-description.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller("users")
 @ApiTags("Users")
@@ -32,7 +32,7 @@ export class UsersController {
   @Get("my/attendance")
   @ApiGetUserAttendance()
   @UseGuards(AccessTokenAuthGuard)
-  getOneUserAttendance(@userNo() userNo: number) {
+  getOneUserAttendance(@UserNo() userNo: number) {
     return this.usersService.getUserAttendance(userNo);
   }
 
@@ -55,7 +55,7 @@ export class UsersController {
   @Patch("my/attendance")
   @ApiUpdateUserAttendance()
   @UseGuards(AccessTokenAuthGuard)
-  updateUserAttendance(@userNo() userNo: number) {
+  updateUserAttendance(@UserNo() userNo: number) {
     return this.usersService.updateUserAttendance(userNo);
   }
 
@@ -63,7 +63,7 @@ export class UsersController {
   @ApiCreateUserNickname()
   @UseGuards(AccessTokenAuthGuard)
   createUserNickname(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Body() body: UpdateUserNicknameDto,
   ) {
     return this.usersService.createUserNickname(userNo, body);
@@ -73,7 +73,7 @@ export class UsersController {
   @ApiUpdateUserDescription()
   @UseGuards(AccessTokenAuthGuard)
   updateUserDescription(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Body() body: UpdateUserDescriptionDto,
   ) {
     return this.usersService.updateUserDescription(userNo, body);

@@ -18,7 +18,7 @@ import { ApiUpdateUserItem } from "./inventory-swagger/update-user-item.decorato
 import { ItemNoDto } from "./dtos/item-no.dto";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { userNo } from "src/auth/auth.decorator";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("Inventory")
@@ -38,7 +38,7 @@ export class InventoryController {
   @Post("users/my/items")
   @ApiCreateUserItem()
   @UseGuards(AccessTokenAuthGuard)
-  createUserOneItem(@userNo() userNo: number, @Body() body: ItemNoDto) {
+  createUserOneItem(@UserNo() userNo: number, @Body() body: ItemNoDto) {
     return this.inventoryService.createUserOneItem(userNo, body);
   }
 
@@ -46,7 +46,7 @@ export class InventoryController {
   @ApiUpdateUserItem()
   @UseGuards(AccessTokenAuthGuard)
   updateItemStatus(
-    @userNo() userNo: number,
+    @UserNo() userNo: number,
     @Param("itemNo", ParsePositiveIntPipe) itemNo: number,
     @Body() body: UpdateUserItemStatusDto,
   ) {
