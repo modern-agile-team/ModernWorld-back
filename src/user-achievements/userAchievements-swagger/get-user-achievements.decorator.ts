@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -116,5 +117,7 @@ export function ApiGetUserAchievements() {
         },
       },
     }),
+
+    ApiBearerAuth("access-token"),
   );
 }
