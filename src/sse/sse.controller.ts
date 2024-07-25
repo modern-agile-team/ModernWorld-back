@@ -1,5 +1,5 @@
 import { Controller, Logger, MessageEvent, Param, Sse } from "@nestjs/common";
-import { Observable, map } from "rxjs";
+import { Observable, map, startWith } from "rxjs";
 import { SseService } from "./sse.service";
 
 @Controller("sse")
@@ -16,6 +16,7 @@ export class SseController {
     const notifications$ = this.sseService.getSubject(userNo);
 
     return notifications$.pipe(
+      startWith("Connected"),
       map((message) => {
         return { data: message };
       }),
