@@ -55,14 +55,14 @@ export class AuthController {
   @ApiKakaoLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("kakao/logout")
-  async kakaoLogout(@userNo() userNo: number) {
+  async kakaoLogout(@UserNo() userNo: number) {
     return await this.authService.kakaoLogout(userNo);
   }
 
   @ApiNaverLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("naver/logout")
-  async naverLogout(@userNo() userNo: number) {
+  async naverLogout(@UserNo() userNo: number) {
     return await this.authService.naverLogout(userNo);
   }
 }
