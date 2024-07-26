@@ -20,7 +20,7 @@ export class SseService {
     return this.notifications.get(userNo);
   }
 
-  sendSse(userNo: number, content: { data: string; url: string }) {
+  sendSse(userNo: number, content: { title: string; content: string }) {
     // subject 객체를 얻어서
     const subject = this.getSubject(`${userNo}`);
 

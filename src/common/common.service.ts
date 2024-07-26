@@ -80,7 +80,7 @@ export class CommonService {
           this.alarmsRepository.createOneAlarm(
             userNo,
             `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
-            "/users/my/achievements", // 해당 항목 반드시 유심히 볼것, 추후 변경 가능성 농후-------------------------------------------
+            "업적",
           ),
         ]);
       } catch (err) {
@@ -89,8 +89,8 @@ export class CommonService {
       }
 
       this.sseService.sendSse(userNo, {
-        data: `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
-        url: "/users/my/achievements",
+        title: "업적",
+        content: `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
       });
     }
   }
