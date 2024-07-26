@@ -5,9 +5,11 @@ import { CommentRepository } from "./comments.repository";
 import { UsersModule } from "src/users/users.module";
 import { CommonModule } from "src/common/common.module";
 import { LegendsModule } from "src/legends/legends.module";
+import { SseModule } from "src/sse/sse.module";
+import { AlarmsModule } from "src/alarms/alarms.module";
 
 @Module({
-  imports: [UsersModule, CommonModule, LegendsModule],
+  imports: [UsersModule, CommonModule, LegendsModule, SseModule, AlarmsModule],
   controllers: [CommentController],
   providers: [CommentService, CommentRepository],
 })

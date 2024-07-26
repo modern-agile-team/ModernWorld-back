@@ -18,6 +18,13 @@ export class CommentRepository {
 
   createOneComment(receiverNo: number, senderNo: number, content: string) {
     return this.prisma.comment.create({
+      select: {
+        no: true,
+        content: true,
+        createdAt: true,
+        commentReceiver: { select: { no: true, nickname: true } },
+        commentSender: { select: { no: true, nickname: true } },
+      },
       data: {
         receiverNo,
         senderNo,
