@@ -3,16 +3,10 @@ name: CD Pipeline Main
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
-    types:
-      - closed
 
 jobs:
   build:
     runs-on: main
-
-    if: github.event.pull_request.merged == true
 
     steps:
       - name: Delete Old docker container
