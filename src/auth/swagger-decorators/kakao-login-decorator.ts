@@ -15,7 +15,9 @@ export function ApiKakaoLogin() {
           example: {
             accessToken: "여기에 액세스 토큰",
             refreshToken: "여기에 리프레시 토큰",
-            newUser: "여기에 신규 유저 여부(false = 기존유저, true = 신규유저)",
+            nickName:
+              "여기에 닉네임(null이면 신규 유저거나 닉네임을 설정하지 않은 유저)",
+            userNo: "여기에 유저 번호",
           },
         },
       },

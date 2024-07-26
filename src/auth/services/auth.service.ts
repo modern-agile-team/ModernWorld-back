@@ -124,7 +124,12 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken, newUser: this.newUser };
+      return {
+        accessToken,
+        refreshToken,
+        nickName: user.nickname,
+        userNo: user.no,
+      };
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
@@ -240,7 +245,12 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken, newUser: this.newUser };
+      return {
+        accessToken,
+        refreshToken,
+        nickName: user.nickname,
+        userNo: user.no,
+      };
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
