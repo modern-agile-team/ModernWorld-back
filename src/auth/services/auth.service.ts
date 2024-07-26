@@ -279,15 +279,10 @@ export class AuthService {
       let socialAccessToken = socialTokens[0].socialAccess;
       const socialRefreshToken = socialTokens[0].socialRefresh;
 
-      const socialAccessTokenUserInfo = await axios.get(
-        "https://kapi.kakao.com/v1/user/access_token_info",
-        {
-          headers: {
-            Authorization: `Bearer ${socialAccessToken}`,
-          },
-        },
-      );
-      if (socialAccessTokenUserInfo.status === 401) {
+      const socialAccessTokenInfo =
+        await this.tokenService.kakaoSocialAccessTokenInfo(socialAccessToken);
+
+      if (socialAccessTokenInfo === 401) {
         const newKakaoAccessToken =
           await this.tokenService.createNewkakaoAccessToken(socialRefreshToken);
         socialAccessToken = newKakaoAccessToken.access_token;

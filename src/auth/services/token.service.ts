@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -43,28 +44,46 @@ export class TokenService {
   }
   async createNewkakaoAccessToken(socialRefreshToken: string) {
     try {
-      return (
-        await axios.post(
-          "https://kauth.kakao.com/oauth/token",
-          {
-            grant_type: "refresh_token",
-            client_id: this.configService.get<string>("KAKAO_CLIENT_ID"),
-            refresh_token: socialRefreshToken,
-            client_secret: this.configService.get<string>("KAKAO_CLIENT"),
-          },
-          {
-            headers: {
-              "Content-type":
-                "Content-type: application/x-www-form-urlencoded;charset=utf-8",
-            },
-          },
-        )
-      ).data;
+      const kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
+      const kakaoTokenHeader = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      };
+      const kakaoTokenData = {
+        grant_type: "refresh_token",
+        client_id: this.configService.get<string>("KAKAO_CLIENT_ID"),
+        refresh_token: socialRefreshToken,
+        client_secret: this.configService.get<string>("KAKAO_CLIENT_SECRET"),
+      };
+      return (await axios.post(kakaoTokenUrl, kakaoTokenData, kakaoTokenHeader))
+        .data;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
         "카카오 액세스 토큰 재발급 중 서버에러가 발생했습니다.",
       );
+    }
+  }
+
+  async kakaoSocialAccessTokenInfo(accessToken: string) {
+    try {
+      const kakaoUnlinkUrl = "https://kapi.kakao.com/v1/user/access_token_info";
+      const kakaoUnlinkHeader = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await axios.get(kakaoUnlinkUrl, kakaoUnlinkHeader);
+      return response.data;
+    } catch (error) {
+      if (error.response.data.code === -401) {
+        return 401;
+      } else {
+        this.logger.error(error);
+        throw new ForbiddenException("카카오 토큰 유효성 검사 오류");
+      }
     }
   }
 
