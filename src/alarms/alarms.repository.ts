@@ -16,7 +16,7 @@ export class AlarmsRepository {
     take: number,
     skip: number,
     orderBy: OrderBy,
-  ): PrismaPromise<alarm[]> {
+  ) {
     return this.prisma.alarm.findMany({
       where: { userNo },
       take,
@@ -25,26 +25,22 @@ export class AlarmsRepository {
     });
   }
 
-  findOneAlarm(alarmNo: number): PrismaPromise<alarm> {
+  findOneAlarm(alarmNo: number) {
     return this.prisma.alarm.findUnique({ where: { no: alarmNo } });
   }
 
-  createOneAlarm(
-    userNo: number,
-    content: string,
-    url: string,
-  ): PrismaPromise<alarm> {
-    return this.prisma.alarm.create({ data: { userNo, content, url } });
+  createOneAlarm(userNo: number, content: string, title?: string) {
+    return this.prisma.alarm.create({ data: { userNo, content, title } });
   }
 
-  updateAlarmStatusToTrue(alarmNo: number): PrismaPromise<alarm> {
+  updateAlarmStatusToTrue(alarmNo: number) {
     return this.prisma.alarm.update({
       data: { status: true },
       where: { no: alarmNo },
     });
   }
 
-  deleteOneAlarmByAlarmNo(alarmNo: number): PrismaPromise<alarm> {
+  deleteOneAlarmByAlarmNo(alarmNo: number) {
     return this.prisma.alarm.delete({ where: { no: alarmNo } });
   }
 }

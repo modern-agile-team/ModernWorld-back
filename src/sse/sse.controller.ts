@@ -34,8 +34,8 @@ export class SseController {
   @Post(":userNo")
   asdf(@Param("userNo", ParsePositiveIntPipe) userNo: number) {
     return this.sseService.sendSse(userNo, {
-      data: `${userNo}번 유저에게 보내는 sse`,
-      url: "test",
+      title: `test용 sse 이곳에는 알람의 제목(title)이 들어감`,
+      content: `${userNo}번 유저에게 보내는 sse`,
     });
   }
 }
