@@ -21,7 +21,6 @@ export class AuthService {
   private state: string;
   private userInfoUrl: string;
   private redirect_uri: string;
-  private newUser: boolean;
 
   constructor(
     private readonly usersRepository: UsersRepository,
@@ -41,7 +40,6 @@ export class AuthService {
       );
       this.code = authorizeCode;
       this.state = "test";
-      this.newUser = false;
 
       const token = (
         await axios.post(
@@ -93,7 +91,6 @@ export class AuthService {
           userInfo.response.profile_image,
           "naver",
         );
-        this.newUser = true;
       }
 
       const accessToken = this.tokenService.createAccessToken(user.no);
@@ -154,7 +151,6 @@ export class AuthService {
         "KAKAO_CLIENT_CALLBACK_URL",
       );
       this.code = authorizeCode;
-      this.newUser = false;
 
       const token = (
         await axios.post(
@@ -212,11 +208,8 @@ export class AuthService {
           userProperties.profile_image,
           "kakao",
         );
-        this.newUser = true;
       }
-      if (user.nickname === null) {
-        this.newUser = true;
-      }
+
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
 
@@ -320,6 +313,10 @@ export class AuthService {
       if (socialAccessTokenInfo === 401) {
         const newKakaoAccessToken =
           await this.tokenService.createNewkakaoAccessToken(socialRefreshToken);
+        await this.tokenRepository.updateAccessToken(
+          userNo,
+          newKakaoAccessToken.access_token,
+        );
         socialAccessToken = newKakaoAccessToken.access_token;
       }
 

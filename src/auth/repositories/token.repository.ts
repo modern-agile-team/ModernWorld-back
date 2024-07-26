@@ -35,6 +35,17 @@ export class TokenRepository {
     });
   }
 
+  async updateAccessToken(userNo: number, socialAccess: string) {
+    return this.prisma.token.updateMany({
+      where: {
+        userNo,
+      },
+      data: {
+        socialAccess,
+      },
+    });
+  }
+
   async updateTokens(
     userNo: number,
     socialAccess: string,
