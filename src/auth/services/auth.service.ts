@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
 import axios from "axios";
@@ -263,19 +264,37 @@ export class AuthService {
   }
   async naverLogout(userNo: number) {
     try {
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (!user) {
+        throw new NotFoundException("user not found");
+      }
+      if (user.domain !== "naver") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Naver.",
+        );
+      }
+
       await this.tokenRepository.deleteTokens(userNo);
+
       await this.tokenService.delRefreshToken(
         userNo.toString() + "-refreshToken",
       );
       await this.tokenService.delAccessToken(
         userNo.toString() + "-accessToken",
       );
+
       return { message: "네이버 로그아웃 성공" };
     } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException(
-        "로그아웃 중 서버에러가 발생했습니다.",
-      );
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그아웃 중 서버에러가 발생했습니다.",
+        );
+      }
     }
   }
 
@@ -283,7 +302,13 @@ export class AuthService {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (socialTokens[0] === undefined) {
-        throw new UnauthorizedException("로그아웃할 유저가 없습니다.");
+        throw new NotFoundException("user not found");
+      }
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (user.domain !== "kakao") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Kakao.",
+        );
       }
 
       let socialAccessToken = socialTokens[0].socialAccess;
@@ -316,10 +341,16 @@ export class AuthService {
         userNo.toString() + "-accessToken",
       );
     } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException(
-        "로그아웃 중 서버에러가 발생했습니다.",
-      );
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그아웃 중 서버에러가 발생했습니다.",
+        );
+      }
     }
     return { message: "카카오 로그아웃 성공" };
   }

@@ -78,6 +78,14 @@ export function ApiNaverLogout() {
               },
               description: "만료된 토큰인 경우",
             },
+            "You are not a user logged in with Naver": {
+              value: {
+                message: "You are not a user logged in with Naver.",
+                error: "Unauthorized",
+                statusCode: 401,
+              },
+              description: "네이버로 로그인한 유저가 아닌 경우",
+            },
             "jwt error": {
               value: {
                 message: "jwt error",
@@ -112,6 +120,14 @@ export function ApiNaverLogout() {
               },
               description:
                 "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
+            },
+            "user not found": {
+              value: {
+                message: "user not found",
+                error: "Not Found",
+                statusCode: 404,
+              },
+              description: "유저를 찾을 수 없는 경우",
             },
           },
         },

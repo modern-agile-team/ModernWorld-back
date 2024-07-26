@@ -24,7 +24,7 @@ export class LikesService {
   ) {}
 
   async createOneLike(senderNo: number, receiverNo: number) {
-    if (!(await this.usersRepository.findUserNicknameByUserNo(receiverNo)))
+    if (!(await this.usersRepository.findUserByUserNo(receiverNo)))
       throw new NotFoundException("User doesn't exist.");
 
     if (senderNo === receiverNo)

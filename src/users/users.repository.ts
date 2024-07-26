@@ -30,7 +30,7 @@ export class UsersRepository {
     });
   }
 
-  findUserNicknameByUserNo(no: number) {
+  findUserByUserNo(no: number) {
     return this.prisma.user.findUnique({
       where: { no },
     });
