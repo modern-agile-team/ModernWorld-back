@@ -38,7 +38,6 @@ export class AccessStrategy extends PassportStrategy(Strategy, "accessToken") {
     const tokenFromRedis = await this.tokenService.getAccessToken(
       payload.userNo + "-accessToken",
     );
-
     if (!tokenFromRedis) {
       throw new NotFoundException("Token not found.");
     }

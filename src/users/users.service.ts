@@ -108,7 +108,7 @@ export class UsersService {
 
   async createUserNickname(userNo: number, body: UpdateUserNicknameDto) {
     const { nickname: userName } =
-      await this.userRepository.findUserNicknameByUserNo(userNo);
+      await this.userRepository.findUserByUserNo(userNo);
 
     if (userName) {
       throw new ConflictException("User already has a nickname.");

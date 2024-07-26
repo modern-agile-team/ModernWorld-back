@@ -1,11 +1,10 @@
 import {
   BadRequestException,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
-  Req,
-  Res,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -17,6 +16,8 @@ import { ApiNaverLogin } from "./swagger-decorators/naver-login-decorator";
 import { ApiKakaoLogin } from "./swagger-decorators/kakao-login-decorator";
 import { ApiNewAccessToken } from "./swagger-decorators/new-access-token.decorator";
 import { CookieInterceptor } from "./interceptors/cookie.interceptor";
+import { ApiKakaoLogout } from "./swagger-decorators/kakao-logout-decorator";
+import { ApiNaverLogout } from "./swagger-decorators/naver-logout-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -49,5 +50,19 @@ export class AuthController {
   @Get("new-access-token")
   async newAccessToken(@UserNo() userNo: number) {
     return await this.tokenService.createNewAccessToken(userNo);
+  }
+
+  @ApiKakaoLogout()
+  @UseGuards(AccessTokenAuthGuard)
+  @Delete("kakao/logout")
+  async kakaoLogout(@userNo() userNo: number) {
+    return await this.authService.kakaoLogout(userNo);
+  }
+
+  @ApiNaverLogout()
+  @UseGuards(AccessTokenAuthGuard)
+  @Delete("naver/logout")
+  async naverLogout(@userNo() userNo: number) {
+    return await this.authService.naverLogout(userNo);
   }
 }

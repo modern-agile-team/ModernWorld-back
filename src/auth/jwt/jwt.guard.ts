@@ -55,6 +55,9 @@ export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
       }
       if (error.message === "Token not found.") {
         throw new NotFoundException(error.message);
+      }
+      if (error.message === "token is not matched.") {
+        throw new NotFoundException(error.message);
       } else {
         this.logger.error(error);
         throw new UnauthorizedException("jwt error");

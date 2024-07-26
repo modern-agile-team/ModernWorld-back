@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
 import axios from "axios";
@@ -20,7 +21,6 @@ export class AuthService {
   private state: string;
   private userInfoUrl: string;
   private redirect_uri: string;
-  private newUser: boolean;
 
   constructor(
     private readonly usersRepository: UsersRepository,
@@ -40,7 +40,6 @@ export class AuthService {
       );
       this.code = authorizeCode;
       this.state = "test";
-      this.newUser = false;
 
       const token = (
         await axios.post(
@@ -92,7 +91,6 @@ export class AuthService {
           userInfo.response.profile_image,
           "naver",
         );
-        this.newUser = true;
       }
 
       const accessToken = this.tokenService.createAccessToken(user.no);
@@ -124,7 +122,12 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken, newUser: this.newUser };
+      return {
+        accessToken,
+        refreshToken,
+        nickName: user.nickname,
+        userNo: user.no,
+      };
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
@@ -148,7 +151,6 @@ export class AuthService {
         "KAKAO_CLIENT_CALLBACK_URL",
       );
       this.code = authorizeCode;
-      this.newUser = false;
 
       const token = (
         await axios.post(
@@ -206,11 +208,8 @@ export class AuthService {
           userProperties.profile_image,
           "kakao",
         );
-        this.newUser = true;
       }
-      if (user.nickname === null) {
-        this.newUser = true;
-      }
+
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
 
@@ -240,7 +239,12 @@ export class AuthService {
         60 * 60 * 12, // 12시간
       );
 
-      return { accessToken, refreshToken, newUser: this.newUser };
+      return {
+        accessToken,
+        refreshToken,
+        nickName: user.nickname,
+        userNo: user.no,
+      };
     } catch (error) {
       this.logger.error(error);
       if (error.response) {
@@ -250,5 +254,101 @@ export class AuthService {
         "로그인 중 서버에러가 발생했습니다.",
       );
     }
+  }
+  async naverLogout(userNo: number) {
+    try {
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (!user) {
+        throw new NotFoundException("user not found");
+      }
+      if (user.domain !== "naver") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Naver.",
+        );
+      }
+
+      await this.tokenRepository.deleteTokens(userNo);
+
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+
+      return { message: "네이버 로그아웃 성공" };
+    } catch (error) {
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그아웃 중 서버에러가 발생했습니다.",
+        );
+      }
+    }
+  }
+
+  async kakaoLogout(userNo: number) {
+    try {
+      const socialTokens = await this.tokenRepository.findToken(userNo);
+      if (socialTokens[0] === undefined) {
+        throw new NotFoundException("user not found");
+      }
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (user.domain !== "kakao") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Kakao.",
+        );
+      }
+
+      let socialAccessToken = socialTokens[0].socialAccess;
+      const socialRefreshToken = socialTokens[0].socialRefresh;
+
+      const socialAccessTokenInfo =
+        await this.tokenService.kakaoSocialAccessTokenInfo(socialAccessToken);
+
+      if (socialAccessTokenInfo === 401) {
+        const newKakaoAccessToken =
+          await this.tokenService.createNewkakaoAccessToken(socialRefreshToken);
+        await this.tokenRepository.updateAccessToken(
+          userNo,
+          newKakaoAccessToken.access_token,
+        );
+        socialAccessToken = newKakaoAccessToken.access_token;
+      }
+
+      await axios.post(
+        "https://kapi.kakao.com/v1/user/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${socialAccessToken}`,
+          },
+        },
+      );
+
+      await this.tokenRepository.deleteTokens(userNo);
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+    } catch (error) {
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그아웃 중 서버에러가 발생했습니다.",
+        );
+      }
+    }
+    return { message: "카카오 로그아웃 성공" };
   }
 }

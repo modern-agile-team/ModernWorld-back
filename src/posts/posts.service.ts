@@ -80,8 +80,7 @@ export class PostsService {
       throw new ForbiddenException("Users cannot post themselves alone.");
     }
 
-    const user =
-      await this.usersRepository.findUserNicknameByUserNo(receiverNo);
+    const user = await this.usersRepository.findUserByUserNo(receiverNo);
 
     if (!user) {
       throw new NotFoundException("Couldn't find receiver.");

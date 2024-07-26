@@ -1,7 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { RedisService } from "../redis/redis.service";
+import axios from "axios";
 
 @Injectable()
 export class TokenService {
@@ -9,6 +15,7 @@ export class TokenService {
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
     private readonly configService: ConfigService,
+    private readonly logger: Logger,
   ) {}
 
   createAccessToken(userNo: number) {
@@ -35,6 +42,50 @@ export class TokenService {
 
     return { accessToken };
   }
+  async createNewkakaoAccessToken(socialRefreshToken: string) {
+    try {
+      const kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
+      const kakaoTokenHeader = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      };
+      const kakaoTokenData = {
+        grant_type: "refresh_token",
+        client_id: this.configService.get<string>("KAKAO_CLIENT_ID"),
+        refresh_token: socialRefreshToken,
+        client_secret: this.configService.get<string>("KAKAO_CLIENT_SECRET"),
+      };
+      return (await axios.post(kakaoTokenUrl, kakaoTokenData, kakaoTokenHeader))
+        .data;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        "카카오 액세스 토큰 재발급 중 서버에러가 발생했습니다.",
+      );
+    }
+  }
+
+  async kakaoSocialAccessTokenInfo(accessToken: string) {
+    try {
+      const kakaoUnlinkUrl = "https://kapi.kakao.com/v1/user/access_token_info";
+      const kakaoUnlinkHeader = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+
+      const response = await axios.get(kakaoUnlinkUrl, kakaoUnlinkHeader);
+      return response.data;
+    } catch (error) {
+      if (error.response.data.code === -401) {
+        return 401;
+      } else {
+        this.logger.error(error);
+        throw new ForbiddenException("카카오 토큰 유효성 검사 오류");
+      }
+    }
+  }
 
   setRefreshToken(userNo: string, refreshToken: string, ttl: number) {
     return this.redisService.setToken(userNo, refreshToken, ttl);
@@ -50,5 +101,13 @@ export class TokenService {
 
   getAccessToken(userNo: string) {
     return this.redisService.getToken(userNo);
+  }
+
+  delRefreshToken(userNo: string) {
+    return this.redisService.delToken(userNo);
+  }
+
+  delAccessToken(userNo: string) {
+    return this.redisService.delToken(userNo);
   }
 }

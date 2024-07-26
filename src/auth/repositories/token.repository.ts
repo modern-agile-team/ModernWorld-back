@@ -27,6 +27,25 @@ export class TokenRepository {
     });
   }
 
+  async deleteTokens(userNo: number) {
+    return this.prisma.token.deleteMany({
+      where: {
+        userNo,
+      },
+    });
+  }
+
+  async updateAccessToken(userNo: number, socialAccess: string) {
+    return this.prisma.token.updateMany({
+      where: {
+        userNo,
+      },
+      data: {
+        socialAccess,
+      },
+    });
+  }
+
   async updateTokens(
     userNo: number,
     socialAccess: string,

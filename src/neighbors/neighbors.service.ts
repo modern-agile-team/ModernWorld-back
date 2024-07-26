@@ -29,7 +29,7 @@ export class NeighborsService {
     if (receiverNo === senderNo) {
       throw new ForbiddenException("Users cannot neighbor themselves alone.");
     }
-    const user = await this.userRepository.findUserNicknameByUserNo(receiverNo);
+    const user = await this.userRepository.findUserByUserNo(receiverNo);
     if (!user) {
       throw new NotFoundException(
         "Can't find anyone to receive neighbor requests.",
