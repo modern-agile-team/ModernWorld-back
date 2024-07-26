@@ -1,9 +1,11 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
 } from "@nestjs/swagger";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 
 export function ApiGetUserAttendance() {
   return applyDecorators(
@@ -39,5 +41,7 @@ export function ApiGetUserAttendance() {
         },
       },
     }),
+
+    ApiBearerAuth("access-token"),
   );
 }

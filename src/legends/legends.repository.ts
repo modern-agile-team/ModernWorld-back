@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, legend } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateLegendCount } from "./interfaces/update-legend-count.interface";
 
@@ -7,14 +6,18 @@ import { UpdateLegendCount } from "./interfaces/update-legend-count.interface";
 export class LegendsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getAllLegendsByUserNo(userNo: number): PrismaPromise<legend> {
+  createUserLegend(userNo: number) {
+    return this.prisma.legend.create({ data: { userNo } });
+  }
+
+  getAllLegendsByUserNo(userNo: number) {
     return this.prisma.legend.findUnique({ where: { userNo } });
   }
 
   updateOneLegendByUserNo<T extends keyof UpdateLegendCount>(
     userNo: number,
     data: Pick<UpdateLegendCount, T>,
-  ): PrismaPromise<legend> {
+  ) {
     return this.prisma.legend.update({
       data,
       where: { userNo },

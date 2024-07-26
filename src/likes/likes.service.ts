@@ -34,7 +34,7 @@ export class LikesService {
       throw new ConflictException("This like already exist.");
 
     try {
-      const [, result] = await this.prisma.$transaction([
+      const [result] = await this.prisma.$transaction([
         this.likesRepository.createOneLike(senderNo, receiverNo),
         this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: { increment: 1 },
@@ -56,7 +56,7 @@ export class LikesService {
     if (!no) throw new NotFoundException("This like doesn't exist.");
 
     try {
-      const [, result] = await this.prisma.$transaction([
+      const [result] = await this.prisma.$transaction([
         this.likesRepository.deleteOneLike(no),
         this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: {

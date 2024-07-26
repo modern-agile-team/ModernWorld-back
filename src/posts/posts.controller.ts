@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { PostContentDto } from "./dtos/post-content.dto";
@@ -17,50 +18,57 @@ import { GetPostsDto } from "./dtos/get-posts.dto";
 import { ApiGetPosts } from "./posts-swagger/get-posts.decorator";
 import { ApiGetOnePost } from "./posts-swagger/get-one-post.decorator";
 import { ApiDeleteOnePost } from "./posts-swagger/delete-one-post.decorator";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
+import { UserNo } from "src/auth/auth.decorator";
 
 //해당 로직은 Presents와 동일한 부분이 많음. 해당 부분 참고할것
 @Controller()
 @ApiTags("Posts")
+@UseGuards(AccessTokenAuthGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get("users/my/posts")
   @ApiGetPosts()
+  @UseGuards(AccessTokenAuthGuard)
   getPosts(
+    @UserNo() userNo: number,
     @Query()
     query: GetPostsDto,
   ) {
-    const userNo = 1;
-
     return this.postsService.getUserPosts(userNo, query);
   }
 
   @Get("users/my/posts/:postNo")
   @ApiGetOnePost()
-  getOnePost(@Param("postNo", ParsePositiveIntPipe) postNo: number) {
-    const userNo = 1;
-
+  @UseGuards(AccessTokenAuthGuard)
+  getOnePost(
+    @UserNo() userNo: number,
+    @Param("postNo", ParsePositiveIntPipe) postNo: number,
+  ) {
     return this.postsService.getOnePostByUserNo(userNo, postNo);
   }
 
   @Post("users/:userNo/posts")
   @ApiCreateOnePost()
+  @UseGuards(AccessTokenAuthGuard)
   createOnePost(
+    @UserNo() userNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body()
     body: PostContentDto,
   ) {
-    const tokenUserNo = 1;
-
-    return this.postsService.createOnePost(tokenUserNo, receiverNo, body);
+    return this.postsService.createOnePost(userNo, receiverNo, body);
   }
 
   @Delete("users/my/posts/:postNo")
   @ApiDeleteOnePost()
   @HttpCode(204)
-  deleteOnePost(@Param("postNo", ParsePositiveIntPipe) postNo: number) {
-    const userNo = 1;
-
+  @UseGuards(AccessTokenAuthGuard)
+  deleteOnePost(
+    @UserNo() userNo: number,
+    @Param("postNo", ParsePositiveIntPipe) postNo: number,
+  ) {
     return this.postsService.updateOnePostToDelete(userNo, postNo);
   }
 }

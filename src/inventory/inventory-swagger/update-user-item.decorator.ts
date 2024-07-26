@@ -1,6 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -95,5 +96,7 @@ export function ApiUpdateUserItem() {
         },
       },
     }),
+
+    ApiBearerAuth("access-token"),
   );
 }
