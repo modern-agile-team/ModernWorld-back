@@ -2,6 +2,8 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { PostsRepository } from "./posts.repositroy";
@@ -9,12 +11,18 @@ import { PostContentDto } from "./dtos/post-content.dto";
 import { UsersRepository } from "src/users/users.repository";
 import { GetOnePostResponseDto } from "./dtos/get-one-post-response.dto";
 import { GetPostsDto } from "./dtos/get-posts.dto";
+import { PrismaClient } from "@prisma/client";
+import { SseService } from "src/sse/sse.service";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly postsRepository: PostsRepository,
     private readonly usersRepository: UsersRepository,
+    private readonly prisma: PrismaService,
+    private readonly sseService: SseService,
+    private readonly logger: Logger,
   ) {}
 
   getUserPosts(userNo: number, query: GetPostsDto) {
@@ -86,7 +94,43 @@ export class PostsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    return this.postsRepository.createOnePost(senderNo, receiverNo, content);
+    try {
+      const post = await this.prisma.$transaction(async (tx) => {
+        const post = await tx.post.create({
+          select: {
+            no: true,
+            content: true,
+            createdAt: true,
+            check: true,
+            senderDelete: true,
+            receiverDelete: true,
+            userPostSenderNo: { select: { no: true, nickname: true } },
+            userPostReceiverNo: { select: { no: true, nickname: true } },
+          },
+          data: { senderNo, receiverNo, content },
+        });
+
+        await tx.alarm.create({
+          data: {
+            content: `${post.userPostSenderNo.nickname}님께서 쪽지를 보냈습니다.`,
+            title: "쪽지",
+            userNo: receiverNo,
+          },
+        });
+
+        return post;
+      });
+
+      this.sseService.sendSse(receiverNo, {
+        title: "쪽지",
+        content: `${post.userPostSenderNo.nickname}남께서 쪽지를 보냈습니다.`,
+      });
+
+      return post;
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 
   async updateOnePostToDelete(userNo: number, postNo: number) {
