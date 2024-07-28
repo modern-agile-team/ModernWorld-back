@@ -1,12 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, post } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class PostsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOnePost(postNo: number): PrismaPromise<post> {
+  getOnePost(postNo: number) {
     return this.prisma.post.findUnique({ where: { no: postNo } });
   }
 
@@ -40,10 +39,6 @@ export class PostsRepository {
     });
   }
 
-  createOnePost(senderNo: number, receiverNo: number, content: string) {
-    return this.prisma.post.create({ data: { senderNo, receiverNo, content } });
-  }
-
   updateOnePostCheckToTrue(postNo: number) {
     return this.prisma.post.update({
       select: {
@@ -64,7 +59,7 @@ export class PostsRepository {
   updateOnePostToDeleteByUser(
     no: number,
     senderReceiverDeleteField: "senderDelete" | "receiverDelete",
-  ): PrismaPromise<post> {
+  ) {
     return this.prisma.post.update({
       data: { [senderReceiverDeleteField]: true },
       where: { no },
