@@ -27,14 +27,20 @@ export function ApiCreateOnePost() {
       content: {
         JSON: {
           example: {
-            no: 8,
-            senderNo: 1,
-            receiverNo: 2,
+            no: 19,
             content: "김뿡우",
-            createdAt: "2024-07-14T11:50:55.000Z",
+            createdAt: "2024-07-28T09:39:52.000Z",
             check: false,
             senderDelete: false,
             receiverDelete: false,
+            userPostSenderNo: {
+              no: 31,
+              nickname: "쌉악질",
+            },
+            userPostReceiverNo: {
+              no: 1,
+              nickname: "1",
+            },
           },
         },
       },
