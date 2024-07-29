@@ -11,6 +11,8 @@ import { UsersRepository } from "src/users/users.repository";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CommonService } from "src/common/common.service";
+import { SseService } from "src/sse/sse.service";
+import { AlarmsRepository } from "src/alarms/alarms.repository";
 
 @Injectable()
 export class LikesService {
@@ -21,6 +23,8 @@ export class LikesService {
     private readonly usersRepository: UsersRepository,
     private readonly legendsRepository: LegendsRepository,
     private readonly commonService: CommonService,
+    private readonly sseService: SseService,
+    private readonly alarmsRepository: AlarmsRepository,
   ) {}
 
   async createOneLike(senderNo: number, receiverNo: number) {
@@ -33,17 +37,33 @@ export class LikesService {
     if (await this.likesRepository.findOneLike(senderNo, receiverNo))
       throw new ConflictException("This like already exist.");
 
+    let like;
+
     try {
-      const [result] = await this.prisma.$transaction([
-        this.likesRepository.createOneLike(senderNo, receiverNo),
-        this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
+      const alarm = await this.prisma.$transaction(async (tx) => {
+        like = await this.likesRepository.createOneLike(senderNo, receiverNo);
+
+        await this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: { increment: 1 },
-        }),
-      ]);
+        });
+
+        await this.alarmsRepository.createOneAlarm(
+          receiverNo,
+          `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
+          `좋아요`,
+        );
+
+        return like;
+      });
+
+      this.sseService.sendSse(receiverNo, {
+        title: "좋아요",
+        content: `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
+      });
 
       this.commonService.checkAchievementCondition(receiverNo, "likeCount");
 
-      return result;
+      return alarm;
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();

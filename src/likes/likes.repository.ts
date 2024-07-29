@@ -10,7 +10,14 @@ export class LikesRepository {
   }
 
   createOneLike(senderNo: number, receiverNo: number) {
-    return this.prisma.like.create({ data: { senderNo, receiverNo } });
+    return this.prisma.like.create({
+      select: {
+        no: true,
+        userLikeSenderNo: { select: { no: true, nickname: true } },
+        userLikeReceiverNo: { select: { no: true, nickname: true } },
+      },
+      data: { senderNo, receiverNo },
+    });
   }
 
   deleteOneLike(no: number) {
