@@ -13,6 +13,7 @@ import { Prisma, UserDomain } from "@prisma/client";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { UpdateUserAttendanceDto } from "./dtos/update-user-attendance.dto";
 
 @Injectable()
 export class UsersService {
@@ -48,7 +49,7 @@ export class UsersService {
     return this.userRepository.getUserAttendance(userNo);
   }
 
-  async updateUserAttendance(userNo: number) {
+  async updateUserAttendance(userNo: number, body: UpdateUserAttendanceDto) {
     /**
      * 일주일 출석부 가져와서 월, 화, 수, 목, 금, 토, 일
      * 즉, 요일에 따라 출석부가 갱신되어야함, 근데 한국시간 기준으로 만들어야함
@@ -64,24 +65,20 @@ export class UsersService {
      * 안돼있다면 출석체크 하고 포인트 얻음 (트랜잭션으로 묶음)ㅇ
      * 끝
      * */
-    /** 출석부의 형식은 다음과 같다. Json형태임
-     * {"0": [false, 100], "1": [false, 200], "2": [false, 300], "3": [false, 200], "4": [false, 400], "5": [true, 300], "6": [false, 300]}
-     *
-     * true가 출석했다는 의미, 그 뒤의 수는 출석했을 시 얻을 포인트
-     */
+
+    const { stickerNo } = body;
 
     const offset = 1000 * 60 * 60 * 9;
     const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms) 한국시각 반환함
     const day = today.getUTCDay(); //getDay()는 현재 로컬환경시각인 +9를 더해주는 바람에 안됨(뇌피셜)
 
-    let attendance = (await this.userRepository.getUserAttendance(userNo))
-      .attendance;
+    const { attendance } = await this.userRepository.getUserAttendance(userNo);
 
     if (attendance[day][0]) {
       throw new ConflictException("already attended");
     }
 
-    attendance[day][0] = true;
+    attendance[day][0] = stickerNo;
 
     try {
       const [userAttendance] = await this.prisma.$transaction([
