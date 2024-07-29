@@ -107,7 +107,7 @@ export class PostsService {
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          `${post.userPostSenderNo.nickname}남께서 쪽지를 보냈습니다.`,
+          `${post.userPostSenderNo.nickname}님께서 쪽지를 보냈습니다.`,
           "쪽지",
         );
 
@@ -116,7 +116,7 @@ export class PostsService {
 
       this.sseService.sendSse(receiverNo, {
         title: "쪽지",
-        content: `${post.userPostSenderNo.nickname}남께서 쪽지를 보냈습니다.`,
+        content: `${post.userPostSenderNo.nickname}님께서 쪽지를 보냈습니다.`,
       });
 
       return post;
