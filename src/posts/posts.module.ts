@@ -4,9 +4,10 @@ import { PostsController } from "./posts.controller";
 import { PostsRepository } from "./posts.repositroy";
 import { UsersModule } from "src/users/users.module";
 import { SseModule } from "src/sse/sse.module";
+import { AlarmsModule } from "src/alarms/alarms.module";
 
 @Module({
-  imports: [UsersModule, SseModule],
+  imports: [UsersModule, SseModule, AlarmsModule],
   controllers: [PostsController],
   providers: [PostsService, PostsRepository],
 })

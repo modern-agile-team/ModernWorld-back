@@ -14,6 +14,7 @@ import { GetPostsDto } from "./dtos/get-posts.dto";
 import { PrismaClient } from "@prisma/client";
 import { SseService } from "src/sse/sse.service";
 import { PrismaService } from "src/prisma/prisma.service";
+import { AlarmsRepository } from "src/alarms/alarms.repository";
 
 @Injectable()
 export class PostsService {
@@ -23,6 +24,7 @@ export class PostsService {
     private readonly prisma: PrismaService,
     private readonly sseService: SseService,
     private readonly logger: Logger,
+    private readonly alarmsRepository: AlarmsRepository,
   ) {}
 
   getUserPosts(userNo: number, query: GetPostsDto) {
@@ -96,27 +98,18 @@ export class PostsService {
 
     try {
       const post = await this.prisma.$transaction(async (tx) => {
-        const post = await tx.post.create({
-          select: {
-            no: true,
-            content: true,
-            createdAt: true,
-            check: true,
-            senderDelete: true,
-            receiverDelete: true,
-            userPostSenderNo: { select: { no: true, nickname: true } },
-            userPostReceiverNo: { select: { no: true, nickname: true } },
-          },
-          data: { senderNo, receiverNo, content },
-        });
+        const post = await this.postsRepository.createOnePost(
+          senderNo,
+          receiverNo,
+          content,
+          tx,
+        );
 
-        await tx.alarm.create({
-          data: {
-            content: `${post.userPostSenderNo.nickname}님께서 쪽지를 보냈습니다.`,
-            title: "쪽지",
-            userNo: receiverNo,
-          },
-        });
+        await this.alarmsRepository.createOneAlarm(
+          receiverNo,
+          `${post.userPostSenderNo.nickname}남께서 쪽지를 보냈습니다.`,
+          "쪽지",
+        );
 
         return post;
       });
