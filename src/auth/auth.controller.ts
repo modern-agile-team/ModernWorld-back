@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { AuthService } from "./services/auth.service";
 import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from "./jwt/jwt.guard";
-import { userNo } from "./auth.decorator";
+import { UserNo } from "./auth.decorator";
 import { TokenService } from "./services/token.service";
 import { ApiNaverLogin } from "./swagger-decorators/naver-login-decorator";
 import { ApiKakaoLogin } from "./swagger-decorators/kakao-login-decorator";
@@ -18,6 +18,7 @@ import { ApiNewAccessToken } from "./swagger-decorators/new-access-token.decorat
 import { CookieInterceptor } from "./interceptors/cookie.interceptor";
 import { ApiKakaoLogout } from "./swagger-decorators/kakao-logout-decorator";
 import { ApiNaverLogout } from "./swagger-decorators/naver-logout-decorator";
+import { ApiKakaoUnlink } from "./swagger-decorators/kakao-unlink-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -48,21 +49,27 @@ export class AuthController {
   @ApiNewAccessToken()
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
-  async newAccessToken(@userNo() userNo: number) {
+  async newAccessToken(@UserNo() userNo: number) {
     return await this.tokenService.createNewAccessToken(userNo);
   }
 
   @ApiKakaoLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("kakao/logout")
-  async kakaoLogout(@userNo() userNo: number) {
+  async kakaoLogout(@UserNo() userNo: number) {
     return await this.authService.kakaoLogout(userNo);
   }
 
   @ApiNaverLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("naver/logout")
-  async naverLogout(@userNo() userNo: number) {
+  async naverLogout(@UserNo() userNo: number) {
     return await this.authService.naverLogout(userNo);
+  }
+  @ApiKakaoUnlink()
+  @UseGuards(AccessTokenAuthGuard)
+  @Delete("kakao/unlink")
+  async kakaoUnlink(@UserNo() userNo: number) {
+    return await this.authService.kakaoUnlink(userNo);
   }
 }
