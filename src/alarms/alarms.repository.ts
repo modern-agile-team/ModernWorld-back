@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaPromise, alarm } from "@prisma/client";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class AlarmsRepository {
@@ -29,8 +30,15 @@ export class AlarmsRepository {
     return this.prisma.alarm.findUnique({ where: { no: alarmNo } });
   }
 
-  createOneAlarm(userNo: number, content: string, title?: string) {
-    return this.prisma.alarm.create({ data: { userNo, content, title } });
+  createOneAlarm(
+    userNo: number,
+    content: string,
+    title?: string,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).alarm.create({
+      data: { userNo, content, title },
+    });
   }
 
   updateAlarmStatusToTrue(alarmNo: number) {
