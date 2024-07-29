@@ -112,6 +112,7 @@ export class PostsService {
           receiverNo,
           `${post.userPostSenderNo.nickname}님께서 쪽지를 보냈습니다.`,
           "쪽지",
+          tx,
         );
 
         return post;
