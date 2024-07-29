@@ -18,13 +18,16 @@ export function ApiGetUserAttendance() {
       content: {
         JSON: {
           example: {
-            "0": [false, 100],
-            "1": [false, 200],
-            "2": [false, 300],
-            "3": [false, 200],
-            "4": [false, 400],
-            "5": [false, 300],
-            "6": [false, 300],
+            nickname: "쌉악질",
+            attendance: {
+              "0": [0, 100],
+              "1": [2, 200],
+              "2": [0, 300],
+              "3": [0, 200],
+              "4": [0, 400],
+              "5": [7, 300],
+              "6": [0, 300],
+            },
           },
         },
       },
