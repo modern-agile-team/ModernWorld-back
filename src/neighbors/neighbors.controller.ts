@@ -48,7 +48,7 @@ export class NeighborsController {
   }
 
   @ApiUpdateNeighbor()
-  @Patch("users/by/neighbors/:neighborNo")
+  @Patch("users/my/neighbors/:neighborNo")
   @UseGuards(AccessTokenAuthGuard)
   updateNeighbor(
     @UserNo() userNo: number,
