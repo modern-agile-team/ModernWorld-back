@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Logger,
   MessageEvent,
@@ -9,6 +10,7 @@ import {
 import { Observable, map, startWith } from "rxjs";
 import { SseService } from "./sse.service";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { ApiBody } from "@nestjs/swagger";
 
 @Controller("sse")
 export class SseController {
@@ -32,10 +34,24 @@ export class SseController {
   }
 
   @Post(":userNo")
-  asdf(@Param("userNo", ParsePositiveIntPipe) userNo: number) {
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        content: {
+          type: "string",
+          default: "김뿡뿡",
+        },
+      },
+    },
+  })
+  asdf(
+    @Param("userNo", ParsePositiveIntPipe) userNo: number,
+    @Body("content") content: string,
+  ) {
     return this.sseService.sendSse(userNo, {
-      title: `test용 sse 이곳에는 알람의 제목(title)이 들어감`,
-      content: `${userNo}번 유저에게 보내는 sse`,
+      title: `${userNo}번 김뿡우`,
+      content: content,
     });
   }
 }
