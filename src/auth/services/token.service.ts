@@ -52,10 +52,11 @@ export class TokenService {
         client_secret: this.configService.get<string>("NAVER_CLIENT_SECRET"),
         refresh_token: socialRefreshToken,
       };
-      return (await axios.get(naverTokenUrl, {
-        params: naverTokenData,
-      })).data;
-
+      return (
+        await axios.get(naverTokenUrl, {
+          params: naverTokenData,
+        })
+      ).data;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
@@ -97,7 +98,6 @@ export class TokenService {
         },
       };
       const response = await axios.get(naverTokenInfoUrl, naverTokenInfoHeader);
-      // console.log(response);
       return response.data;
     } catch (error) {
       if (error.response.data.resultcode === "024") {

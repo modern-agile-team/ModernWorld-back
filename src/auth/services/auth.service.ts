@@ -97,6 +97,8 @@ export class AuthService {
         await this.legendsRepository.createUserLegend(user.no);
       }
 
+      await this.usersRepository.updateUserDeletedAt(user.no);
+
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
 
@@ -214,6 +216,8 @@ export class AuthService {
         );
         await this.legendsRepository.createUserLegend(user.no);
       }
+
+      await this.usersRepository.updateUserDeletedAt(user.no);
 
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
