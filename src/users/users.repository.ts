@@ -27,13 +27,13 @@ export class UsersRepository {
         image,
         domain,
         attendance: {
-          "0": [false, 100],
-          "1": [false, 200],
-          "2": [false, 300],
-          "3": [false, 200],
-          "4": [false, 400],
-          "5": [false, 300],
-          "6": [false, 300],
+          "0": [0, 100],
+          "1": [0, 200],
+          "2": [0, 300],
+          "3": [0, 200],
+          "4": [0, 400],
+          "5": [0, 300],
+          "6": [0, 300],
         },
       },
     });
@@ -102,13 +102,13 @@ export class UsersRepository {
     return this.prisma.user.updateMany({
       data: {
         attendance: {
-          "0": [false, 100],
-          "1": [false, 200],
-          "2": [false, 300],
-          "3": [false, 200],
-          "4": [false, 400],
-          "5": [false, 300],
-          "6": [false, 300],
+          "0": [0, 100],
+          "1": [0, 200],
+          "2": [0, 300],
+          "3": [0, 200],
+          "4": [0, 400],
+          "5": [0, 300],
+          "6": [0, 300],
         },
       },
     });

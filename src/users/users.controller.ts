@@ -23,6 +23,7 @@ import { ApiUpdateUserDescription } from "./users-swagger/update-user-descriptio
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { UpdateUserAttendanceDto } from "./dtos/update-user-attendance.dto";
 
 @Controller("users")
 @ApiTags("Users")
@@ -55,8 +56,11 @@ export class UsersController {
   @Patch("my/attendance")
   @ApiUpdateUserAttendance()
   @UseGuards(AccessTokenAuthGuard)
-  updateUserAttendance(@UserNo() userNo: number) {
-    return this.usersService.updateUserAttendance(userNo);
+  updateUserAttendance(
+    @UserNo() userNo: number,
+    @Body() body: UpdateUserAttendanceDto,
+  ) {
+    return this.usersService.updateUserAttendance(userNo, body);
   }
 
   @Post("my/nickname")
