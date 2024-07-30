@@ -11,6 +11,7 @@ import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
+import { LegendsRepository } from "src/legends/legends.repository";
 
 @Injectable()
 export class AuthService {
@@ -29,6 +30,7 @@ export class AuthService {
     private readonly tokenRepository: TokenRepository,
     private readonly logger: Logger,
     private readonly configService: ConfigService,
+    private readonly legendsRepository: LegendsRepository,
   ) {}
 
   async naverLogin(authorizeCode: string) {
@@ -92,6 +94,7 @@ export class AuthService {
           userInfo.response.profile_image,
           "naver",
         );
+        // await this.legendsRepository.
       }
 
       const accessToken = this.tokenService.createAccessToken(user.no);
@@ -351,6 +354,79 @@ export class AuthService {
       }
     }
     return { message: "카카오 로그아웃 성공" };
+  }
+
+  async naverUnlink(userNo: number) {
+    try {
+      const socialTokens = await this.tokenRepository.findToken(userNo);
+      if (socialTokens[0] === undefined) {
+        throw new NotFoundException("token not found");
+      }
+
+      let socialAccessToken = socialTokens[0].socialAccess;
+      const socialRefreshToken = socialTokens[0].socialRefresh;
+
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (!user) {
+        throw new NotFoundException("user not found");
+      }
+      if (user.domain !== "naver") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Naver.",
+        );
+      }
+      const socialAccessTokenInfo =
+        await this.tokenService.naverSocialAccessTokenInfo(socialAccessToken);
+
+      if (socialAccessTokenInfo === 401) {
+        const newNaverAccessToken =
+          await this.tokenService.createNewNaverAccessToken(socialRefreshToken);
+        await this.tokenRepository.updateAccessToken(
+          userNo,
+          newNaverAccessToken.access_token,
+        );
+        socialAccessToken = newNaverAccessToken.access_token;
+      }
+      const naverUnlinkUrl = "https://nid.naver.com/oauth2.0/token";
+      const naverUnlinkData = {
+        grant_type: "delete",
+        client_id: this.configService.get<string>("NAVER_CLIENT_ID"),
+        client_secret: this.configService.get<string>("NAVER_CLIENT_SECRET"),
+        access_token: socialAccessToken,
+      };
+      const userUnlink = (
+        await axios.get(naverUnlinkUrl, {
+          params: naverUnlinkData,
+        })
+      ).data;
+
+      if (userUnlink.result !== "success") {
+        throw new UnauthorizedException(userUnlink.error_description);
+      }
+
+      await this.tokenRepository.deleteTokens(userNo);
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+
+      await this.usersRepository.softDeleteUser(userNo);
+
+      return { message: "네이버 회원 탈퇴 성공" };
+    } catch (error) {
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "회원탈퇴 중 서버에러가 발생했습니다.",
+        );
+      }
+    }
   }
 
   async kakaoUnlink(userNo: number) {

@@ -42,6 +42,28 @@ export class TokenService {
 
     return { accessToken };
   }
+
+  async createNewNaverAccessToken(socialRefreshToken: string) {
+    try {
+      const naverTokenUrl = "https://nid.naver.com/oauth2.0/token";
+      const naverTokenData = {
+        grant_type: "refresh_token",
+        client_id: this.configService.get<string>("NAVER_CLIENT_ID"),
+        client_secret: this.configService.get<string>("NAVER_CLIENT_SECRET"),
+        refresh_token: socialRefreshToken,
+      };
+      return (await axios.get(naverTokenUrl, {
+        params: naverTokenData,
+      })).data;
+
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        "네이버 액세스 토큰 재발급 중 서버에러가 발생했습니다.",
+      );
+    }
+  }
+
   async createNewkakaoAccessToken(socialRefreshToken: string) {
     try {
       const kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
@@ -66,16 +88,38 @@ export class TokenService {
     }
   }
 
+  async naverSocialAccessTokenInfo(accessToken: string) {
+    try {
+      const naverTokenInfoUrl = "https://openapi.naver.com/v1/nid/me";
+      const naverTokenInfoHeader = {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+      const response = await axios.get(naverTokenInfoUrl, naverTokenInfoHeader);
+      // console.log(response);
+      return response.data;
+    } catch (error) {
+      if (error.response.data.resultcode === "024") {
+        return 401;
+      } else {
+        this.logger.error(error);
+        throw new ForbiddenException("네이버 토큰 유효성 검사 오류");
+      }
+    }
+  }
+
   async kakaoSocialAccessTokenInfo(accessToken: string) {
     try {
-      const kakaoUnlinkUrl = "https://kapi.kakao.com/v1/user/access_token_info";
-      const kakaoUnlinkHeader = {
+      const kakaoTokenInfoUrl =
+        "https://kapi.kakao.com/v1/user/access_token_info";
+      const kakaoTokenInfoHeader = {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       };
 
-      const response = await axios.get(kakaoUnlinkUrl, kakaoUnlinkHeader);
+      const response = await axios.get(kakaoTokenInfoUrl, kakaoTokenInfoHeader);
       return response.data;
     } catch (error) {
       if (error.response.data.code === -401) {
