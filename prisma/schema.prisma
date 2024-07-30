@@ -20,10 +20,10 @@ model achievement {
 model alarm {
   no        Int      @id @default(autoincrement()) @db.UnsignedInt
   userNo    Int      @map("user_no") @db.UnsignedInt
+  title     String   @default("기타") @db.VarChar(20)
   content   String   @db.VarChar(500)
   status    Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
-  url       String   @db.VarChar(300)
   user      user     @relation(fields: [userNo], onDelete: Cascade, references: [no])
 
   @@index([userNo], map: "user_no")

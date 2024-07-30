@@ -7,6 +7,7 @@ import {
   Patch,
   Put,
   Post,
+  UseGuards,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
@@ -20,6 +21,9 @@ import { ApiGetUserNamePointAchievementTitle } from "./users-swagger/get-user-na
 import { ApiCreateUserNickname } from "./users-swagger/create-user-nickname.decorator";
 import { ApiUpdateUserDescription } from "./users-swagger/update-user-description.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
+import { UserNo } from "src/auth/auth.decorator";
+import { UpdateUserAttendanceDto } from "./dtos/update-user-attendance.dto";
 
 @Controller("users")
 @ApiTags("Users")
@@ -28,20 +32,21 @@ export class UsersController {
 
   @Get("my/attendance")
   @ApiGetUserAttendance()
-  getOneUserAttendance() {
-    const userNo = 1;
-
+  @UseGuards(AccessTokenAuthGuard)
+  getOneUserAttendance(@UserNo() userNo: number) {
     return this.usersService.getUserAttendance(userNo);
   }
 
   @Get()
   @ApiGetUsers()
+  @UseGuards(AccessTokenAuthGuard)
   getUsers(@Query() query: GetUsersByAnimalDto) {
     return this.usersService.getUsers(query);
   }
 
   @Get(":userNo")
   @ApiGetUserNamePointAchievementTitle()
+  @UseGuards(AccessTokenAuthGuard)
   getUserNamePointAchievementTitle(
     @Param("userNo", ParsePositiveIntPipe) userNo: number,
   ) {
@@ -50,25 +55,31 @@ export class UsersController {
 
   @Patch("my/attendance")
   @ApiUpdateUserAttendance()
-  updateUserAttendance() {
-    const userNo = 1;
-
-    return this.usersService.updateUserAttendance(userNo);
+  @UseGuards(AccessTokenAuthGuard)
+  updateUserAttendance(
+    @UserNo() userNo: number,
+    @Body() body: UpdateUserAttendanceDto,
+  ) {
+    return this.usersService.updateUserAttendance(userNo, body);
   }
 
   @Post("my/nickname")
   @ApiCreateUserNickname()
-  createUserNickname(@Body() body: UpdateUserNicknameDto) {
-    const userNo = 1;
-
+  @UseGuards(AccessTokenAuthGuard)
+  createUserNickname(
+    @UserNo() userNo: number,
+    @Body() body: UpdateUserNicknameDto,
+  ) {
     return this.usersService.createUserNickname(userNo, body);
   }
 
   @Put("my/description")
   @ApiUpdateUserDescription()
-  updateUserDescription(@Body() body: UpdateUserDescriptionDto) {
-    const userNo = 1;
-
+  @UseGuards(AccessTokenAuthGuard)
+  updateUserDescription(
+    @UserNo() userNo: number,
+    @Body() body: UpdateUserDescriptionDto,
+  ) {
     return this.usersService.updateUserDescription(userNo, body);
   }
 }

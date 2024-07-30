@@ -19,7 +19,7 @@ const dailyOptions = (
       winstonFormat.uncolorize(),
       winstonFormat.printf((info) => {
         if (info.stack) {
-          return `${info.label} ${info.timestamp} ${info.level} : ${info.message} ${info.stack} \n Error: ${info.response?.data.error} \n Error_description: ${info.response?.data.error_description}\n Error_error_code: ${info.response?.data.error_code}`;
+          return `${info.label} ${info.timestamp} ${info.level} : ${info.message} ${info.stack} \n Error: ${info.response?.data?.error} \n Error_description: ${info.response?.data?.error_description}\n Error_error_code: ${info.response?.data?.error_code}`;
         }
 
         return `${info.timestamp} ${info.level} : ${info.message}`;
@@ -38,7 +38,7 @@ export const winstonLogger = WinstonModule.createLogger({
     winstonFormat.timestamp({ format: "| YYYY-MM-DD HH:mm:ss |" }),
     winstonFormat.printf((info) => {
       if (info.stack) {
-        return `${info.label} ${info.timestamp} ${info.level} : ${info.message} ${info.stack} \n Error: ${info.response?.data.error} \n Error_description: ${info.response?.data.error_description}\n Error_error_code: ${info.response?.data.error_code}`;
+        return `${info.label} ${info.timestamp} ${info.level} : ${info.message} ${info.stack} \n Error: ${info.response?.data?.error} \n Error_description: ${info.response?.data?.error_description}\n Error_error_code: ${info.response?.data?.error_code}`;
       }
 
       return `${info.timestamp} ${info.level} : ${info.message}`;

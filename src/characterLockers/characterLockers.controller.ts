@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { CharacterLockersService } from "./characterLockers.service";
 import { ApiTags } from "@nestjs/swagger";
@@ -15,6 +16,8 @@ import { ApiGetUserCharacters } from "./characterLockers-swagger/get-user-charac
 import { ApiCreateUserOneCharacter } from "./characterLockers-swagger/create-user-character.decorator";
 import { ApiUpdateUserCharacter } from "./characterLockers-swagger/update-user-character.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("CharacterLockers")
@@ -25,6 +28,7 @@ export class CharacterLockersController {
 
   @Get("users/:userNo/characters")
   @ApiGetUserCharacters()
+  @UseGuards(AccessTokenAuthGuard)
   getUserCharacters(
     @Param("userNo", ParsePositiveIntPipe) userNo: number,
     @Query() query: GetUserCharactersDto,
@@ -34,19 +38,21 @@ export class CharacterLockersController {
 
   @Post("users/my/characters")
   @ApiCreateUserOneCharacter()
-  createUserOneCharacter(@Body() body: CharacterNoDto) {
-    const userNo = 1;
-
+  @UseGuards(AccessTokenAuthGuard)
+  createUserOneCharacter(
+    @UserNo() userNo: number,
+    @Body() body: CharacterNoDto,
+  ) {
     return this.characterLockerService.createUserOneCharacter(userNo, body);
   }
 
   @Patch("users/my/characters/:characterNo")
   @ApiUpdateUserCharacter()
+  @UseGuards(AccessTokenAuthGuard)
   updateCharacterStatus(
+    @UserNo() userNo: number,
     @Param("characterNo", ParsePositiveIntPipe) characterNo: number,
   ) {
-    const userNo = 1;
-
     return this.characterLockerService.updateCharacterStatus(
       userNo,
       characterNo,

@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaPromise, alarm } from "@prisma/client";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class AlarmsRepository {
@@ -16,7 +17,7 @@ export class AlarmsRepository {
     take: number,
     skip: number,
     orderBy: OrderBy,
-  ): PrismaPromise<alarm[]> {
+  ) {
     return this.prisma.alarm.findMany({
       where: { userNo },
       take,
@@ -25,26 +26,29 @@ export class AlarmsRepository {
     });
   }
 
-  findOneAlarm(alarmNo: number): PrismaPromise<alarm> {
+  findOneAlarm(alarmNo: number) {
     return this.prisma.alarm.findUnique({ where: { no: alarmNo } });
   }
 
   createOneAlarm(
     userNo: number,
     content: string,
-    url: string,
-  ): PrismaPromise<alarm> {
-    return this.prisma.alarm.create({ data: { userNo, content, url } });
+    title?: string,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).alarm.create({
+      data: { userNo, content, title },
+    });
   }
 
-  updateAlarmStatusToTrue(alarmNo: number): PrismaPromise<alarm> {
+  updateAlarmStatusToTrue(alarmNo: number) {
     return this.prisma.alarm.update({
       data: { status: true },
       where: { no: alarmNo },
     });
   }
 
-  deleteOneAlarmByAlarmNo(alarmNo: number): PrismaPromise<alarm> {
+  deleteOneAlarmByAlarmNo(alarmNo: number) {
     return this.prisma.alarm.delete({ where: { no: alarmNo } });
   }
 }

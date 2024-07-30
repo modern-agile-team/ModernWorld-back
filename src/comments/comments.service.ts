@@ -13,6 +13,8 @@ import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.d
 import { CommonService } from "src/common/common.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { SseService } from "src/sse/sse.service";
+import { AlarmsRepository } from "src/alarms/alarms.repository";
 
 @Injectable()
 export class CommentService {
@@ -22,6 +24,8 @@ export class CommentService {
     private readonly legendsService: LegendsRepository,
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
+    private readonly sseService: SseService,
+    private readonly alarmsRepository: AlarmsRepository,
   ) {}
 
   async createOneComment(
@@ -37,7 +41,13 @@ export class CommentService {
         this.legendsService.updateOneLegendByUserNo(senderNo, {
           commentCount: { increment: 1 },
         }),
+        this.alarmsRepository.createOneAlarm(receiverNo, content, "방명록"),
       ]);
+
+      this.sseService.sendSse(receiverNo, {
+        title: "방명록",
+        content: `${comment.commentSender.nickname}}님이 방명록을 남겼습니다.`,
+      });
 
       this.commonService.checkAchievementCondition(senderNo, "commentCount");
 

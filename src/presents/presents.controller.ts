@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { PresentsService } from "./presents.service";
 import { ApiTags } from "@nestjs/swagger";
@@ -20,6 +21,8 @@ import { ApiGetUserOnePresent } from "./presents-swagger/get-user-one-present.de
 import { ApiUpdatePresentStatus } from "./presents-swagger/update-present-status.decorator";
 import { ApiDeleteOnePresent } from "./presents-swagger/delete-one-present.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("Presents")
@@ -28,45 +31,45 @@ export class PresentsController {
 
   @Get("users/my/presents")
   @ApiGetUserPresents()
+  @UseGuards(AccessTokenAuthGuard)
   getUserPresents(
+    @UserNo() userNo: number,
     @Query()
     query: GetUserPresentsDto,
   ) {
-    const userNo = 1;
-
     return this.presentsService.getUserPresents(userNo, query);
   }
 
   @Get("users/my/presents/:presentNo")
   @ApiGetUserOnePresent()
+  @UseGuards(AccessTokenAuthGuard)
   getUserOnePresent(
+    @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
   ) {
-    const userNo = 1;
-
     return this.presentsService.getUserOnePresent(userNo, presentNo);
   }
 
   @Post("users/:userNo/presents")
   @ApiCreateOnePresent()
+  @UseGuards(AccessTokenAuthGuard)
   createOnePresent(
+    @UserNo() userNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body() body: ItemNoDto,
   ) {
-    const tokenUserNo = 1;
-
-    return this.presentsService.createOnePresent(tokenUserNo, receiverNo, body);
+    return this.presentsService.createOnePresent(userNo, receiverNo, body);
   }
 
   @Patch("users/my/presents/:presentNo")
   @ApiUpdatePresentStatus()
+  @UseGuards(AccessTokenAuthGuard)
   updatePresentStatus(
+    @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
     @Body()
     body: PresentAcceptRejectDto,
   ) {
-    const userNo = 1;
-
     return this.presentsService.acceptOrRejectOnePresent(
       userNo,
       presentNo,
@@ -77,11 +80,11 @@ export class PresentsController {
   @Delete("users/my/presents/:presentNo")
   @ApiDeleteOnePresent()
   @HttpCode(204)
+  @UseGuards(AccessTokenAuthGuard)
   deleteOnePresent(
+    @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
   ) {
-    const userNo = 1;
-
     return this.presentsService.updateOnePresentToDelete(userNo, presentNo);
   }
 }

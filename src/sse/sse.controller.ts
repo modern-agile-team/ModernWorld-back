@@ -1,6 +1,16 @@
-import { Controller, Logger, MessageEvent, Param, Sse } from "@nestjs/common";
-import { Observable, map } from "rxjs";
+import {
+  Body,
+  Controller,
+  Logger,
+  MessageEvent,
+  Param,
+  Post,
+  Sse,
+} from "@nestjs/common";
+import { Observable, map, startWith } from "rxjs";
 import { SseService } from "./sse.service";
+import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { ApiBody } from "@nestjs/swagger";
 
 @Controller("sse")
 export class SseController {
@@ -16,9 +26,32 @@ export class SseController {
     const notifications$ = this.sseService.getSubject(userNo);
 
     return notifications$.pipe(
+      startWith("Connected"),
       map((message) => {
         return { data: message };
       }),
     );
+  }
+
+  @Post(":userNo")
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        content: {
+          type: "string",
+          default: "김뿡뿡",
+        },
+      },
+    },
+  })
+  asdf(
+    @Param("userNo", ParsePositiveIntPipe) userNo: number,
+    @Body("content") content: string,
+  ) {
+    return this.sseService.sendSse(userNo, {
+      title: `${userNo}번 김뿡우`,
+      content: content,
+    });
   }
 }

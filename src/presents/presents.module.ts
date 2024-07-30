@@ -7,6 +7,8 @@ import { UsersModule } from "src/users/users.module";
 import { ItemsModule } from "src/items/items.module";
 import { CommonModule } from "src/common/common.module";
 import { LegendsModule } from "src/legends/legends.module";
+import { AlarmsModule } from "src/alarms/alarms.module";
+import { SseModule } from "src/sse/sse.module";
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { LegendsModule } from "src/legends/legends.module";
     ItemsModule,
     CommonModule,
     LegendsModule,
+    SseModule,
+    AlarmsModule,
   ],
   controllers: [PresentsController],
   providers: [PresentsService, PresentsRepository],

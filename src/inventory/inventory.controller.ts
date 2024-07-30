@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { InventoryService } from "./inventory.service";
 import { ApiTags } from "@nestjs/swagger";
@@ -16,6 +17,8 @@ import { ApiCreateUserItem } from "./inventory-swagger/create-user-item.decorato
 import { ApiUpdateUserItem } from "./inventory-swagger/update-user-item.decorator";
 import { ItemNoDto } from "./dtos/item-no.dto";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
+import { UserNo } from "src/auth/auth.decorator";
 
 @Controller()
 @ApiTags("Inventory")
@@ -24,6 +27,7 @@ export class InventoryController {
 
   @Get("users/:userNo/items")
   @ApiGetUserItems()
+  @UseGuards(AccessTokenAuthGuard)
   getUserItems(
     @Param("userNo", ParsePositiveIntPipe) userNo: number,
     @Query() query: GetUserItemsDto,
@@ -33,20 +37,19 @@ export class InventoryController {
 
   @Post("users/my/items")
   @ApiCreateUserItem()
-  createUserOneItem(@Body() body: ItemNoDto) {
-    const userNo = 1;
-
+  @UseGuards(AccessTokenAuthGuard)
+  createUserOneItem(@UserNo() userNo: number, @Body() body: ItemNoDto) {
     return this.inventoryService.createUserOneItem(userNo, body);
   }
 
   @Patch("users/my/items/:itemNo")
   @ApiUpdateUserItem()
+  @UseGuards(AccessTokenAuthGuard)
   updateItemStatus(
+    @UserNo() userNo: number,
     @Param("itemNo", ParsePositiveIntPipe) itemNo: number,
     @Body() body: UpdateUserItemStatusDto,
   ) {
-    const userNo = 1;
-
     return this.inventoryService.updateItemStatus(userNo, itemNo, body);
   }
 }

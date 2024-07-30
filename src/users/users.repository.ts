@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { UserDomain } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class UsersRepository {
@@ -33,6 +34,15 @@ export class UsersRepository {
         socialName,
         image,
         domain,
+        attendance: {
+          "0": [0, 100],
+          "1": [0, 200],
+          "2": [0, 300],
+          "3": [0, 200],
+          "4": [0, 400],
+          "5": [0, 300],
+          "6": [0, 300],
+        },
       },
     });
   }
@@ -50,8 +60,12 @@ export class UsersRepository {
     });
   }
 
-  updateUserCurrentPoint(userNo: number, incrementalPoint: number) {
-    return this.prisma.user.update({
+  updateUserCurrentPoint(
+    userNo: number,
+    incrementalPoint: number,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).user.update({
       select: { nickname: true, currentPoint: true, accumulationPoint: true },
       data: {
         currentPoint: { increment: incrementalPoint },
@@ -100,13 +114,13 @@ export class UsersRepository {
     return this.prisma.user.updateMany({
       data: {
         attendance: {
-          "0": [false, 100],
-          "1": [false, 200],
-          "2": [false, 300],
-          "3": [false, 200],
-          "4": [false, 400],
-          "5": [false, 300],
-          "6": [false, 300],
+          "0": [0, 100],
+          "1": [0, 200],
+          "2": [0, 300],
+          "3": [0, 200],
+          "4": [0, 400],
+          "5": [0, 300],
+          "6": [0, 300],
         },
       },
     });

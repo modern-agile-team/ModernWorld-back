@@ -1,5 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -19,14 +21,31 @@ export function ApiUpdateUserAttendance() {
           example: {
             nickname: "1번닉네임",
             attendance: {
-              "0": [false, 100],
-              "1": [false, 200],
-              "2": [true, 300],
-              "3": [false, 200],
-              "4": [false, 400],
-              "5": [false, 300],
-              "6": [false, 300],
+              "0": [0, 100],
+              "1": [2, 200],
+              "2": [0, 300],
+              "3": [0, 200],
+              "4": [0, 400],
+              "5": [0, 300],
+              "6": [0, 300],
             },
+          },
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description: "stickerNo가 1 ~ 10 사이의 정수가 아닌 경우",
+      content: {
+        JSON: {
+          example: {
+            message: [
+              "stickerNo must be an integer number",
+              "stickerNo must not be greater than 10",
+              "stickerNo must not be less than 1",
+            ],
+            error: "Bad Request",
+            statusCode: 400,
           },
         },
       },
@@ -56,5 +75,7 @@ export function ApiUpdateUserAttendance() {
         },
       },
     }),
+
+    ApiBearerAuth("access-token"),
   );
 }

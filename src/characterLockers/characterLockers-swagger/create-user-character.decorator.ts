@@ -1,6 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -123,5 +124,7 @@ export function ApiCreateUserOneCharacter() {
         },
       },
     }),
+
+    ApiBearerAuth("access-token"),
   );
 }
