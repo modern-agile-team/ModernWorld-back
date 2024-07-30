@@ -94,7 +94,7 @@ export class AuthService {
           userInfo.response.profile_image,
           "naver",
         );
-        // await this.legendsRepository.
+        await this.legendsRepository.createUserLegend(user.no);
       }
 
       const accessToken = this.tokenService.createAccessToken(user.no);
@@ -212,6 +212,7 @@ export class AuthService {
           userProperties.profile_image,
           "kakao",
         );
+        await this.legendsRepository.createUserLegend(user.no);
       }
 
       const accessToken = this.tokenService.createAccessToken(user.no);
