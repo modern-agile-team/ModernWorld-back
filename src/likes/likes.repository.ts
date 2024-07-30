@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class LikesRepository {
@@ -9,8 +10,8 @@ export class LikesRepository {
     return this.prisma.like.findFirst({ where: { senderNo, receiverNo } });
   }
 
-  createOneLike(senderNo: number, receiverNo: number) {
-    return this.prisma.like.create({
+  createOneLike(senderNo: number, receiverNo: number, tx?: PrismaTxType) {
+    return (tx ?? this.prisma).like.create({
       select: {
         no: true,
         userLikeSenderNo: { select: { no: true, nickname: true } },
