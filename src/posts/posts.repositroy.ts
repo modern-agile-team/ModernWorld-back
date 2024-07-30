@@ -1,12 +1,33 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, post } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class PostsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOnePost(postNo: number): PrismaPromise<post> {
+  createOnePost(
+    senderNo: number,
+    receiverNo: number,
+    content: string,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).post.create({
+      select: {
+        no: true,
+        content: true,
+        createdAt: true,
+        check: true,
+        senderDelete: true,
+        receiverDelete: true,
+        userPostSenderNo: { select: { no: true, nickname: true } },
+        userPostReceiverNo: { select: { no: true, nickname: true } },
+      },
+      data: { senderNo, receiverNo, content },
+    });
+  }
+
+  getOnePost(postNo: number) {
     return this.prisma.post.findUnique({ where: { no: postNo } });
   }
 
@@ -40,10 +61,6 @@ export class PostsRepository {
     });
   }
 
-  createOnePost(senderNo: number, receiverNo: number, content: string) {
-    return this.prisma.post.create({ data: { senderNo, receiverNo, content } });
-  }
-
   updateOnePostCheckToTrue(postNo: number) {
     return this.prisma.post.update({
       select: {
@@ -64,7 +81,7 @@ export class PostsRepository {
   updateOnePostToDeleteByUser(
     no: number,
     senderReceiverDeleteField: "senderDelete" | "receiverDelete",
-  ): PrismaPromise<post> {
+  ) {
     return this.prisma.post.update({
       data: { [senderReceiverDeleteField]: true },
       where: { no },
