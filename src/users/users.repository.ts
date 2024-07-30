@@ -15,16 +15,9 @@ export class UsersRepository {
     });
   }
 
-  softDeleteUser(userNo: number) {
+  updateDeleteAt(userNo: number, deletedAt: Date | null) {
     return this.prisma.user.update({
-      data: { deletedAt: new Date() },
-      where: { no: userNo },
-    });
-  }
-
-  updateUserDeletedAt(userNo: number) {
-    return this.prisma.user.update({
-      data: { deletedAt: null },
+      data: { deletedAt },
       where: { no: userNo },
     });
   }

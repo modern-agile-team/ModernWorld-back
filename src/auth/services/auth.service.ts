@@ -97,13 +97,13 @@ export class AuthService {
         await this.legendsRepository.createUserLegend(user.no);
       }
 
-      await this.usersRepository.updateUserDeletedAt(user.no);
+      await this.usersRepository.updateDeleteAt(user.no, null);
 
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
 
       const socialTokens = await this.tokenRepository.findToken(user.no);
-      if (socialTokens[0] === undefined) {
+      if (!socialTokens) {
         await this.tokenRepository.saveTokens(
           user.no,
           socialAccessToken,
@@ -217,13 +217,13 @@ export class AuthService {
         await this.legendsRepository.createUserLegend(user.no);
       }
 
-      await this.usersRepository.updateUserDeletedAt(user.no);
+      await this.usersRepository.updateDeleteAt(user.no, null);
 
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
 
       const socialTokens = await this.tokenRepository.findToken(user.no);
-      if (socialTokens[0] === undefined) {
+      if (!socialTokens) {
         await this.tokenRepository.saveTokens(
           user.no,
           socialAccessToken,
@@ -303,7 +303,7 @@ export class AuthService {
   async kakaoLogout(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
-      if (socialTokens[0] === undefined) {
+      if (!socialTokens) {
         throw new NotFoundException("user not found");
       }
       const user = await this.usersRepository.findUserByUserNo(userNo);
@@ -313,8 +313,8 @@ export class AuthService {
         );
       }
 
-      let socialAccessToken = socialTokens[0].socialAccess;
-      const socialRefreshToken = socialTokens[0].socialRefresh;
+      let socialAccessToken = socialTokens.socialAccess;
+      const socialRefreshToken = socialTokens.socialRefresh;
 
       const socialAccessTokenInfo =
         await this.tokenService.kakaoSocialAccessTokenInfo(socialAccessToken);
@@ -364,12 +364,12 @@ export class AuthService {
   async naverUnlink(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
-      if (socialTokens[0] === undefined) {
+      if (!socialTokens) {
         throw new NotFoundException("token not found");
       }
 
-      let socialAccessToken = socialTokens[0].socialAccess;
-      const socialRefreshToken = socialTokens[0].socialRefresh;
+      let socialAccessToken = socialTokens.socialAccess;
+      const socialRefreshToken = socialTokens.socialRefresh;
 
       const user = await this.usersRepository.findUserByUserNo(userNo);
       if (!user) {
@@ -417,7 +417,7 @@ export class AuthService {
         userNo.toString() + "-accessToken",
       );
 
-      await this.usersRepository.softDeleteUser(userNo);
+      await this.usersRepository.updateDeleteAt(userNo, new Date());
 
       return { message: "네이버 회원 탈퇴 성공" };
     } catch (error) {
@@ -437,7 +437,7 @@ export class AuthService {
   async kakaoUnlink(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
-      if (socialTokens[0] === undefined) {
+      if (!socialTokens) {
         throw new NotFoundException("user not found");
       }
       const user = await this.usersRepository.findUserByUserNo(userNo);
@@ -446,8 +446,8 @@ export class AuthService {
           "You are not a user logged in with Kakao.",
         );
       }
-      let socialAccessToken = socialTokens[0].socialAccess;
-      const socialRefreshToken = socialTokens[0].socialRefresh;
+      let socialAccessToken = socialTokens.socialAccess;
+      const socialRefreshToken = socialTokens.socialRefresh;
 
       const socialAccessTokenInfo =
         await this.tokenService.kakaoSocialAccessTokenInfo(socialAccessToken);
@@ -481,7 +481,7 @@ export class AuthService {
         userNo.toString() + "-accessToken",
       );
 
-      await this.usersRepository.softDeleteUser(userNo);
+      await this.usersRepository.updateDeleteAt(userNo, new Date());
 
       return { message: "카카오 탈퇴 성공" };
     } catch (error) {

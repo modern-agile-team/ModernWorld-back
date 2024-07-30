@@ -20,7 +20,7 @@ export class TokenRepository {
   }
 
   async findToken(userNo: number) {
-    return this.prisma.token.findMany({
+    return this.prisma.token.findUnique({
       where: {
         userNo,
       },
@@ -28,7 +28,7 @@ export class TokenRepository {
   }
 
   async deleteTokens(userNo: number) {
-    return this.prisma.token.deleteMany({
+    return this.prisma.token.delete({
       where: {
         userNo,
       },
@@ -36,7 +36,7 @@ export class TokenRepository {
   }
 
   async updateAccessToken(userNo: number, socialAccess: string) {
-    return this.prisma.token.updateMany({
+    return this.prisma.token.update({
       where: {
         userNo,
       },
@@ -51,7 +51,7 @@ export class TokenRepository {
     socialAccess: string,
     socialRefresh: string,
   ) {
-    return this.prisma.token.updateMany({
+    return this.prisma.token.update({
       where: {
         userNo,
       },
