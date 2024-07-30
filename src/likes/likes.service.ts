@@ -40,34 +40,43 @@ export class LikesService {
     let like;
 
     try {
-      const alarm = await this.prisma.$transaction(async (tx) => {
-        like = await this.likesRepository.createOneLike(senderNo, receiverNo);
+      like = await this.prisma.$transaction(async (tx) => {
+        const result = await this.likesRepository.createOneLike(
+          senderNo,
+          receiverNo,
+          tx,
+        );
 
-        await this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
-          likeCount: { increment: 1 },
-        });
+        await this.legendsRepository.updateOneLegendByUserNo(
+          receiverNo,
+          {
+            likeCount: { increment: 1 },
+          },
+          tx,
+        );
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
+          `${result.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
           `좋아요`,
+          tx,
         );
 
-        return like;
+        return result;
       });
-
-      this.sseService.sendSse(receiverNo, {
-        title: "좋아요",
-        content: `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
-      });
-
-      this.commonService.checkAchievementCondition(receiverNo, "likeCount");
-
-      return alarm;
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();
     }
+
+    this.sseService.sendSse(receiverNo, {
+      title: "좋아요",
+      content: `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
+    });
+
+    this.commonService.checkAchievementCondition(receiverNo, "likeCount");
+
+    return like;
   }
 
   async deleteOneLike(senderNo: number, receiverNo: number) {
