@@ -79,7 +79,7 @@ export class InventoryService {
     }
 
     try {
-      const [, result] = await this.prisma.$transaction([
+      const [, , result] = await this.prisma.$transaction([
         this.legendsRepository.updateOneLegendByUserNo(userNo, {
           itemCount: { increment: 1 },
         }),
