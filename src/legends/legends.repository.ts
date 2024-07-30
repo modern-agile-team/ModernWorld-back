@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateLegendCount } from "./interfaces/update-legend-count.interface";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class LegendsRepository {
@@ -17,8 +18,9 @@ export class LegendsRepository {
   updateOneLegendByUserNo<T extends keyof UpdateLegendCount>(
     userNo: number,
     data: Pick<UpdateLegendCount, T>,
+    tx?: PrismaTxType,
   ) {
-    return this.prisma.legend.update({
+    return (tx ?? this.prisma).legend.update({
       data,
       where: { userNo },
     });
