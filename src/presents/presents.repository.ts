@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AcceptReject, PresentStatus } from "./enum/present-status.enum";
 import { PrismaPromise, present } from "@prisma/client";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class PresentsRepository {
@@ -50,8 +51,9 @@ export class PresentsRepository {
     senderNo: number,
     receiverNo: number,
     itemNo: number,
+    tx?: PrismaTxType,
   ): PrismaPromise<present> {
-    return this.prisma.present.create({
+    return (tx ?? this.prisma).present.create({
       data: { senderNo, receiverNo, itemNo },
     });
   }
