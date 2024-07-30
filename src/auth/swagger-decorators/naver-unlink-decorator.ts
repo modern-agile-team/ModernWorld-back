@@ -138,6 +138,25 @@ export function ApiNaverUnlink() {
         },
       },
     }),
+    ApiResponse({
+      status: 409,
+      description: "409 error",
+      content: {
+        JSON: {
+          examples: {
+            "token is not matched.": {
+              value: {
+                message: "token is not matched.",
+                error: "Conflict",
+                statusCode: 409,
+              },
+              description:
+                "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
+            },
+          },
+        },
+      },
+    }),
 
     ApiResponse({
       status: 500,

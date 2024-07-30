@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
@@ -43,7 +44,7 @@ export class AccessStrategy extends PassportStrategy(Strategy, "accessToken") {
     }
 
     if (tokenFromRequest !== tokenFromRedis) {
-      throw new NotFoundException("token is not matched.");
+      throw new ConflictException("token is not matched.");
     }
     return { tokenType: payload.sub, no: payload.userNo };
   }
@@ -88,7 +89,7 @@ export class RefreshStrategy extends PassportStrategy(
     }
 
     if (tokenFromRequest !== tokenFromRedis) {
-      throw new NotFoundException("token is not matched.");
+      throw new ConflictException("token is not matched.");
     }
 
     return { tokenType: payload.sub, no: payload.userNo };
