@@ -18,6 +18,8 @@ import { UpdatePresentsStatusResponseDto } from "./dtos/update-presents-status-r
 import { PrismaService } from "src/prisma/prisma.service";
 import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { SseService } from "src/sse/sse.service";
+import { AlarmsRepository } from "src/alarms/alarms.repository";
 
 @Injectable()
 export class PresentsService {
@@ -30,6 +32,8 @@ export class PresentsService {
     private readonly usersRepository: UsersRepository,
     private readonly legendsRepository: LegendsRepository,
     private readonly commonService: CommonService,
+    private readonly sseService: SseService,
+    private readonly alarmsRepository: AlarmsRepository,
   ) {}
 
   getUserPresents(userNo: number, query: GetUserPresentsDto) {
@@ -241,7 +245,8 @@ export class PresentsService {
       throw new NotFoundException("Item doesn't exist.");
     }
 
-    const { currentPoint } = await this.usersRepository.findUserPoint(senderNo);
+    const { nickname, currentPoint } =
+      await this.usersRepository.findUserPoint(senderNo);
 
     if (currentPoint < item.price) {
       throw new ForbiddenException("User doesn't have enough point.");
@@ -253,27 +258,50 @@ export class PresentsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
+    let present;
+
     try {
-      const [, , result] = await this.prisma.$transaction([
-        this.legendsRepository.updateOneLegendByUserNo(senderNo, {
-          presentCount: { increment: 1 },
-        }),
-
-        this.usersRepository.updateUserCurrentPoint(senderNo, -item.price),
-
-        this.presentsRepository.createOneItemToUser(
+      await this.prisma.$transaction(async (tx) => {
+        present = await this.presentsRepository.createOneItemToUser(
           senderNo,
           receiverNo,
           itemNo,
-        ),
-      ]);
+          tx,
+        );
 
-      this.commonService.checkAchievementCondition(senderNo, "presentCount");
+        await this.usersRepository.updateUserCurrentPoint(
+          senderNo,
+          -item.price,
+          tx,
+        );
 
-      return result;
+        await this.legendsRepository.updateOneLegendByUserNo(
+          senderNo,
+          {
+            presentCount: { increment: 1 },
+          },
+          tx,
+        );
+
+        await this.alarmsRepository.createOneAlarm(
+          receiverNo,
+          `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
+          "선물",
+          tx,
+        );
+      });
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();
     }
+
+    this.sseService.sendSse(receiverNo, {
+      title: "선물",
+      content: `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
+    });
+
+    this.commonService.checkAchievementCondition(senderNo, "presentCount");
+
+    return present;
   }
 }

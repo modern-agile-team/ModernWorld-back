@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { UserDomain } from "@prisma/client";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class UsersRepository {
@@ -52,8 +53,12 @@ export class UsersRepository {
     });
   }
 
-  updateUserCurrentPoint(userNo: number, incrementalPoint: number) {
-    return this.prisma.user.update({
+  updateUserCurrentPoint(
+    userNo: number,
+    incrementalPoint: number,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).user.update({
       select: { nickname: true, currentPoint: true, accumulationPoint: true },
       data: {
         currentPoint: { increment: incrementalPoint },

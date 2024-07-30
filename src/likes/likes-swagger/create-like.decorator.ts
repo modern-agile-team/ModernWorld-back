@@ -20,9 +20,15 @@ export function ApiCreateLike() {
       content: {
         JSON: {
           example: {
-            no: 1,
-            receiverNo: 2,
-            senderNo: 3,
+            no: 7408,
+            userLikeSenderNo: {
+              no: 31,
+              nickname: "왕닭발",
+            },
+            userLikeReceiverNo: {
+              no: 1,
+              nickname: "1",
+            },
           },
         },
       },
