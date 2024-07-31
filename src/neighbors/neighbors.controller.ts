@@ -25,7 +25,7 @@ import { UserNo } from "src/auth/auth.decorator";
 export class NeighborsController {
   constructor(private readonly neighborsService: NeighborsService) {}
 
-  @Post("users/:userNo/neighbor")
+  @Post("users/:userNo/neighbors")
   @ApiCraeteNeighbor()
   @UseGuards(AccessTokenAuthGuard)
   createNeighbor(
