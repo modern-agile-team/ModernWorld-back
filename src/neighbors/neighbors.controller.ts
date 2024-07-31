@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { NeighborsService } from "./neighbors.service";
 import { ApiTags } from "@nestjs/swagger";
-import { ApiCraeteNeighbor } from "./swagger-decorators/create-one-neighbors.decorator";
+import { ApiCreateNeighbor } from "./swagger-decorators/create-one-neighbors.decorator";
 import { ApiGetNeighbor } from "./swagger-decorators/get-neighbors.decorator";
 import { ApiUpdateNeighbor } from "./swagger-decorators/update-one-neighbor.decorator";
 import { ApiDeleteNeighbor } from "./swagger-decorators/delete-one-neighbor.decorator";
@@ -26,7 +26,7 @@ export class NeighborsController {
   constructor(private readonly neighborsService: NeighborsService) {}
 
   @Post("users/:userNo/neighbors")
-  @ApiCraeteNeighbor()
+  @ApiCreateNeighbor()
   @UseGuards(AccessTokenAuthGuard)
   createNeighbor(
     @UserNo() senderNo: number,

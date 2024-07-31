@@ -10,7 +10,7 @@ import {
   ApiOperation,
 } from "@nestjs/swagger";
 
-export function ApiCraeteNeighbor() {
+export function ApiCreateNeighbor() {
   return applyDecorators(
     ApiOperation({
       summary: "이웃 생성 (요청 보내기)",
