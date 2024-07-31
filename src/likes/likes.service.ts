@@ -80,13 +80,13 @@ export class LikesService {
   }
 
   async deleteOneLike(senderNo: number, receiverNo: number) {
-    const { no } = await this.likesRepository.findOneLike(senderNo, receiverNo);
+    const like = await this.likesRepository.findOneLike(senderNo, receiverNo);
 
-    if (!no) throw new NotFoundException("This like doesn't exist.");
+    if (!like) throw new NotFoundException("This like doesn't exist.");
 
     try {
       const [result] = await this.prisma.$transaction([
-        this.likesRepository.deleteOneLike(no),
+        this.likesRepository.deleteOneLike(like.no),
         this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: {
             increment: -1,
