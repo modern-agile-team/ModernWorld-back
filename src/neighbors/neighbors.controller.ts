@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Body,
   Patch,
   Param,
   Delete,
@@ -11,7 +10,6 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { NeighborsService } from "./neighbors.service";
-import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCraeteNeighbor } from "./swagger-decorators/create-one-neighbors.decorator";
 import { ApiGetNeighbor } from "./swagger-decorators/get-neighbors.decorator";
@@ -27,8 +25,8 @@ import { UserNo } from "src/auth/auth.decorator";
 export class NeighborsController {
   constructor(private readonly neighborsService: NeighborsService) {}
 
+  @Post("users/:userNo/neighbors")
   @ApiCraeteNeighbor()
-  @Post("users/:userNo/neighbor")
   @UseGuards(AccessTokenAuthGuard)
   createNeighbor(
     @UserNo() senderNo: number,
@@ -37,8 +35,8 @@ export class NeighborsController {
     return this.neighborsService.createNeighbor(senderNo, userNo);
   }
 
-  @ApiGetNeighbor()
   @Get("users/my/neighbors")
+  @ApiGetNeighbor()
   @UseGuards(AccessTokenAuthGuard)
   getMyNeighbors(
     @UserNo() userNo: number,
@@ -47,29 +45,24 @@ export class NeighborsController {
     return this.neighborsService.getMyNeighbors(userNo, query);
   }
 
-  @ApiUpdateNeighbor()
   @Patch("users/my/neighbors/:neighborNo")
+  @ApiUpdateNeighbor()
   @UseGuards(AccessTokenAuthGuard)
   updateNeighbor(
     @UserNo() userNo: number,
     @Param("neighborNo", ParsePositiveIntPipe) neighborNo: number,
-    @Body()
-    body: UpdateNeighborDto,
   ) {
-    return this.neighborsService.updateNeighbor(neighborNo, userNo, body);
+    return this.neighborsService.updateNeighbor(neighborNo, userNo);
   }
 
-  @ApiDeleteNeighbor()
   @Delete("users/my/neighbors/:neighborNo")
+  @ApiDeleteNeighbor()
   @HttpCode(204)
   @UseGuards(AccessTokenAuthGuard)
-  deleteNeighborRelationAndRequest(
+  deleteNeighbor(
     @UserNo() userNo: number,
     @Param("neighborNo", ParsePositiveIntPipe) neighborNo: number,
   ) {
-    return this.neighborsService.deleteNeighborRelationAndRequest(
-      neighborNo,
-      userNo,
-    );
+    return this.neighborsService.deleteNeighbor(neighborNo, userNo);
   }
 }

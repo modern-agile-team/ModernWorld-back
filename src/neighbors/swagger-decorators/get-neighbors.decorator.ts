@@ -10,8 +10,9 @@ import {
 export function ApiGetNeighbor() {
   return applyDecorators(
     ApiOperation({
-      summary: "neighbor 조회",
+      summary: "이웃 조회",
     }),
+
     ApiOkResponse({
       description: "Success",
       content: {

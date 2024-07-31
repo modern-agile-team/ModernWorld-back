@@ -12,7 +12,7 @@ import {
 export function ApiDeleteNeighbor() {
   return applyDecorators(
     ApiOperation({
-      summary: "이웃 승인 거절하거나 이웃 삭제 API",
+      summary: "이웃 삭제 및 거절",
     }),
 
     ApiNoContentResponse({ description: "Success" }),

@@ -23,7 +23,7 @@ import { SseModule } from "./sse/sse.module";
 import { RedisModule } from "./auth/redis/redis.module";
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
 import { CommonModule } from "./common/common.module";
-import { NeighborModule } from "./neighbors/neighbors.module";
+import { NeighborsModule } from "./neighbors/neighbors.module";
 
 @Module({
   imports: [
@@ -46,7 +46,7 @@ import { NeighborModule } from "./neighbors/neighbors.module";
     LoggerModule,
     SseModule,
     CommonModule,
-    NeighborModule,
+    NeighborsModule,
     RedisModule,
     InventoryModule,
     UsersModule,

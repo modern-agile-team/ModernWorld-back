@@ -2,33 +2,43 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
-import { UpdateNeighborDto } from "./dtos/update-neighbor.dto";
 import { NeighborsRepository } from "./neighbors.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
+import { PrismaService } from "src/prisma/prisma.service";
+import { SseService } from "src/sse/sse.service";
+import { AlarmsRepository } from "src/alarms/alarms.repository";
 
 @Injectable()
 export class NeighborsService {
   constructor(
     private readonly neighborsRepository: NeighborsRepository,
     private readonly userRepository: UsersRepository,
+    private readonly logger: Logger,
+    private readonly prisma: PrismaService,
+    private readonly sseService: SseService,
+    private readonly alarmsRepository: AlarmsRepository,
   ) {}
 
   async createNeighbor(senderNo: number, receiverNo: number) {
-    const checkMyNeighbor = await this.neighborsRepository.checkMyNeighbor(
+    const isNeighbor = await this.neighborsRepository.checkMyNeighbor(
       receiverNo,
       senderNo,
     );
-    if (checkMyNeighbor) {
+
+    if (isNeighbor) {
       throw new ConflictException("The other person is already neighbors.");
     }
 
     if (receiverNo === senderNo) {
       throw new ForbiddenException("Users cannot neighbor themselves alone.");
     }
+
     const user = await this.userRepository.findUserByUserNo(receiverNo);
     if (!user) {
       throw new NotFoundException(
@@ -36,40 +46,60 @@ export class NeighborsService {
       );
     }
 
-    const existNeighborRequest =
-      await this.neighborsRepository.getOneNeighborRequest(
-        receiverNo,
-        senderNo,
-      );
+    const myRequest = await this.neighborsRepository.getOneNeighborRequest(
+      receiverNo,
+      senderNo,
+    );
 
-    if (existNeighborRequest) {
+    if (myRequest) {
       throw new ConflictException(
         "You have already sent a neighbor request to this user.",
       );
     }
 
-    const existRequestAndOpponentRequestOneMore =
+    const opponentRequest =
       await this.neighborsRepository.getOneNeighborRequest(
         senderNo,
         receiverNo,
       );
 
-    if (existRequestAndOpponentRequestOneMore) {
-      return this.neighborsRepository.updateNeighbor(
-        existRequestAndOpponentRequestOneMore.no,
-        true,
-      );
+    if (opponentRequest) {
+      return this.setNeighborAsTrue(senderNo, receiverNo, opponentRequest.no);
     }
 
-    return this.neighborsRepository.createNeighbor(receiverNo, senderNo);
+    let neighbor;
+
+    try {
+      neighbor = await this.prisma.$transaction(async (tx) => {
+        const result = await this.neighborsRepository.createNeighbor(
+          receiverNo,
+          senderNo,
+          tx,
+        );
+
+        await this.alarmsRepository.createOneAlarm(
+          receiverNo,
+          `${result.neighborSenderNo.nickname}님에게 이웃 요청이 왔습니다.`,
+          "이웃",
+          tx,
+        );
+
+        return result;
+      });
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
+
+    this.sseService.sendSse(receiverNo, {
+      title: "이웃",
+      content: `${neighbor.neighborSenderNo.nickname}님에게 이웃 요청이 왔습니다.`,
+    });
+
+    return neighbor;
   }
 
-  async updateNeighbor(
-    neighborNo: number,
-    userNo: number,
-    body: UpdateNeighborDto,
-  ) {
-    const { status } = body;
+  async updateNeighbor(neighborNo: number, userNo: number) {
     const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
 
     if (!neighbor) {
@@ -88,16 +118,20 @@ export class NeighborsService {
       );
     }
 
-    return this.neighborsRepository.updateNeighbor(neighborNo, status);
+    return this.setNeighborAsTrue(
+      neighbor.senderNo,
+      neighbor.receiverNo,
+      neighborNo,
+    );
   }
 
   async getMyNeighbors(userNo: number, query: NeighborsPaginationDto) {
-    const { page, take, orderBy, status, type } = query;
+    const { page, take, orderBy, status, type: senderReceiver } = query;
 
     const where =
-      type && !status
+      senderReceiver && !status
         ? {
-            [type]: userNo,
+            [senderReceiver]: userNo,
             status,
           }
         : {
@@ -136,7 +170,7 @@ export class NeighborsService {
     });
   }
 
-  async deleteNeighborRelationAndRequest(neighborNo: number, userNo: number) {
+  async deleteNeighbor(neighborNo: number, userNo: number) {
     const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
     if (!neighbor) {
       throw new NotFoundException("No neighbor found");
@@ -146,8 +180,54 @@ export class NeighborsService {
         "You can only delete the neighbor request you received and your neighbor.",
       );
     }
-    return this.neighborsRepository.deleteNeighborRelationAndRequest(
-      neighborNo,
-    );
+    return this.neighborsRepository.deleteNeighbor(neighborNo);
+  }
+
+  private async setNeighborAsTrue(
+    senderNo: number,
+    receiverNo: number,
+    neighborNo: number,
+  ) {
+    let neighbor;
+
+    try {
+      neighbor = await this.prisma.$transaction(async (tx) => {
+        const result = await this.neighborsRepository.setNeighborStatusTrue(
+          neighborNo,
+          tx,
+        );
+
+        await this.alarmsRepository.createOneAlarm(
+          receiverNo,
+          `${result.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
+          "이웃",
+          tx,
+        );
+
+        await this.alarmsRepository.createOneAlarm(
+          senderNo,
+          `${result.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
+          "이웃",
+          tx,
+        );
+
+        return result;
+      });
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
+
+    this.sseService.sendSse(receiverNo, {
+      title: "이웃",
+      content: `${neighbor.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
+    });
+
+    this.sseService.sendSse(senderNo, {
+      title: "이웃",
+      content: `${neighbor.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
+    });
+
+    return neighbor;
   }
 }
