@@ -12,9 +12,10 @@ import {
 export function ApiUpdateNeighbor() {
   return applyDecorators(
     ApiOperation({
-      summary: "이웃 승인 API",
-      description: "이웃 신청을 승인하는 API입니다.",
+      summary: "이웃 승인",
+      description: "이웃 요청 승인",
     }),
+
     ApiOkResponse({
       description: "이웃 승인을 성공한 경우",
       content: {
@@ -77,7 +78,6 @@ export function ApiUpdateNeighbor() {
     }),
 
     ApiInternalServerErrorResponse({
-      description: "서버 오류가 발생한 경우",
       content: {
         JSON: {
           example: {

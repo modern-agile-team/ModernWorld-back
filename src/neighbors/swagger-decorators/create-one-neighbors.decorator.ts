@@ -13,7 +13,7 @@ import {
 export function ApiCraeteNeighbor() {
   return applyDecorators(
     ApiOperation({
-      summary: "이웃 생성 API",
+      summary: "이웃 생성 (요청 보내기)",
     }),
 
     ApiCreatedResponse({
