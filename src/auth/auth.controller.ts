@@ -18,6 +18,8 @@ import { ApiNewAccessToken } from "./swagger-decorators/new-access-token.decorat
 import { CookieInterceptor } from "./interceptors/cookie.interceptor";
 import { ApiKakaoLogout } from "./swagger-decorators/kakao-logout-decorator";
 import { ApiNaverLogout } from "./swagger-decorators/naver-logout-decorator";
+import { ApiKakaoUnlink } from "./swagger-decorators/kakao-unlink-decorator";
+import { ApiNaverUnlink } from "./swagger-decorators/naver-unlink-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -64,5 +66,19 @@ export class AuthController {
   @Delete("naver/logout")
   async naverLogout(@UserNo() userNo: number) {
     return await this.authService.naverLogout(userNo);
+  }
+
+  @ApiKakaoUnlink()
+  @UseGuards(AccessTokenAuthGuard)
+  @Delete("kakao/unlink")
+  async kakaoUnlink(@UserNo() userNo: number) {
+    return await this.authService.kakaoUnlink(userNo);
+  }
+
+  @ApiNaverUnlink()
+  @UseGuards(AccessTokenAuthGuard)
+  @Delete("naver/unlink")
+  async naverUnlink(@UserNo() userNo: number) {
+    return await this.authService.naverUnlink(userNo);
   }
 }

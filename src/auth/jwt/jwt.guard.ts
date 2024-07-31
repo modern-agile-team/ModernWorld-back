@@ -6,6 +6,7 @@ import {
   NotFoundException,
   UnauthorizedException,
   Logger,
+  ConflictException,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Observable } from "rxjs";
@@ -57,7 +58,7 @@ export class AccessTokenAuthGuard extends AuthGuard("accessToken") {
         throw new NotFoundException(error.message);
       }
       if (error.message === "token is not matched.") {
-        throw new NotFoundException(error.message);
+        throw new ConflictException(error.message);
       } else {
         this.logger.error(error);
         throw new UnauthorizedException("jwt error");
@@ -111,6 +112,9 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
       }
       if (error.message === "Token not found.") {
         throw new NotFoundException(error.message);
+      }
+      if (error.message === "token is not matched.") {
+        throw new ConflictException(error.message);
       } else {
         this.logger.error(error);
         throw new UnauthorizedException("jwt error");

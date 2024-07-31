@@ -15,6 +15,13 @@ export class UsersRepository {
     });
   }
 
+  updateDeleteAt(userNo: number, deletedAt: Date | null) {
+    return this.prisma.user.update({
+      data: { deletedAt },
+      where: { no: userNo },
+    });
+  }
+
   createUser(
     uniqueIdentifier: string,
     socialName: string,
