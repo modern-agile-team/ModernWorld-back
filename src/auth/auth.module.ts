@@ -7,9 +7,10 @@ import { TokenRepository } from "./repositories/token.repository";
 import { JwtModule } from "@nestjs/jwt";
 import { AccessStrategy, RefreshStrategy } from "./jwt/jwt.strategy";
 import { RedisModule } from "./redis/redis.module";
+import { LegendsModule } from "src/legends/legends.module";
 
 @Module({
-  imports: [UsersModule, JwtModule, RedisModule],
+  imports: [UsersModule, JwtModule, RedisModule, LegendsModule],
   controllers: [AuthController],
   providers: [
     AuthService,
