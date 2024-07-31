@@ -6,7 +6,7 @@ import { SenderReceiverNoField } from "src/common/enum/sender-receiver-no.enum";
 
 export class NeighborsPaginationDto extends PaginationDto {
   @ApiPropertyOptional({
-    description: "이웃 / 이웃 아님 상태",
+    description: "true 면 이웃 관계가 성립된 것들만, false면 요청만 조회",
     default: false,
   })
   @BooleanTransform()
@@ -15,7 +15,8 @@ export class NeighborsPaginationDto extends PaginationDto {
 
   @ApiPropertyOptional({
     enum: SenderReceiverNoField,
-    description: "쓴것 / 받은것 (status 값이 false일때만 사용)",
+    description:
+      "recieverNo면 유저가 받은 것들만, senderNo면 유저가 보낸 것들만 조회, 보내지 않으면 전부 조회 (status가 false일때만 사용)",
   })
   @IsEnum(SenderReceiverNoField)
   @IsOptional()
