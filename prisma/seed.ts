@@ -17,7 +17,7 @@ import { legend } from "./seeding/legend";
 const prisma = new PrismaClient();
 
 async function main() {
-  await user(prisma);
+  // await user(prisma);
   await character(prisma);
   await item(prisma);
   await achievement(prisma);
@@ -29,7 +29,7 @@ async function main() {
   await neighbor(prisma);
   await comment(prisma);
   await reply(prisma);
-  await like(prisma);
+  // await like(prisma);
   await legend(prisma);
 }
 
