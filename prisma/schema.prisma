@@ -202,6 +202,7 @@ model user {
   socialName        String     @map("social_name") @db.VarChar(200)
   image             String?    @default("https://wang0514.s3.ap-northeast-2.amazonaws.com/page/BaseProfileImage/pngwing.com.png") @db.VarChar(300)
   domain            UserDomain
+  chance            Int        @default(10) @db.UnsignedInt
 
   characterLocker    characterLocker[]
   commentSenderNo    comment[]         @relation("comment_sender_noTouser")
