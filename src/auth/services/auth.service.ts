@@ -264,6 +264,106 @@ export class AuthService {
       );
     }
   }
+
+  async googleLogin(authorizeCode: string) {
+    try {
+      this.tokenUrl = "https://oauth2.googleapis.com/token";
+      this.grant_type = "authorization_code";
+      this.client_id = this.configService.get<string>("GOOGLE_CLIENT_ID");
+      this.client_secret = this.configService.get<string>(
+        "GOOGLE_CLIENT_SECRET",
+      );
+      this.redirect_uri = this.configService.get<string>(
+        "GOOGLE_CLIENT_CALLBACK_URL",
+      );
+      this.code = authorizeCode;
+      const tokenBody = {
+        grant_type: this.grant_type,
+        client_id: this.client_id,
+        client_secret: this.client_secret,
+        code: this.code,
+        redirect_uri: this.redirect_uri,
+      };
+      const tokenHeader = {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      };
+      const token = (await axios.post(this.tokenUrl, tokenBody, tokenHeader))
+        .data;
+
+      if (!token) {
+        throw new UnauthorizedException("Invalid authorization code.");
+      }
+
+      const socialAccessToken = token.access_token;
+      const userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
+      const userInfoHeader = {
+        headers: {
+          Authorization: `Bearer ${socialAccessToken}`,
+          "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      };
+
+      const userInfo = (await axios.get(userInfoUrl, userInfoHeader)).data;
+
+      if (!userInfo) {
+        throw new InternalServerErrorException(
+          "Failed to retrieve social user information.",
+        );
+      }
+      const userUniqueIdentifier = userInfo.id;
+      let user =
+        await this.usersRepository.findUserByUniqueIndentifier(
+          userUniqueIdentifier,
+        );
+      if (!user) {
+        user = await this.usersRepository.createUser(
+          userUniqueIdentifier,
+          userInfo.name,
+          userInfo.picture,
+          "google",
+        );
+        await this.legendsRepository.createUserLegend(user.no);
+      }
+      await this.usersRepository.updateDeleteAt(user.no, null);
+
+      const accessToken = this.tokenService.createAccessToken(user.no);
+      const refreshToken = this.tokenService.createRefreshToken(user.no);
+
+      const socialTokens = await this.tokenRepository.findToken(user.no);
+      if (!socialTokens) {
+        await this.tokenRepository.saveTokens(user.no, socialAccessToken, "");
+      } else {
+        await this.tokenRepository.updateTokens(user.no, socialAccessToken, "");
+      }
+
+      await this.tokenService.setRefreshToken(
+        user.no.toString() + "-refreshToken",
+        refreshToken,
+        60 * 60 * 24 * 7, // 7일
+      );
+      await this.tokenService.setAccessToken(
+        user.no.toString() + "-accessToken",
+        accessToken,
+        60 * 60 * 12, // 12시간
+      );
+
+      return {
+        accessToken,
+        refreshToken,
+        nickName: user.nickname,
+        userNo: user.no,
+      };
+    } catch (error) {
+      this.logger.error(error);
+      if (error.response) {
+        throw new UnauthorizedException("Invalid authorization code.");
+      }
+      throw new InternalServerErrorException(
+        "로그인 중 서버에러가 발생했습니다.",
+      );
+    }
+  }
+
   async naverLogout(userNo: number) {
     try {
       const user = await this.usersRepository.findUserByUserNo(userNo);
