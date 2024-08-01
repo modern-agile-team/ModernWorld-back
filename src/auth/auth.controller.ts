@@ -20,6 +20,7 @@ import { ApiKakaoLogout } from "./swagger-decorators/kakao-logout-decorator";
 import { ApiNaverLogout } from "./swagger-decorators/naver-logout-decorator";
 import { ApiKakaoUnlink } from "./swagger-decorators/kakao-unlink-decorator";
 import { ApiNaverUnlink } from "./swagger-decorators/naver-unlink-decorator";
+import { ApiGoogleLogin } from "./swagger-decorators/google-login-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -47,6 +48,16 @@ export class AuthController {
     }
     return this.authService.kakaoLogin(code);
   }
+  @ApiGoogleLogin()
+  @UseInterceptors(CookieInterceptor)
+  @Post("google/login")
+  async googleLogin(@Query("code") code: string) {
+    if (!code) {
+      throw new BadRequestException("인가 코드가 없습니다");
+    }
+    return this.authService.googleLogin(code);
+  }
+
   @ApiNewAccessToken()
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
