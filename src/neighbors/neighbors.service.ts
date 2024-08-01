@@ -153,12 +153,22 @@ export class NeighborsService {
     const fillteredNeighbors = neighbors.map((neighbor) => {
       if (neighbor.neighborSenderNo.no === userNo) {
         {
-          const { neighborSenderNo, ...fitteredNeighbor } = neighbor;
-          return fitteredNeighbor;
+          const { neighborSenderNo, ...filtered } = neighbor;
+
+          filtered["neighbor"] = filtered.neighborReceiverNo;
+
+          delete filtered.neighborReceiverNo;
+
+          return filtered;
         }
       } else if (neighbor.neighborReceiverNo.no === userNo) {
-        const { neighborReceiverNo, ...fitteredNeighbor } = neighbor;
-        return fitteredNeighbor;
+        const { neighborReceiverNo, ...filtered } = neighbor;
+
+        filtered["neighbor"] = filtered.neighborSenderNo;
+
+        delete filtered.neighborSenderNo;
+
+        return filtered;
       }
     });
 
