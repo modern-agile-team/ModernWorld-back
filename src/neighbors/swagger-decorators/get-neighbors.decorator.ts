@@ -26,39 +26,52 @@ export function ApiGetNeighbor() {
                 data: [
                   {
                     no: 19,
-                    neighborSenderNo: {
-                      no: 10,
-                      nickname: "10번닉네임",
-                    },
-                    createdAt: "2024-07-22T16:02:00.000Z",
+                    createdAt: "2024-08-01T16:22:15.000Z",
                     status: true,
+                    neighbor: {
+                      no: 11,
+                      nickname: "11번닉네임",
+                      image: "11번이미지",
+                      description: "11번소개",
+                      userAchievement: [],
+                    },
+                  },
+                  {
+                    no: 17,
+                    createdAt: "2024-08-01T16:22:15.000Z",
+                    status: true,
+                    neighbor: {
+                      no: 5,
+                      nickname: "5번닉네임",
+                      image: "5번이미지",
+                      description: "5번소개",
+                      userAchievement: [],
+                    },
                   },
                   {
                     no: 14,
-                    neighborReceiverNo: {
-                      no: 3,
-                      nickname: "3번닉네임",
-                    },
-                    createdAt: "2024-07-19T16:22:02.000Z",
+                    createdAt: "2024-08-01T16:22:15.000Z",
                     status: true,
+                    neighbor: {
+                      no: 2,
+                      nickname: "2번닉네임",
+                      image: "2번이미지",
+                      description: "2번소개",
+                      userAchievement: [],
+                    },
                   },
                   {
-                    no: 10,
-                    neighborSenderNo: {
-                      no: 8,
-                      nickname: "8번닉네임",
-                    },
-                    createdAt: "2024-07-16T19:55:27.000Z",
+                    no: 13,
+                    createdAt: "2024-08-01T16:22:15.000Z",
                     status: true,
-                  },
-                  {
-                    no: 3,
-                    neighborReceiverNo: {
-                      no: 4,
-                      nickname: "4번닉네임",
+                    neighbor: {
+                      no: 1,
+                      nickname: "1",
+                      image:
+                        "https://wang0514.s3.ap-northeast-2.amazonaws.com/page/BaseProfileImage/pngwing.com.png",
+                      description: null,
+                      userAchievement: [],
                     },
-                    createdAt: "2024-07-15T10:52:38.000Z",
-                    status: true,
                   },
                 ],
                 meta: {
@@ -75,40 +88,87 @@ export function ApiGetNeighbor() {
               value: {
                 data: [
                   {
-                    no: 18,
-                    neighborReceiverNo: {
-                      no: 19,
-                      nickname: "19번닉네임",
+                    data: [
+                      {
+                        no: 22,
+                        createdAt: "2024-08-01T16:21:40.000Z",
+                        status: false,
+                        neighbor: {
+                          no: 12,
+                          nickname: "12번닉네임",
+                          image: "12번이미지",
+                          description: "12번소개",
+                          userAchievement: [],
+                        },
+                      },
+                      {
+                        no: 21,
+                        createdAt: "2024-08-01T16:21:37.000Z",
+                        status: false,
+                        neighbor: {
+                          no: 22,
+                          nickname: "22번닉네임",
+                          image: "22번이미지",
+                          description: "22번소개",
+                          userAchievement: [],
+                        },
+                      },
+                      {
+                        no: 20,
+                        createdAt: "2024-08-01T16:21:36.000Z",
+                        status: false,
+                        neighbor: {
+                          no: 31,
+                          nickname: "쌉악질",
+                          image:
+                            "https://phinf.pstatic.net/contact/20230524_5/1684868987987elDzd_PNG/%C8%AD%B8%E9_%C4%B8%C3%B3_2023-05-03_120045.png",
+                          description: "김은우 학살자",
+                          userAchievement: [],
+                        },
+                      },
+                      {
+                        no: 18,
+                        createdAt: "2024-08-01T15:46:25.000Z",
+                        status: false,
+                        neighbor: {
+                          no: 6,
+                          nickname: "6번닉네임",
+                          image: "6번이미지",
+                          description: "6번소개",
+                          userAchievement: [],
+                        },
+                      },
+                      {
+                        no: 16,
+                        createdAt: "2024-08-01T15:46:23.000Z",
+                        status: false,
+                        neighbor: {
+                          no: 4,
+                          nickname: "4번닉네임",
+                          image: "4번이미지",
+                          description: "4번소개",
+                          userAchievement: [],
+                        },
+                      },
+                      {
+                        no: 15,
+                        createdAt: "2024-08-01T15:46:22.000Z",
+                        status: false,
+                        neighbor: {
+                          no: 3,
+                          nickname: "3번닉네임",
+                          image: "3번이미지",
+                          description: "3번소개",
+                          userAchievement: [],
+                        },
+                      },
+                    ],
+                    meta: {
+                      page: 1,
+                      take: 10,
+                      totalCount: 6,
+                      totalPage: 1,
                     },
-                    createdAt: "2024-07-22T14:46:08.000Z",
-                    status: false,
-                  },
-                  {
-                    no: 17,
-                    neighborReceiverNo: {
-                      no: 14,
-                      nickname: "14번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:46:04.000Z",
-                    status: false,
-                  },
-                  {
-                    no: 16,
-                    neighborReceiverNo: {
-                      no: 15,
-                      nickname: "15번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:45:58.000Z",
-                    status: false,
-                  },
-                  {
-                    no: 15,
-                    neighborReceiverNo: {
-                      no: 13,
-                      nickname: "13번닉네임",
-                    },
-                    createdAt: "2024-07-19T20:29:05.000Z",
-                    status: false,
                   },
                 ],
                 meta: {
@@ -125,28 +185,46 @@ export function ApiGetNeighbor() {
               value: {
                 data: [
                   {
-                    no: 26,
-                    neighborSenderNo: {
-                      no: 27,
-                      nickname: "27번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:51:06.000Z",
+                    no: 25,
+                    createdAt: "2024-08-01T16:21:40.000Z",
                     status: false,
+                    neighbor: {
+                      no: 9,
+                      nickname: "9번닉네임",
+                      image: "9번이미지",
+                      description: "9번소개",
+                      userAchievement: [],
+                    },
                   },
                   {
-                    no: 25,
-                    neighborSenderNo: {
-                      no: 24,
-                      nickname: "24번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:50:44.000Z",
+                    no: 24,
+                    createdAt: "2024-08-01T16:21:40.000Z",
                     status: false,
+                    neighbor: {
+                      no: 8,
+                      nickname: "8번닉네임",
+                      image: "8번이미지",
+                      description: "8번소개",
+                      userAchievement: [],
+                    },
+                  },
+                  {
+                    no: 23,
+                    createdAt: "2024-08-01T16:21:40.000Z",
+                    status: false,
+                    neighbor: {
+                      no: 7,
+                      nickname: "7번닉네임",
+                      image: "7번이미지",
+                      description: "7번소개",
+                      userAchievement: [],
+                    },
                   },
                 ],
                 meta: {
                   page: 1,
                   take: 10,
-                  totalCount: 2,
+                  totalCount: 3,
                   totalPage: 1,
                 },
               },
@@ -158,64 +236,119 @@ export function ApiGetNeighbor() {
               value: {
                 data: [
                   {
-                    no: 26,
-                    neighborSenderNo: {
-                      no: 27,
-                      nickname: "27번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:51:06.000Z",
+                    no: 25,
+                    createdAt: "2024-08-01T16:21:40.000Z",
                     status: false,
+                    neighbor: {
+                      no: 9,
+                      nickname: "9번닉네임",
+                      image: "9번이미지",
+                      description: "9번소개",
+                      userAchievement: [],
+                    },
                   },
                   {
-                    no: 25,
-                    neighborSenderNo: {
-                      no: 24,
-                      nickname: "24번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:50:44.000Z",
+                    no: 24,
+                    createdAt: "2024-08-01T16:21:40.000Z",
                     status: false,
+                    neighbor: {
+                      no: 8,
+                      nickname: "8번닉네임",
+                      image: "8번이미지",
+                      description: "8번소개",
+                      userAchievement: [],
+                    },
+                  },
+                  {
+                    no: 23,
+                    createdAt: "2024-08-01T16:21:40.000Z",
+                    status: false,
+                    neighbor: {
+                      no: 7,
+                      nickname: "7번닉네임",
+                      image: "7번이미지",
+                      description: "7번소개",
+                      userAchievement: [],
+                    },
+                  },
+                  {
+                    no: 22,
+                    createdAt: "2024-08-01T16:21:40.000Z",
+                    status: false,
+                    neighbor: {
+                      no: 12,
+                      nickname: "12번닉네임",
+                      image: "12번이미지",
+                      description: "12번소개",
+                      userAchievement: [],
+                    },
+                  },
+                  {
+                    no: 21,
+                    createdAt: "2024-08-01T16:21:37.000Z",
+                    status: false,
+                    neighbor: {
+                      no: 22,
+                      nickname: "22번닉네임",
+                      image: "22번이미지",
+                      description: "22번소개",
+                      userAchievement: [],
+                    },
+                  },
+                  {
+                    no: 20,
+                    createdAt: "2024-08-01T16:21:36.000Z",
+                    status: false,
+                    neighbor: {
+                      no: 31,
+                      nickname: "쌉악질",
+                      image:
+                        "https://phinf.pstatic.net/contact/20230524_5/1684868987987elDzd_PNG/%C8%AD%B8%E9_%C4%B8%C3%B3_2023-05-03_120045.png",
+                      description: "김은우 학살자",
+                      userAchievement: [],
+                    },
                   },
                   {
                     no: 18,
-                    neighborReceiverNo: {
-                      no: 19,
-                      nickname: "19번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:46:08.000Z",
+                    createdAt: "2024-08-01T15:46:25.000Z",
                     status: false,
-                  },
-                  {
-                    no: 17,
-                    neighborReceiverNo: {
-                      no: 14,
-                      nickname: "14번닉네임",
+                    neighbor: {
+                      no: 6,
+                      nickname: "6번닉네임",
+                      image: "6번이미지",
+                      description: "6번소개",
+                      userAchievement: [],
                     },
-                    createdAt: "2024-07-22T14:46:04.000Z",
-                    status: false,
                   },
                   {
                     no: 16,
-                    neighborReceiverNo: {
-                      no: 15,
-                      nickname: "15번닉네임",
-                    },
-                    createdAt: "2024-07-22T14:45:58.000Z",
+                    createdAt: "2024-08-01T15:46:23.000Z",
                     status: false,
+                    neighbor: {
+                      no: 4,
+                      nickname: "4번닉네임",
+                      image: "4번이미지",
+                      description: "4번소개",
+                      userAchievement: [],
+                    },
                   },
                   {
                     no: 15,
-                    neighborReceiverNo: {
-                      no: 13,
-                      nickname: "13번닉네임",
-                    },
-                    createdAt: "2024-07-19T20:29:05.000Z",
+                    createdAt: "2024-08-01T15:46:22.000Z",
                     status: false,
+                    neighbor: {
+                      no: 3,
+                      nickname: "3번닉네임",
+                      image: "3번이미지",
+                      description: "3번소개",
+                      userAchievement: [],
+                    },
                   },
                 ],
                 meta: {
                   page: 1,
                   take: 10,
-                  totalCount: 6,
+                  totalCount: 9,
                   totalPage: 1,
                 },
               },
