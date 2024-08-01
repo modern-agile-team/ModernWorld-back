@@ -20,7 +20,6 @@ import { ApiKakaoLogout } from "./swagger-decorators/kakao-logout-decorator";
 import { ApiNaverLogout } from "./swagger-decorators/naver-logout-decorator";
 import { ApiKakaoUnlink } from "./swagger-decorators/kakao-unlink-decorator";
 import { ApiNaverUnlink } from "./swagger-decorators/naver-unlink-decorator";
-import { AuthGuard } from "@nestjs/passport";
 import { ApiGoogleLogin } from "./swagger-decorators/google-login-decorator";
 
 @Controller("auth")
