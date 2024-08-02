@@ -4,8 +4,10 @@ import { RockScissorsPaperService } from "./rock-scissors-paper/rock-scissors-pa
 import { RockScissorsPaperDto } from "./rock-scissors-paper/dtos/rock-scissors-paper.dto";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { ApiRockScissorsPaper } from "./swagger-decorators/rock-scissors-paper.decorator";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller("games")
+@ApiTags("Games")
 export class GamesController {
   constructor(
     private readonly rockScissorsPaperService: RockScissorsPaperService,
