@@ -8,4 +8,6 @@ export interface UpdateLegendCount {
   presentCount: { increment: number };
 
   attendanceCount: { increment: number };
+
+  RSPWinCount: { increment: number };
 }
