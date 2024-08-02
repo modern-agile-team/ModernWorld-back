@@ -67,6 +67,10 @@ export class UsersRepository {
     });
   }
 
+  initAllUserChance() {
+    return this.prisma.user.updateMany({ data: { chance: 10 } });
+  }
+
   updateUserChance(userNo: number, increment: number) {
     return this.prisma.user.update({
       data: { chance: { increment } },
