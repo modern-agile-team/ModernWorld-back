@@ -60,6 +60,20 @@ export class UsersRepository {
     });
   }
 
+  getUserChanceByUserNo(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { chance: true },
+      where: { no: userNo },
+    });
+  }
+
+  updateUserChance(userNo: number, increment: number) {
+    return this.prisma.user.update({
+      data: { chance: { increment } },
+      where: { no: userNo },
+    });
+  }
+
   updateUserCurrentPoint(
     userNo: number,
     incrementalPoint: number,
