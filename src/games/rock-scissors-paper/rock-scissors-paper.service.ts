@@ -79,6 +79,7 @@ export class RockScissorsPaperService {
 
   private async win(userNo: number, user: string, computer: string) {
     let result;
+
     try {
       [result] = await this.prisma.$transaction([
         this.RSPRepository.createOneRecord(userNo, user, computer, "win"),
