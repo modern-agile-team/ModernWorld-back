@@ -7,6 +7,7 @@ import { RockScissorsPaperRepository } from "./rock-scissors-paper.repository";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { SseService } from "src/sse/sse.service";
 import { CommonService } from "src/common/common.service";
+import { REWARD_POINT } from "../constants/reward-point.constant";
 
 @Injectable()
 export class RockScissorsPaperService {
@@ -86,7 +87,7 @@ export class RockScissorsPaperService {
 
         this.usersRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
-          300,
+          REWARD_POINT.RSP_REWARD,
         ),
 
         this.usersRepository.updateUserChance(userNo, -1),
@@ -97,7 +98,7 @@ export class RockScissorsPaperService {
 
         this.alarmsRepository.createOneAlarm(
           userNo,
-          "[가위 바위 보 게임]에서 승리하셨습니다! 300포인트를 획득하셨습니다!",
+          `[가위 바위 보 게임]에서 승리하셨습니다! ${REWARD_POINT.RSP_REWARD}포인트를 획득하셨습니다!`,
           "게임",
         ),
       ]);
@@ -109,8 +110,7 @@ export class RockScissorsPaperService {
 
     this.sseService.sendSse(userNo, {
       title: "게임",
-      content:
-        "[가위 바위 보 게임]에서 승리하셨습니다! 300포인트를 획득하셨습니다!",
+      content: `[가위 바위 보 게임]에서 승리하셨습니다! ${REWARD_POINT.RSP_REWARD}포인트를 획득하셨습니다!`,
     });
 
     return result;
