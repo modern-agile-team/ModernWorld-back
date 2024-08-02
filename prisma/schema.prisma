@@ -101,6 +101,7 @@ model legend {
   itemCount       Int  @default(0) @map("item_count") @db.UnsignedInt
   presentCount    Int  @default(0) @map("present_count") @db.UnsignedInt
   likeCount       Int  @default(0) @map("like_count") @db.UnsignedInt
+  RSPWinCount     Int  @default(0) @map("RSP_win_count") @db.UnsignedInt
   user            user @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "legend_ibfk_1")
 }
 
