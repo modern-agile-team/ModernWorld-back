@@ -177,17 +177,17 @@ model reply {
   @@index([userNo], map: "user_no")
 }
 
-model rpsGameRecord {
+model RSPGameRecord {
   no             Int        @id @default(autoincrement()) @db.UnsignedInt
   userNo         Int        @map("user_no") @db.UnsignedInt
   userChoice     String     @map("user_choice") @db.VarChar(10)
   computerChoice String     @map("computer_choice") @db.VarChar(10)
   result         GameResult
   createdAt      DateTime   @default(now()) @map("created_at") @db.DateTime(0)
-  user           user       @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "rps_game_record_ibfk_1")
+  user           user       @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "RSP_game_record_ibfk_1")
 
   @@index([userNo], map: "user_no")
-  @@map("rps_game_record")
+  @@map("RSP_game_record")
 }
 
 model token {
@@ -234,7 +234,7 @@ model user {
   token              token[]
   userAchievement    userAchievement[]
   alarm              alarm[]
-  rpsGameRecord      rpsGameRecord[]
+  RSPGameRecord      RSPGameRecord[]
 }
 
 model userAchievement {
