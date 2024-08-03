@@ -36,6 +36,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 29,
@@ -55,6 +56,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 28,
@@ -74,6 +76,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 27,
@@ -93,6 +96,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 26,
@@ -112,6 +116,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 25,
@@ -131,6 +136,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 24,
@@ -150,6 +156,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 23,
@@ -169,6 +176,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 22,
@@ -188,6 +196,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
               {
                 no: 21,
@@ -207,6 +216,7 @@ export function ApiGetUsers() {
                   },
                 ],
                 userAchievement: [],
+                chance: 10,
               },
             ],
             meta: {
