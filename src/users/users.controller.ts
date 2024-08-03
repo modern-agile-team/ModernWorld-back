@@ -17,7 +17,7 @@ import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 import { ApiGetUserAttendance } from "./users-swagger/get-user-attendance.decorator";
 import { ApiUpdateUserAttendance } from "./users-swagger/update-user-attendance.decorator";
 import { ApiGetUsers } from "./users-swagger/get-users.decorator";
-import { ApiGetUserNamePointAchievementTitle } from "./users-swagger/get-user-name-point-achievement.decorator";
+import { ApiGetOneUser } from "./users-swagger/get-one-user.decorator";
 import { ApiCreateUserNickname } from "./users-swagger/create-user-nickname.decorator";
 import { ApiUpdateUserDescription } from "./users-swagger/update-user-description.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
@@ -45,12 +45,10 @@ export class UsersController {
   }
 
   @Get(":userNo")
-  @ApiGetUserNamePointAchievementTitle()
+  @ApiGetOneUser()
   @UseGuards(AccessTokenAuthGuard)
-  getUserNamePointAchievementTitle(
-    @Param("userNo", ParsePositiveIntPipe) userNo: number,
-  ) {
-    return this.usersService.getUserNamePointTitleCharacter(userNo);
+  getOneUser(@Param("userNo", ParsePositiveIntPipe) userNo: number) {
+    return this.usersService.getOneUser(userNo);
   }
 
   @Patch("my/attendance")
