@@ -26,7 +26,7 @@ export class UsersService {
   ) {}
 
   getUserNamePointTitleCharacter(userNo: number) {
-    return this.userRepository.getUserNamePointTitleCharacter(userNo);
+    return this.userRepository.getOneUser(userNo);
   }
 
   // 이거 안쓰는 거임 ----------------------------------
