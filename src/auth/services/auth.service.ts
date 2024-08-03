@@ -131,7 +131,7 @@ export class AuthService {
       return {
         accessToken,
         refreshToken,
-        nickName: user.nickname,
+        nickname: user.nickname,
         userNo: user.no,
       };
     } catch (error) {
@@ -251,7 +251,7 @@ export class AuthService {
       return {
         accessToken,
         refreshToken,
-        nickName: user.nickname,
+        nickname: user.nickname,
         userNo: user.no,
       };
     } catch (error) {
@@ -350,7 +350,7 @@ export class AuthService {
       return {
         accessToken,
         refreshToken,
-        nickName: user.nickname,
+        nickname: user.nickname,
         userNo: user.no,
       };
     } catch (error) {
