@@ -21,16 +21,16 @@ async function main() {
   await character(prisma);
   await item(prisma);
   await achievement(prisma);
-  await characterLocker(prisma);
-  await present(prisma);
-  await inventory(prisma);
-  await userAchievement(prisma);
-  await post(prisma);
-  await neighbor(prisma);
-  await comment(prisma);
-  await reply(prisma);
+  // await characterLocker(prisma);
+  // await present(prisma);
+  // await inventory(prisma);
+  // await userAchievement(prisma);
+  // await post(prisma);
+  // await neighbor(prisma);
+  // await comment(prisma);
+  // await reply(prisma);
   // await like(prisma);
-  await legend(prisma);
+  // await legend(prisma);
 }
 
 main()
