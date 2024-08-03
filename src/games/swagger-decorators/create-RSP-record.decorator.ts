@@ -2,13 +2,13 @@ import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiForbiddenResponse,
-  ApiOkResponse,
 } from "@nestjs/swagger";
 
 export function ApiCreateRSPRecord() {
   return applyDecorators(
-    ApiOkResponse({
+    ApiCreatedResponse({
       description: "가위바위보 결과 반환",
       content: {
         JSON: {

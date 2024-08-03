@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { GameResult } from "@prisma/client";
+import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
+import { orderByField } from "src/users/enum/orderByFeild.enum";
 
 @Injectable()
 export class RockScissorsPaperRepository {
@@ -23,5 +25,20 @@ export class RockScissorsPaperRepository {
 
       data: { userNo, userChoice, computerChoice, result },
     });
+  }
+
+  getRecords(
+    take: number,
+    where: {
+      userNo: number;
+    },
+    skip: number,
+    orderBy: { no: OrderBy },
+  ) {
+    return this.prisma.rSPGameRecord.findMany({ take, where, skip, orderBy });
+  }
+
+  countRecordsByUserNo(userNo: number) {
+    return this.prisma.rSPGameRecord.count({ where: { userNo } });
   }
 }
