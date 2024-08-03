@@ -1,12 +1,12 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { UserNo } from "src/auth/auth.decorator";
 import { RockScissorsPaperService } from "./rock-scissors-paper/rock-scissors-paper.service";
 import { RockScissorsPaperDto } from "./rock-scissors-paper/dtos/rock-scissors-paper.dto";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
-import { ApiRockScissorsPaper } from "./swagger-decorators/rock-scissors-paper.decorator";
+import { ApiCreateRSPRecord } from "./swagger-decorators/create-RSP-record.decorator";
 import { ApiTags } from "@nestjs/swagger";
 
-@Controller("games")
+@Controller("users/my")
 @ApiTags("Games")
 export class GamesController {
   constructor(
@@ -15,11 +15,17 @@ export class GamesController {
 
   @Post("rock-scissors-paper")
   @UseGuards(AccessTokenAuthGuard)
-  @ApiRockScissorsPaper()
-  rockScissorsPaper(
+  @ApiCreateRSPRecord()
+  createRSPRecord(
     @UserNo() userNo: number,
     @Body() body: RockScissorsPaperDto,
   ) {
-    return this.rockScissorsPaperService.rockScissorsPaper(userNo, body);
+    return this.rockScissorsPaperService.createRSPRecord(userNo, body);
   }
+
+  // @Get("rock-scissors-paper")
+  // @UseGuards(AccessTokenAuthGuard)
+  // getRSPRecord(@UserNo() userNo: number) {
+  //   return this.rockScissorsPaperService;
+  // }
 }

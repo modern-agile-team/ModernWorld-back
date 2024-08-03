@@ -6,19 +6,22 @@ import {
   ApiOkResponse,
 } from "@nestjs/swagger";
 
-export function ApiRockScissorsPaper() {
+export function ApiCreateRSPRecord() {
   return applyDecorators(
     ApiOkResponse({
       description: "가위바위보 결과 반환",
       content: {
         JSON: {
           example: {
-            no: 17,
-            userNo: 31,
-            userChoice: "Rock",
-            computerChoice: "Paper",
-            result: "lose",
-            createdAt: "2024-08-02T02:52:18.000Z",
+            userChoice: "Scissors",
+            computerChoice: "Scissors",
+            result: "draw",
+            createdAt: "2024-08-03T09:12:54.000Z",
+            user: {
+              no: 31,
+              nickname: "내이름",
+              chance: 96,
+            },
           },
         },
       },

@@ -13,6 +13,14 @@ export class RockScissorsPaperRepository {
     result: GameResult,
   ) {
     return this.prisma.rSPGameRecord.create({
+      select: {
+        userChoice: true,
+        computerChoice: true,
+        result: true,
+        createdAt: true,
+        user: { select: { no: true, nickname: true, chance: true } },
+      },
+
       data: { userNo, userChoice, computerChoice, result },
     });
   }

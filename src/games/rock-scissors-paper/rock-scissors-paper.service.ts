@@ -22,7 +22,7 @@ export class RockScissorsPaperService {
     private readonly commonService: CommonService,
   ) {}
 
-  async rockScissorsPaper(userNo: number, body: RockScissorsPaperDto) {
+  async createRSPRecord(userNo: number, body: RockScissorsPaperDto) {
     // 가위 : 0, 바위 : 1, 보 : 2
     const { chance } = await this.usersRepository.findUserByUserNo(userNo);
 
@@ -82,9 +82,7 @@ export class RockScissorsPaperService {
     let result;
 
     try {
-      [result] = await this.prisma.$transaction([
-        this.RSPRepository.createOneRecord(userNo, user, computer, "win"),
-
+      [, , , , result] = await this.prisma.$transaction([
         this.usersRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           REWARD_POINT.RSP_REWARD,
@@ -101,6 +99,8 @@ export class RockScissorsPaperService {
           `[가위 바위 보 게임]에서 승리하셨습니다! ${REWARD_POINT.RSP_REWARD}포인트를 획득하셨습니다!`,
           "게임",
         ),
+
+        this.RSPRepository.createOneRecord(userNo, user, computer, "win"),
       ]);
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
@@ -123,10 +123,10 @@ export class RockScissorsPaperService {
     gameResult: "lose" | "draw",
   ) {
     try {
-      const [result] = await this.prisma.$transaction([
-        this.RSPRepository.createOneRecord(userNo, user, computer, gameResult),
-
+      const [, result] = await this.prisma.$transaction([
         this.usersRepository.updateUserChance(userNo, -1),
+
+        this.RSPRepository.createOneRecord(userNo, user, computer, gameResult),
       ]);
 
       return result;
