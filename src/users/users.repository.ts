@@ -181,6 +181,8 @@ export class UsersRepository {
           select: { achievement: { select: { title: true, level: true } } },
           where: { status: true },
         },
+
+        chance: true,
       },
 
       where: { no: userNo },
@@ -218,6 +220,8 @@ export class UsersRepository {
           select: { achievement: { select: { title: true, level: true } } },
           where: { status: true },
         },
+
+        chance: true,
       },
 
       where,

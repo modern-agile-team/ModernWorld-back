@@ -25,33 +25,32 @@ export function ApiGetOneUser() {
       content: {
         JSON: {
           example: {
-            data: {
-              no: 2,
-              nickname: "2번닉네임",
-              description: "2번소개",
-              currentPoint: 0,
-              accumulationPoint: 0,
-              image: "2번이미지",
-              legend: {
-                likeCount: 7,
-              },
-              characterLocker: [
-                {
-                  character: {
-                    no: 2,
-                    image: "2번 cat 이미지",
-                  },
-                },
-              ],
-              userAchievement: [
-                {
-                  achievement: {
-                    title: "커뮤 중급자",
-                    level: "two",
-                  },
-                },
-              ],
+            no: 1,
+            nickname: "1번닉네임",
+            description: "1번소개",
+            currentPoint: 0,
+            accumulationPoint: 0,
+            image: "1번이미지",
+            legend: {
+              likeCount: 7,
             },
+            characterLocker: [
+              {
+                character: {
+                  no: 1,
+                  image: "1번 dog 이미지",
+                },
+              },
+            ],
+            userAchievement: [
+              {
+                achievement: {
+                  title: "커뮤 초보자",
+                  level: "one",
+                },
+              },
+            ],
+            chance: 10,
           },
         },
       },
