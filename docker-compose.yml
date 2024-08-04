@@ -4,8 +4,8 @@ services:
     image: cogeu/secret
     volumes:
       - /home/ubuntu/MA7/logs:/logs
-    ports:
-      - "3000:3000"
+    expose:
+      - 3000 # 컨테이너 포트만 열어줌 호스트는 X = 컨테이너 끼리만 접근 가능
     env_file:
       - ./.env
 
@@ -16,8 +16,8 @@ services:
     env_file:
       - ./.env
     command: sh -c "redis-server /usr/local/etc/redis/redis.conf"
-    ports:
-      - "6379:6379"
+    expose:
+      - 6379 # 컨테이너 내부 포트만 열어줌 호스트는 X
     restart: always
 
   nginx:
@@ -28,7 +28,7 @@ services:
     volumes:
       - /home/ubuntu/MA7/certbot/www:/var/www/certbot
       - /home/ubuntu/MA7/certbot/conf:/etc/letsencrypt
-      - /home/ubuntu/MA7/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /home/ubuntu/MA7/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # 해당 경로에 conf 파일 잘 넣어 둘 것. ro는 read only
       - /home/ubuntu/MA7/nginx/log:/var/log/nginx
     restart: always
 
