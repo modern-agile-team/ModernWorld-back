@@ -12,6 +12,7 @@ import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { access } from "fs";
 
 @Injectable()
 export class AuthService {
@@ -278,6 +279,8 @@ export class AuthService {
       );
       this.code = authorizeCode;
       const tokenBody = {
+        access_type: "offline",
+        prompt: "consent",
         grant_type: this.grant_type,
         client_id: this.client_id,
         client_secret: this.client_secret,
@@ -285,16 +288,18 @@ export class AuthService {
         redirect_uri: this.redirect_uri,
       };
       const tokenHeader = {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       };
       const token = (await axios.post(this.tokenUrl, tokenBody, tokenHeader))
         .data;
-
       if (!token) {
         throw new UnauthorizedException("Invalid authorization code.");
       }
 
       const socialAccessToken = token.access_token;
+      const socialRefreshToken = token.refresh_token;
       const userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
       const userInfoHeader = {
         headers: {
@@ -331,9 +336,17 @@ export class AuthService {
 
       const socialTokens = await this.tokenRepository.findToken(user.no);
       if (!socialTokens) {
-        await this.tokenRepository.saveTokens(user.no, socialAccessToken, "");
+        await this.tokenRepository.saveTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
       } else {
-        await this.tokenRepository.updateTokens(user.no, socialAccessToken, "");
+        await this.tokenRepository.updateTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
       }
 
       await this.tokenService.setRefreshToken(
