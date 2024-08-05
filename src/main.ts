@@ -4,12 +4,15 @@ import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { winstonLogger } from "./common/utils/logger/logger.config";
 import * as cookieParser from "cookie-parser";
+import { NestExpressApplication } from "@nestjs/platform-express";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: true,
     logger: winstonLogger,
   });
+
+  app.set("trust proxy", true);
 
   const config = new DocumentBuilder()
     .setTitle("Modern World API")
