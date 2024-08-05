@@ -108,6 +108,27 @@ export async function achievement(prisma: PrismaClient) {
         level: "three",
         point: 5000,
       },
+      {
+        name: "RSPWinCount1",
+        description: "쫌 이겼네",
+        title: "도전자",
+        level: "one",
+        point: 1000,
+      },
+      {
+        name: "RSPWinCount2",
+        description: "계속 이긴다!",
+        title: "베테랑",
+        level: "two",
+        point: 3000,
+      },
+      {
+        name: "RSPWinCount3",
+        description: "많이 이기셨네요.",
+        title: "달인",
+        level: "three",
+        point: 5000,
+      },
     ],
   });
 }

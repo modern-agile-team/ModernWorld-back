@@ -8,7 +8,7 @@ import {
   ApiParam,
 } from "@nestjs/swagger";
 
-export function ApiGetUserNamePointAchievementTitle() {
+export function ApiGetOneUser() {
   return applyDecorators(
     ApiOperation({
       summary: "한 유저 조회",
@@ -25,32 +25,32 @@ export function ApiGetUserNamePointAchievementTitle() {
       content: {
         JSON: {
           example: {
-            data: {
-              no: 1,
-              nickname: "엄준식",
-              currentPoint: 3000,
-              accumulationPoint: 2100,
-              description: "1번소개",
-              image: "1번이미지",
-              legend: {
-                likeCount: 60,
-              },
-              characterLocker: [
-                {
-                  character: {
-                    image: "3번 cat 이미지",
-                  },
-                },
-              ],
-              userAchievement: [
-                {
-                  achievement: {
-                    title: "1번 업적 칭호",
-                    level: "one",
-                  },
-                },
-              ],
+            no: 1,
+            nickname: "1번닉네임",
+            description: "1번소개",
+            currentPoint: 0,
+            accumulationPoint: 0,
+            image: "1번이미지",
+            legend: {
+              likeCount: 7,
             },
+            characterLocker: [
+              {
+                character: {
+                  no: 1,
+                  image: "1번 dog 이미지",
+                },
+              },
+            ],
+            userAchievement: [
+              {
+                achievement: {
+                  title: "커뮤 초보자",
+                  level: "one",
+                },
+              },
+            ],
+            chance: 10,
           },
         },
       },

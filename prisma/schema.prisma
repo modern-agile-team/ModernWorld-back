@@ -101,6 +101,7 @@ model legend {
   itemCount       Int  @default(0) @map("item_count") @db.UnsignedInt
   presentCount    Int  @default(0) @map("present_count") @db.UnsignedInt
   likeCount       Int  @default(0) @map("like_count") @db.UnsignedInt
+  RSPWinCount     Int  @default(0) @map("RSP_win_count") @db.UnsignedInt
   user            user @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "legend_ibfk_1")
 }
 
@@ -177,6 +178,19 @@ model reply {
   @@index([userNo], map: "user_no")
 }
 
+model RSPGameRecord {
+  no             Int        @id @default(autoincrement()) @db.UnsignedInt
+  userNo         Int        @map("user_no") @db.UnsignedInt
+  userChoice     String     @map("user_choice") @db.VarChar(10)
+  computerChoice String     @map("computer_choice") @db.VarChar(10)
+  result         GameResult
+  createdAt      DateTime   @default(now()) @map("created_at") @db.DateTime(0)
+  user           user       @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "RSP_game_record_ibfk_1")
+
+  @@index([userNo], map: "user_no")
+  @@map("RSP_game_record")
+}
+
 model token {
   no            Int     @id @default(autoincrement()) @db.UnsignedInt
   userNo        Int     @unique @map("user_no") @db.UnsignedInt
@@ -202,6 +216,7 @@ model user {
   socialName        String     @map("social_name") @db.VarChar(200)
   image             String?    @default("https://wang0514.s3.ap-northeast-2.amazonaws.com/page/BaseProfileImage/pngwing.com.png") @db.VarChar(300)
   domain            UserDomain
+  chance            Int        @default(10) @db.UnsignedInt
 
   characterLocker    characterLocker[]
   commentSenderNo    comment[]         @relation("comment_sender_noTouser")
@@ -220,6 +235,7 @@ model user {
   token              token[]
   userAchievement    userAchievement[]
   alarm              alarm[]
+  RSPGameRecord      RSPGameRecord[]
 }
 
 model userAchievement {
@@ -259,4 +275,12 @@ enum UserDomain {
   google @map("google")
 
   @@map("user_domain")
+}
+
+enum GameResult {
+  win  @map("win")
+  lose @map("lose")
+  draw @map("draw")
+
+  @@map("game_result")
 }

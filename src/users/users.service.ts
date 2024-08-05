@@ -25,8 +25,8 @@ export class UsersService {
     private readonly legendsRepository: LegendsRepository,
   ) {}
 
-  getUserNamePointTitleCharacter(userNo: number) {
-    return this.userRepository.getUserNamePointTitleCharacter(userNo);
+  getOneUser(userNo: number) {
+    return this.userRepository.getOneUser(userNo);
   }
 
   // 이거 안쓰는 거임 ----------------------------------

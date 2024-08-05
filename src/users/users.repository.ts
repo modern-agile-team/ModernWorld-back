@@ -60,6 +60,24 @@ export class UsersRepository {
     });
   }
 
+  getUserChanceByUserNo(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { chance: true },
+      where: { no: userNo },
+    });
+  }
+
+  initAllUserChance() {
+    return this.prisma.user.updateMany({ data: { chance: 10 } });
+  }
+
+  updateUserChance(userNo: number, increment: number) {
+    return this.prisma.user.update({
+      data: { chance: { increment } },
+      where: { no: userNo },
+    });
+  }
+
   updateUserCurrentPoint(
     userNo: number,
     incrementalPoint: number,
@@ -142,29 +160,29 @@ export class UsersRepository {
     });
   }
 
-  getUserNamePointTitleCharacter(userNo: number) {
+  getOneUser(userNo: number) {
     return this.prisma.user.findUnique({
       select: {
         no: true,
         nickname: true,
+        description: true,
         currentPoint: true,
         accumulationPoint: true,
-        description: true,
         image: true,
 
         legend: { select: { likeCount: true } },
 
         characterLocker: {
-          select: { character: { select: { image: true } } },
+          select: { character: { select: { no: true, image: true } } },
           where: { status: true },
         },
 
         userAchievement: {
-          select: {
-            achievement: { select: { title: true, level: true } },
-          },
+          select: { achievement: { select: { title: true, level: true } } },
           where: { status: true },
         },
+
+        chance: true,
       },
 
       where: { no: userNo },
@@ -188,26 +206,22 @@ export class UsersRepository {
         no: true,
         nickname: true,
         description: true,
-        createdAt: true,
         accumulationPoint: true,
+        createdAt: true,
 
         legend: { select: { likeCount: true } },
 
-        userAchievement: {
+        characterLocker: {
+          select: { character: { select: { no: true, image: true } } },
           where: { status: true },
-          select: {
-            achievement: {
-              select: { title: true, level: true },
-            },
-          },
         },
 
-        characterLocker: {
+        userAchievement: {
+          select: { achievement: { select: { title: true, level: true } } },
           where: { status: true },
-          select: {
-            character: { select: { image: true } },
-          },
         },
+
+        chance: true,
       },
 
       where,
