@@ -8,7 +8,8 @@ export class LoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const reqTime = Date.now();
     const userAgent = req.get("user-agent");
-    const { method, originalUrl, ip } = req;
+    const ip = req.headers["x-forwarded-for"] || req.ip; //proxy 서버를 신뢰 하도록 하는 설정 필요할듯.
+    const { method, originalUrl, protocol } = req;
 
     res.on("finish", () => {
       const resTime = Date.now();
@@ -16,7 +17,7 @@ export class LoggerMiddleware implements NestMiddleware {
       const { statusCode } = res;
 
       this.logger.log(
-        `${ip} ${statusCode} ${duration}ms ${method} [${originalUrl}] | ${userAgent}`,
+        `${ip} ${statusCode} ${duration}ms ${protocol} ${method} [${originalUrl}] | ${userAgent}`,
       );
     });
 
