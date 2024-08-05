@@ -79,6 +79,12 @@ export class AuthController {
     return await this.authService.naverLogout(userNo);
   }
 
+  @UseGuards(AccessTokenAuthGuard)
+  @Delete("google/logout")
+  async googleLogout(@UserNo() userNo: number) {
+    return await this.authService.googleLogout(userNo);
+  }
+
   @ApiKakaoUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("kakao/unlink")

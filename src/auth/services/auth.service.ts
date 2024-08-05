@@ -413,6 +413,42 @@ export class AuthService {
     }
   }
 
+  async googleLogout(userNo: number) {
+    try {
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (!user) {
+        throw new NotFoundException("user not found");
+      }
+      if (user.domain !== "google") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Google.",
+        );
+      }
+
+      await this.tokenRepository.deleteTokens(userNo);
+
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+
+      return { message: "구글 로그아웃 성공" };
+    } catch (error) {
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그아웃 중 서버에러가 발생했습니다.",
+        );
+      }
+    }
+  }
+
   async kakaoLogout(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
