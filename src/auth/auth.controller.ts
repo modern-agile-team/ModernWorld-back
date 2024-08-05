@@ -22,6 +22,7 @@ import { ApiKakaoUnlink } from "./swagger-decorators/kakao-unlink-decorator";
 import { ApiNaverUnlink } from "./swagger-decorators/naver-unlink-decorator";
 import { ApiGoogleLogin } from "./swagger-decorators/google-login-decorator";
 import { ApiGoogleLogout } from "./swagger-decorators/google-logout-decorator";
+import { ApiGoogleUnlink } from "./swagger-decorators/google-unlink-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -99,5 +100,12 @@ export class AuthController {
   @Delete("naver/unlink")
   async naverUnlink(@UserNo() userNo: number) {
     return await this.authService.naverUnlink(userNo);
+  }
+
+  @ApiGoogleUnlink()
+  @UseGuards(AccessTokenAuthGuard)
+  @Delete("google/unlink")
+  async googleUnlink(@UserNo() userNo: number) {
+    return await this.authService.googleUnlink(userNo);
   }
 }

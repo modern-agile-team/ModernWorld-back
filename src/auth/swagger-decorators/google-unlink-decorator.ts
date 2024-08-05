@@ -1,17 +1,17 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-export function ApiGoogleLogout() {
+export function ApiGoogleUnlink() {
   return applyDecorators(
     ApiOperation({
-      summary: "구글 로그아웃 API",
-      description: "구글 로그아웃 API",
+      summary: "구글 회원탈퇴 API",
+      description: "구글 회원탈퇴 API",
     }),
     ApiResponse({
       status: 200,
-      description: "성공적으로 로그아웃 된 경우",
+      description: "성공적으로 회원탈퇴가 된 경우",
       content: {
-        JSON: { example: { message: "구글 로그아웃 성공." } },
+        JSON: { example: { message: "구글 회원탈퇴 성공." } },
       },
     }),
     ApiResponse({
@@ -78,7 +78,7 @@ export function ApiGoogleLogout() {
               },
               description: "만료된 토큰인 경우",
             },
-            "You are not a user logged in with Google": {
+            "You are not a user logged in with Google.": {
               value: {
                 message: "You are not a user logged in with Google.",
                 error: "Unauthorized",
@@ -110,7 +110,7 @@ export function ApiGoogleLogout() {
                 error: "Not Found",
                 statusCode: 404,
               },
-              description: "리프레시 토큰이 Redis에 없는 경우",
+              description: "액세스 토큰이 Redis에 없는 경우",
             },
             "token is not matched.": {
               value: {
@@ -133,6 +133,26 @@ export function ApiGoogleLogout() {
         },
       },
     }),
+    ApiResponse({
+      status: 409,
+      description: "409 error",
+      content: {
+        JSON: {
+          examples: {
+            "token is not matched.": {
+              value: {
+                message: "token is not matched.",
+                error: "Conflict",
+                statusCode: 409,
+              },
+              description:
+                "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
+            },
+          },
+        },
+      },
+    }),
+
     ApiResponse({
       status: 500,
       description: "Internal server error",

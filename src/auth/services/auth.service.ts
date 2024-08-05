@@ -648,4 +648,65 @@ export class AuthService {
       }
     }
   }
+  async googleUnlink(userNo: number) {
+    try {
+      const socialTokens = await this.tokenRepository.findToken(userNo);
+      if (!socialTokens) {
+        throw new NotFoundException("user not found");
+      }
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (user.domain !== "google") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Google.",
+        );
+      }
+      let socialAccessToken = socialTokens.socialAccess;
+      const socialRefreshToken = socialTokens.socialRefresh;
+
+      const socialAccessTokenInfo =
+        await this.tokenService.googleSocialAccessTokenInfo(socialAccessToken);
+      if (socialAccessTokenInfo === 401) {
+        const newGoogleAccessToken =
+          await this.tokenService.createNewGoogleAccessToken(
+            socialRefreshToken,
+          );
+        await this.tokenRepository.updateAccessToken(
+          userNo,
+          newGoogleAccessToken.access_token,
+        );
+        socialAccessToken = newGoogleAccessToken.access_token;
+      }
+
+      const unlink = await axios.post(
+        `https://accounts.google.com/o/oauth2/revoke?token=${socialAccessToken}`,
+        {},
+        { headers: { "Content-type": "application/x-www-form-urlencoded" } },
+      );
+
+      await this.tokenRepository.deleteTokens(userNo);
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+
+      await this.usersRepository.updateDeleteAt(userNo, new Date());
+
+      return { message: "구글 회원탈퇴 성공" };
+    } catch (error) {
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else if (error.response.statusCode === 409) {
+        throw new ConflictException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "회원탈퇴 중 서버에러가 발생했습니다.",
+        );
+      }
+    }
+  }
 }
