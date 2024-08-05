@@ -677,7 +677,7 @@ export class AuthService {
         socialAccessToken = newGoogleAccessToken.access_token;
       }
 
-      const unlink = await axios.post(
+      await axios.post(
         `https://accounts.google.com/o/oauth2/revoke?token=${socialAccessToken}`,
         {},
         { headers: { "Content-type": "application/x-www-form-urlencoded" } },
