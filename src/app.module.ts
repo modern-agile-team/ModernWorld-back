@@ -24,6 +24,7 @@ import { RedisModule } from "./auth/redis/redis.module";
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
 import { CommonModule } from "./common/common.module";
 import { NeighborsModule } from "./neighbors/neighbors.module";
+import { GamesModule } from "./games/games.module";
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { NeighborsModule } from "./neighbors/neighbors.module";
     RedisModule,
     InventoryModule,
     UsersModule,
+    GamesModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],

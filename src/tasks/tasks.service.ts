@@ -16,6 +16,29 @@ export class TasksService {
     private readonly sseService: SseService,
   ) {}
 
+  @Cron("0 0 0 * * *", {
+    timeZone: "Asia/Seoul",
+  })
+  async initUserChance() {
+    //0 0 0 * * * - 매일 00시 00분 00초
+    for (let i = 1; i <= 3; i++) {
+      try {
+        const result = await this.usersRepository.initAllUserChance();
+        this.logger.log("User Chance intialization Completed.");
+        return result;
+      } catch (err) {
+        if (i === 3) {
+          this.logger.error("User Chance initialization error.", err);
+          return 0;
+        }
+        this.logger.warn(
+          `${i} user chance initialization failed, try again...`,
+          err,
+        );
+      }
+    }
+  }
+
   @Cron("0 0 0 * * 1", {
     timeZone: "Asia/seoul",
   })
@@ -26,13 +49,14 @@ export class TasksService {
         const result = await this.usersRepository.resetUserAttendance();
         this.logger.log("User Attendance intialization Completed.");
         return result;
-      } catch {
-        if (i === 3)
-          throw new InternalServerErrorException(
-            "Reset user attendance Transaction error.",
-          );
+      } catch (err) {
+        if (i === 3) {
+          this.logger.error("Reset user attendance Transaction error.", err);
+          return 0;
+        }
         this.logger.warn(
           `${i} user attendance initialization failed, try again...`,
+          err,
         );
       }
     }
@@ -47,10 +71,12 @@ export class TasksService {
         const result = this.sseService.deleteAllSse();
         this.logger.log("SSE initialization Completed.");
         return result;
-      } catch {
-        if (i === 3)
-          throw new InternalServerErrorException("SSE initialization error.");
-        this.logger.warn(`${i} SSE initialization failed : try again...`);
+      } catch (err) {
+        if (i === 3) {
+          this.logger.error("SSE initialization error.", err);
+          return 0;
+        }
+        this.logger.warn(`${i} SSE initialization failed : try again...`, err);
       }
     }
   }
