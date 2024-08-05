@@ -21,6 +21,7 @@ import { ApiNaverLogout } from "./swagger-decorators/naver-logout-decorator";
 import { ApiKakaoUnlink } from "./swagger-decorators/kakao-unlink-decorator";
 import { ApiNaverUnlink } from "./swagger-decorators/naver-unlink-decorator";
 import { ApiGoogleLogin } from "./swagger-decorators/google-login-decorator";
+import { ApiGoogleLogout } from "./swagger-decorators/google-logout-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -79,6 +80,7 @@ export class AuthController {
     return await this.authService.naverLogout(userNo);
   }
 
+  @ApiGoogleLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("google/logout")
   async googleLogout(@UserNo() userNo: number) {
