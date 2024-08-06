@@ -1,8 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { GameResult } from "@prisma/client";
-import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
-import { orderByField } from "src/users/enum/orderByFeild.enum";
 
 @Injectable()
 export class RockScissorsPaperRepository {

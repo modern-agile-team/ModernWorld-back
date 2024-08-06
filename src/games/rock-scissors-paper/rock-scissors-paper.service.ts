@@ -8,8 +8,6 @@ import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { SseService } from "src/sse/sse.service";
 import { CommonService } from "src/common/common.service";
 import { REWARD_POINT } from "../constants/reward-point.constant";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { GetDateDto } from "./dtos/get-date.dto";
 
 @Injectable()

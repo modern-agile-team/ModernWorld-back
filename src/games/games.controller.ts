@@ -13,7 +13,6 @@ import { RockScissorsPaperDto } from "./rock-scissors-paper/dtos/rock-scissors-p
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { ApiCreateRSPRecord } from "./swagger-decorators/create-RSP-record.decorator";
 import { ApiTags } from "@nestjs/swagger";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { ApiGetRSPRecords } from "./swagger-decorators/get-RSP-records.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { GetDateDto } from "./rock-scissors-paper/dtos/get-date.dto";
