@@ -25,7 +25,7 @@ export class RockScissorsPaperService {
   ) {}
 
   async createRSPRecord(userNo: number, body: RockScissorsPaperDto) {
-    // 가위 : 0, 바위 : 1, 보 : 2
+    // 가위 : 0, 바위 : 1, 보 : 2 패배 : 3
     const { chance } = await this.usersRepository.findUserByUserNo(userNo);
 
     if (chance === 0)
@@ -34,8 +34,13 @@ export class RockScissorsPaperService {
     const { choice } = body;
     const random = Math.floor(Math.random() * 3);
 
-    const user = this.convertChoiceToString(choice);
     const computer = this.convertChoiceToString(random);
+
+    if (choice === 3) {
+      return this.drawOrLose(userNo, "-", computer, "lose");
+    }
+
+    const user = this.convertChoiceToString(choice);
 
     if (choice === random) {
       return this.drawOrLose(userNo, user, computer, "draw");

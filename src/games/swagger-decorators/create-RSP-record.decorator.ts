@@ -28,13 +28,13 @@ export function ApiCreateRSPRecord() {
     }),
 
     ApiBadRequestResponse({
-      description: "body의 choice가 0, 1, 2가 아닌 경우",
+      description: "body의 choice가 0, 1, 2, 3 이 아닌 경우",
       content: {
         JSON: {
           example: {
             message: [
               "choice must be an integer number",
-              "choice must not be greater than 2",
+              "choice must not be greater than 3",
               "choice must not be less than 0",
             ],
             error: "Bad Request",
