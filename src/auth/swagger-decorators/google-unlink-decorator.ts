@@ -112,15 +112,6 @@ export function ApiGoogleUnlink() {
               },
               description: "액세스 토큰이 Redis에 없는 경우",
             },
-            "token is not matched.": {
-              value: {
-                message: "token is not matched.",
-                error: "Not Found",
-                statusCode: 404,
-              },
-              description:
-                "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
-            },
             "user not found": {
               value: {
                 message: "user not found",
@@ -152,7 +143,6 @@ export function ApiGoogleUnlink() {
         },
       },
     }),
-
     ApiResponse({
       status: 500,
       description: "Internal server error",
