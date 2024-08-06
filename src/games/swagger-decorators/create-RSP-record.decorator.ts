@@ -4,10 +4,13 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiOperation,
 } from "@nestjs/swagger";
 
 export function ApiCreateRSPRecord() {
   return applyDecorators(
+    ApiOperation({ summary: "가위바위보 실행(생성)" }),
+
     ApiCreatedResponse({
       description: "가위바위보 결과 반환",
       content: {

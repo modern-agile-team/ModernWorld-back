@@ -10,6 +10,7 @@ import { CommonService } from "src/common/common.service";
 import { REWARD_POINT } from "../constants/reward-point.constant";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
+import { GetDateDto } from "./dtos/get-date.dto";
 
 @Injectable()
 export class RockScissorsPaperService {
@@ -85,25 +86,12 @@ export class RockScissorsPaperService {
     }
   }
 
-  async getRSPRecords(userNo: number, query: PaginationDto) {
-    const { page, take, orderBy } = query;
-    const skip = (page - 1) * take;
-    const where = { userNo };
+  async getRSPRecords(userNo: number, query: GetDateDto) {
+    const { date } = query;
 
-    const records = await this.RSPRepository.getRecords(take, where, skip, {
-      no: orderBy,
-    });
+    const records = await this.RSPRepository.getRecords(userNo, date);
 
-    const totalCount = await this.RSPRepository.countRecordsByUserNo(userNo);
-
-    const totalPage = Math.ceil(totalCount / take);
-
-    return new PaginationResponseDto(records, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return records;
   }
 
   private async win(userNo: number, user: string, computer: string) {
