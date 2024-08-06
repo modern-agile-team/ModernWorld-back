@@ -12,7 +12,6 @@ import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
 import { LegendsRepository } from "src/legends/legends.repository";
-import { access } from "fs";
 
 @Injectable()
 export class AuthService {
