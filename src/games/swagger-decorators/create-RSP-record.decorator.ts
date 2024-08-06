@@ -4,10 +4,13 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiOperation,
 } from "@nestjs/swagger";
 
 export function ApiCreateRSPRecord() {
   return applyDecorators(
+    ApiOperation({ summary: "가위바위보 실행(생성)" }),
+
     ApiCreatedResponse({
       description: "가위바위보 결과 반환",
       content: {
@@ -28,13 +31,13 @@ export function ApiCreateRSPRecord() {
     }),
 
     ApiBadRequestResponse({
-      description: "body의 choice가 0, 1, 2가 아닌 경우",
+      description: "body의 choice가 0, 1, 2, 3 이 아닌 경우",
       content: {
         JSON: {
           example: {
             message: [
               "choice must be an integer number",
-              "choice must not be greater than 2",
+              "choice must not be greater than 3",
               "choice must not be less than 0",
             ],
             error: "Bad Request",

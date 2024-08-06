@@ -3,10 +3,13 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiOkResponse,
+  ApiOperation,
 } from "@nestjs/swagger";
 
 export function ApiGetRSPRecords() {
   return applyDecorators(
+    ApiOperation({ summary: "가위바위보 기록 조회" }),
+
     ApiOkResponse({
       description: "가위 바위 보 기록",
       content: {
@@ -106,52 +109,13 @@ export function ApiGetRSPRecords() {
     }),
 
     ApiBadRequestResponse({
+      description: "query의 날짜의 형식이 알맞지 않은 경우",
       content: {
         JSON: {
-          examples: {
-            ex1: {
-              summary: "query의 page가 양의 정수가 아닐 경우",
-              value: {
-                message: [
-                  "page must be a positive number",
-                  "page must be an integer number",
-                ],
-                error: "Bad Request",
-                statusCode: 400,
-              },
-            },
-
-            ex2: {
-              summary: "query의 take가 양의 정수가 아닐 경우",
-              value: {
-                message: [
-                  "take must be a positive number",
-                  "take must be an integer number",
-                ],
-                error: "Bad Request",
-                statusCode: 400,
-              },
-            },
-
-            ex3: {
-              summary: "query의 orderBy가 asc, desc가 아닐 경우",
-              value: {
-                message: [
-                  "orderBy must be one of the following values: asc, desc",
-                ],
-                error: "Bad Request",
-                statusCode: 400,
-              },
-            },
-
-            ex5: {
-              summary: "param의 userNo가 양의 정수가 아닐 경우",
-              value: {
-                message: "Validation failed (positive int string is expected)",
-                error: "Bad Request",
-                statusCode: 400,
-              },
-            },
+          example: {
+            message: ["date must be a Date instance"],
+            error: "Bad Request",
+            statusCode: 400,
           },
         },
       },
