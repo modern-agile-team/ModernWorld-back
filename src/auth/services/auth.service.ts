@@ -95,6 +95,12 @@ export class AuthService {
           "naver",
         );
         await this.legendsRepository.createUserLegend(user.no);
+      } else {
+        await this.usersRepository.updateUser(
+          user.no,
+          userInfo.response.name,
+          userInfo.response.profile_image,
+        );
       }
 
       await this.usersRepository.updateDeleteAt(user.no, null);
@@ -185,12 +191,16 @@ export class AuthService {
 
       this.userInfoUrl = "https://kapi.kakao.com/v2/user/me";
       const userInfo = (
-        await axios.get(this.userInfoUrl, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${socialAccessToken}`,
+        await axios.post(
+          this.userInfoUrl,
+          { secure_resource: true },
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${socialAccessToken}`,
+            },
           },
-        })
+        )
       ).data;
 
       if (!userInfo) {
@@ -215,6 +225,12 @@ export class AuthService {
           "kakao",
         );
         await this.legendsRepository.createUserLegend(user.no);
+      } else {
+        await this.usersRepository.updateUser(
+          user.no,
+          userProperties.nickname,
+          userProperties.profile_image,
+        );
       }
 
       await this.usersRepository.updateDeleteAt(user.no, null);
@@ -327,6 +343,12 @@ export class AuthService {
           "google",
         );
         await this.legendsRepository.createUserLegend(user.no);
+      } else {
+        await this.usersRepository.updateUser(
+          user.no,
+          userInfo.name,
+          userInfo.picture,
+        );
       }
       await this.usersRepository.updateDeleteAt(user.no, null);
 
