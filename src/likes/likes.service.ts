@@ -85,7 +85,7 @@ export class LikesService {
     if (!like) throw new NotFoundException("This like doesn't exist.");
 
     try {
-      const [result] = await this.prisma.$transaction([
+      await this.prisma.$transaction([
         this.likesRepository.deleteOneLike(like.no),
         this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: {
@@ -93,8 +93,6 @@ export class LikesService {
           },
         }),
       ]);
-
-      return result;
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();
