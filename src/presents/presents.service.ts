@@ -20,6 +20,7 @@ import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
+import { PresentStatus } from "@prisma/client";
 
 @Injectable()
 export class PresentsService {
@@ -81,7 +82,7 @@ export class PresentsService {
       throw new NotFoundException("This present was deleted from sender.");
     }
 
-    if (receiver.no === userNo && present.status === "unread") {
+    if (receiver.no === userNo && present.status === PresentStatus.unread) {
       const updatedPresent =
         await this.presentsRepository.updateOnePresentStatusFromUnreadToRead(
           presentNo,
