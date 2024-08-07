@@ -22,6 +22,14 @@ export class UsersRepository {
     });
   }
 
+  updateUser(userNo: number, socialName: string, image: string) {
+    return this.prisma.user.update({
+      select: { no: true, image: true, socialName: true },
+      data: { image, socialName },
+      where: { no: userNo },
+    });
+  }
+
   createUser(
     uniqueIdentifier: string,
     socialName: string,
