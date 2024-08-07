@@ -78,7 +78,7 @@ export class NeighborsRepository {
       },
       skip,
       take,
-      orderBy: { no: orderBy },
+      orderBy: { createdAt: orderBy },
       where,
     });
   }
