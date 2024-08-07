@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, inventory } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -38,13 +37,13 @@ export class InventoryRepository {
     });
   }
 
-  findOneItem(userNo: number, itemNo: number): PrismaPromise<inventory> {
+  findOneItem(userNo: number, itemNo: number) {
     return this.prisma.inventory.findFirst({
       where: { userNo, itemNo },
     });
   }
 
-  createUserOneItem(userNo: number, itemNo: number): PrismaPromise<inventory> {
+  createUserOneItem(userNo: number, itemNo: number) {
     return this.prisma.inventory.create({
       data: {
         userNo,
@@ -53,7 +52,7 @@ export class InventoryRepository {
     });
   }
 
-  updateItemStatus(no: number, status: boolean): PrismaPromise<inventory> {
+  updateItemStatus(no: number, status: boolean) {
     return this.prisma.inventory.update({
       data: {
         status,
@@ -62,10 +61,7 @@ export class InventoryRepository {
     });
   }
 
-  disuseOtherItems(
-    userNo: number,
-    itemType: string,
-  ): PrismaPromise<{ count: number }> {
+  disuseOtherItems(userNo: number, itemType: string) {
     return this.prisma.inventory.updateMany({
       data: { status: false },
       where: { userNo, item: { type: itemType } },
