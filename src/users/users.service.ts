@@ -29,22 +29,6 @@ export class UsersService {
     return this.userRepository.getOneUser(userNo);
   }
 
-  // 이거 안쓰는 거임 ----------------------------------
-  async createUser(
-    uniqueIdentifier: string,
-    socialName: string,
-    image: string,
-    domain: UserDomain,
-  ) {
-    const result = await this.userRepository.createUser(
-      uniqueIdentifier,
-      socialName,
-      image,
-      domain,
-    );
-    return result;
-  }
-
   getUserAttendance(userNo: number) {
     return this.userRepository.getUserAttendance(userNo);
   }
