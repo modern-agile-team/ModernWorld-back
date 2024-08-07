@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, alarm } from "@prisma/client";
+import { PrismaPromise } from "@prisma/client";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PrismaTxType } from "src/prisma/prisma.type";
