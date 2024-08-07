@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, characterLocker } from "@prisma/client";
 import { Animal } from "src/common/enum/animal.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -7,11 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class CharacterLockersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getUserAllCharacters(
-    userNo: number,
-    species?: Animal,
-    status?: boolean,
-  ): PrismaPromise<characterLocker[]> {
+  getUserAllCharacters(userNo: number, species?: Animal, status?: boolean) {
     return this.prisma.characterLocker.findMany({
       select: {
         no: true,
@@ -32,46 +27,33 @@ export class CharacterLockersRepository {
     });
   }
 
-  createOneCharacter(
-    userNo: number,
-    characterNo: number,
-    status?: boolean,
-  ): PrismaPromise<characterLocker> {
+  createOneCharacter(userNo: number, characterNo: number, status?: boolean) {
     return this.prisma.characterLocker.create({
       data: { characterNo, userNo, status },
     });
   }
 
-  updateCharacterStatusToUse(no: number): PrismaPromise<characterLocker> {
+  updateCharacterStatusToUse(no: number) {
     return this.prisma.characterLocker.update({
       data: { status: true },
       where: { no },
     });
   }
 
-  disuseOtherCharacters(
-    userNo: number,
-    characterNo: number,
-  ): PrismaPromise<{ count: number }> {
+  disuseOtherCharacters(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.updateMany({
       data: { status: false },
       where: { userNo, characterNo: { not: characterNo } },
     });
   }
 
-  getUserAllCharactersBySpecies(
-    userNo: number,
-    species: string,
-  ): PrismaPromise<characterLocker[]> {
+  getUserAllCharactersBySpecies(userNo: number, species: string) {
     return this.prisma.characterLocker.findMany({
       where: { userNo, character: { species } },
     });
   }
 
-  findUserCharacterFromInventory(
-    userNo: number,
-    characterNo: number,
-  ): PrismaPromise<characterLocker> {
+  findUserCharacterFromInventory(userNo: number, characterNo: number) {
     return this.prisma.characterLocker.findFirst({
       where: { userNo, characterNo },
     });
