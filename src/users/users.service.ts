@@ -9,11 +9,11 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
-import { Prisma, UserDomain } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
-import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { UpdateUserAttendanceDto } from "./dtos/update-user-attendance.dto";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class UsersService {
@@ -21,8 +21,8 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly userRepository: UsersRepository,
     private readonly logger: Logger,
-    private readonly commonService: CommonService,
     private readonly legendsRepository: LegendsRepository,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   getOneUser(userNo: number) {
@@ -78,7 +78,10 @@ export class UsersService {
         }),
       ]);
 
-      this.commonService.checkAchievementCondition(userNo, "attendanceCount");
+      this.userAchievementsService.checkAchievementCondition(
+        userNo,
+        "attendanceCount",
+      );
 
       return userAttendance;
     } catch (err) {
