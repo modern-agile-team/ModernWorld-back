@@ -10,22 +10,22 @@ import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
-import { CommonService } from "src/common/common.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class CommentService {
   constructor(
     private readonly commentRepository: CommentRepository,
-    private readonly commonService: CommonService,
     private readonly legendsService: LegendsRepository,
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
     private readonly sseService: SseService,
     private readonly alarmsRepository: AlarmsRepository,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   async createOneComment(
@@ -49,7 +49,10 @@ export class CommentService {
         content: `${comment.commentSender.nickname}}님이 방명록을 남겼습니다.`,
       });
 
-      this.commonService.checkAchievementCondition(senderNo, "commentCount");
+      this.userAchievementsService.checkAchievementCondition(
+        senderNo,
+        "commentCount",
+      );
 
       return comment;
     } catch (err) {
@@ -136,7 +139,10 @@ export class CommentService {
         }),
       ]);
 
-      this.commonService.checkAchievementCondition(userNo, "commentCount");
+      this.userAchievementsService.checkAchievementCondition(
+        userNo,
+        "commentCount",
+      );
 
       return reply;
     } catch (err) {
