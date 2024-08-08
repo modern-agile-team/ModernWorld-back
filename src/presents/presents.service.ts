@@ -16,11 +16,11 @@ import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
 import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
 import { UpdatePresentsStatusResponseDto } from "./dtos/update-presents-status-response.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { PresentStatus } from "@prisma/client";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class PresentsService {
@@ -32,9 +32,9 @@ export class PresentsService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly legendsRepository: LegendsRepository,
-    private readonly commonService: CommonService,
     private readonly sseService: SseService,
     private readonly alarmsRepository: AlarmsRepository,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   getUserPresents(userNo: number, query: GetUserPresentsDto) {
@@ -166,7 +166,10 @@ export class PresentsService {
           ),
         ]);
 
-        this.commonService.checkAchievementCondition(userNo, "itemCount");
+        this.userAchievementsService.checkAchievementCondition(
+          userNo,
+          "itemCount",
+        );
 
         return new UpdatePresentsStatusResponseDto(processedPresent);
       } catch (err) {
@@ -301,7 +304,10 @@ export class PresentsService {
       content: `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
     });
 
-    this.commonService.checkAchievementCondition(senderNo, "presentCount");
+    this.userAchievementsService.checkAchievementCondition(
+      senderNo,
+      "presentCount",
+    );
 
     return present;
   }
