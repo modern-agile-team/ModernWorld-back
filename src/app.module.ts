@@ -22,7 +22,6 @@ import { AlarmsModule } from "./alarms/alarms.module";
 import { SseModule } from "./sse/sse.module";
 import { RedisModule } from "./auth/redis/redis.module";
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
-import { CommonModule } from "./common/common.module";
 import { NeighborsModule } from "./neighbors/neighbors.module";
 import { GamesModule } from "./games/games.module";
 
@@ -46,7 +45,6 @@ import { GamesModule } from "./games/games.module";
     LikesModule,
     LoggerModule,
     SseModule,
-    CommonModule,
     NeighborsModule,
     RedisModule,
     InventoryModule,
