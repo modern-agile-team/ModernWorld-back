@@ -6,9 +6,9 @@ import { UsersRepository } from "src/users/users.repository";
 import { RockScissorsPaperRepository } from "./rock-scissors-paper.repository";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { SseService } from "src/sse/sse.service";
-import { CommonService } from "src/common/common.service";
 import { REWARD_POINT } from "../constants/reward-point.constant";
 import { GetDateDto } from "./dtos/get-date.dto";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class RockScissorsPaperService {
@@ -20,7 +20,7 @@ export class RockScissorsPaperService {
     private readonly RSPRepository: RockScissorsPaperRepository,
     private readonly alarmsRepository: AlarmsRepository,
     private readonly sseService: SseService,
-    private readonly commonService: CommonService,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   async createRSPRecord(userNo: number, body: RockScissorsPaperDto) {
@@ -120,7 +120,10 @@ export class RockScissorsPaperService {
       this.logger.error(`transaction Error : ${err}`);
     }
 
-    this.commonService.checkAchievementCondition(userNo, "RSPWinCount");
+    this.userAchievementsService.checkAchievementCondition(
+      userNo,
+      "RSPWinCount",
+    );
 
     this.sseService.sendSse(userNo, {
       title: "게임",
