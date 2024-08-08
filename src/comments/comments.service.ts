@@ -46,7 +46,7 @@ export class CommentService {
 
       this.sseService.sendSse(receiverNo, {
         title: "방명록",
-        content: `${comment.commentSender.nickname}}님이 방명록을 남겼습니다.`,
+        content: `${comment.commentSender.nickname}님이 방명록을 남겼습니다.`,
       });
 
       this.userAchievementsService.checkAchievementCondition(
