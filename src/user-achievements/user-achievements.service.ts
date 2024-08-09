@@ -13,6 +13,7 @@ import { LegendsRepository } from "src/legends/legends.repository";
 import { AchievementsRepository } from "src/achievements/achievements.repository";
 import { UpdateLegendCount } from "src/legends/interfaces/update-legend-count.interface";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class UserAchievementsService {
@@ -75,9 +76,12 @@ export class UserAchievementsService {
   async checkAchievementCondition(
     userNo: number,
     legendField: keyof UpdateLegendCount,
+    tx: PrismaTxType,
   ) {
-    const userLegend =
-      await this.legendsRepository.getAllLegendsByUserNo(userNo);
+    const userLegend = await this.legendsRepository.getAllLegendsByUserNo(
+      userNo,
+      tx,
+    );
 
     // 해당하는 개수 별로 흭득할수 있는 업적 설정
     // 총 15개의 업적. 5(업적 종류) * 3(업적단계) legend table의 feild 값이10, 20, 40일떄 이벤트 발생
@@ -85,19 +89,20 @@ export class UserAchievementsService {
     // 그러나 title(칭호)가 있으니까 프론트는 이거쓰면 됨ㅇㅇ
     switch (userLegend[`${legendField}`]) {
       case 10:
-        this.checkAchievementAndGet(userNo, legendField + 1);
+        await this.checkAchievementAndGet(userNo, legendField + 1, tx);
         break;
       case 20:
-        this.checkAchievementAndGet(userNo, legendField + 2);
+        await this.checkAchievementAndGet(userNo, legendField + 2, tx);
         break;
       case 40:
-        this.checkAchievementAndGet(userNo, legendField + 3);
+        await this.checkAchievementAndGet(userNo, legendField + 3, tx);
     }
   }
 
   private async checkAchievementAndGet(
     userNo: number,
     legendFieldWithNumber: string,
+    tx: PrismaTxType,
   ) {
     if (
       //해당 하는 업적을 가지고 있는지 확인
@@ -107,33 +112,40 @@ export class UserAchievementsService {
       ))
     ) {
       //해당 업적 정보얻기
-      const { no, point, title } =
+      const achievement =
         await this.achievementsRepository.getAchievementNoByName(
           legendFieldWithNumber,
         );
 
-      try {
-        await this.prisma.$transaction([
-          //유저 업적 테이블에 업적 추가
-          this.userAchievementsRepository.createOneUserAchievement(userNo, no),
-
-          //유저 포인트 늘리기
-          this.usersRepository.updateUserCurrentPointAccumulationPoint(
-            userNo,
-            point,
-          ),
-
-          //알람 테이블에 알람 추가
-          this.alarmsRepository.createOneAlarm(
-            userNo,
-            `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
-            "업적",
-          ),
-        ]);
-      } catch (err) {
-        this.logger.error(`transaction Error : ${err}`);
-        throw new InternalServerErrorException();
+      if (!achievement) {
+        this.logger.error(
+          `Error: There is no such achievement in DB. Name: ${legendFieldWithNumber}`,
+        );
       }
+
+      const { no, point, title } = achievement;
+
+      //유저 업적 테이블에 업적 추가
+      await this.userAchievementsRepository.createOneUserAchievement(
+        userNo,
+        no,
+        tx,
+      );
+
+      //유저 포인트 늘리기
+      await this.usersRepository.updateUserCurrentPointAccumulationPoint(
+        userNo,
+        point,
+        tx,
+      );
+
+      //알람 테이블에 알람 추가
+      await this.alarmsRepository.createOneAlarm(
+        userNo,
+        `업적 [${title}]을 달성했습니다! ${point}포인트를 흭득하셨습니다!`,
+        "업적",
+        tx,
+      );
 
       this.sseService.sendSse(userNo, {
         title: "업적",
