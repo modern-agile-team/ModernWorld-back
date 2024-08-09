@@ -62,6 +62,12 @@ export class LikesService {
           tx,
         );
 
+        await this.userAchievementsService.checkAchievementCondition(
+          receiverNo,
+          "likeCount",
+          tx,
+        );
+
         return result;
       });
     } catch (err) {
@@ -73,11 +79,6 @@ export class LikesService {
       title: "좋아요",
       content: `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
     });
-
-    this.userAchievementsService.checkAchievementCondition(
-      receiverNo,
-      "likeCount",
-    );
 
     return like;
   }
