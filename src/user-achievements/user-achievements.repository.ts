@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class UserAchievementsRepository {
@@ -37,8 +38,12 @@ export class UserAchievementsRepository {
     });
   }
 
-  createOneUserAchievement(userNo: number, achievementNo: number) {
-    return this.prisma.userAchievement.create({
+  createOneUserAchievement(
+    userNo: number,
+    achievementNo: number,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).userAchievement.create({
       data: { userNo, achievementNo },
     });
   }
