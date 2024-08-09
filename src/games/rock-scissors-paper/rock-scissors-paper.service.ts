@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RockScissorsPaperDto } from "./dtos/rock-scissors-paper.dto";
 import { LegendsRepository } from "src/legends/legends.repository";
@@ -96,34 +101,48 @@ export class RockScissorsPaperService {
     let result;
 
     try {
-      [, , , , result] = await this.prisma.$transaction([
-        this.usersRepository.updateUserCurrentPointAccumulationPoint(
+      await this.prisma.$transaction(async (tx) => {
+        await this.usersRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           REWARD_POINT.RSP_REWARD,
-        ),
+          tx,
+        );
 
-        this.usersRepository.updateUserChance(userNo, -1),
+        await this.usersRepository.updateUserChance(userNo, -1, tx);
 
-        this.legendsRepository.updateOneLegendByUserNo(userNo, {
-          RSPWinCount: { increment: 1 },
-        }),
+        await this.legendsRepository.updateOneLegendByUserNo(
+          userNo,
+          {
+            RSPWinCount: { increment: 1 },
+          },
+          tx,
+        );
 
-        this.alarmsRepository.createOneAlarm(
+        await this.alarmsRepository.createOneAlarm(
           userNo,
           `[가위 바위 보 게임]에서 승리하셨습니다! ${REWARD_POINT.RSP_REWARD}포인트를 획득하셨습니다!`,
           "게임",
-        ),
+          tx,
+        );
 
-        this.RSPRepository.createOneRecord(userNo, user, computer, "win"),
-      ]);
+        await this.userAchievementsService.checkAchievementCondition(
+          userNo,
+          "RSPWinCount",
+          tx,
+        );
+
+        result = await this.RSPRepository.createOneRecord(
+          userNo,
+          user,
+          computer,
+          "win",
+          tx,
+        );
+      });
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
     }
-
-    this.userAchievementsService.checkAchievementCondition(
-      userNo,
-      "RSPWinCount",
-    );
 
     this.sseService.sendSse(userNo, {
       title: "게임",
