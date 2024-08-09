@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise } from "@prisma/client";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PrismaTxType } from "src/prisma/prisma.type";
@@ -8,7 +7,7 @@ import { PrismaTxType } from "src/prisma/prisma.type";
 export class AlarmsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  countAlarmsByUserNo(userNo: number): PrismaPromise<number> {
+  countAlarmsByUserNo(userNo: number) {
     return this.prisma.alarm.count({ where: { userNo } });
   }
 
