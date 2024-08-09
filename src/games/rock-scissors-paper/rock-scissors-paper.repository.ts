@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { GameResult } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class RockScissorsPaperRepository {
@@ -11,8 +12,9 @@ export class RockScissorsPaperRepository {
     userChoice: string,
     computerChoice: string,
     result: GameResult,
+    tx?: PrismaTxType,
   ) {
-    return this.prisma.rSPGameRecord.create({
+    return (tx ?? this.prisma).rSPGameRecord.create({
       select: {
         userChoice: true,
         computerChoice: true,

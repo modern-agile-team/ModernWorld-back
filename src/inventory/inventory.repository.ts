@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class InventoryRepository {
@@ -43,8 +44,8 @@ export class InventoryRepository {
     });
   }
 
-  createUserOneItem(userNo: number, itemNo: number) {
-    return this.prisma.inventory.create({
+  createUserOneItem(userNo: number, itemNo: number, tx?: PrismaTxType) {
+    return (tx ?? this.prisma).inventory.create({
       data: {
         userNo,
         itemNo,

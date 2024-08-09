@@ -79,8 +79,8 @@ export class UsersRepository {
     return this.prisma.user.updateMany({ data: { chance: 10 } });
   }
 
-  updateUserChance(userNo: number, increment: number) {
-    return this.prisma.user.update({
+  updateUserChance(userNo: number, increment: number, tx?: PrismaTxType) {
+    return (tx ?? this.prisma).user.update({
       data: { chance: { increment } },
       where: { no: userNo },
     });
@@ -103,8 +103,9 @@ export class UsersRepository {
   updateUserCurrentPointAccumulationPoint(
     userNo: number,
     incrementalPoint: number,
+    tx?: PrismaTxType,
   ) {
-    return this.prisma.user.update({
+    return (tx ?? this.prisma).user.update({
       select: { nickname: true, currentPoint: true, accumulationPoint: true },
       data: {
         currentPoint: { increment: incrementalPoint },
@@ -128,8 +129,12 @@ export class UsersRepository {
     });
   }
 
-  updateUserAttendance(userNo: number, attendance: JsonValue) {
-    return this.prisma.user.update({
+  updateUserAttendance(
+    userNo: number,
+    attendance: JsonValue,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).user.update({
       select: { nickname: true, attendance: true },
       data: { attendance },
       where: { no: userNo },

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class CommentRepository {
@@ -16,8 +17,13 @@ export class CommentRepository {
     return this.prisma.reply.count({ where: { commentNo } });
   }
 
-  createOneComment(receiverNo: number, senderNo: number, content: string) {
-    return this.prisma.comment.create({
+  createOneComment(
+    receiverNo: number,
+    senderNo: number,
+    content: string,
+    tx: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).comment.create({
       select: {
         no: true,
         content: true,

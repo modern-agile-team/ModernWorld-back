@@ -74,8 +74,12 @@ export class PresentsRepository {
     });
   }
 
-  updateOnePresentStatus(presentNo: number, status: PresentStatus) {
-    return this.prisma.present.update({
+  updateOnePresentStatus(
+    presentNo: number,
+    status: PresentStatus,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).present.update({
       data: { status },
       where: { no: presentNo },
     });
