@@ -65,25 +65,29 @@ export class UsersService {
     attendance[day][0] = stickerNo;
 
     try {
-      const [userAttendance] = await this.prisma.$transaction([
-        this.userRepository.updateUserAttendance(userNo, attendance),
-
-        this.userRepository.updateUserCurrentPointAccumulationPoint(
+      return this.prisma.$transaction(async (tx) => {
+        await this.userRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
-        ),
+          tx,
+        );
 
-        this.legendsRepository.updateOneLegendByUserNo(userNo, {
-          attendanceCount: { increment: 1 },
-        }),
-      ]);
+        await this.legendsRepository.updateOneLegendByUserNo(
+          userNo,
+          {
+            attendanceCount: { increment: 1 },
+          },
+          tx,
+        );
 
-      this.userAchievementsService.checkAchievementCondition(
-        userNo,
-        "attendanceCount",
-      );
+        await this.userAchievementsService.checkAchievementCondition(
+          userNo,
+          "attendanceCount",
+          tx,
+        );
 
-      return userAttendance;
+        return this.userRepository.updateUserAttendance(userNo, attendance, tx);
+      });
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();
