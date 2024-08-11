@@ -2,9 +2,9 @@ import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
-  ApiOkResponse,
   ApiOperation,
 } from "@nestjs/swagger";
 
@@ -12,17 +12,19 @@ export function ApiCreateOneReply() {
   return applyDecorators(
     ApiOperation({ summary: "comment의 reply 생성" }),
 
-    ApiOkResponse({
+    ApiCreatedResponse({
       description: "Success",
       content: {
         JSON: {
           example: {
-            no: 27,
-            commentNo: 11,
-            userNo: 1,
-            content: "asd",
-            createdAt: "2024-06-26T08:38:00.000Z",
-            deletedAt: null,
+            no: 26,
+            commentNo: 98,
+            content: "aaaatring",
+            createdAt: "2024-08-11T10:55:37.000Z",
+            user: {
+              no: 31,
+              nickname: "내이름",
+            },
           },
         },
       },

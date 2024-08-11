@@ -20,29 +20,41 @@ export function ApiGetRelies() {
           example: {
             data: [
               {
-                no: 5,
-                content: "댓글의 댓글",
-                createdAt: "2024-07-01T05:00:46.000Z",
+                no: 26,
+                commentNo: 98,
+                content: "aaaatring",
+                createdAt: "2024-08-11T10:55:37.000Z",
                 user: {
-                  no: 1,
-                  nickname: "1번 닉네임",
+                  no: 31,
+                  nickname: "내이름",
                 },
               },
               {
-                no: 4,
-                content: "댓글의 댓글",
-                createdAt: "2024-07-01T05:00:46.000Z",
+                no: 25,
+                commentNo: 98,
+                content: "aaaatring",
+                createdAt: "2024-08-11T10:53:16.000Z",
                 user: {
-                  no: 1,
-                  nickname: "1번 닉네임",
+                  no: 31,
+                  nickname: "내이름",
+                },
+              },
+              {
+                no: 24,
+                commentNo: 98,
+                content: "strinasdg",
+                createdAt: "2024-08-11T10:52:35.000Z",
+                user: {
+                  no: 31,
+                  nickname: "내이름",
                 },
               },
             ],
             meta: {
               page: 1,
-              take: 2,
+              take: 10,
               totalCount: 3,
-              totalPage: 2,
+              totalPage: 1,
             },
           },
         },

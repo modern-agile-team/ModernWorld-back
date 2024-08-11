@@ -238,7 +238,7 @@ export class CommentService {
     await this.commentRepository.softDeleteOneReply(replyNo);
   }
 
-  async findOneCommentNotDeleted(commentNo: number) {
+  private async findOneCommentNotDeleted(commentNo: number) {
     const comment =
       await this.commentRepository.findOneCommentNotDeleted(commentNo);
 

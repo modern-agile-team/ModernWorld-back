@@ -17,11 +17,16 @@ export function ApiCreateOneComment() {
         JSON: {
           example: {
             no: 98,
-            receiverNo: 1,
-            senderNo: 1,
-            content: "모던애자일 사랑해요.",
-            createdAt: "2024-06-26T08:36:44.000Z",
-            deletedAt: null,
+            content: "string",
+            createdAt: "2024-08-11T10:48:10.000Z",
+            commentReceiver: {
+              no: 3,
+              nickname: "3번닉네임",
+            },
+            commentSender: {
+              no: 31,
+              nickname: "내이름",
+            },
           },
         },
       },

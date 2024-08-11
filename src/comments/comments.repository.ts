@@ -67,6 +67,13 @@ export class CommentRepository {
 
   updateOneComment(no: number, content: string) {
     return this.prisma.comment.update({
+      select: {
+        no: true,
+        content: true,
+        createdAt: true,
+        commentReceiver: { select: { no: true, nickname: true } },
+        commentSender: { select: { no: true, nickname: true } },
+      },
       where: {
         no,
       },
@@ -94,6 +101,13 @@ export class CommentRepository {
     tx?: PrismaTxType,
   ) {
     return (tx ?? this.prisma).reply.create({
+      select: {
+        no: true,
+        commentNo: true,
+        content: true,
+        createdAt: true,
+        user: { select: { no: true, nickname: true } },
+      },
       data: {
         commentNo,
         userNo,
@@ -120,6 +134,7 @@ export class CommentRepository {
     return this.prisma.reply.findMany({
       select: {
         no: true,
+        commentNo: true,
         content: true,
         createdAt: true,
         user: { select: { no: true, nickname: true } },
@@ -136,6 +151,13 @@ export class CommentRepository {
 
   updateOneReply(no: number, content: string) {
     return this.prisma.reply.update({
+      select: {
+        no: true,
+        commentNo: true,
+        content: true,
+        createdAt: true,
+        user: { select: { no: true, nickname: true } },
+      },
       where: {
         no,
       },
