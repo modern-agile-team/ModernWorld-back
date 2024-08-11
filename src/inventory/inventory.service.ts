@@ -79,22 +79,29 @@ export class InventoryService {
     }
 
     try {
-      const [, , result] = await this.prisma.$transaction([
-        this.legendsRepository.updateOneLegendByUserNo(userNo, {
-          itemCount: { increment: 1 },
-        }),
+      return this.prisma.$transaction(async (tx) => {
+        await this.legendsRepository.updateOneLegendByUserNo(
+          userNo,
+          {
+            itemCount: { increment: 1 },
+          },
+          tx,
+        );
 
-        this.usersRepository.updateUserCurrentPoint(userNo, -item.price),
+        await this.userAchievementsService.checkAchievementCondition(
+          userNo,
+          "itemCount",
+          tx,
+        );
 
-        this.inventoryRepository.createUserOneItem(userNo, itemNo),
-      ]);
+        await this.usersRepository.updateUserCurrentPoint(
+          userNo,
+          -item.price,
+          tx,
+        );
 
-      this.userAchievementsService.checkAchievementCondition(
-        userNo,
-        "itemCount",
-      );
-
-      return result;
+        return this.inventoryRepository.createUserOneItem(userNo, itemNo, tx);
+      });
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();
