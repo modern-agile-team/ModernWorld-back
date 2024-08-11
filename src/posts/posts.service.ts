@@ -96,7 +96,6 @@ export class PostsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    //흐음... 이거는 좀 짜치네
     let post;
 
     try {

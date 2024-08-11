@@ -18,8 +18,6 @@ export class PostsRepository {
         content: true,
         createdAt: true,
         check: true,
-        senderDelete: true,
-        receiverDelete: true,
         userPostSenderNo: { select: { no: true, nickname: true } },
         userPostReceiverNo: { select: { no: true, nickname: true } },
       },
