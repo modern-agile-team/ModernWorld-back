@@ -27,9 +27,8 @@ export class UserAchievementsRepository {
         status: true,
         achievement: {
           select: {
-            name: true,
-            description: true,
             title: true,
+            description: true,
             level: true,
           },
         },
