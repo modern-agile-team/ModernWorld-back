@@ -21,7 +21,7 @@ export class CommentRepository {
     receiverNo: number,
     senderNo: number,
     content: string,
-    tx: PrismaTxType,
+    tx?: PrismaTxType,
   ) {
     return (tx ?? this.prisma).comment.create({
       select: {
@@ -87,8 +87,13 @@ export class CommentRepository {
     });
   }
 
-  createOneReply(commentNo: number, userNo: number, content: string) {
-    return this.prisma.reply.create({
+  createOneReply(
+    commentNo: number,
+    userNo: number,
+    content: string,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).reply.create({
       data: {
         commentNo,
         userNo,
