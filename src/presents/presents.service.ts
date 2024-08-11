@@ -14,7 +14,7 @@ import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
 import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
 import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
-import { UpdatePresentsStatusResponseDto } from "./dtos/update-presents-status-response.dto";
+import { PresentsWithoutDeleteResponseDto } from "./dtos/presents-without-delete-response.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
@@ -150,7 +150,7 @@ export class PresentsService {
             acceptReject,
           );
 
-        return new UpdatePresentsStatusResponseDto(processedPresent);
+        return new PresentsWithoutDeleteResponseDto(processedPresent);
       }
 
       try {
@@ -178,7 +178,7 @@ export class PresentsService {
           );
         });
 
-        return new UpdatePresentsStatusResponseDto(processedPresent);
+        return new PresentsWithoutDeleteResponseDto(processedPresent);
       } catch (err) {
         this.logger.error(`transaction Error : ${err}`);
         throw new InternalServerErrorException();
@@ -191,7 +191,7 @@ export class PresentsService {
         acceptReject,
       );
 
-    return new UpdatePresentsStatusResponseDto(processedPresent);
+    return new PresentsWithoutDeleteResponseDto(processedPresent);
   }
 
   async updateOnePresentToDelete(userNo: number, presentNo: number) {
@@ -317,6 +317,6 @@ export class PresentsService {
       content: `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
     });
 
-    return present;
+    return new PresentsWithoutDeleteResponseDto(present);
   }
 }
