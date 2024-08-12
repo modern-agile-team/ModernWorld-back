@@ -57,17 +57,14 @@ export function ApiGetOnePost() {
     }),
 
     ApiForbiddenResponse({
-      description: "해당 쪽지가 유저와 관련이 없을 때",
+      description:
+        "해당 쪽지가 유저와 관련이 없을 때, userNo가 senderNo, receiverNo 둘중에 하나라도 해당되는게 없다면 반환합니다.",
       content: {
         JSON: {
           example: {
-            description:
-              "userNo가 senderNo, receiverNo 둘중에 하나라도 해당되는게 없다면 반환합니다.",
-            value: {
-              message: "This post is not related with user.",
-              error: "Forbidden",
-              statusCode: 403,
-            },
+            message: "This post is not related with user.",
+            error: "Forbidden",
+            statusCode: 403,
           },
         },
       },

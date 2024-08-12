@@ -4,6 +4,7 @@ import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -15,20 +16,8 @@ export function ApiUpdateAlarmStatusToRead() {
       summary: "알람 읽음으로 처리",
     }),
 
-    ApiOkResponse({
+    ApiNoContentResponse({
       description: "Success",
-      content: {
-        JSON: {
-          example: {
-            no: 5,
-            userNo: 1,
-            content: "1",
-            status: true,
-            createdAt: "2024-07-01T17:39:44.000Z",
-            url: "1",
-          },
-        },
-      },
     }),
 
     ApiBadRequestResponse({
@@ -60,7 +49,7 @@ export function ApiUpdateAlarmStatusToRead() {
     ApiNotFoundResponse({
       description: "해당 번호의 알람이 존재하지 않을 때",
       content: {
-        jSON: {
+        JSON: {
           example: {
             message: "This alarm doesn't exist.",
             error: "Not Found",

@@ -18,12 +18,17 @@ export function ApiUpdateComment() {
       content: {
         JSON: {
           example: {
-            no: 94,
-            receiverNo: 2,
-            senderNo: 1,
-            content: "어떻게 사람이름이 엄준식",
-            createdAt: "2024-07-17T01:55:56.000Z",
-            deletedAt: null,
+            no: 98,
+            content: "stringaaaa",
+            createdAt: "2024-08-11T10:48:10.000Z",
+            commentReceiver: {
+              no: 3,
+              nickname: "3번닉네임",
+            },
+            commentSender: {
+              no: 31,
+              nickname: "내이름",
+            },
           },
         },
       },

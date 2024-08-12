@@ -9,11 +9,11 @@ import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
-import { Prisma, UserDomain } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
-import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { UpdateUserAttendanceDto } from "./dtos/update-user-attendance.dto";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class UsersService {
@@ -21,28 +21,12 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly userRepository: UsersRepository,
     private readonly logger: Logger,
-    private readonly commonService: CommonService,
     private readonly legendsRepository: LegendsRepository,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   getOneUser(userNo: number) {
     return this.userRepository.getOneUser(userNo);
-  }
-
-  // 이거 안쓰는 거임 ----------------------------------
-  async createUser(
-    uniqueIdentifier: string,
-    socialName: string,
-    image: string,
-    domain: UserDomain,
-  ) {
-    const result = await this.userRepository.createUser(
-      uniqueIdentifier,
-      socialName,
-      image,
-      domain,
-    );
-    return result;
   }
 
   getUserAttendance(userNo: number) {
@@ -81,22 +65,29 @@ export class UsersService {
     attendance[day][0] = stickerNo;
 
     try {
-      const [userAttendance] = await this.prisma.$transaction([
-        this.userRepository.updateUserAttendance(userNo, attendance),
-
-        this.userRepository.updateUserCurrentPointAccumulationPoint(
+      return this.prisma.$transaction(async (tx) => {
+        await this.userRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
-        ),
+          tx,
+        );
 
-        this.legendsRepository.updateOneLegendByUserNo(userNo, {
-          attendanceCount: { increment: 1 },
-        }),
-      ]);
+        await this.legendsRepository.updateOneLegendByUserNo(
+          userNo,
+          {
+            attendanceCount: { increment: 1 },
+          },
+          tx,
+        );
 
-      this.commonService.checkAchievementCondition(userNo, "attendanceCount");
+        await this.userAchievementsService.checkAchievementCondition(
+          userNo,
+          "attendanceCount",
+          tx,
+        );
 
-      return userAttendance;
+        return this.userRepository.updateUserAttendance(userNo, attendance, tx);
+      });
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();

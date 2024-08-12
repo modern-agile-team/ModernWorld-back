@@ -14,7 +14,7 @@ import { UpdateUserItemStatusDto } from "./dtos/update-user-item-status.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
-import { CommonService } from "src/common/common.service";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class InventoryService {
@@ -25,7 +25,7 @@ export class InventoryService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly legendsRepository: LegendsRepository,
-    private readonly commonService: CommonService,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
   getUserItems(userNo: number, query: GetUserItemsDto) {
     const { theme, status, itemName } = query;
@@ -79,19 +79,29 @@ export class InventoryService {
     }
 
     try {
-      const [, , result] = await this.prisma.$transaction([
-        this.legendsRepository.updateOneLegendByUserNo(userNo, {
-          itemCount: { increment: 1 },
-        }),
+      return this.prisma.$transaction(async (tx) => {
+        await this.legendsRepository.updateOneLegendByUserNo(
+          userNo,
+          {
+            itemCount: { increment: 1 },
+          },
+          tx,
+        );
 
-        this.usersRepository.updateUserCurrentPoint(userNo, -item.price),
+        await this.userAchievementsService.checkAchievementCondition(
+          userNo,
+          "itemCount",
+          tx,
+        );
 
-        this.inventoryRepository.createUserOneItem(userNo, itemNo),
-      ]);
+        await this.usersRepository.updateUserCurrentPoint(
+          userNo,
+          -item.price,
+          tx,
+        );
 
-      this.commonService.checkAchievementCondition(userNo, "itemCount");
-
-      return result;
+        return this.inventoryRepository.createUserOneItem(userNo, itemNo, tx);
+      });
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();

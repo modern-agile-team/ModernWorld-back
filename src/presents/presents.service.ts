@@ -14,12 +14,13 @@ import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
 import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
 import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
-import { UpdatePresentsStatusResponseDto } from "./dtos/update-presents-status-response.dto";
+import { PresentsWithoutDeleteResponseDto } from "./dtos/presents-without-delete-response.dto";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CommonService } from "src/common/common.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
+import { PresentStatus } from "@prisma/client";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class PresentsService {
@@ -31,9 +32,9 @@ export class PresentsService {
     private readonly itemsRepository: ItemsRepository,
     private readonly usersRepository: UsersRepository,
     private readonly legendsRepository: LegendsRepository,
-    private readonly commonService: CommonService,
     private readonly sseService: SseService,
     private readonly alarmsRepository: AlarmsRepository,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   getUserPresents(userNo: number, query: GetUserPresentsDto) {
@@ -81,7 +82,7 @@ export class PresentsService {
       throw new NotFoundException("This present was deleted from sender.");
     }
 
-    if (receiver.no === userNo && present.status === "unread") {
+    if (receiver.no === userNo && present.status === PresentStatus.unread) {
       const updatedPresent =
         await this.presentsRepository.updateOnePresentStatusFromUnreadToRead(
           presentNo,
@@ -136,6 +137,7 @@ export class PresentsService {
       if (existedItem) {
         // 아 이건 아무리 생각해도 좀 아닌데 여기 로직은 나중에 반드시 생각해볼것.
         // 유저가 아이템을 이미 갖고있다면 그 값의 반을 포인트로 주는 로직인데 다른 반환값들과는 차별성이 있어야할 필요성이 보임
+        // 프론트와 상의후 바꿀것 ------------------------------------------------
         const item = await this.itemsRepository.getOneItem(itemNo);
 
         await this.usersRepository.updateUserCurrentPointAccumulationPoint(
@@ -148,26 +150,35 @@ export class PresentsService {
             acceptReject,
           );
 
-        return new UpdatePresentsStatusResponseDto(processedPresent);
+        return new PresentsWithoutDeleteResponseDto(processedPresent);
       }
 
       try {
-        const [, , processedPresent] = await this.prisma.$transaction([
-          this.legendsRepository.updateOneLegendByUserNo(userNo, {
-            itemCount: { increment: 1 },
-          }),
+        const processedPresent = await this.prisma.$transaction(async (tx) => {
+          await this.legendsRepository.updateOneLegendByUserNo(
+            userNo,
+            {
+              itemCount: { increment: 1 },
+            },
+            tx,
+          );
 
-          this.inventoryRepository.createUserOneItem(userNo, itemNo),
+          await this.inventoryRepository.createUserOneItem(userNo, itemNo, tx);
 
-          this.presentsRepository.updateOnePresentStatus(
+          await this.userAchievementsService.checkAchievementCondition(
+            userNo,
+            "itemCount",
+            tx,
+          );
+
+          return this.presentsRepository.updateOnePresentStatus(
             presentNo,
             acceptReject,
-          ),
-        ]);
+            tx,
+          );
+        });
 
-        this.commonService.checkAchievementCondition(userNo, "itemCount");
-
-        return new UpdatePresentsStatusResponseDto(processedPresent);
+        return new PresentsWithoutDeleteResponseDto(processedPresent);
       } catch (err) {
         this.logger.error(`transaction Error : ${err}`);
         throw new InternalServerErrorException();
@@ -180,7 +191,7 @@ export class PresentsService {
         acceptReject,
       );
 
-    return new UpdatePresentsStatusResponseDto(processedPresent);
+    return new PresentsWithoutDeleteResponseDto(processedPresent);
   }
 
   async updateOnePresentToDelete(userNo: number, presentNo: number) {
@@ -261,11 +272,25 @@ export class PresentsService {
     let present;
 
     try {
-      await this.prisma.$transaction(async (tx) => {
-        present = await this.presentsRepository.createOneItemToUser(
+      present = await this.prisma.$transaction(async (tx) => {
+        await this.legendsRepository.updateOneLegendByUserNo(
           senderNo,
+          {
+            presentCount: { increment: 1 },
+          },
+          tx,
+        );
+
+        await this.userAchievementsService.checkAchievementCondition(
+          senderNo,
+          "presentCount",
+          tx,
+        );
+
+        await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          itemNo,
+          `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
+          "선물",
           tx,
         );
 
@@ -275,18 +300,10 @@ export class PresentsService {
           tx,
         );
 
-        await this.legendsRepository.updateOneLegendByUserNo(
+        return this.presentsRepository.createOneItemToUser(
           senderNo,
-          {
-            presentCount: { increment: 1 },
-          },
-          tx,
-        );
-
-        await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
-          "선물",
+          itemNo,
           tx,
         );
       });
@@ -300,8 +317,6 @@ export class PresentsService {
       content: `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
     });
 
-    this.commonService.checkAchievementCondition(senderNo, "presentCount");
-
-    return present;
+    return new PresentsWithoutDeleteResponseDto(present);
   }
 }

@@ -29,7 +29,7 @@ export class PostsService {
 
   getUserPosts(userNo: number, query: GetPostsDto) {
     //해당 로직 GetUserPresents로직과 같음 (중복)
-    const { type } = query;
+    const { type, orderBy } = query;
 
     const senderReceiverDeleteField =
       type === "receiverNo"
@@ -47,7 +47,7 @@ export class PostsService {
           ],
         };
 
-    return this.postsRepository.getPosts(where);
+    return this.postsRepository.getPosts(where, { no: orderBy });
   }
 
   async getOnePostByUserNo(userNo: number, postNo: number) {
@@ -96,7 +96,6 @@ export class PostsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    //흐음... 이거는 좀 짜치네
     let post;
 
     try {

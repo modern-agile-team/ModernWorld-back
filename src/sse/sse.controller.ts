@@ -6,11 +6,15 @@ import {
   Param,
   Post,
   Sse,
+  UseGuards,
 } from "@nestjs/common";
 import { Observable, map, startWith } from "rxjs";
 import { SseService } from "./sse.service";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { ApiBody } from "@nestjs/swagger";
+import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
+import { UserNo } from "src/auth/auth.decorator";
+import { ApiConnectSse } from "./swagger-decorators/connect-sse.decorator";
 
 @Controller("sse")
 export class SseController {
@@ -20,10 +24,12 @@ export class SseController {
   ) {}
 
   //SSE 연결 Route
-  @Sse(":userNo")
-  sse(@Param("userNo") userNo: string): Observable<MessageEvent> {
+  @Sse()
+  @ApiConnectSse()
+  @UseGuards(AccessTokenAuthGuard)
+  sse(@UserNo() userNo: number): Observable<MessageEvent> {
     this.logger.log(`${userNo} : Try SSE connection.`);
-    const notifications$ = this.sseService.getSubject(userNo);
+    const notifications$ = this.sseService.getSubject(`${userNo}`);
 
     return notifications$.pipe(
       startWith("Connected"),
