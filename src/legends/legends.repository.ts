@@ -11,8 +11,8 @@ export class LegendsRepository {
     return this.prisma.legend.create({ data: { userNo } });
   }
 
-  getAllLegendsByUserNo(userNo: number) {
-    return this.prisma.legend.findUnique({ where: { userNo } });
+  getAllLegendsByUserNo(userNo: number, tx?: PrismaTxType) {
+    return (tx ?? this.prisma).legend.findUnique({ where: { userNo } });
   }
 
   updateOneLegendByUserNo<T extends keyof UpdateLegendCount>(

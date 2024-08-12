@@ -102,14 +102,12 @@ export function ApiCreateOnePresent() {
       content: {
         JSON: {
           example: {
-            no: 10,
-            itemNo: 4,
-            senderNo: 1,
-            receiverNo: 3,
-            createdAt: "2024-07-12T06:19:41.000Z",
+            no: 14,
+            itemNo: 1,
+            senderNo: 31,
+            receiverNo: 1,
+            createdAt: "2024-08-11T10:44:29.000Z",
             status: "unread",
-            senderDelete: false,
-            receiverDelete: false,
           },
         },
       },

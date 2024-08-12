@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, character } from "@prisma/client";
 import { Animal } from "src/common/enum/animal.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -7,7 +6,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class CharactersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOneCharacter(no: number): PrismaPromise<character> {
+  getOneCharacter(no: number) {
     return this.prisma.character.findUnique({
       where: {
         no,

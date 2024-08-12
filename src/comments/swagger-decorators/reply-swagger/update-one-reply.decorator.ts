@@ -18,12 +18,14 @@ export function ApiUpdateOneReply() {
       content: {
         JSON: {
           example: {
-            no: 4,
-            commentNo: 2,
-            userNo: 1,
-            content: "왕덕봉",
-            createdAt: "2024-07-01T05:00:46.000Z",
-            deletedAt: null,
+            no: 25,
+            commentNo: 98,
+            content: "straaing",
+            createdAt: "2024-08-11T10:53:16.000Z",
+            user: {
+              no: 31,
+              nickname: "내이름",
+            },
           },
         },
       },

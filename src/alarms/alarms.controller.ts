@@ -33,6 +33,7 @@ export class AlarmsController {
   @Patch(":alarmNo")
   @ApiUpdateAlarmStatusToRead()
   @UseGuards(AccessTokenAuthGuard)
+  @HttpCode(204)
   updateAlarmStatusToRead(
     @UserNo() userNo: number,
     @Param("alarmNo", ParsePositiveIntPipe) alarmNo: number,

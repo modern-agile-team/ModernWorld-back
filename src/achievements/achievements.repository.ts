@@ -1,21 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, achievement } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AchievemetWhere } from "./interfaces/get-achievements-where.interface";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class AchievementsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getAchievementNoByName(name: string): PrismaPromise<achievement> {
-    return this.prisma.achievement.findFirst({
+  getAchievementNoByName(name: string, tx?: PrismaTxType) {
+    return (tx ?? this.prisma).achievement.findFirst({
       where: { name },
     });
   }
 
-  getAchievements(
-    where: AchievemetWhere,
-  ): PrismaPromise<Omit<achievement, "name">[]> {
+  getAchievements(where: AchievemetWhere) {
     return this.prisma.achievement.findMany({
       select: {
         no: true,

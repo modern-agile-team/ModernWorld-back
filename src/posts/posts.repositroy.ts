@@ -18,8 +18,6 @@ export class PostsRepository {
         content: true,
         createdAt: true,
         check: true,
-        senderDelete: true,
-        receiverDelete: true,
         userPostSenderNo: { select: { no: true, nickname: true } },
         userPostReceiverNo: { select: { no: true, nickname: true } },
       },
@@ -31,7 +29,7 @@ export class PostsRepository {
     return this.prisma.post.findUnique({ where: { no: postNo } });
   }
 
-  getPosts(where: object) {
+  getPosts(where: object, orderBy: { no: "asc" | "desc" }) {
     return this.prisma.post.findMany({
       select: {
         no: true,
@@ -41,6 +39,7 @@ export class PostsRepository {
         userPostSenderNo: { select: { no: true, nickname: true } },
         userPostReceiverNo: { select: { no: true, nickname: true } },
       },
+      orderBy,
       where,
     });
   }

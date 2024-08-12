@@ -10,22 +10,22 @@ import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
-import { CommonService } from "src/common/common.service";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class CommentService {
   constructor(
     private readonly commentRepository: CommentRepository,
-    private readonly commonService: CommonService,
     private readonly legendsService: LegendsRepository,
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
     private readonly sseService: SseService,
     private readonly alarmsRepository: AlarmsRepository,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   async createOneComment(
@@ -35,27 +35,49 @@ export class CommentService {
   ) {
     const { content } = body;
 
+    let comment;
+
     try {
-      const [comment] = await this.prisma.$transaction([
-        this.commentRepository.createOneComment(receiverNo, senderNo, content),
-        this.legendsService.updateOneLegendByUserNo(senderNo, {
-          commentCount: { increment: 1 },
-        }),
-        this.alarmsRepository.createOneAlarm(receiverNo, content, "방명록"),
-      ]);
+      comment = await this.prisma.$transaction(async (tx) => {
+        await this.legendsService.updateOneLegendByUserNo(
+          senderNo,
+          {
+            commentCount: { increment: 1 },
+          },
+          tx,
+        );
 
-      this.sseService.sendSse(receiverNo, {
-        title: "방명록",
-        content: `${comment.commentSender.nickname}}님이 방명록을 남겼습니다.`,
+        await this.userAchievementsService.checkAchievementCondition(
+          senderNo,
+          "commentCount",
+          tx,
+        );
+
+        await this.alarmsRepository.createOneAlarm(
+          receiverNo,
+          content,
+          "방명록",
+          tx,
+        );
+
+        return this.commentRepository.createOneComment(
+          receiverNo,
+          senderNo,
+          content,
+          tx,
+        );
       });
-
-      this.commonService.checkAchievementCondition(senderNo, "commentCount");
-
-      return comment;
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();
     }
+
+    this.sseService.sendSse(receiverNo, {
+      title: "방명록",
+      content: `${comment?.commentSender?.nickname}님이 방명록을 남겼습니다.`,
+    });
+
+    return comment;
   }
 
   async getManyComments(userNo: number, query: CommentsPaginationDto) {
@@ -129,16 +151,28 @@ export class CommentService {
     const { content } = body;
 
     try {
-      const [reply] = await this.prisma.$transaction([
-        this.commentRepository.createOneReply(commentNo, userNo, content),
-        this.legendsService.updateOneLegendByUserNo(userNo, {
-          commentCount: { increment: 1 },
-        }),
-      ]);
+      return this.prisma.$transaction(async (tx) => {
+        await this.legendsService.updateOneLegendByUserNo(
+          userNo,
+          {
+            commentCount: { increment: 1 },
+          },
+          tx,
+        );
 
-      this.commonService.checkAchievementCondition(userNo, "commentCount");
+        await this.userAchievementsService.checkAchievementCondition(
+          userNo,
+          "commentCount",
+          tx,
+        );
 
-      return reply;
+        return this.commentRepository.createOneReply(
+          commentNo,
+          userNo,
+          content,
+          tx,
+        );
+      });
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();
@@ -194,16 +228,17 @@ export class CommentService {
     replyNo: number,
   ) {
     await this.findOneCommentNotDeleted(commentNo);
+
     const { userNo } = await this.findOneReplyNotDeleted(replyNo);
 
     if (senderNo !== userNo) {
       throw new ForbiddenException("User can delete only their reply.");
     }
 
-    return await this.commentRepository.softDeleteOneReply(replyNo);
+    await this.commentRepository.softDeleteOneReply(replyNo);
   }
 
-  async findOneCommentNotDeleted(commentNo: number) {
+  private async findOneCommentNotDeleted(commentNo: number) {
     const comment =
       await this.commentRepository.findOneCommentNotDeleted(commentNo);
 

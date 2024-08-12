@@ -10,9 +10,9 @@ import { LikesRepository } from "./likes.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { PrismaService } from "src/prisma/prisma.service";
-import { CommonService } from "src/common/common.service";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
+import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
 export class LikesService {
@@ -22,9 +22,9 @@ export class LikesService {
     private readonly likesRepository: LikesRepository,
     private readonly usersRepository: UsersRepository,
     private readonly legendsRepository: LegendsRepository,
-    private readonly commonService: CommonService,
     private readonly sseService: SseService,
     private readonly alarmsRepository: AlarmsRepository,
+    private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   async createOneLike(senderNo: number, receiverNo: number) {
@@ -62,6 +62,12 @@ export class LikesService {
           tx,
         );
 
+        await this.userAchievementsService.checkAchievementCondition(
+          receiverNo,
+          "likeCount",
+          tx,
+        );
+
         return result;
       });
     } catch (err) {
@@ -74,8 +80,6 @@ export class LikesService {
       content: `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
     });
 
-    this.commonService.checkAchievementCondition(receiverNo, "likeCount");
-
     return like;
   }
 
@@ -85,7 +89,7 @@ export class LikesService {
     if (!like) throw new NotFoundException("This like doesn't exist.");
 
     try {
-      const [result] = await this.prisma.$transaction([
+      await this.prisma.$transaction([
         this.likesRepository.deleteOneLike(like.no),
         this.legendsRepository.updateOneLegendByUserNo(receiverNo, {
           likeCount: {
@@ -93,8 +97,6 @@ export class LikesService {
           },
         }),
       ]);
-
-      return result;
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
       throw new InternalServerErrorException();

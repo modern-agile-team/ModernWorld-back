@@ -28,7 +28,7 @@ export function ApiCreateUserNickname() {
     }),
 
     ApiBadRequestResponse({
-      description: "BadRequest",
+      description: "정규표현식에 맞지 않는경우",
       content: {
         JSON: {
           example: {

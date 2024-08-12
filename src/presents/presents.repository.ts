@@ -1,14 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AcceptReject, PresentStatus } from "./enum/present-status.enum";
-import { PrismaPromise, present } from "@prisma/client";
+import { PresentStatus } from "@prisma/client";
 import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class PresentsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOnePresent(presentNo: number): PrismaPromise<present> {
+  getOnePresent(presentNo: number) {
     return this.prisma.present.findUnique({
       where: { no: presentNo },
     });
@@ -52,7 +51,7 @@ export class PresentsRepository {
     receiverNo: number,
     itemNo: number,
     tx?: PrismaTxType,
-  ): PrismaPromise<present> {
+  ) {
     return (tx ?? this.prisma).present.create({
       data: { senderNo, receiverNo, itemNo },
     });
@@ -77,9 +76,10 @@ export class PresentsRepository {
 
   updateOnePresentStatus(
     presentNo: number,
-    status: PresentStatus | AcceptReject,
-  ): PrismaPromise<present> {
-    return this.prisma.present.update({
+    status: PresentStatus,
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).present.update({
       data: { status },
       where: { no: presentNo },
     });
@@ -88,7 +88,7 @@ export class PresentsRepository {
   updateOnePresentToDeleteByUser(
     presentNo: number,
     senderReceiverDeleteField: "senderDelete" | "receiverDelete",
-  ): PrismaPromise<present> {
+  ) {
     return this.prisma.present.update({
       data: { [senderReceiverDeleteField]: true },
       where: {

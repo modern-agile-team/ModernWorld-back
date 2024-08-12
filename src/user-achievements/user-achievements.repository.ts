@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaPromise, achievement, userAchievement } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class UserAchievementsRepository {
@@ -12,20 +12,13 @@ export class UserAchievementsRepository {
     });
   }
 
-  findOneUserAchievement(
-    userNo: number,
-    achievementNo: number,
-  ): PrismaPromise<userAchievement> {
+  findOneUserAchievement(userNo: number, achievementNo: number) {
     return this.prisma.userAchievement.findFirst({
       where: { userNo, achievementNo },
     });
   }
 
-  getUserAchievements(
-    userNo: number,
-  ): PrismaPromise<
-    (userAchievement & { achievement: Omit<achievement, "no" | "point"> })[]
-  > {
+  getUserAchievements(userNo: number) {
     return this.prisma.userAchievement.findMany({
       select: {
         no: true,
@@ -34,9 +27,8 @@ export class UserAchievementsRepository {
         status: true,
         achievement: {
           select: {
-            name: true,
-            description: true,
             title: true,
+            description: true,
             level: true,
           },
         },
@@ -48,8 +40,9 @@ export class UserAchievementsRepository {
   createOneUserAchievement(
     userNo: number,
     achievementNo: number,
-  ): PrismaPromise<userAchievement> {
-    return this.prisma.userAchievement.create({
+    tx?: PrismaTxType,
+  ) {
+    return (tx ?? this.prisma).userAchievement.create({
       data: { userNo, achievementNo },
     });
   }
@@ -58,7 +51,7 @@ export class UserAchievementsRepository {
     userNo: number,
     status: boolean,
     achievementNo?: number,
-  ): PrismaPromise<{ count: number }> {
+  ) {
     return this.prisma.userAchievement.updateMany({
       data: { status },
       where: { userNo, achievementNo },
