@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -107,5 +108,11 @@ export class AuthController {
   @Delete("google/unlink")
   async googleUnlink(@UserNo() userNo: number) {
     return await this.authService.googleUnlink(userNo);
+  }
+
+  @UseGuards(AccessTokenAuthGuard)
+  @Patch("updateProfile")
+  async updateProfile(@UserNo() userNo: number) {
+    return await this.authService.updateProfile(userNo);
   }
 }
