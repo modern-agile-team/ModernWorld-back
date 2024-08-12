@@ -24,6 +24,7 @@ import { ApiNaverUnlink } from "./swagger-decorators/naver-unlink-decorator";
 import { ApiGoogleLogin } from "./swagger-decorators/google-login-decorator";
 import { ApiGoogleLogout } from "./swagger-decorators/google-logout-decorator";
 import { ApiGoogleUnlink } from "./swagger-decorators/google-unlink-decorator";
+import { ApiUpdateProfile } from "./swagger-decorators/updateProfile-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -110,6 +111,7 @@ export class AuthController {
     return await this.authService.googleUnlink(userNo);
   }
 
+  @ApiUpdateProfile()
   @UseGuards(AccessTokenAuthGuard)
   @Patch("updateProfile")
   async updateProfile(@UserNo() userNo: number) {

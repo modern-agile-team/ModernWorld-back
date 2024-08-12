@@ -42,7 +42,7 @@ export class AuthService {
       if (user.domain === "naver") {
         const socialTokens = await this.tokenRepository.findToken(userNo);
         if (!socialTokens) {
-          throw new NotFoundException("token not found");
+          throw new NotFoundException("socialToken not found");
         }
 
         let socialAccessToken = socialTokens.socialAccess;
@@ -87,7 +87,7 @@ export class AuthService {
       } else if (user.domain === "kakao") {
         const socialTokens = await this.tokenRepository.findToken(userNo);
         if (!socialTokens) {
-          throw new NotFoundException("token not found");
+          throw new NotFoundException("socialToken not found");
         }
         let socialAccessToken = socialTokens.socialAccess;
         const socialRefreshToken = socialTokens.socialRefresh;
@@ -134,7 +134,7 @@ export class AuthService {
       } else {
         const socialTokens = await this.tokenRepository.findToken(userNo);
         if (!socialTokens) {
-          throw new NotFoundException("token not found");
+          throw new NotFoundException("socialToken not found");
         }
         let socialAccessToken = socialTokens.socialAccess;
         const socialRefreshToken = socialTokens.socialRefresh;
@@ -188,8 +188,8 @@ export class AuthService {
       if (error.message === "user not found") {
         throw new NotFoundException("user not found");
       }
-      if (error.message === "token not found") {
-        throw new NotFoundException("token not found");
+      if (error.message === "socialToken not found") {
+        throw new NotFoundException("socialToken not found");
       } else {
         this.logger.error(error);
         throw new InternalServerErrorException(
@@ -623,7 +623,7 @@ export class AuthService {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {
-        throw new NotFoundException("user not found");
+        throw new NotFoundException("socialToken not found");
       }
       const user = await this.usersRepository.findUserByUserNo(userNo);
       if (user.domain !== "kakao") {
@@ -684,7 +684,7 @@ export class AuthService {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {
-        throw new NotFoundException("token not found");
+        throw new NotFoundException("socialToken not found");
       }
 
       let socialAccessToken = socialTokens.socialAccess;
@@ -757,7 +757,7 @@ export class AuthService {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {
-        throw new NotFoundException("user not found");
+        throw new NotFoundException("socialToken not found");
       }
       const user = await this.usersRepository.findUserByUserNo(userNo);
       if (user.domain !== "kakao") {
@@ -822,7 +822,7 @@ export class AuthService {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {
-        throw new NotFoundException("user not found");
+        throw new NotFoundException("socialToken not found");
       }
       const user = await this.usersRepository.findUserByUserNo(userNo);
       if (user.domain !== "google") {
