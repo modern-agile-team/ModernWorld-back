@@ -89,6 +89,25 @@ export class TokenService {
     }
   }
 
+  async createNewGoogleAccessToken(socialRefreshToken: string) {
+    try {
+      const googleTokenUrl = "https://oauth2.googleapis.com/token";
+
+      const tokenBody = {
+        client_id: this.configService.get<string>("GOOGLE_CLIENT_ID"),
+        client_secret: this.configService.get<string>("GOOGLE_CLIENT_SECRET"),
+        refresh_token: socialRefreshToken,
+        grant_type: "refresh_token",
+      };
+      return (await axios.post(googleTokenUrl, tokenBody)).data;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        "구글 액세스 토큰 재발급 중 서버에러가 발생했습니다.",
+      );
+    }
+  }
+
   async naverSocialAccessTokenInfo(accessToken: string) {
     try {
       const naverTokenInfoUrl = "https://openapi.naver.com/v1/nid/me";
@@ -127,6 +146,27 @@ export class TokenService {
       } else {
         this.logger.error(error);
         throw new ForbiddenException("카카오 토큰 유효성 검사 오류");
+      }
+    }
+  }
+
+  async googleSocialAccessTokenInfo(accessToken: string) {
+    try {
+      const googleTokenInfoUrl =
+        "https://www.googleapis.com/oauth2/v2/tokeninfo";
+      const googleTokenInfoData = {
+        access_token: accessToken,
+      };
+      const response = await axios.get(googleTokenInfoUrl, {
+        params: googleTokenInfoData,
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response.data.error_description === "Invalid Value") {
+        return 401;
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException("구글 토큰 유효성 검사 오류");
       }
     }
   }

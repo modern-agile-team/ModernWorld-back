@@ -5,7 +5,6 @@ import {
   ApiOkResponse,
   ApiOperation,
 } from "@nestjs/swagger";
-import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 
 export function ApiGetUserAttendance() {
   return applyDecorators(

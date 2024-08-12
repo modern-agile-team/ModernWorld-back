@@ -95,6 +95,12 @@ export class AuthService {
           "naver",
         );
         await this.legendsRepository.createUserLegend(user.no);
+      } else {
+        await this.usersRepository.updateUser(
+          user.no,
+          userInfo.response.name,
+          userInfo.response.profile_image,
+        );
       }
 
       await this.usersRepository.updateDeleteAt(user.no, null);
@@ -185,12 +191,16 @@ export class AuthService {
 
       this.userInfoUrl = "https://kapi.kakao.com/v2/user/me";
       const userInfo = (
-        await axios.get(this.userInfoUrl, {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Bearer ${socialAccessToken}`,
+        await axios.post(
+          this.userInfoUrl,
+          { secure_resource: true },
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              Authorization: `Bearer ${socialAccessToken}`,
+            },
           },
-        })
+        )
       ).data;
 
       if (!userInfo) {
@@ -215,6 +225,12 @@ export class AuthService {
           "kakao",
         );
         await this.legendsRepository.createUserLegend(user.no);
+      } else {
+        await this.usersRepository.updateUser(
+          user.no,
+          userProperties.nickname,
+          userProperties.profile_image,
+        );
       }
 
       await this.usersRepository.updateDeleteAt(user.no, null);
@@ -278,6 +294,8 @@ export class AuthService {
       );
       this.code = authorizeCode;
       const tokenBody = {
+        access_type: "offline",
+        prompt: "consent",
         grant_type: this.grant_type,
         client_id: this.client_id,
         client_secret: this.client_secret,
@@ -285,16 +303,18 @@ export class AuthService {
         redirect_uri: this.redirect_uri,
       };
       const tokenHeader = {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       };
       const token = (await axios.post(this.tokenUrl, tokenBody, tokenHeader))
         .data;
-
       if (!token) {
         throw new UnauthorizedException("Invalid authorization code.");
       }
 
       const socialAccessToken = token.access_token;
+      const socialRefreshToken = token.refresh_token;
       const userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
       const userInfoHeader = {
         headers: {
@@ -323,6 +343,12 @@ export class AuthService {
           "google",
         );
         await this.legendsRepository.createUserLegend(user.no);
+      } else {
+        await this.usersRepository.updateUser(
+          user.no,
+          userInfo.name,
+          userInfo.picture,
+        );
       }
       await this.usersRepository.updateDeleteAt(user.no, null);
 
@@ -331,9 +357,17 @@ export class AuthService {
 
       const socialTokens = await this.tokenRepository.findToken(user.no);
       if (!socialTokens) {
-        await this.tokenRepository.saveTokens(user.no, socialAccessToken, "");
+        await this.tokenRepository.saveTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
       } else {
-        await this.tokenRepository.updateTokens(user.no, socialAccessToken, "");
+        await this.tokenRepository.updateTokens(
+          user.no,
+          socialAccessToken,
+          socialRefreshToken,
+        );
       }
 
       await this.tokenService.setRefreshToken(
@@ -386,6 +420,42 @@ export class AuthService {
       );
 
       return { message: "네이버 로그아웃 성공" };
+    } catch (error) {
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그아웃 중 서버에러가 발생했습니다.",
+        );
+      }
+    }
+  }
+
+  async googleLogout(userNo: number) {
+    try {
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (!user) {
+        throw new NotFoundException("user not found");
+      }
+      if (user.domain !== "google") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Google.",
+        );
+      }
+
+      await this.tokenRepository.deleteTokens(userNo);
+
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+
+      return { message: "구글 로그아웃 성공" };
     } catch (error) {
       if (error.response.statusCode === 401) {
         throw new UnauthorizedException(error.response.message);
@@ -584,6 +654,67 @@ export class AuthService {
       await this.usersRepository.updateDeleteAt(userNo, new Date());
 
       return { message: "카카오 탈퇴 성공" };
+    } catch (error) {
+      if (error.response.statusCode === 401) {
+        throw new UnauthorizedException(error.response.message);
+      } else if (error.response.statusCode === 404) {
+        throw new NotFoundException(error.response.message);
+      } else if (error.response.statusCode === 409) {
+        throw new ConflictException(error.response.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "회원탈퇴 중 서버에러가 발생했습니다.",
+        );
+      }
+    }
+  }
+  async googleUnlink(userNo: number) {
+    try {
+      const socialTokens = await this.tokenRepository.findToken(userNo);
+      if (!socialTokens) {
+        throw new NotFoundException("user not found");
+      }
+      const user = await this.usersRepository.findUserByUserNo(userNo);
+      if (user.domain !== "google") {
+        throw new UnauthorizedException(
+          "You are not a user logged in with Google.",
+        );
+      }
+      let socialAccessToken = socialTokens.socialAccess;
+      const socialRefreshToken = socialTokens.socialRefresh;
+
+      const socialAccessTokenInfo =
+        await this.tokenService.googleSocialAccessTokenInfo(socialAccessToken);
+      if (socialAccessTokenInfo === 401) {
+        const newGoogleAccessToken =
+          await this.tokenService.createNewGoogleAccessToken(
+            socialRefreshToken,
+          );
+        await this.tokenRepository.updateAccessToken(
+          userNo,
+          newGoogleAccessToken.access_token,
+        );
+        socialAccessToken = newGoogleAccessToken.access_token;
+      }
+
+      await axios.post(
+        `https://accounts.google.com/o/oauth2/revoke?token=${socialAccessToken}`,
+        {},
+        { headers: { "Content-type": "application/x-www-form-urlencoded" } },
+      );
+
+      await this.tokenRepository.deleteTokens(userNo);
+      await this.tokenService.delRefreshToken(
+        userNo.toString() + "-refreshToken",
+      );
+      await this.tokenService.delAccessToken(
+        userNo.toString() + "-accessToken",
+      );
+
+      await this.usersRepository.updateDeleteAt(userNo, new Date());
+
+      return { message: "구글 회원탈퇴 성공" };
     } catch (error) {
       if (error.response.statusCode === 401) {
         throw new UnauthorizedException(error.response.message);

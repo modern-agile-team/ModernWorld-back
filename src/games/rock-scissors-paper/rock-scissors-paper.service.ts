@@ -8,8 +8,7 @@ import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { SseService } from "src/sse/sse.service";
 import { CommonService } from "src/common/common.service";
 import { REWARD_POINT } from "../constants/reward-point.constant";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
+import { GetDateDto } from "./dtos/get-date.dto";
 
 @Injectable()
 export class RockScissorsPaperService {
@@ -25,7 +24,7 @@ export class RockScissorsPaperService {
   ) {}
 
   async createRSPRecord(userNo: number, body: RockScissorsPaperDto) {
-    // 가위 : 0, 바위 : 1, 보 : 2
+    // 가위 : 0, 바위 : 1, 보 : 2 패배 : 3
     const { chance } = await this.usersRepository.findUserByUserNo(userNo);
 
     if (chance === 0)
@@ -34,8 +33,13 @@ export class RockScissorsPaperService {
     const { choice } = body;
     const random = Math.floor(Math.random() * 3);
 
-    const user = this.convertChoiceToString(choice);
     const computer = this.convertChoiceToString(random);
+
+    if (choice === 3) {
+      return this.drawOrLose(userNo, "-", computer, "lose");
+    }
+
+    const user = this.convertChoiceToString(choice);
 
     if (choice === random) {
       return this.drawOrLose(userNo, user, computer, "draw");
@@ -80,25 +84,12 @@ export class RockScissorsPaperService {
     }
   }
 
-  async getRSPRecords(userNo: number, query: PaginationDto) {
-    const { page, take, orderBy } = query;
-    const skip = (page - 1) * take;
-    const where = { userNo };
+  async getRSPRecords(userNo: number, query: GetDateDto) {
+    const { date } = query;
 
-    const records = await this.RSPRepository.getRecords(take, where, skip, {
-      no: orderBy,
-    });
+    const records = await this.RSPRepository.getRecords(userNo, date);
 
-    const totalCount = await this.RSPRepository.countRecordsByUserNo(userNo);
-
-    const totalPage = Math.ceil(totalCount / take);
-
-    return new PaginationResponseDto(records, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return records;
   }
 
   private async win(userNo: number, user: string, computer: string) {

@@ -1,17 +1,17 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-export function ApiNaverUnlink() {
+export function ApiGoogleLogout() {
   return applyDecorators(
     ApiOperation({
-      summary: "네이버 회원탈퇴 API",
-      description: "네이버 회원탈퇴 API",
+      summary: "구글 로그아웃 API",
+      description: "구글 로그아웃 API",
     }),
     ApiResponse({
       status: 200,
-      description: "성공적으로 회원탈퇴가 된 경우",
+      description: "성공적으로 로그아웃 된 경우",
       content: {
-        JSON: { example: { message: "네이버 회원탈퇴 성공." } },
+        JSON: { example: { message: "구글 로그아웃 성공." } },
       },
     }),
     ApiResponse({
@@ -78,13 +78,13 @@ export function ApiNaverUnlink() {
               },
               description: "만료된 토큰인 경우",
             },
-            "You are not a user logged in with Naver.": {
+            "You are not a user logged in with Google": {
               value: {
-                message: "You are not a user logged in with Naver.",
+                message: "You are not a user logged in with Google.",
                 error: "Unauthorized",
                 statusCode: 401,
               },
-              description: "네이버로 로그인한 유저가 아닌 경우",
+              description: "구글로 로그인한 유저가 아닌 경우",
             },
             "jwt error": {
               value: {
@@ -110,17 +110,9 @@ export function ApiNaverUnlink() {
                 error: "Not Found",
                 statusCode: 404,
               },
-              description: "액세스 토큰이 Redis에 없는 경우",
+              description: "리프레시 토큰이 Redis에 없는 경우",
             },
-            "token is not matched.": {
-              value: {
-                message: "token is not matched.",
-                error: "Not Found",
-                statusCode: 404,
-              },
-              description:
-                "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
-            },
+
             "user not found": {
               value: {
                 message: "user not found",
@@ -152,7 +144,6 @@ export function ApiNaverUnlink() {
         },
       },
     }),
-
     ApiResponse({
       status: 500,
       description: "Internal server error",
