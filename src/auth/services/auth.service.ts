@@ -178,6 +178,12 @@ export class AuthService {
           userInfo.picture,
         );
       }
+      const updateUserInfo =
+        await this.usersRepository.findUserByUserNo(userNo);
+      return {
+        message: "프로필 업데이트 성공",
+        userProfileImage: updateUserInfo.image,
+      };
     } catch (error) {
       if (error.message === "user not found") {
         throw new NotFoundException("user not found");
