@@ -262,13 +262,6 @@ export class AuthService {
         );
         await this.legendsRepository.createUserLegend(user.no);
       }
-      // else {
-      //   await this.usersRepository.updateUser(
-      //     user.no,
-      //     userInfo.response.name,
-      //     userInfo.response.profile_image,
-      //   );
-      // }
 
       await this.usersRepository.updateDeleteAt(user.no, null);
 
@@ -393,13 +386,6 @@ export class AuthService {
         );
         await this.legendsRepository.createUserLegend(user.no);
       }
-      // else {
-      //   await this.usersRepository.updateUser(
-      //     user.no,
-      //     userProperties.nickname,
-      //     userProperties.profile_image,
-      //   );
-      // }
 
       await this.usersRepository.updateDeleteAt(user.no, null);
 
@@ -512,13 +498,7 @@ export class AuthService {
         );
         await this.legendsRepository.createUserLegend(user.no);
       }
-      // else {
-      //   await this.usersRepository.updateUser(
-      //     user.no,
-      //     userInfo.name,
-      //     userInfo.picture,
-      //   );
-      // }
+
       await this.usersRepository.updateDeleteAt(user.no, null);
 
       const accessToken = this.tokenService.createAccessToken(user.no);
