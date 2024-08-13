@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PrismaTxType } from "src/prisma/prisma.type";
 
@@ -65,8 +66,8 @@ export class PostsRepository {
       select: {
         no: true,
         content: true,
-        check: true,
         createdAt: true,
+        check: true,
         senderDelete: true,
         receiverDelete: true,
         userPostSenderNo: { select: { no: true, nickname: true } },
@@ -79,10 +80,10 @@ export class PostsRepository {
 
   updateOnePostToDeleteByUser(
     no: number,
-    senderReceiverDeleteField: "senderDelete" | "receiverDelete",
+    data: Pick<Prisma.postUpdateInput, "receiverDelete" | "senderDelete">,
   ) {
     return this.prisma.post.update({
-      data: { [senderReceiverDeleteField]: true },
+      data,
       where: { no },
     });
   }

@@ -150,9 +150,10 @@ export class PostsService {
       throw new ConflictException("Already deleted from receiver.");
     }
 
-    const senderReceiverDeleteField = isSender
-      ? "senderDelete"
-      : "receiverDelete";
+    const senderReceiverDeleteField: Pick<
+      Prisma.postUpdateInput,
+      "receiverDelete" | "senderDelete"
+    > = isSender ? { senderDelete: true } : { receiverDelete: true };
 
     return this.postsRepository.updateOnePostToDeleteByUser(
       postNo,
