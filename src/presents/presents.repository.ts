@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PresentStatus } from "@prisma/client";
 import { PrismaTxType } from "src/prisma/prisma.type";
+import { DEFAULT_PRESENT_SELECT_OPTIONS } from "./constatns/default-present-select-options.constant";
 
 @Injectable()
 export class PresentsRepository {
@@ -16,12 +17,7 @@ export class PresentsRepository {
   getPresents(where: object) {
     return this.prisma.present.findMany({
       select: {
-        no: true,
-        status: true,
-        createdAt: true,
-        item: { select: { name: true, image: true, description: true } },
-        userPresentSenderNo: { select: { no: true, nickname: true } },
-        userPresentReceiverNo: { select: { no: true, nickname: true } },
+        ...DEFAULT_PRESENT_SELECT_OPTIONS,
       },
       where,
       orderBy: { no: "desc" },
@@ -31,14 +27,9 @@ export class PresentsRepository {
   getUserOnePresentWithItemUserInfo(presentNo: number) {
     return this.prisma.present.findUnique({
       select: {
-        no: true,
-        status: true,
-        createdAt: true,
+        ...DEFAULT_PRESENT_SELECT_OPTIONS,
         senderDelete: true,
         receiverDelete: true,
-        item: { select: { name: true, image: true, description: true } },
-        userPresentSenderNo: { select: { no: true, nickname: true } },
-        userPresentReceiverNo: { select: { no: true, nickname: true } },
       },
       where: {
         no: presentNo,
@@ -60,14 +51,9 @@ export class PresentsRepository {
   updateOnePresentStatusFromUnreadToRead(presentNo: number) {
     return this.prisma.present.update({
       select: {
-        no: true,
-        status: true,
-        createdAt: true,
+        ...DEFAULT_PRESENT_SELECT_OPTIONS,
         senderDelete: true,
         receiverDelete: true,
-        item: { select: { name: true, image: true, description: true } },
-        userPresentSenderNo: { select: { no: true, nickname: true } },
-        userPresentReceiverNo: { select: { no: true, nickname: true } },
       },
       data: { status: "read" },
       where: { no: presentNo, status: "unread" },
