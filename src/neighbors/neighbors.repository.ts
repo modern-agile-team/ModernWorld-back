@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PrismaTxType } from "src/prisma/prisma.type";
+import { DEFAULT_NEIGHBORS_SELECT_OPTIONS } from "./constants/default-neighbors-select-options.constants";
+import { GET_NEIGHBORS_SELECT_OPTIONS } from "./constants/get-neighbors-select-options.constant";
 
 @Injectable()
 export class NeighborsRepository {
@@ -9,11 +11,7 @@ export class NeighborsRepository {
   createNeighbor(receiverNo: number, senderNo: number, tx?: PrismaTxType) {
     return (tx ?? this.prisma).neighbor.create({
       select: {
-        no: true,
-        neighborSenderNo: { select: { no: true, nickname: true } },
-        neighborReceiverNo: { select: { no: true, nickname: true } },
-        createdAt: true,
-        status: true,
+        ...DEFAULT_NEIGHBORS_SELECT_OPTIONS,
       },
       data: {
         receiverNo,
@@ -25,11 +23,7 @@ export class NeighborsRepository {
   setNeighborStatusTrue(neighborNo: number, tx?: PrismaTxType) {
     return (tx ?? this.prisma).neighbor.update({
       select: {
-        no: true,
-        neighborSenderNo: { select: { no: true, nickname: true } },
-        neighborReceiverNo: { select: { no: true, nickname: true } },
-        createdAt: true,
-        status: true,
+        ...DEFAULT_NEIGHBORS_SELECT_OPTIONS,
       },
       where: {
         no: neighborNo,
@@ -42,39 +36,7 @@ export class NeighborsRepository {
 
   getMyNeighbors(skip: number, take: number, orderBy: OrderBy, where: object) {
     return this.prisma.neighbor.findMany({
-      select: {
-        no: true,
-        neighborSenderNo: {
-          select: {
-            no: true,
-            nickname: true,
-            image: true,
-            description: true,
-            userAchievement: {
-              select: {
-                achievement: { select: { title: true, level: true } },
-              },
-              where: { status: true },
-            },
-          },
-        },
-        neighborReceiverNo: {
-          select: {
-            no: true,
-            nickname: true,
-            image: true,
-            description: true,
-            userAchievement: {
-              select: {
-                achievement: { select: { title: true, level: true } },
-              },
-              where: { status: true },
-            },
-          },
-        },
-        createdAt: true,
-        status: true,
-      },
+      select: { ...GET_NEIGHBORS_SELECT_OPTIONS },
       skip,
       take,
       orderBy: { createdAt: orderBy },
