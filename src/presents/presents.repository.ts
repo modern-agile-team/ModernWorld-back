@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PresentStatus } from "@prisma/client";
 import { PrismaTxType } from "src/prisma/prisma.type";
-import { DEFAULT_PRESENTS_SELECT_OPTIONS } from "./constants/default-present-select-options.constant";
+import { DEFAULT_PRESENTS_SELECT_OPTIONS } from "./constants/default-presents-select-options.constant";
 
 @Injectable()
 export class PresentsRepository {
