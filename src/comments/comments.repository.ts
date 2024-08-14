@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { OrderBy } from "src/common/enum/order-by.enum";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PrismaTxType } from "src/prisma/prisma.type";
+import { DEFAULT_REPLIES_SELECT_OPTIONS } from "./constants/default-replies-select-options.constant";
+import { DEFAULT_COMMENTS_SELECT_OPTIONS } from "./constants/default-comments-select-options.constant";
 
 @Injectable()
 export class CommentRepository {
@@ -25,11 +27,7 @@ export class CommentRepository {
   ) {
     return (tx ?? this.prisma).comment.create({
       select: {
-        no: true,
-        content: true,
-        createdAt: true,
-        commentReceiver: { select: { no: true, nickname: true } },
-        commentSender: { select: { no: true, nickname: true } },
+        ...DEFAULT_COMMENTS_SELECT_OPTIONS,
       },
       data: {
         receiverNo,
@@ -51,11 +49,7 @@ export class CommentRepository {
   getManyComments(skip: number, take: number, orderBy: OrderBy, where: object) {
     return this.prisma.comment.findMany({
       select: {
-        no: true,
-        content: true,
-        createdAt: true,
-        commentReceiver: { select: { no: true, nickname: true } },
-        commentSender: { select: { no: true, nickname: true } },
+        ...DEFAULT_COMMENTS_SELECT_OPTIONS,
         _count: { select: { reply: { where: { deletedAt: null } } } },
       },
       skip,
@@ -68,11 +62,7 @@ export class CommentRepository {
   updateOneComment(no: number, content: string) {
     return this.prisma.comment.update({
       select: {
-        no: true,
-        content: true,
-        createdAt: true,
-        commentReceiver: { select: { no: true, nickname: true } },
-        commentSender: { select: { no: true, nickname: true } },
+        ...DEFAULT_COMMENTS_SELECT_OPTIONS,
       },
       where: {
         no,
@@ -102,11 +92,7 @@ export class CommentRepository {
   ) {
     return (tx ?? this.prisma).reply.create({
       select: {
-        no: true,
-        commentNo: true,
-        content: true,
-        createdAt: true,
-        user: { select: { no: true, nickname: true } },
+        ...DEFAULT_REPLIES_SELECT_OPTIONS,
       },
       data: {
         commentNo,
@@ -133,11 +119,7 @@ export class CommentRepository {
   ) {
     return this.prisma.reply.findMany({
       select: {
-        no: true,
-        commentNo: true,
-        content: true,
-        createdAt: true,
-        user: { select: { no: true, nickname: true } },
+        ...DEFAULT_REPLIES_SELECT_OPTIONS,
       },
       skip,
       take,
@@ -152,11 +134,7 @@ export class CommentRepository {
   updateOneReply(no: number, content: string) {
     return this.prisma.reply.update({
       select: {
-        no: true,
-        commentNo: true,
-        content: true,
-        createdAt: true,
-        user: { select: { no: true, nickname: true } },
+        ...DEFAULT_REPLIES_SELECT_OPTIONS,
       },
       where: {
         no,
