@@ -242,4 +242,10 @@ export class UsersRepository {
       orderBy,
     });
   }
+
+  deleteOneUserByDeletedAt(date: Date) {
+    return this.prisma.user.deleteMany({
+      where: { deletedAt: { lte: date } },
+    });
+  }
 }
