@@ -263,7 +263,7 @@ export class AuthService {
         await this.legendsRepository.createUserLegend(user.no);
       }
 
-      await this.usersRepository.updateDeleteAt(user.no, null);
+      await this.usersRepository.updateDeletedAt(user.no, null);
 
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
@@ -387,7 +387,7 @@ export class AuthService {
         await this.legendsRepository.createUserLegend(user.no);
       }
 
-      await this.usersRepository.updateDeleteAt(user.no, null);
+      await this.usersRepository.updateDeletedAt(user.no, null);
 
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
@@ -499,7 +499,7 @@ export class AuthService {
         await this.legendsRepository.createUserLegend(user.no);
       }
 
-      await this.usersRepository.updateDeleteAt(user.no, null);
+      await this.usersRepository.updateDeletedAt(user.no, null);
 
       const accessToken = this.tokenService.createAccessToken(user.no);
       const refreshToken = this.tokenService.createRefreshToken(user.no);
@@ -736,7 +736,7 @@ export class AuthService {
         userNo.toString() + "-accessToken",
       );
 
-      await this.usersRepository.updateDeleteAt(userNo, new Date());
+      await this.usersRepository.updateDeletedAt(userNo, new Date());
 
       return { message: "네이버 회원 탈퇴 성공" };
     } catch (error) {
@@ -800,7 +800,7 @@ export class AuthService {
         userNo.toString() + "-accessToken",
       );
 
-      await this.usersRepository.updateDeleteAt(userNo, new Date());
+      await this.usersRepository.updateDeletedAt(userNo, new Date());
 
       return { message: "카카오 탈퇴 성공" };
     } catch (error) {
@@ -861,7 +861,7 @@ export class AuthService {
         userNo.toString() + "-accessToken",
       );
 
-      await this.usersRepository.updateDeleteAt(userNo, new Date());
+      await this.usersRepository.updateDeletedAt(userNo, new Date());
 
       return { message: "구글 회원탈퇴 성공" };
     } catch (error) {
