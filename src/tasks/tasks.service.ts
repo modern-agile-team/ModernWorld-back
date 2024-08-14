@@ -25,7 +25,7 @@ export class TasksService {
       } catch (err) {
         if (i === 3) {
           this.logger.error("User Chance initialization error.", err);
-          return 0;
+          return;
         }
         this.logger.warn(
           `${i} user chance initialization failed, try again...`,
@@ -48,7 +48,7 @@ export class TasksService {
       } catch (err) {
         if (i === 3) {
           this.logger.error("Reset user attendance Transaction error.", err);
-          return 0;
+          return;
         }
         this.logger.warn(
           `${i} user attendance initialization failed, try again...`,
@@ -70,7 +70,7 @@ export class TasksService {
       } catch (err) {
         if (i === 3) {
           this.logger.error("SSE initialization error.", err);
-          return 0;
+          return;
         }
         this.logger.warn(`${i} SSE initialization failed : try again...`, err);
       }
