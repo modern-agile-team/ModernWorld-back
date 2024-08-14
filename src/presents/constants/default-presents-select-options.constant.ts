@@ -1,4 +1,4 @@
-export const DEFAULT_PRESENT_SELECT_OPTIONS = {
+export const DEFAULT_PRESENTS_SELECT_OPTIONS = {
   no: true,
   status: true,
   createdAt: true,

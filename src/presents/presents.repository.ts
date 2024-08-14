@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PresentStatus } from "@prisma/client";
 import { PrismaTxType } from "src/prisma/prisma.type";
-import { DEFAULT_PRESENT_SELECT_OPTIONS } from "./constatns/default-present-select-options.constant";
+import { DEFAULT_PRESENTS_SELECT_OPTIONS } from "./constants/default-present-select-options.constant";
 
 @Injectable()
 export class PresentsRepository {
@@ -17,7 +17,7 @@ export class PresentsRepository {
   getPresents(where: object) {
     return this.prisma.present.findMany({
       select: {
-        ...DEFAULT_PRESENT_SELECT_OPTIONS,
+        ...DEFAULT_PRESENTS_SELECT_OPTIONS,
       },
       where,
       orderBy: { no: "desc" },
@@ -27,7 +27,7 @@ export class PresentsRepository {
   getUserOnePresentWithItemUserInfo(presentNo: number) {
     return this.prisma.present.findUnique({
       select: {
-        ...DEFAULT_PRESENT_SELECT_OPTIONS,
+        ...DEFAULT_PRESENTS_SELECT_OPTIONS,
         senderDelete: true,
         receiverDelete: true,
       },
@@ -51,7 +51,7 @@ export class PresentsRepository {
   updateOnePresentStatusFromUnreadToRead(presentNo: number) {
     return this.prisma.present.update({
       select: {
-        ...DEFAULT_PRESENT_SELECT_OPTIONS,
+        ...DEFAULT_PRESENTS_SELECT_OPTIONS,
         senderDelete: true,
         receiverDelete: true,
       },
