@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { UserAchievementsService } from "./user-achievements.service";
 import { ApiTags } from "@nestjs/swagger";
 import { updateUserAchievementStatusDto } from "./dtos/update-user-achievement-status.dto";
@@ -7,6 +15,7 @@ import { ApiGetUserAchievements } from "./userAchievements-swagger/get-user-achi
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { GetUserAchievementsDto } from "./dtos/get-user-achievements.dto";
 
 @Controller("users/my/achievements")
 @ApiTags("UserAchievements")
@@ -18,8 +27,11 @@ export class UserAchievementsController {
   @Get()
   @ApiGetUserAchievements()
   @UseGuards(AccessTokenAuthGuard)
-  getUserAchievements(@UserNo() userNo: number) {
-    return this.userAchievementsService.getUserAchievements(userNo);
+  getUserAchievements(
+    @UserNo() userNo: number,
+    @Query() query: GetUserAchievementsDto,
+  ) {
+    return this.userAchievementsService.getUserAchievements(userNo, query);
   }
 
   @Patch(":achievementNo")

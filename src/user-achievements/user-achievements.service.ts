@@ -14,6 +14,7 @@ import { AchievementsRepository } from "src/achievements/achievements.repository
 import { UpdateLegendCount } from "src/legends/interfaces/update-legend-count.interface";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { PrismaTxType } from "src/prisma/prisma.type";
+import { GetUserAchievementsDto } from "./dtos/get-user-achievements.dto";
 
 @Injectable()
 export class UserAchievementsService {
@@ -28,8 +29,14 @@ export class UserAchievementsService {
     private readonly alarmsRepository: AlarmsRepository,
   ) {}
 
-  getUserAchievements(userNo: number) {
-    return this.userAchievementsRepository.getUserAchievements(userNo);
+  getUserAchievements(userNo: number, query: GetUserAchievementsDto) {
+    const { title, category } = query;
+
+    return this.userAchievementsRepository.getUserAchievements(
+      userNo,
+      title,
+      category,
+    );
   }
 
   async updateUserAchievementStatus(
