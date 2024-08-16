@@ -7,10 +7,11 @@ export class BansService {
   constructor(private readonly bansRepository: BansRepository) {}
 
   async createBan(body: CreateBanDto) {
-    const { content, expiredAt } = body;
+    const { userNo, content, expireDays } = body;
 
     const uniqueIdentifier = "asd";
+    const expiredAt = new Date();
 
-    return this.bansRepository.createBan(content, uniqueIdentifier, expiredAt);
+    return this.bansRepository.createBan(uniqueIdentifier, content, expiredAt);
   }
 }
