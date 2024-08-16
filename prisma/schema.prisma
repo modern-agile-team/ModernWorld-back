@@ -31,7 +31,7 @@ model alarm {
 }
 
 model ban {
-  no               Int       @id
+  no               Int       @id @default(autoincrement()) @db.UnsignedInt
   uniqueIdentifier String    @unique @map("unique_identifier") @db.VarChar(300)
   content          String    @db.VarChar(100)
   createdAt        DateTime  @default(now()) @map("created_at") @db.DateTime(0)
