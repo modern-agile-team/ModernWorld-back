@@ -129,6 +129,13 @@ export class UsersRepository {
     });
   }
 
+  getUserUniqueIndentifier(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { uniqueIdentifier: true },
+      where: { no: userNo },
+    });
+  }
+
   updateUserAttendance(
     userNo: number,
     attendance: JsonValue,
