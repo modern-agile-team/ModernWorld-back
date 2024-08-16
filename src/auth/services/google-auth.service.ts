@@ -31,7 +31,7 @@ export class GoogleAuthService {
     private readonly legendsRepository: LegendsRepository,
   ) {}
 
-  async googleLogin(authorizeCode: string) {
+  async login(authorizeCode: string) {
     try {
       this.tokenUrl = "https://oauth2.googleapis.com/token";
       this.grant_type = "authorization_code";
@@ -143,7 +143,7 @@ export class GoogleAuthService {
     }
   }
 
-  async googleLogout(userNo: number) {
+  async logout(userNo: number) {
     try {
       const user = await this.usersRepository.findUserByUserNo(userNo);
       if (!user) {
@@ -179,7 +179,7 @@ export class GoogleAuthService {
     }
   }
 
-  async googleUnlink(userNo: number) {
+  async unlink(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {

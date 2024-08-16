@@ -46,7 +46,7 @@ export class AuthController {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
-    return this.naverAuthService.naverLogin(code);
+    return this.naverAuthService.login(code);
   }
 
   @ApiKakaoLogin()
@@ -56,7 +56,7 @@ export class AuthController {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
-    return this.kakaoAuthService.kakaoLogin(code);
+    return this.kakaoAuthService.login(code);
   }
   @ApiGoogleLogin()
   @UseInterceptors(CookieInterceptor)
@@ -65,7 +65,7 @@ export class AuthController {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다");
     }
-    return this.googleAuthService.googleLogin(code);
+    return this.googleAuthService.login(code);
   }
 
   @ApiNewAccessToken()
@@ -79,42 +79,42 @@ export class AuthController {
   @UseGuards(AccessTokenAuthGuard)
   @Delete("kakao/logout")
   async kakaoLogout(@UserNo() userNo: number) {
-    return await this.kakaoAuthService.kakaoLogout(userNo);
+    return await this.kakaoAuthService.logout(userNo);
   }
 
   @ApiNaverLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("naver/logout")
   async naverLogout(@UserNo() userNo: number) {
-    return await this.naverAuthService.naverLogout(userNo);
+    return await this.naverAuthService.logout(userNo);
   }
 
   @ApiGoogleLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("google/logout")
   async googleLogout(@UserNo() userNo: number) {
-    return await this.googleAuthService.googleLogout(userNo);
+    return await this.googleAuthService.logout(userNo);
   }
 
   @ApiKakaoUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("kakao/unlink")
   async kakaoUnlink(@UserNo() userNo: number) {
-    return await this.kakaoAuthService.kakaoUnlink(userNo);
+    return await this.kakaoAuthService.unlink(userNo);
   }
 
   @ApiNaverUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("naver/unlink")
   async naverUnlink(@UserNo() userNo: number) {
-    return await this.naverAuthService.naverUnlink(userNo);
+    return await this.naverAuthService.unlink(userNo);
   }
 
   @ApiGoogleUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("google/unlink")
   async googleUnlink(@UserNo() userNo: number) {
-    return await this.googleAuthService.googleUnlink(userNo);
+    return await this.googleAuthService.unlink(userNo);
   }
 
   @ApiUpdateProfile()

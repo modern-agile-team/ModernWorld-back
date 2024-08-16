@@ -32,7 +32,7 @@ export class KakaoAuthService {
     private readonly legendsRepository: LegendsRepository,
   ) {}
 
-  async kakaoLogin(authorizeCode: string) {
+  async login(authorizeCode: string) {
     try {
       this.tokenUrl = "https://kauth.kakao.com/oauth/token";
       this.grant_type = "authorization_code";
@@ -156,7 +156,7 @@ export class KakaoAuthService {
     }
   }
 
-  async kakaoLogout(userNo: number) {
+  async logout(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {
@@ -217,7 +217,7 @@ export class KakaoAuthService {
     return { message: "카카오 로그아웃 성공" };
   }
 
-  async kakaoUnlink(userNo: number) {
+  async unlink(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {

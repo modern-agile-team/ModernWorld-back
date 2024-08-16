@@ -31,7 +31,7 @@ export class NaverAuthService {
     private readonly legendsRepository: LegendsRepository,
   ) {}
 
-  async naverLogin(authorizeCode: string) {
+  async login(authorizeCode: string) {
     try {
       this.tokenUrl = "https://nid.naver.com/oauth2.0/token";
       this.grant_type = "authorization_code";
@@ -143,7 +143,7 @@ export class NaverAuthService {
     }
   }
 
-  async naverLogout(userNo: number) {
+  async logout(userNo: number) {
     try {
       const user = await this.usersRepository.findUserByUserNo(userNo);
       if (!user) {
@@ -179,7 +179,7 @@ export class NaverAuthService {
     }
   }
 
-  async naverUnlink(userNo: number) {
+  async unlink(userNo: number) {
     try {
       const socialTokens = await this.tokenRepository.findToken(userNo);
       if (!socialTokens) {
