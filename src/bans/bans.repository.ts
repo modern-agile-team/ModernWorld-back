@@ -5,7 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class BansRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  createBan(uniqueIdentifier: string, content: string, expiredAt: Date) {
+  createBan(uniqueIdentifier: string, content: string, expiredAt?: Date) {
     return this.prisma.ban.create({
       data: { content, uniqueIdentifier, expiredAt },
     });
