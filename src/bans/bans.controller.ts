@@ -4,8 +4,10 @@ import { CreateBanDto } from "./dtos/create-ban.dto";
 import { ApiCreateBan } from "./bans-swagger/create-ban.decorator";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller("bans")
+@ApiTags("Bans")
 export class BansController {
   constructor(private readonly bansService: BansService) {}
 
