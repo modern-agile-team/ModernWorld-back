@@ -188,8 +188,8 @@ export class TokenService {
   }
 
   async delAllRedisTokens(userNo: string) {
-    await this.redisService.delToken(userNo.toString() + "-refreshToken");
-    await this.redisService.delToken(userNo.toString() + "-accessToken");
+    await this.redisService.delToken(userNo + "-refreshToken");
+    await this.redisService.delToken(userNo + "-accessToken");
   }
 
   delRefreshToken(userNo: string) {
