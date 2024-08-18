@@ -7,7 +7,7 @@ import {
 import { BansRepository } from "./bans.repository";
 import { CreateBanDto } from "./dtos/create-ban.dto";
 import { UsersRepository } from "src/users/users.repository";
-import { RedisService } from "src/auth/redis/redis.service";
+import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class BansService {
   constructor(
     private readonly bansRepository: BansRepository,
     private readonly usersRepository: UsersRepository,
-    private readonly redisService: RedisService,
+    private readonly tokenService: TokenService,
     private readonly tokenRepository: TokenRepository,
   ) {}
 
@@ -38,7 +38,9 @@ export class BansService {
     if (isBanned) throw new ConflictException("User is already banned.");
 
     if (!expireDays) {
-      await this.deleteAllTokens(userNo);
+      await this.tokenService.delAllRedisTokens(`${userNo}`);
+
+      await this.tokenRepository.deleteTokens(userNo);
 
       return this.bansRepository.createBan(uniqueIdentifier, content);
     }
@@ -47,15 +49,10 @@ export class BansService {
 
     expiredAt.setDate(expiredAt.getDate() + expireDays);
 
-    await this.deleteAllTokens(userNo);
+    await this.tokenService.delAllRedisTokens(`${userNo}`);
+
+    await this.tokenRepository.deleteTokens(userNo);
 
     return this.bansRepository.createBan(uniqueIdentifier, content, expiredAt);
-  }
-
-  private async deleteAllTokens(userNo: number) {
-    await this.redisService.delToken(userNo.toString() + "-refreshToken");
-    await this.redisService.delToken(userNo.toString() + "-accessToken");
-
-    return this.tokenRepository.deleteTokens(userNo);
   }
 }
