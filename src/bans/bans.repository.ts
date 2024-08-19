@@ -14,4 +14,8 @@ export class BansRepository {
   findBanByUniqueIdentifier(uniqueIdentifier: string) {
     return this.prisma.ban.findUnique({ where: { uniqueIdentifier } });
   }
+
+  deleteBanByUniqueIdentifier(uniqueIdentifier: string) {
+    return this.prisma.ban.delete({ where: { uniqueIdentifier } });
+  }
 }
