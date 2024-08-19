@@ -24,7 +24,7 @@ export class TokenRepository {
   }
 
   deleteTokens(userNo: number) {
-    return this.prisma.token.delete({
+    return this.prisma.token.deleteMany({
       where: {
         userNo,
       },
