@@ -19,6 +19,6 @@ import { LegendsModule } from "src/legends/legends.module";
     AccessStrategy,
     RefreshStrategy,
   ],
-  exports: [TokenService],
+  exports: [TokenService, TokenRepository],
 })
 export class AuthModule {}

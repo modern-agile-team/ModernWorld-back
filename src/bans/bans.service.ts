@@ -2,6 +2,8 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from "@nestjs/common";
 import { BansRepository } from "./bans.repository";
@@ -9,10 +11,13 @@ import { CreateBanDto } from "./dtos/create-ban.dto";
 import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class BansService {
   constructor(
+    private readonly prisma: PrismaService,
+    private readonly logger: Logger,
     private readonly bansRepository: BansRepository,
     private readonly usersRepository: UsersRepository,
     private readonly tokenService: TokenService,
@@ -38,21 +43,34 @@ export class BansService {
     if (isBanned) throw new ConflictException("User is already banned.");
 
     if (!expireDays) {
-      await this.tokenService.delAllRedisTokens(`${userNo}`);
-
-      await this.tokenRepository.deleteTokens(userNo);
-
-      return this.bansRepository.createBan(uniqueIdentifier, content);
+      return this.executeBan(userNo, uniqueIdentifier, content);
     }
 
     const expiredAt = new Date();
 
     expiredAt.setDate(expiredAt.getDate() + expireDays);
 
+    return this.executeBan(userNo, uniqueIdentifier, content, expiredAt);
+  }
+
+  private async executeBan(
+    userNo: number,
+    uniqueIdentifier: string,
+    content: string,
+    expiredAt?: Date,
+  ) {
     await this.tokenService.delAllRedisTokens(`${userNo}`);
 
-    await this.tokenRepository.deleteTokens(userNo);
-
-    return this.bansRepository.createBan(uniqueIdentifier, content, expiredAt);
+    try {
+      return (
+        await this.prisma.$transaction([
+          this.tokenRepository.deleteTokens(userNo),
+          this.bansRepository.createBan(uniqueIdentifier, content, expiredAt),
+        ])
+      )[1];
+    } catch (err) {
+      this.logger.error(`transaction Error : ${err}`);
+      throw new InternalServerErrorException();
+    }
   }
 }
