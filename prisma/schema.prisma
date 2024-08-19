@@ -205,7 +205,7 @@ model token {
   userNo        Int     @unique @map("user_no") @db.UnsignedInt
   socialAccess  String? @map("social_access") @db.VarChar(300)
   socialRefresh String? @map("social_refresh") @db.VarChar(300)
-  user          user    @relation(fields: [userNo], references: [no])
+  user          user    @relation(fields: [userNo], references: [no], onDelete: Cascade)
 
   @@index([userNo], map: "user_no")
 }
