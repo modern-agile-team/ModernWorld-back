@@ -30,7 +30,6 @@ export function ApiCreateBan() {
     }),
 
     ApiBadRequestResponse({
-      description: "cat, dog 이외의 값을 넣었을 때",
       content: {
         JSON: {
           examples: {
