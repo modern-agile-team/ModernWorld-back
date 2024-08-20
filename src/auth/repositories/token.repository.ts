@@ -5,11 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class TokenRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async saveTokens(
-    userNo: number,
-    socialAccess: string,
-    socialRefresh: string,
-  ) {
+  saveTokens(userNo: number, socialAccess: string, socialRefresh: string) {
     return this.prisma.token.create({
       data: {
         userNo,
@@ -19,7 +15,7 @@ export class TokenRepository {
     });
   }
 
-  async findToken(userNo: number) {
+  findToken(userNo: number) {
     return this.prisma.token.findUnique({
       where: {
         userNo,
@@ -27,15 +23,15 @@ export class TokenRepository {
     });
   }
 
-  async deleteTokens(userNo: number) {
-    return this.prisma.token.delete({
+  deleteTokens(userNo: number) {
+    return this.prisma.token.deleteMany({
       where: {
         userNo,
       },
     });
   }
 
-  async updateAccessToken(userNo: number, socialAccess: string) {
+  updateAccessToken(userNo: number, socialAccess: string) {
     return this.prisma.token.update({
       where: {
         userNo,
@@ -46,11 +42,7 @@ export class TokenRepository {
     });
   }
 
-  async updateTokens(
-    userNo: number,
-    socialAccess: string,
-    socialRefresh: string,
-  ) {
+  updateTokens(userNo: number, socialAccess: string, socialRefresh: string) {
     return this.prisma.token.update({
       where: {
         userNo,

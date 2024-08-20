@@ -10,11 +10,11 @@ export class RedisService {
     return this.tokenCache.get(key);
   }
 
-  async setToken(key: string, token: string, ttl?: number) {
-    await this.tokenCache.set(key, token, { ttl } as any);
+  setToken(key: string, token: string, ttl?: number) {
+    return this.tokenCache.set(key, token, { ttl } as any);
   }
 
-  async delToken(key: string) {
-    await this.tokenCache.del(key);
+  delToken(key: string) {
+    return this.tokenCache.del(key);
   }
 }

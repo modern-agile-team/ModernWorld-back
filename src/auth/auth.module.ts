@@ -25,5 +25,6 @@ import { GoogleAuthService } from "./services/google-auth.service";
     AccessStrategy,
     RefreshStrategy,
   ],
+  exports: [TokenService, TokenRepository],
 })
 export class AuthModule {}

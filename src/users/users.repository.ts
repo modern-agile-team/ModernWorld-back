@@ -129,6 +129,20 @@ export class UsersRepository {
     });
   }
 
+  isAdmin(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { admin: true },
+      where: { no: userNo },
+    });
+  }
+
+  getUserUniqueIndentifier(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { uniqueIdentifier: true },
+      where: { no: userNo },
+    });
+  }
+
   updateUserAttendance(
     userNo: number,
     attendance: JsonValue,

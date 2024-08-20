@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -114,6 +115,19 @@ export function ApiGetUserAchievements() {
               },
             },
           ],
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description: "Bad Request",
+      content: {
+        JSON: {
+          example: {
+            message: ["title must be a string", "category must be a string"],
+            error: "Bad Request",
+            statusCode: 400,
+          },
         },
       },
     }),

@@ -30,6 +30,14 @@ model alarm {
   @@index([userNo], map: "user_no")
 }
 
+model ban {
+  no               Int       @id @default(autoincrement()) @db.UnsignedInt
+  uniqueIdentifier String    @unique @map("unique_identifier") @db.VarChar(300)
+  content          String    @db.VarChar(100)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  expiredAt        DateTime? @map("expired_at") @db.DateTime(0)
+}
+
 model character {
   no              Int               @id @default(autoincrement()) @db.UnsignedInt
   name            String            @db.VarChar(15)
@@ -197,7 +205,7 @@ model token {
   userNo        Int     @unique @map("user_no") @db.UnsignedInt
   socialAccess  String? @map("social_access") @db.VarChar(300)
   socialRefresh String? @map("social_refresh") @db.VarChar(300)
-  user          user    @relation(fields: [userNo], references: [no])
+  user          user    @relation(fields: [userNo], references: [no], onDelete: Cascade)
 
   @@index([userNo], map: "user_no")
 }

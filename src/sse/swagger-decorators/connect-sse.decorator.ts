@@ -92,7 +92,7 @@ export function ApiConnectSse() {
             },
 
             ex10: {
-              summary: "이웃",
+              summary: "업적",
               value: {
                 title: "업적",
                 content: `업적 [???]을 달성했습니다! ???포인트를 흭득하셨습니다!`,

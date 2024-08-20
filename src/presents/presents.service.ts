@@ -72,17 +72,17 @@ export class PresentsService {
     const { userPresentReceiverNo: receiver, userPresentSenderNo: sender } =
       present;
 
-    if (receiver.no !== userNo && sender.no !== userNo) {
+    if (receiver?.no !== userNo && sender?.no !== userNo) {
       throw new ForbiddenException("This present is not related with user.");
     }
 
-    if (userNo === receiver.no && present.receiverDelete) {
+    if (userNo === receiver?.no && present.receiverDelete) {
       throw new NotFoundException("This present was deleted from receiver.");
-    } else if (userNo === sender.no && present.senderDelete) {
+    } else if (userNo === sender?.no && present.senderDelete) {
       throw new NotFoundException("This present was deleted from sender.");
     }
 
-    if (receiver.no === userNo && present.status === PresentStatus.unread) {
+    if (receiver?.no === userNo && present.status === PresentStatus.unread) {
       const updatedPresent =
         await this.presentsRepository.updateOnePresentStatusFromUnreadToRead(
           presentNo,
