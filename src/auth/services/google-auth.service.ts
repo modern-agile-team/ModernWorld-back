@@ -94,11 +94,10 @@ export class GoogleAuthService {
         }
         if (userBanInfo.expiredAt > new Date()) {
           throw new ForbiddenException("Banned User");
-        } else {
-          await this.bansRepository.deleteBanByUniqueIdentifier(
-            userUniqueIdentifier,
-          );
         }
+        await this.bansRepository.deleteBanByUniqueIdentifier(
+          userUniqueIdentifier,
+        );
       }
       let user =
         await this.usersRepository.findUserByUniqueIndentifier(

@@ -105,11 +105,10 @@ export class KakaoAuthService {
         }
         if (userBanInfo.expiredAt > new Date()) {
           throw new ForbiddenException("Banned User");
-        } else {
-          await this.bansRepository.deleteBanByUniqueIdentifier(
-            userUniqueIdentifier,
-          );
         }
+        await this.bansRepository.deleteBanByUniqueIdentifier(
+          userUniqueIdentifier,
+        );
       }
 
       let user =
