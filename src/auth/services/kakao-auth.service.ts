@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -12,6 +13,7 @@ import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { BansRepository } from "src/bans/bans.repository";
 
 @Injectable()
 export class KakaoAuthService {
@@ -30,6 +32,7 @@ export class KakaoAuthService {
     private readonly logger: Logger,
     private readonly configService: ConfigService,
     private readonly legendsRepository: LegendsRepository,
+    private readonly bansRepository: BansRepository,
   ) {}
 
   async login(authorizeCode: string) {
@@ -92,6 +95,22 @@ export class KakaoAuthService {
 
       const userUniqueIdentifier = userInfo.id.toString();
       const userProperties = userInfo.properties;
+      const userBanInfo =
+        await this.bansRepository.findBanByUniqueIdentifier(
+          userUniqueIdentifier,
+        );
+      if (userBanInfo) {
+        if (!userBanInfo.expiredAt) {
+          throw new ForbiddenException("Permanently Banned User");
+        }
+        if (userBanInfo.expiredAt > new Date()) {
+          throw new ForbiddenException("Banned User");
+        } else {
+          await this.bansRepository.deleteBanByUniqueIdentifier(
+            userUniqueIdentifier,
+          );
+        }
+      }
 
       let user =
         await this.usersRepository.findUserByUniqueIndentifier(
@@ -146,13 +165,16 @@ export class KakaoAuthService {
         userNo: user.no,
       };
     } catch (error) {
-      this.logger.error(error);
-      if (error.response) {
-        throw new UnauthorizedException("Invalid authorization code.");
+      if (error.status === 401) {
+        throw new UnauthorizedException(error.message);
+      } else if (error.status === 403) {
+        throw new ForbiddenException(error.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그인 중 서버에러가 발생했습니다.",
+        );
       }
-      throw new InternalServerErrorException(
-        "로그인 중 서버에러가 발생했습니다.",
-      );
     }
   }
 
