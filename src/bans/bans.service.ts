@@ -24,6 +24,21 @@ export class BansService {
     private readonly tokenRepository: TokenRepository,
   ) {}
 
+  async checkBan(uniqueIdentifier: string) {
+    const userBanInfo =
+      await this.bansRepository.findBanByUniqueIdentifier(uniqueIdentifier);
+
+    if (userBanInfo) {
+      if (!userBanInfo.expiredAt) {
+        throw new ForbiddenException("Permanently Banned User");
+      }
+      if (userBanInfo.expiredAt > new Date()) {
+        throw new ForbiddenException("Banned User");
+      }
+      await this.bansRepository.deleteBanByUniqueIdentifier(uniqueIdentifier);
+    }
+  }
+
   async createBan(adminNo: number, body: CreateBanDto) {
     const { userNo, content, expireDays } = body;
 

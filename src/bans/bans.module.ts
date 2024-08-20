@@ -10,6 +10,6 @@ import { AuthModule } from "src/auth/auth.module";
   imports: [UsersModule, RedisModule, forwardRef(() => AuthModule)],
   controllers: [BansController],
   providers: [BansService, BansRepository],
-  exports: [BansRepository],
+  exports: [BansService, BansRepository],
 })
 export class BansModule {}

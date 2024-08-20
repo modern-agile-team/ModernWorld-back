@@ -14,6 +14,7 @@ import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { BansRepository } from "src/bans/bans.repository";
+import { BansService } from "src/bans/bans.service";
 
 @Injectable()
 export class GoogleAuthService {
@@ -31,7 +32,7 @@ export class GoogleAuthService {
     private readonly logger: Logger,
     private readonly configService: ConfigService,
     private readonly legendsRepository: LegendsRepository,
-    private readonly bansRepository: BansRepository,
+    private readonly bansService: BansService,
   ) {}
 
   async login(authorizeCode: string) {
@@ -84,21 +85,8 @@ export class GoogleAuthService {
         );
       }
       const userUniqueIdentifier = userInfo.id;
-      const userBanInfo =
-        await this.bansRepository.findBanByUniqueIdentifier(
-          userUniqueIdentifier,
-        );
-      if (userBanInfo) {
-        if (!userBanInfo.expiredAt) {
-          throw new ForbiddenException("Permanently Banned User");
-        }
-        if (userBanInfo.expiredAt > new Date()) {
-          throw new ForbiddenException("Banned User");
-        }
-        await this.bansRepository.deleteBanByUniqueIdentifier(
-          userUniqueIdentifier,
-        );
-      }
+      await this.bansService.checkBan(userUniqueIdentifier);
+
       let user =
         await this.usersRepository.findUserByUniqueIndentifier(
           userUniqueIdentifier,
