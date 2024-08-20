@@ -12,7 +12,6 @@ import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
 import { LegendsRepository } from "src/legends/legends.repository";
-import { BansRepository } from "src/bans/bans.repository";
 import { BansService } from "src/bans/bans.service";
 
 @Injectable()
