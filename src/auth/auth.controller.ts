@@ -25,11 +25,17 @@ import { ApiGoogleLogin } from "./swagger-decorators/google-login-decorator";
 import { ApiGoogleLogout } from "./swagger-decorators/google-logout-decorator";
 import { ApiGoogleUnlink } from "./swagger-decorators/google-unlink-decorator";
 import { ApiUpdateProfile } from "./swagger-decorators/updateProfile-decorator";
+import { NaverAuthService } from "./services/naver-auth.service";
+import { KakaoAuthService } from "./services/kakao-auth.service";
+import { GoogleAuthService } from "./services/google-auth.service";
 
 @Controller("auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly naverAuthService: NaverAuthService,
+    private readonly kakaoAuthService: KakaoAuthService,
+    private readonly googleAuthService: GoogleAuthService,
     private readonly tokenService: TokenService,
   ) {}
 
@@ -40,7 +46,7 @@ export class AuthController {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
-    return this.authService.naverLogin(code);
+    return this.naverAuthService.login(code);
   }
 
   @ApiKakaoLogin()
@@ -50,7 +56,7 @@ export class AuthController {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
-    return this.authService.kakaoLogin(code);
+    return this.kakaoAuthService.login(code);
   }
   @ApiGoogleLogin()
   @UseInterceptors(CookieInterceptor)
@@ -59,7 +65,7 @@ export class AuthController {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다");
     }
-    return this.authService.googleLogin(code);
+    return this.googleAuthService.login(code);
   }
 
   @ApiNewAccessToken()
@@ -73,42 +79,42 @@ export class AuthController {
   @UseGuards(AccessTokenAuthGuard)
   @Delete("kakao/logout")
   async kakaoLogout(@UserNo() userNo: number) {
-    return await this.authService.kakaoLogout(userNo);
+    return await this.kakaoAuthService.logout(userNo);
   }
 
   @ApiNaverLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("naver/logout")
   async naverLogout(@UserNo() userNo: number) {
-    return await this.authService.naverLogout(userNo);
+    return await this.naverAuthService.logout(userNo);
   }
 
   @ApiGoogleLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("google/logout")
   async googleLogout(@UserNo() userNo: number) {
-    return await this.authService.googleLogout(userNo);
+    return await this.googleAuthService.logout(userNo);
   }
 
   @ApiKakaoUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("kakao/unlink")
   async kakaoUnlink(@UserNo() userNo: number) {
-    return await this.authService.kakaoUnlink(userNo);
+    return await this.kakaoAuthService.unlink(userNo);
   }
 
   @ApiNaverUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("naver/unlink")
   async naverUnlink(@UserNo() userNo: number) {
-    return await this.authService.naverUnlink(userNo);
+    return await this.naverAuthService.unlink(userNo);
   }
 
   @ApiGoogleUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("google/unlink")
   async googleUnlink(@UserNo() userNo: number) {
-    return await this.authService.googleUnlink(userNo);
+    return await this.googleAuthService.unlink(userNo);
   }
 
   @ApiUpdateProfile()
