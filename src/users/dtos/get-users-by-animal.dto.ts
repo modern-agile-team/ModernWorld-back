@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 import { Animal } from "../../common/enum/animal.enum";
 import { ApiPropertyOptional, OmitType } from "@nestjs/swagger";
 import { orderByField } from "../enum/orderByFeild.enum";
@@ -26,5 +26,7 @@ export class GetUsersByAnimalDto extends OmitType(PaginationDto, ["orderBy"]) {
   @ApiPropertyOptional({
     description: "검색할 유저 이름",
   })
+  @IsString()
+  @IsOptional()
   nickname?: string;
 }
