@@ -26,14 +26,22 @@ import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { ApiGetOneComment } from "./swagger-decorators/comment-swagger/get-one-comment.dto";
 
 @Controller()
 @ApiTags("Comments & Replies")
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @ApiCreateOneComment()
+  @Get("comments/:commentNo")
+  @ApiGetOneComment()
+  @UseGuards(AccessTokenAuthGuard)
+  getOneComment(@Param("commentNo", ParsePositiveIntPipe) commentNo: number) {
+    return this.commentService.findOneCommentNotDeleted(commentNo);
+  }
+
   @Post("users/:userNo/comments")
+  @ApiCreateOneComment()
   @UseGuards(AccessTokenAuthGuard)
   createOneComment(
     @UserNo() senderNo: number,
