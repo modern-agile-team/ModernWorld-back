@@ -11,8 +11,8 @@ import { InventoryRepository } from "src/inventory/inventory.repository";
 import { ItemsRepository } from "src/items/items.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
+import { SenderReceiverNoDto } from "src/common/dtos/sender-receiver-no.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
-import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
 import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
 import { PresentsWithoutDeleteResponseDto } from "./dtos/presents-without-delete-response.dto";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -37,7 +37,7 @@ export class PresentsService {
     private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
-  getUserPresents(userNo: number, query: GetUserPresentsDto) {
+  getUserPresents(userNo: number, query: SenderReceiverNoDto) {
     const { type } = query;
 
     const senderReceiverDeleteField =
