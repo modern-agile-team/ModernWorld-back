@@ -19,7 +19,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
-import { PresentStatus } from "@prisma/client";
+import { PresentStatus, Prisma } from "@prisma/client";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
@@ -269,7 +269,9 @@ export class PresentsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    let present;
+    let present: Prisma.PromiseReturnType<
+      typeof this.presentsRepository.createOneItemToUser
+    >;
 
     try {
       present = await this.prisma.$transaction(async (tx) => {

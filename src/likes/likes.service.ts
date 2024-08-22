@@ -13,6 +13,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class LikesService {
@@ -37,7 +38,9 @@ export class LikesService {
     if (await this.likesRepository.findOneLike(senderNo, receiverNo))
       throw new ConflictException("This like already exist.");
 
-    let like;
+    let like: Prisma.PromiseReturnType<
+      typeof this.likesRepository.createOneLike
+    >;
 
     try {
       like = await this.prisma.$transaction(async (tx) => {
