@@ -5,6 +5,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { LikesService } from "./likes.service";
@@ -15,11 +16,23 @@ import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { ApiFindOneLike } from "./likes-swagger/find-one-like.decorator";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { ApiGetLikes } from "./likes-swagger/get-likes.decorator";
+import { GetLikesDto } from "./dtos/get-likes.dto";
 
 @Controller()
 @ApiTags("Likes")
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
+
+  @Get("users/:userNo/likes")
+  @ApiGetLikes()
+  @UseGuards(AccessTokenAuthGuard)
+  getUserLikes(
+    @Param("userNo", ParsePositiveIntPipe) userNo: number,
+    @Query() query: GetLikesDto,
+  ) {
+    return this.likesService.getUserLikes(userNo, query);
+  }
 
   @Post("users/:userNo/likes")
   @ApiCreateLike()
