@@ -56,7 +56,8 @@ export function ApiNaverLogin() {
           examples: {
             "Banned User": {
               value: {
-                message: "Banned User (밴 만료 기간)",
+                message:
+                  "Banned User (밴 만료 기간 ex) 2024-08-23T05:08:33.000Z)",
                 error: "Forbidden",
                 statusCode: 403,
               },
