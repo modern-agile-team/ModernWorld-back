@@ -40,6 +40,10 @@ export class CommentRepository {
 
   findOneCommentNotDeleted(commentNo: number) {
     return this.prisma.comment.findUnique({
+      select: {
+        ...DEFAULT_COMMENTS_SELECT_OPTIONS,
+        _count: { select: { reply: { where: { deletedAt: null } } } },
+      },
       where: {
         no: commentNo,
         deletedAt: null,
@@ -105,6 +109,9 @@ export class CommentRepository {
 
   findOneReplyNotDeleted(replyNo: number) {
     return this.prisma.reply.findUnique({
+      select: {
+        ...DEFAULT_REPLIES_SELECT_OPTIONS,
+      },
       where: {
         no: replyNo,
         deletedAt: null,

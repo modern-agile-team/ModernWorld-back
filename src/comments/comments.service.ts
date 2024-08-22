@@ -125,9 +125,9 @@ export class CommentService {
     body: CommentContentDto,
   ) {
     const { content } = body;
-    const { senderNo } = await this.findOneCommentNotDeleted(commentNo);
+    const { commentSender } = await this.findOneCommentNotDeleted(commentNo);
 
-    if (userNo !== senderNo) {
+    if (userNo !== commentSender?.no) {
       throw new ForbiddenException("User can update only their comment.");
     }
 
@@ -135,9 +135,9 @@ export class CommentService {
   }
 
   async softDeleteOneComment(userNo: number, commentNo: number) {
-    const { senderNo } = await this.findOneCommentNotDeleted(commentNo);
+    const { commentSender } = await this.findOneCommentNotDeleted(commentNo);
 
-    if (userNo !== senderNo) {
+    if (userNo !== commentSender?.no) {
       throw new ForbiddenException("User can delete only their comment.");
     }
 
@@ -182,6 +182,14 @@ export class CommentService {
     }
   }
 
+  async getOneReply(replyNo: number) {
+    const reply = await this.findOneReplyNotDeleted(replyNo);
+
+    await this.findOneCommentNotDeleted(reply.commentNo);
+
+    return reply;
+  }
+
   async getManyReplies(commentNo: number, query: PaginationDto) {
     await this.findOneCommentNotDeleted(commentNo);
 
@@ -217,11 +225,12 @@ export class CommentService {
     body: CommentContentDto,
   ) {
     await this.findOneCommentNotDeleted(commentNo);
-    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
+
+    const { user } = await this.findOneReplyNotDeleted(replyNo);
 
     const { content } = body;
 
-    if (senderNo !== userNo) {
+    if (senderNo !== user?.no) {
       throw new ForbiddenException("User can update only their reply.");
     }
 
@@ -235,16 +244,16 @@ export class CommentService {
   ) {
     await this.findOneCommentNotDeleted(commentNo);
 
-    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
+    const { user } = await this.findOneReplyNotDeleted(replyNo);
 
-    if (senderNo !== userNo) {
+    if (senderNo !== user?.no) {
       throw new ForbiddenException("User can delete only their reply.");
     }
 
     await this.commentRepository.softDeleteOneReply(replyNo);
   }
 
-  private async findOneCommentNotDeleted(commentNo: number) {
+  async findOneCommentNotDeleted(commentNo: number) {
     const comment =
       await this.commentRepository.findOneCommentNotDeleted(commentNo);
 
