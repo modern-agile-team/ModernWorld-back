@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -12,6 +13,7 @@ import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 import { ConfigService } from "@nestjs/config";
 import { LegendsRepository } from "src/legends/legends.repository";
+import { BansService } from "src/bans/bans.service";
 
 @Injectable()
 export class KakaoAuthService {
@@ -30,6 +32,7 @@ export class KakaoAuthService {
     private readonly logger: Logger,
     private readonly configService: ConfigService,
     private readonly legendsRepository: LegendsRepository,
+    private readonly bansService: BansService,
   ) {}
 
   async login(authorizeCode: string) {
@@ -93,6 +96,8 @@ export class KakaoAuthService {
       const userUniqueIdentifier = userInfo.id.toString();
       const userProperties = userInfo.properties;
 
+      await this.bansService.checkBan(userUniqueIdentifier);
+
       let user =
         await this.usersRepository.findUserByUniqueIndentifier(
           userUniqueIdentifier,
@@ -146,13 +151,16 @@ export class KakaoAuthService {
         userNo: user.no,
       };
     } catch (error) {
-      this.logger.error(error);
-      if (error.response) {
-        throw new UnauthorizedException("Invalid authorization code.");
+      if (error.status === 401) {
+        throw new UnauthorizedException(error.message);
+      } else if (error.status === 403) {
+        throw new ForbiddenException(error.message);
+      } else {
+        this.logger.error(error);
+        throw new InternalServerErrorException(
+          "로그인 중 서버에러가 발생했습니다.",
+        );
       }
-      throw new InternalServerErrorException(
-        "로그인 중 서버에러가 발생했습니다.",
-      );
     }
   }
 

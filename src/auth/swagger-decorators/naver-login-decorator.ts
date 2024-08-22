@@ -49,6 +49,33 @@ export function ApiNaverLogin() {
       },
     }),
     ApiResponse({
+      status: 403,
+      description: "403 error",
+      content: {
+        JSON: {
+          examples: {
+            "Banned User": {
+              value: {
+                message:
+                  "Banned User (밴 만료 기간 ex) 2024-08-23T05:08:33.000Z)",
+                error: "Forbidden",
+                statusCode: 403,
+              },
+              description: "밴된 유저(일시적 밴)",
+            },
+            "Permanently Banned User": {
+              value: {
+                message: "Permanently Banned User",
+                error: "Forbidden",
+                statusCode: 403,
+              },
+              description: "밴된 유저(영구 밴)",
+            },
+          },
+        },
+      },
+    }),
+    ApiResponse({
       status: 500,
       description: "Internal Server Error",
       content: {
