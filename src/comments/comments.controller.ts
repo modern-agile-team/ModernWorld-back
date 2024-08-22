@@ -27,6 +27,7 @@ import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.d
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
 import { ApiGetOneComment } from "./swagger-decorators/comment-swagger/get-one-comment.dto";
+import { ApiGetOneReply } from "./swagger-decorators/reply-swagger/get-one-reply.decorator";
 
 @Controller()
 @ApiTags("Comments & Replies")
@@ -81,6 +82,13 @@ export class CommentController {
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
   ) {
     return this.commentService.softDeleteOneComment(userNo, commentNo);
+  }
+
+  @Get("replies/:replyNo")
+  @ApiGetOneReply()
+  @UseGuards(AccessTokenAuthGuard)
+  getOneReply(@Param("replyNo", ParsePositiveIntPipe) replyNo: number) {
+    return this.commentService.getOneReply(replyNo);
   }
 
   @Post("comments/:commentNo/replies")

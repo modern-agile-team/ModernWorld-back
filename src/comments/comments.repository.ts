@@ -109,6 +109,9 @@ export class CommentRepository {
 
   findOneReplyNotDeleted(replyNo: number) {
     return this.prisma.reply.findUnique({
+      select: {
+        ...DEFAULT_REPLIES_SELECT_OPTIONS,
+      },
       where: {
         no: replyNo,
         deletedAt: null,
