@@ -13,6 +13,7 @@ import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class NeighborsService {
@@ -67,7 +68,9 @@ export class NeighborsService {
       return this.setNeighborAsTrue(senderNo, receiverNo, opponentRequest.no);
     }
 
-    let neighbor;
+    let neighbor: Prisma.PromiseReturnType<
+      typeof this.neighborsRepository.createNeighbor
+    >;
 
     try {
       neighbor = await this.prisma.$transaction(async (tx) => {
@@ -182,14 +185,15 @@ export class NeighborsService {
 
   async deleteNeighbor(neighborNo: number, userNo: number) {
     const neighbor = await this.neighborsRepository.getOneNeighbor(neighborNo);
-    if (!neighbor) {
-      throw new NotFoundException("No neighbor found");
-    }
+
+    if (!neighbor) throw new NotFoundException("No neighbor found");
+
     if (neighbor.receiverNo !== userNo && neighbor.senderNo !== userNo) {
       throw new ForbiddenException(
         "You can only delete the neighbor request you received and your neighbor.",
       );
     }
+
     return this.neighborsRepository.deleteNeighbor(neighborNo);
   }
 
@@ -198,7 +202,9 @@ export class NeighborsService {
     receiverNo: number,
     neighborNo: number,
   ) {
-    let neighbor;
+    let neighbor: Prisma.PromiseReturnType<
+      typeof this.neighborsRepository.setNeighborStatusTrue
+    >;
 
     try {
       neighbor = await this.prisma.$transaction(async (tx) => {

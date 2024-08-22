@@ -14,6 +14,7 @@ import { SseService } from "src/sse/sse.service";
 import { REWARD_POINT } from "../constants/reward-point.constant";
 import { GetDateDto } from "./dtos/get-date.dto";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class RockScissorsPaperService {
@@ -98,7 +99,9 @@ export class RockScissorsPaperService {
   }
 
   private async win(userNo: number, user: string, computer: string) {
-    let result;
+    let result: Prisma.PromiseReturnType<
+      typeof this.RSPRepository.createOneRecord
+    >;
 
     try {
       await this.prisma.$transaction(async (tx) => {

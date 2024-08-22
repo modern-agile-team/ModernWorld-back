@@ -96,7 +96,9 @@ export class PostsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    let post;
+    let post: Prisma.PromiseReturnType<
+      typeof this.postsRepository.createOnePost
+    >;
 
     try {
       post = await this.prisma.$transaction(async (tx) => {

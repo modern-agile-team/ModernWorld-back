@@ -15,6 +15,7 @@ import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class CommentService {
@@ -35,7 +36,9 @@ export class CommentService {
   ) {
     const { content } = body;
 
-    let comment;
+    let comment: Prisma.PromiseReturnType<
+      typeof this.commentRepository.createOneComment
+    >;
 
     try {
       comment = await this.prisma.$transaction(async (tx) => {
