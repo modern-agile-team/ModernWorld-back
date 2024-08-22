@@ -56,7 +56,7 @@ export function ApiGoogleLogin() {
           examples: {
             "Banned User": {
               value: {
-                message: "Banned User",
+                message: "Banned User (밴 만료 기간)",
                 error: "Forbidden",
                 statusCode: 403,
               },

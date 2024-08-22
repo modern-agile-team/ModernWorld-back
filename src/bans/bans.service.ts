@@ -33,8 +33,11 @@ export class BansService {
         throw new ForbiddenException("Permanently Banned User");
       }
       if (userBanInfo.expiredAt > new Date()) {
-        throw new ForbiddenException("Banned User");
+        throw new ForbiddenException(
+          `Banned User (${userBanInfo.expiredAt.toISOString()})`,
+        );
       }
+
       await this.bansRepository.deleteBanByUniqueIdentifier(uniqueIdentifier);
     }
   }
