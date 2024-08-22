@@ -4,19 +4,20 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { PrismaTxType } from "src/prisma/prisma.type";
 import { DEFAULT_REPLIES_SELECT_OPTIONS } from "./constants/default-replies-select-options.constant";
 import { DEFAULT_COMMENTS_SELECT_OPTIONS } from "./constants/default-comments-select-options.constant";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class CommentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  countCommentsByUserNo(where: object) {
+  countCommentsByUserNo(where: Prisma.commentWhereInput) {
     return this.prisma.comment.count({
       where,
     });
   }
 
-  countRepliesByCommentNo(commentNo: number) {
-    return this.prisma.reply.count({ where: { commentNo } });
+  countRepliesByCommentNo(where: Prisma.replyWhereInput) {
+    return this.prisma.reply.count({ where });
   }
 
   createOneComment(
@@ -112,10 +113,10 @@ export class CommentRepository {
   }
 
   getManyReplies(
-    commentNo: number,
     skip: number,
     take: number,
     orderBy: OrderBy,
+    where: Prisma.replyWhereInput,
   ) {
     return this.prisma.reply.findMany({
       select: {
@@ -124,10 +125,7 @@ export class CommentRepository {
       skip,
       take,
       orderBy: { no: orderBy },
-      where: {
-        commentNo,
-        deletedAt: null,
-      },
+      where,
     });
   }
 

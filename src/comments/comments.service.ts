@@ -187,16 +187,19 @@ export class CommentService {
 
     const { take, page, orderBy } = query;
     const skip = take * (page - 1);
+
+    const where: Prisma.replyWhereInput = { commentNo, deletedAt: null };
+
     const totalCount =
-      await this.commentRepository.countRepliesByCommentNo(commentNo);
+      await this.commentRepository.countRepliesByCommentNo(where);
 
     const totalPage = Math.ceil(totalCount / take);
 
     const replies = await this.commentRepository.getManyReplies(
-      commentNo,
       skip,
       take,
       orderBy,
+      where,
     );
 
     return new PaginationResponseDto(replies, {
