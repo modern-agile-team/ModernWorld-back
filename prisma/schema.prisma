@@ -115,11 +115,11 @@ model legend {
 }
 
 model like {
-  no                 Int  @id @default(autoincrement()) @db.UnsignedInt
-  receiverNo         Int  @map("receiver_no") @db.UnsignedInt
-  senderNo           Int  @map("sender_no") @db.UnsignedInt
-  userLikeSenderNo   user @relation("like_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "like_ibfk_1")
-  userLikeReceiverNo user @relation("like_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "like_ibfk_2")
+  no         Int  @id @default(autoincrement()) @db.UnsignedInt
+  receiverNo Int  @map("receiver_no") @db.UnsignedInt
+  senderNo   Int  @map("sender_no") @db.UnsignedInt
+  sender     user @relation("like_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "like_ibfk_1")
+  receiver   user @relation("like_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "like_ibfk_2")
 
   @@unique([receiverNo, senderNo], map: "receiver_no_sender_no")
   @@index([receiverNo], map: "receiver_no")

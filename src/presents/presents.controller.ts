@@ -14,7 +14,7 @@ import { PresentsService } from "./presents.service";
 import { ApiTags } from "@nestjs/swagger";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
-import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
+import { SenderReceiverNoDto } from "../common/dtos/sender-receiver-no.dto";
 import { ApiCreateOnePresent } from "./presents-swagger/create-one-present.decorator";
 import { ApiGetUserPresents } from "./presents-swagger/get-user-presents.decorator";
 import { ApiGetUserOnePresent } from "./presents-swagger/get-user-one-present.decorator";
@@ -35,7 +35,7 @@ export class PresentsController {
   getUserPresents(
     @UserNo() userNo: number,
     @Query()
-    query: GetUserPresentsDto,
+    query: SenderReceiverNoDto,
   ) {
     return this.presentsService.getUserPresents(userNo, query);
   }
