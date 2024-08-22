@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsEnum, IsOptional } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 import { Animal } from "src/common/enum/animal.enum";
 
 export class GetCharactersDto {
@@ -16,5 +16,6 @@ export class GetCharactersDto {
     name: "characterName",
     description: "캐릭터 이름",
   })
+  @IsString()
   characterName?: string;
 }

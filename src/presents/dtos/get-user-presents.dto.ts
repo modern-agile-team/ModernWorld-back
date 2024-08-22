@@ -9,5 +9,5 @@ export class GetUserPresentsDto {
   })
   @IsEnum(SenderReceiverNoField)
   @IsOptional()
-  type: SenderReceiverNoField;
+  type?: SenderReceiverNoField;
 }
