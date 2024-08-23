@@ -7,7 +7,7 @@ export class GetPostsDto {
   @ApiPropertyOptional({ enum: SenderReceiverNoField })
   @IsEnum(SenderReceiverNoField)
   @IsOptional()
-  type: SenderReceiverNoField;
+  type?: SenderReceiverNoField;
 
   @ApiPropertyOptional({ enum: OrderBy, default: OrderBy.DESC })
   @IsEnum(OrderBy)
