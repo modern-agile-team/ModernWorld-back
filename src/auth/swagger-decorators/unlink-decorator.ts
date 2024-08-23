@@ -1,17 +1,21 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-export function ApiGoogleUnlink() {
+export function ApiUnlink() {
   return applyDecorators(
     ApiOperation({
-      summary: "구글 회원탈퇴 API",
-      description: "구글 회원탈퇴 API",
+      summary: "회원탈퇴 API",
+      description: "회원탈퇴 API",
     }),
     ApiResponse({
       status: 200,
       description: "성공적으로 회원탈퇴가 된 경우",
       content: {
-        JSON: { example: { message: "구글 회원탈퇴 성공." } },
+        JSON: {
+          example: {
+            message: "(도메인) 회원탈퇴 성공. ex) 구글 회원탈퇴 성공",
+          },
+        },
       },
     }),
     ApiResponse({
@@ -78,14 +82,6 @@ export function ApiGoogleUnlink() {
               },
               description: "만료된 토큰인 경우",
             },
-            "You are not a user logged in with Google.": {
-              value: {
-                message: "You are not a user logged in with Google.",
-                error: "Unauthorized",
-                statusCode: 401,
-              },
-              description: "구글로 로그인한 유저가 아닌 경우",
-            },
             "jwt error": {
               value: {
                 message: "jwt error",
@@ -138,6 +134,16 @@ export function ApiGoogleUnlink() {
               },
               description:
                 "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
+            },
+
+            "Invalid user": {
+              value: {
+                message: "Invalid user",
+                error: "Conflict",
+                statusCode: 409,
+              },
+              description:
+                "요청한 유저와 db에 저장된 유저가 일치하지 않는 경우",
             },
           },
         },

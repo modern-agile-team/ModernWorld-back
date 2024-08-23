@@ -153,16 +153,6 @@ export class GoogleAuthService {
 
   async logout(userNo: number) {
     try {
-      const user = await this.usersRepository.findUserByUserNo(userNo);
-      if (!user) {
-        throw new NotFoundException("user not found");
-      }
-      if (user.domain !== "google") {
-        throw new UnauthorizedException(
-          "You are not a user logged in with Google.",
-        );
-      }
-
       await this.tokenRepository.deleteTokens(userNo);
 
       await this.tokenService.delRefreshToken(
@@ -193,12 +183,7 @@ export class GoogleAuthService {
       if (!socialTokens) {
         throw new NotFoundException("socialToken not found");
       }
-      const user = await this.usersRepository.findUserByUserNo(userNo);
-      if (user.domain !== "google") {
-        throw new UnauthorizedException(
-          "You are not a user logged in with Google.",
-        );
-      }
+
       let socialAccessToken = socialTokens.socialAccess;
       const socialRefreshToken = socialTokens.socialRefresh;
 

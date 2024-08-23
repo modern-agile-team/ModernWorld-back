@@ -17,19 +17,17 @@ import { ApiNaverLogin } from "./swagger-decorators/naver-login-decorator";
 import { ApiKakaoLogin } from "./swagger-decorators/kakao-login-decorator";
 import { ApiNewAccessToken } from "./swagger-decorators/new-access-token.decorator";
 import { CookieInterceptor } from "./interceptors/cookie.interceptor";
-import { ApiKakaoLogout } from "./swagger-decorators/kakao-logout-decorator";
-import { ApiNaverLogout } from "./swagger-decorators/naver-logout-decorator";
-import { ApiKakaoUnlink } from "./swagger-decorators/kakao-unlink-decorator";
-import { ApiNaverUnlink } from "./swagger-decorators/naver-unlink-decorator";
 import { ApiGoogleLogin } from "./swagger-decorators/google-login-decorator";
-import { ApiGoogleLogout } from "./swagger-decorators/google-logout-decorator";
-import { ApiGoogleUnlink } from "./swagger-decorators/google-unlink-decorator";
 import { ApiUpdateProfile } from "./swagger-decorators/updateProfile-decorator";
 import { NaverAuthService } from "./services/naver-auth.service";
 import { KakaoAuthService } from "./services/kakao-auth.service";
 import { GoogleAuthService } from "./services/google-auth.service";
+import { ApiLogout } from "./swagger-decorators/logout-decorator";
+import { ApiUnlink } from "./swagger-decorators/unlink-decorator";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller("auth")
+@ApiTags("Auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -42,7 +40,7 @@ export class AuthController {
   @ApiNaverLogin()
   @UseInterceptors(CookieInterceptor)
   @Post("naver/login")
-  async naverLogin(@Query("code") code: string) {
+  naverLogin(@Query("code") code: string) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
@@ -52,7 +50,7 @@ export class AuthController {
   @ApiKakaoLogin()
   @UseInterceptors(CookieInterceptor)
   @Post("kakao/login")
-  async kakaoLogin(@Query("code") code: string) {
+  kakaoLogin(@Query("code") code: string) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
@@ -61,7 +59,7 @@ export class AuthController {
   @ApiGoogleLogin()
   @UseInterceptors(CookieInterceptor)
   @Post("google/login")
-  async googleLogin(@Query("code") code: string) {
+  googleLogin(@Query("code") code: string) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다");
     }
@@ -71,56 +69,28 @@ export class AuthController {
   @ApiNewAccessToken()
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
-  async newAccessToken(@UserNo() userNo: number) {
-    return await this.tokenService.createNewAccessToken(userNo);
+  newAccessToken(@UserNo() userNo: number) {
+    return this.tokenService.createNewAccessToken(userNo);
   }
 
-  @ApiKakaoLogout()
+  @ApiLogout()
   @UseGuards(AccessTokenAuthGuard)
-  @Delete("kakao/logout")
-  async kakaoLogout(@UserNo() userNo: number) {
-    return await this.kakaoAuthService.logout(userNo);
+  @Delete("logout")
+  logout(@UserNo() userNo: number) {
+    return this.authService.logout(userNo);
   }
 
-  @ApiNaverLogout()
+  @ApiUnlink()
   @UseGuards(AccessTokenAuthGuard)
-  @Delete("naver/logout")
-  async naverLogout(@UserNo() userNo: number) {
-    return await this.naverAuthService.logout(userNo);
-  }
-
-  @ApiGoogleLogout()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("google/logout")
-  async googleLogout(@UserNo() userNo: number) {
-    return await this.googleAuthService.logout(userNo);
-  }
-
-  @ApiKakaoUnlink()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("kakao/unlink")
-  async kakaoUnlink(@UserNo() userNo: number) {
-    return await this.kakaoAuthService.unlink(userNo);
-  }
-
-  @ApiNaverUnlink()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("naver/unlink")
-  async naverUnlink(@UserNo() userNo: number) {
-    return await this.naverAuthService.unlink(userNo);
-  }
-
-  @ApiGoogleUnlink()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("google/unlink")
-  async googleUnlink(@UserNo() userNo: number) {
-    return await this.googleAuthService.unlink(userNo);
+  @Delete("unlink")
+  unlink(@UserNo() userNo: number) {
+    return this.authService.unlink(userNo);
   }
 
   @ApiUpdateProfile()
   @UseGuards(AccessTokenAuthGuard)
   @Patch("updateProfile")
-  async updateProfile(@UserNo() userNo: number) {
-    return await this.authService.updateProfile(userNo);
+  updateProfile(@UserNo() userNo: number) {
+    return this.authService.updateProfile(userNo);
   }
 }
