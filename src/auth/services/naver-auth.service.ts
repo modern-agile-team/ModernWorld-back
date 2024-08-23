@@ -153,16 +153,6 @@ export class NaverAuthService {
 
   async logout(userNo: number) {
     try {
-      const user = await this.usersRepository.findUserByUserNo(userNo);
-      if (!user) {
-        throw new NotFoundException("user not found");
-      }
-      if (user.domain !== "naver") {
-        throw new UnauthorizedException(
-          "You are not a user logged in with Naver.",
-        );
-      }
-
       await this.tokenRepository.deleteTokens(userNo);
 
       await this.tokenService.delRefreshToken(
