@@ -69,28 +69,28 @@ export class AuthController {
   @ApiNewAccessToken()
   @UseGuards(RefreshTokenAuthGuard)
   @Get("new-access-token")
-  async newAccessToken(@UserNo() userNo: number) {
-    return await this.tokenService.createNewAccessToken(userNo);
+  newAccessToken(@UserNo() userNo: number) {
+    return this.tokenService.createNewAccessToken(userNo);
   }
 
   @ApiLogout()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("logout")
-  async logout(@UserNo() userNo: number) {
-    return await this.authService.logout(userNo);
+  logout(@UserNo() userNo: number) {
+    return this.authService.logout(userNo);
   }
 
   @ApiUnlink()
   @UseGuards(AccessTokenAuthGuard)
   @Delete("unlink")
-  async unlink(@UserNo() userNo: number) {
-    return await this.authService.unlink(userNo);
+  unlink(@UserNo() userNo: number) {
+    return this.authService.unlink(userNo);
   }
 
   @ApiUpdateProfile()
   @UseGuards(AccessTokenAuthGuard)
   @Patch("updateProfile")
-  async updateProfile(@UserNo() userNo: number) {
-    return await this.authService.updateProfile(userNo);
+  updateProfile(@UserNo() userNo: number) {
+    return this.authService.updateProfile(userNo);
   }
 }
