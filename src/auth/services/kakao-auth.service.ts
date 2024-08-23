@@ -170,12 +170,6 @@ export class KakaoAuthService {
       if (!socialTokens) {
         throw new NotFoundException("socialToken not found");
       }
-      const user = await this.usersRepository.findUserByUserNo(userNo);
-      if (user.domain !== "kakao") {
-        throw new UnauthorizedException(
-          "You are not a user logged in with Kakao.",
-        );
-      }
 
       let socialAccessToken = socialTokens.socialAccess;
       const socialRefreshToken = socialTokens.socialRefresh;

@@ -28,6 +28,8 @@ import { ApiUpdateProfile } from "./swagger-decorators/updateProfile-decorator";
 import { NaverAuthService } from "./services/naver-auth.service";
 import { KakaoAuthService } from "./services/kakao-auth.service";
 import { GoogleAuthService } from "./services/google-auth.service";
+import { ApiLogout } from "./swagger-decorators/logout-decorator";
+import { ApiUnlink } from "./swagger-decorators/unlink-decorator";
 
 @Controller("auth")
 export class AuthController {
@@ -75,46 +77,18 @@ export class AuthController {
     return await this.tokenService.createNewAccessToken(userNo);
   }
 
-  @ApiKakaoLogout()
+  @ApiLogout()
   @UseGuards(AccessTokenAuthGuard)
-  @Delete("kakao/logout")
-  async kakaoLogout(@UserNo() userNo: number) {
-    return await this.kakaoAuthService.logout(userNo);
+  @Delete("logout")
+  async logout(@UserNo() userNo: number) {
+    return await this.authService.logout(userNo);
   }
 
-  @ApiNaverLogout()
+  @ApiUnlink()
   @UseGuards(AccessTokenAuthGuard)
-  @Delete("naver/logout")
-  async naverLogout(@UserNo() userNo: number) {
-    return await this.naverAuthService.logout(userNo);
-  }
-
-  @ApiGoogleLogout()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("google/logout")
-  async googleLogout(@UserNo() userNo: number) {
-    return await this.googleAuthService.logout(userNo);
-  }
-
-  @ApiKakaoUnlink()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("kakao/unlink")
-  async kakaoUnlink(@UserNo() userNo: number) {
-    return await this.kakaoAuthService.unlink(userNo);
-  }
-
-  @ApiNaverUnlink()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("naver/unlink")
-  async naverUnlink(@UserNo() userNo: number) {
-    return await this.naverAuthService.unlink(userNo);
-  }
-
-  @ApiGoogleUnlink()
-  @UseGuards(AccessTokenAuthGuard)
-  @Delete("google/unlink")
-  async googleUnlink(@UserNo() userNo: number) {
-    return await this.googleAuthService.unlink(userNo);
+  @Delete("unlink")
+  async unlink(@UserNo() userNo: number) {
+    return await this.authService.unlink(userNo);
   }
 
   @ApiUpdateProfile()
