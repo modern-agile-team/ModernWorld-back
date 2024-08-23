@@ -40,7 +40,7 @@ export class AuthController {
   @ApiNaverLogin()
   @UseInterceptors(CookieInterceptor)
   @Post("naver/login")
-  async naverLogin(@Query("code") code: string) {
+  naverLogin(@Query("code") code: string) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
@@ -50,7 +50,7 @@ export class AuthController {
   @ApiKakaoLogin()
   @UseInterceptors(CookieInterceptor)
   @Post("kakao/login")
-  async kakaoLogin(@Query("code") code: string) {
+  kakaoLogin(@Query("code") code: string) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다.");
     }
@@ -59,7 +59,7 @@ export class AuthController {
   @ApiGoogleLogin()
   @UseInterceptors(CookieInterceptor)
   @Post("google/login")
-  async googleLogin(@Query("code") code: string) {
+  googleLogin(@Query("code") code: string) {
     if (!code) {
       throw new BadRequestException("인가 코드가 없습니다");
     }
