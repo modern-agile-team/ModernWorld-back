@@ -24,7 +24,7 @@ import { RedisModule } from "./auth/redis/redis.module";
 import { UserAchievementsModule } from "./user-achievements/user-achievements.module";
 import { NeighborsModule } from "./neighbors/neighbors.module";
 import { GamesModule } from "./games/games.module";
-import { BansModule } from './bans/bans.module';
+import { BansModule } from "./bans/bans.module";
 
 @Module({
   imports: [
