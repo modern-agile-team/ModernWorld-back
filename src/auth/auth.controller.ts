@@ -24,8 +24,10 @@ import { KakaoAuthService } from "./services/kakao-auth.service";
 import { GoogleAuthService } from "./services/google-auth.service";
 import { ApiLogout } from "./swagger-decorators/logout-decorator";
 import { ApiUnlink } from "./swagger-decorators/unlink-decorator";
+import { ApiTags } from "@nestjs/swagger";
 
 @Controller("auth")
+@ApiTags("Auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
