@@ -17,5 +17,6 @@ export class GetCharactersDto {
     description: "캐릭터 이름",
   })
   @IsString()
+  @IsOptional()
   characterName?: string;
 }
