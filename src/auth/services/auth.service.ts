@@ -240,7 +240,7 @@ export class AuthService {
       if (error.response.message === "user not found") {
         throw new NotFoundException(error.response.message);
       }
-      if (error.message === "socialToken not found") {
+      if (error.response.message === "socialToken not found") {
         throw new NotFoundException(error.response.message);
       } else {
         this.logger.error(error);
