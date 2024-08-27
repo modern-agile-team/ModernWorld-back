@@ -5,8 +5,6 @@ import {
 } from "@nestjs/common";
 import { AlarmsRepository } from "./alarms.repository";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
-import { alarm } from "@prisma/client";
 
 @Injectable()
 export class AlarmsService {
