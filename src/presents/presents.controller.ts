@@ -24,6 +24,7 @@ import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
 import { PresentsWithoutDeleteResponseDto } from "./dtos/presents-without-delete-response.dto";
+import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
 
 @Controller()
 @ApiTags("Presents")
@@ -44,22 +45,26 @@ export class PresentsController {
   @Get("users/my/presents/:presentNo")
   @ApiGetUserOnePresent()
   @UseGuards(AccessTokenAuthGuard)
-  getUserOnePresent(
+  async getUserOnePresent(
     @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
   ) {
-    return this.presentsService.getUserOnePresent(userNo, presentNo);
+    return new GetUserOnePresentResponseDto(
+      await this.presentsService.getUserOnePresent(userNo, presentNo),
+    );
   }
 
   @Post("users/:userNo/presents")
   @ApiCreateOnePresent()
   @UseGuards(AccessTokenAuthGuard)
-  createOnePresent(
+  async createOnePresent(
     @UserNo() userNo: number,
     @Param("userNo", ParsePositiveIntPipe) receiverNo: number,
     @Body() body: ItemNoDto,
   ) {
-    return this.presentsService.createOnePresent(userNo, receiverNo, body);
+    return new PresentsWithoutDeleteResponseDto(
+      await this.presentsService.createOnePresent(userNo, receiverNo, body),
+    );
   }
 
   @Patch("users/my/presents/:presentNo")

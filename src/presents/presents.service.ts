@@ -13,8 +13,6 @@ import { UsersRepository } from "src/users/users.repository";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
 import { SenderReceiverNoDto } from "src/common/dtos/sender-receiver-no.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
-import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
-import { PresentsWithoutDeleteResponseDto } from "./dtos/presents-without-delete-response.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
@@ -83,15 +81,12 @@ export class PresentsService {
     }
 
     if (receiver?.no === userNo && present.status === PresentStatus.unread) {
-      const updatedPresent =
-        await this.presentsRepository.updateOnePresentStatusFromUnreadToRead(
-          presentNo,
-        );
-
-      return new GetUserOnePresentResponseDto(updatedPresent);
+      return this.presentsRepository.updateOnePresentStatusFromUnreadToRead(
+        presentNo,
+      );
     }
 
-    return new GetUserOnePresentResponseDto(present);
+    return present;
   }
 
   async acceptOrRejectOnePresent(
@@ -340,6 +335,6 @@ export class PresentsService {
       content: `${nickname}님이 ${item.name}을 선물로 보냈습니다.`,
     });
 
-    return new PresentsWithoutDeleteResponseDto(present);
+    return present;
   }
 }
