@@ -153,7 +153,7 @@ export class NeighborsService {
       where,
     );
 
-    const fillteredNeighbors = neighbors.map((neighbor) => {
+    const filteredNeighbors = neighbors.map((neighbor) => {
       if (neighbor.neighborSenderNo.no === userNo) {
         {
           const { neighborSenderNo, ...filtered } = neighbor;
@@ -175,12 +175,13 @@ export class NeighborsService {
       }
     });
 
-    return new PaginationResponseDto(fillteredNeighbors, {
+    return {
+      filteredNeighbors,
       page,
       take,
       totalCount,
       totalPage,
-    });
+    };
   }
 
   async deleteNeighbor(neighborNo: number, userNo: number) {

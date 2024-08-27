@@ -19,6 +19,7 @@ import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
 @Controller()
 @ApiTags("neighbors")
@@ -38,11 +39,14 @@ export class NeighborsController {
   @Get("users/my/neighbors")
   @ApiGetNeighbor()
   @UseGuards(AccessTokenAuthGuard)
-  getMyNeighbors(
+  async getMyNeighbors(
     @UserNo() userNo: number,
     @Query() query: NeighborsPaginationDto,
   ) {
-    return this.neighborsService.getMyNeighbors(userNo, query);
+    const { filteredNeighbors, ...meta } =
+      await this.neighborsService.getMyNeighbors(userNo, query);
+
+    return new PaginationResponseDto(filteredNeighbors, meta);
   }
 
   @Patch("users/my/neighbors/:neighborNo")
