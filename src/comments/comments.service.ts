@@ -8,7 +8,6 @@ import {
 import { CommentRepository } from "./comments.repository";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
@@ -111,12 +110,7 @@ export class CommentService {
       where,
     );
 
-    return new PaginationResponseDto(comments, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return { comments, page, take, totalCount, totalPage };
   }
 
   async updateOneComment(
@@ -210,12 +204,7 @@ export class CommentService {
       where,
     );
 
-    return new PaginationResponseDto(replies, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return { replies, page, take, totalCount, totalPage };
   }
 
   async updateOneReply(
