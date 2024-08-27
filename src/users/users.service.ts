@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -19,18 +20,24 @@ import { UserAchievementsService } from "src/user-achievements/user-achievements
 export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly userRepository: UsersRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly logger: Logger,
     private readonly legendsRepository: LegendsRepository,
     private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
   getOneUser(userNo: number) {
-    return this.userRepository.getOneUser(userNo);
+    return this.usersRepository.getOneUser(userNo);
   }
 
   getUserAttendance(userNo: number) {
-    return this.userRepository.getUserAttendance(userNo);
+    return this.usersRepository.getUserAttendance(userNo);
+  }
+
+  async checkAdmin(userNo: number) {
+    const { admin } = await this.usersRepository.isAdmin(userNo);
+
+    if (!admin) throw new ForbiddenException("You are not admin.");
   }
 
   async updateUserAttendance(userNo: number, body: UpdateUserAttendanceDto) {
@@ -56,7 +63,7 @@ export class UsersService {
     const today = new Date(Date.now() + offset); // GMT + 9 = 한국시각 (ms) 한국시각 반환함
     const day = today.getUTCDay(); //getDay()는 현재 로컬환경시각인 +9를 더해주는 바람에 안됨(뇌피셜)
 
-    const { attendance } = await this.userRepository.getUserAttendance(userNo);
+    const { attendance } = await this.usersRepository.getUserAttendance(userNo);
 
     if (attendance[day][0]) {
       throw new ConflictException("already attended");
@@ -66,7 +73,7 @@ export class UsersService {
 
     try {
       return this.prisma.$transaction(async (tx) => {
-        await this.userRepository.updateUserCurrentPointAccumulationPoint(
+        await this.usersRepository.updateUserCurrentPointAccumulationPoint(
           userNo,
           attendance[day][1],
           tx,
@@ -86,7 +93,11 @@ export class UsersService {
           tx,
         );
 
-        return this.userRepository.updateUserAttendance(userNo, attendance, tx);
+        return this.usersRepository.updateUserAttendance(
+          userNo,
+          attendance,
+          tx,
+        );
       });
     } catch (err) {
       this.logger.error(`transaction Error : ${err}`);
@@ -96,7 +107,7 @@ export class UsersService {
 
   async createUserNickname(userNo: number, body: UpdateUserNicknameDto) {
     const { nickname: userName } =
-      await this.userRepository.findUserByUserNo(userNo);
+      await this.usersRepository.findUserByUserNo(userNo);
 
     if (userName) {
       throw new ConflictException("User already has a nickname.");
@@ -105,19 +116,19 @@ export class UsersService {
     const { nickname } = body;
 
     const duplicatedName =
-      await this.userRepository.findUserNicknameByNickname(nickname);
+      await this.usersRepository.findUserNicknameByNickname(nickname);
 
     if (duplicatedName) {
       throw new ConflictException(`'${nickname}' is duplicated.`);
     }
 
-    return this.userRepository.updateUserNickname(userNo, nickname);
+    return this.usersRepository.updateUserNickname(userNo, nickname);
   }
 
   updateUserDescription(userNo: number, body: UpdateUserDescriptionDto) {
     const { description } = body;
 
-    return this.userRepository.updateUserDescription(userNo, description);
+    return this.usersRepository.updateUserDescription(userNo, description);
   }
 
   async getUsers(query: GetUsersByAnimalDto) {
@@ -137,9 +148,9 @@ export class UsersService {
         ? [{ legend: { likeCount: "desc" } }, { no: "desc" }]
         : [{ [orderByField]: "desc" }, { no: "desc" }];
 
-    const totalCount = await this.userRepository.countUsers(where);
+    const totalCount = await this.usersRepository.countUsers(where);
     const totalPage = Math.ceil(totalCount / take);
-    const users = await this.userRepository.getUsers(
+    const users = await this.usersRepository.getUsers(
       take,
       skip,
       orderBy,
