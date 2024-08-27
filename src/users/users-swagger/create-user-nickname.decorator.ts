@@ -33,7 +33,7 @@ export function ApiCreateUserNickname() {
         JSON: {
           example: {
             message: [
-              "nickname must match /\\/^[a-zA-Z가-힣0-9]{2,10}$\\// regular expression",
+              "nickname must match /^[a-zA-Z가-힣0-9]{2,10}$/ regular expression",
             ],
             error: "Bad Request",
             statusCode: 400,

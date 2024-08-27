@@ -1,13 +1,13 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { SenderReceiverNoField } from "../../common/enum/sender-receiver-no.enum";
+import { SenderReceiverNoField } from "../enum/sender-receiver-no.enum";
 import { IsEnum, IsOptional } from "class-validator";
 
-export class GetUserPresentsDto {
+export class SenderReceiverNoDto {
   @ApiPropertyOptional({
     enum: SenderReceiverNoField,
     description: "발신 / 수신",
   })
   @IsEnum(SenderReceiverNoField)
   @IsOptional()
-  type: SenderReceiverNoField;
+  type?: SenderReceiverNoField;
 }

@@ -59,17 +59,17 @@ export class PostsService {
 
     const { userPostReceiverNo: receiver, userPostSenderNo: sender } = post;
 
-    if (receiver.no !== userNo && sender.no !== userNo) {
+    if (receiver?.no !== userNo && sender?.no !== userNo) {
       throw new ForbiddenException("This post is not related with user.");
     }
 
-    if (userNo === receiver.no && post.receiverDelete) {
+    if (userNo === receiver?.no && post.receiverDelete) {
       throw new NotFoundException("This post was deleted from receiver.");
-    } else if (userNo === sender.no && post.senderDelete) {
+    } else if (userNo === sender?.no && post.senderDelete) {
       throw new NotFoundException("This post was deleted from sender.");
     }
 
-    if (receiver.no === userNo && !post.check) {
+    if (receiver?.no === userNo && !post.check) {
       const processedPost =
         await this.postsRepository.updateOnePostCheckToTrue(postNo);
 
@@ -96,7 +96,9 @@ export class PostsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    let post;
+    let post: Prisma.PromiseReturnType<
+      typeof this.postsRepository.createOnePost
+    >;
 
     try {
       post = await this.prisma.$transaction(async (tx) => {
@@ -150,9 +152,10 @@ export class PostsService {
       throw new ConflictException("Already deleted from receiver.");
     }
 
-    const senderReceiverDeleteField = isSender
-      ? "senderDelete"
-      : "receiverDelete";
+    const senderReceiverDeleteField: Pick<
+      Prisma.postUpdateInput,
+      "receiverDelete" | "senderDelete"
+    > = isSender ? { senderDelete: true } : { receiverDelete: true };
 
     return this.postsRepository.updateOnePostToDeleteByUser(
       postNo,

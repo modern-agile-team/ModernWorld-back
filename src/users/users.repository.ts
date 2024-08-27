@@ -15,7 +15,7 @@ export class UsersRepository {
     });
   }
 
-  updateDeleteAt(userNo: number, deletedAt: Date | null) {
+  updateDeletedAt(userNo: number, deletedAt: Date | null) {
     return this.prisma.user.update({
       data: { deletedAt },
       where: { no: userNo },
@@ -125,6 +125,20 @@ export class UsersRepository {
   getUserAttendance(userNo: number) {
     return this.prisma.user.findUnique({
       select: { no: true, nickname: true, attendance: true },
+      where: { no: userNo },
+    });
+  }
+
+  isAdmin(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { admin: true },
+      where: { no: userNo },
+    });
+  }
+
+  getUserUniqueIndentifier(userNo: number) {
+    return this.prisma.user.findUnique({
+      select: { uniqueIdentifier: true },
       where: { no: userNo },
     });
   }
@@ -240,6 +254,12 @@ export class UsersRepository {
       where,
 
       orderBy,
+    });
+  }
+
+  deleteOneUserByDeletedAt(date: Date) {
+    return this.prisma.user.deleteMany({
+      where: { deletedAt: { lte: date } },
     });
   }
 }

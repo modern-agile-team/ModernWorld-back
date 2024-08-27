@@ -15,6 +15,7 @@ import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class CommentService {
@@ -35,7 +36,9 @@ export class CommentService {
   ) {
     const { content } = body;
 
-    let comment;
+    let comment: Prisma.PromiseReturnType<
+      typeof this.commentRepository.createOneComment
+    >;
 
     try {
       comment = await this.prisma.$transaction(async (tx) => {
@@ -122,9 +125,9 @@ export class CommentService {
     body: CommentContentDto,
   ) {
     const { content } = body;
-    const { senderNo } = await this.findOneCommentNotDeleted(commentNo);
+    const { commentSender } = await this.findOneCommentNotDeleted(commentNo);
 
-    if (userNo !== senderNo) {
+    if (userNo !== commentSender?.no) {
       throw new ForbiddenException("User can update only their comment.");
     }
 
@@ -132,9 +135,9 @@ export class CommentService {
   }
 
   async softDeleteOneComment(userNo: number, commentNo: number) {
-    const { senderNo } = await this.findOneCommentNotDeleted(commentNo);
+    const { commentSender } = await this.findOneCommentNotDeleted(commentNo);
 
-    if (userNo !== senderNo) {
+    if (userNo !== commentSender?.no) {
       throw new ForbiddenException("User can delete only their comment.");
     }
 
@@ -179,21 +182,32 @@ export class CommentService {
     }
   }
 
+  async getOneReply(replyNo: number) {
+    const reply = await this.findOneReplyNotDeleted(replyNo);
+
+    await this.findOneCommentNotDeleted(reply.commentNo);
+
+    return reply;
+  }
+
   async getManyReplies(commentNo: number, query: PaginationDto) {
     await this.findOneCommentNotDeleted(commentNo);
 
     const { take, page, orderBy } = query;
     const skip = take * (page - 1);
+
+    const where: Prisma.replyWhereInput = { commentNo, deletedAt: null };
+
     const totalCount =
-      await this.commentRepository.countRepliesByCommentNo(commentNo);
+      await this.commentRepository.countRepliesByCommentNo(where);
 
     const totalPage = Math.ceil(totalCount / take);
 
     const replies = await this.commentRepository.getManyReplies(
-      commentNo,
       skip,
       take,
       orderBy,
+      where,
     );
 
     return new PaginationResponseDto(replies, {
@@ -211,11 +225,12 @@ export class CommentService {
     body: CommentContentDto,
   ) {
     await this.findOneCommentNotDeleted(commentNo);
-    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
+
+    const { user } = await this.findOneReplyNotDeleted(replyNo);
 
     const { content } = body;
 
-    if (senderNo !== userNo) {
+    if (senderNo !== user?.no) {
       throw new ForbiddenException("User can update only their reply.");
     }
 
@@ -229,16 +244,16 @@ export class CommentService {
   ) {
     await this.findOneCommentNotDeleted(commentNo);
 
-    const { userNo } = await this.findOneReplyNotDeleted(replyNo);
+    const { user } = await this.findOneReplyNotDeleted(replyNo);
 
-    if (senderNo !== userNo) {
+    if (senderNo !== user?.no) {
       throw new ForbiddenException("User can delete only their reply.");
     }
 
     await this.commentRepository.softDeleteOneReply(replyNo);
   }
 
-  private async findOneCommentNotDeleted(commentNo: number) {
+  async findOneCommentNotDeleted(commentNo: number) {
     const comment =
       await this.commentRepository.findOneCommentNotDeleted(commentNo);
 

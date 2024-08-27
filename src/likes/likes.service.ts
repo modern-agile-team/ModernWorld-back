@@ -13,6 +13,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
+import { Prisma } from "@prisma/client";
+import { GetLikesDto } from "./dtos/get-likes.dto";
 
 @Injectable()
 export class LikesService {
@@ -27,6 +29,25 @@ export class LikesService {
     private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
+  getUserLikes(userNo: number, query: GetLikesDto) {
+    const { type } = query;
+
+    const select: Prisma.likeSelect =
+      type === "receiverNo"
+        ? {
+            no: true,
+            sender: { select: { no: true, nickname: true, image: true } },
+          }
+        : {
+            no: true,
+            receiver: { select: { no: true, nickname: true, image: true } },
+          };
+
+    const where: Prisma.likeWhereInput = { [type]: userNo };
+
+    return this.likesRepository.getUserLikes(select, where);
+  }
+
   async createOneLike(senderNo: number, receiverNo: number) {
     if (!(await this.usersRepository.findUserByUserNo(receiverNo)))
       throw new NotFoundException("User doesn't exist.");
@@ -37,7 +58,9 @@ export class LikesService {
     if (await this.likesRepository.findOneLike(senderNo, receiverNo))
       throw new ConflictException("This like already exist.");
 
-    let like;
+    let like: Prisma.PromiseReturnType<
+      typeof this.likesRepository.createOneLike
+    >;
 
     try {
       like = await this.prisma.$transaction(async (tx) => {
@@ -57,7 +80,7 @@ export class LikesService {
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          `${result.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
+          `${result.sender.nickname}님이 좋아요를 눌렀습니다.`,
           `좋아요`,
           tx,
         );
@@ -77,7 +100,7 @@ export class LikesService {
 
     this.sseService.sendSse(receiverNo, {
       title: "좋아요",
-      content: `${like.userLikeSenderNo.nickname}님이 좋아요를 눌렀습니다.`,
+      content: `${like.sender.nickname}님이 좋아요를 눌렀습니다.`,
     });
 
     return like;

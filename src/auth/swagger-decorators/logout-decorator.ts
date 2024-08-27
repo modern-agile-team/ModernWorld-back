@@ -1,17 +1,21 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-export function ApiKakaoUnlink() {
+export function ApiLogout() {
   return applyDecorators(
     ApiOperation({
-      summary: "카카오 회원탈퇴 API",
-      description: "카카오 회원탈퇴 API",
+      summary: "로그아웃 API",
+      description: "로그아웃 API",
     }),
     ApiResponse({
       status: 200,
-      description: "성공적으로 회원탈퇴가 된 경우",
+      description: "성공적으로 로그아웃 된 경우",
       content: {
-        JSON: { example: { message: "카카오 회원탈퇴 성공." } },
+        JSON: {
+          example: {
+            message: "(도메인 명) 로그아웃 성공. ex) 구글 로그아웃 성공",
+          },
+        },
       },
     }),
     ApiResponse({
@@ -78,14 +82,6 @@ export function ApiKakaoUnlink() {
               },
               description: "만료된 토큰인 경우",
             },
-            "You are not a user logged in with Kakao.": {
-              value: {
-                message: "You are not a user logged in with Kakao.",
-                error: "Unauthorized",
-                statusCode: 401,
-              },
-              description: "카카오로 로그인한 유저가 아닌 경우",
-            },
             "jwt error": {
               value: {
                 message: "jwt error",
@@ -110,8 +106,9 @@ export function ApiKakaoUnlink() {
                 error: "Not Found",
                 statusCode: 404,
               },
-              description: "액세스 토큰이 Redis에 없는 경우",
+              description: "리프레시 토큰이 Redis에 없는 경우",
             },
+
             "user not found": {
               value: {
                 message: "user not found",
@@ -138,16 +135,6 @@ export function ApiKakaoUnlink() {
               },
               description:
                 "요청한 토큰과 Redis에 저장된 토큰이 일치하지 않는 경우",
-            },
-
-            "Invalid user": {
-              value: {
-                message: "Invalid user",
-                error: "Conflict",
-                statusCode: 409,
-              },
-              description:
-                "요청한 유저와 db에 저장된 유저가 일치하지 않는 경우",
             },
           },
         },

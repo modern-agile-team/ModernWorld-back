@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 import { BooleanTransform } from "src/common/decorators/boolean-transform.decorator";
 
 export class GetUserItemsDto {
@@ -12,5 +12,7 @@ export class GetUserItemsDto {
   status?: boolean;
 
   @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
   itemName?: string;
 }

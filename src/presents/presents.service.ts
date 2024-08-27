@@ -11,15 +11,15 @@ import { InventoryRepository } from "src/inventory/inventory.repository";
 import { ItemsRepository } from "src/items/items.repository";
 import { UsersRepository } from "src/users/users.repository";
 import { PresentAcceptRejectDto } from "./dtos/present-accept-reject.dto";
+import { SenderReceiverNoDto } from "src/common/dtos/sender-receiver-no.dto";
 import { ItemNoDto } from "./dtos/item-no.dto";
-import { GetUserPresentsDto } from "./dtos/get-user-presents.dto";
 import { GetUserOnePresentResponseDto } from "./dtos/get-user-one-present-response.dto";
 import { PresentsWithoutDeleteResponseDto } from "./dtos/presents-without-delete-response.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { SseService } from "src/sse/sse.service";
 import { AlarmsRepository } from "src/alarms/alarms.repository";
-import { PresentStatus } from "@prisma/client";
+import { PresentStatus, Prisma } from "@prisma/client";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 
 @Injectable()
@@ -37,7 +37,7 @@ export class PresentsService {
     private readonly userAchievementsService: UserAchievementsService,
   ) {}
 
-  getUserPresents(userNo: number, query: GetUserPresentsDto) {
+  getUserPresents(userNo: number, query: SenderReceiverNoDto) {
     const { type } = query;
 
     const senderReceiverDeleteField =
@@ -72,17 +72,17 @@ export class PresentsService {
     const { userPresentReceiverNo: receiver, userPresentSenderNo: sender } =
       present;
 
-    if (receiver.no !== userNo && sender.no !== userNo) {
+    if (receiver?.no !== userNo && sender?.no !== userNo) {
       throw new ForbiddenException("This present is not related with user.");
     }
 
-    if (userNo === receiver.no && present.receiverDelete) {
+    if (userNo === receiver?.no && present.receiverDelete) {
       throw new NotFoundException("This present was deleted from receiver.");
-    } else if (userNo === sender.no && present.senderDelete) {
+    } else if (userNo === sender?.no && present.senderDelete) {
       throw new NotFoundException("This present was deleted from sender.");
     }
 
-    if (receiver.no === userNo && present.status === PresentStatus.unread) {
+    if (receiver?.no === userNo && present.status === PresentStatus.unread) {
       const updatedPresent =
         await this.presentsRepository.updateOnePresentStatusFromUnreadToRead(
           presentNo,
@@ -269,7 +269,9 @@ export class PresentsService {
       throw new NotFoundException("Couldn't find receiver.");
     }
 
-    let present;
+    let present: Prisma.PromiseReturnType<
+      typeof this.presentsRepository.createOneItemToUser
+    >;
 
     try {
       present = await this.prisma.$transaction(async (tx) => {

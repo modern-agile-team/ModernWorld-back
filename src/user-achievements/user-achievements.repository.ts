@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { title } from "process";
 import { PrismaService } from "src/prisma/prisma.service";
 import { PrismaTxType } from "src/prisma/prisma.type";
 
@@ -18,7 +19,7 @@ export class UserAchievementsRepository {
     });
   }
 
-  getUserAchievements(userNo: number) {
+  getUserAchievements(userNo: number, title: string, category: string) {
     return this.prisma.userAchievement.findMany({
       select: {
         no: true,
@@ -30,10 +31,19 @@ export class UserAchievementsRepository {
             title: true,
             description: true,
             level: true,
+            category: true,
           },
         },
       },
-      where: { userNo },
+      where: {
+        userNo,
+        achievement: {
+          AND: [
+            { title: { contains: title } },
+            { category: { contains: category } },
+          ],
+        },
+      },
     });
   }
 

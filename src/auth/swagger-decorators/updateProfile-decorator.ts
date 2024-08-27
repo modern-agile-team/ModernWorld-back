@@ -1,17 +1,22 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-export function ApiGoogleUnlink() {
+export function ApiUpdateProfile() {
   return applyDecorators(
     ApiOperation({
-      summary: "구글 회원탈퇴 API",
-      description: "구글 회원탈퇴 API",
+      summary: "유저 소셜 프로필 업데이트 API",
+      description: "유저 소셜 프로필 업데이트 API",
     }),
     ApiResponse({
       status: 200,
-      description: "성공적으로 회원탈퇴가 된 경우",
+      description: "성공적으로 업데이트 된 경우",
       content: {
-        JSON: { example: { message: "구글 회원탈퇴 성공." } },
+        JSON: {
+          example: {
+            message: "프로필 업데이트 성공",
+            userProfileImage: "업데이트 된 프로필 이미지 URL",
+          },
+        },
       },
     }),
     ApiResponse({
@@ -78,14 +83,6 @@ export function ApiGoogleUnlink() {
               },
               description: "만료된 토큰인 경우",
             },
-            "You are not a user logged in with Google.": {
-              value: {
-                message: "You are not a user logged in with Google.",
-                error: "Unauthorized",
-                statusCode: 401,
-              },
-              description: "구글로 로그인한 유저가 아닌 경우",
-            },
             "jwt error": {
               value: {
                 message: "jwt error",
@@ -120,6 +117,14 @@ export function ApiGoogleUnlink() {
               },
               description: "유저를 찾을 수 없는 경우",
             },
+            "socialToken not found": {
+              value: {
+                message: "socialToken not found",
+                error: "Not Found",
+                statusCode: 404,
+              },
+              description: "소셜 토큰을 찾을 수 없는 경우",
+            },
           },
         },
       },
@@ -149,7 +154,7 @@ export function ApiGoogleUnlink() {
       content: {
         JSON: {
           example: {
-            message: "로그아웃 중 서버에러가 발생했습니다.",
+            message: "프로필 업데이트 중 서버에러가 발생했습니다.",
             error: "Internal Server Error",
             statusCode: 500,
           },
