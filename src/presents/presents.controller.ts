@@ -23,6 +23,7 @@ import { ApiDeleteOnePresent } from "./presents-swagger/delete-one-present.decor
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { PresentsWithoutDeleteResponseDto } from "./dtos/presents-without-delete-response.dto";
 
 @Controller()
 @ApiTags("Presents")
@@ -64,16 +65,18 @@ export class PresentsController {
   @Patch("users/my/presents/:presentNo")
   @ApiUpdatePresentStatus()
   @UseGuards(AccessTokenAuthGuard)
-  updatePresentStatus(
+  async updatePresentStatus(
     @UserNo() userNo: number,
     @Param("presentNo", ParsePositiveIntPipe) presentNo: number,
     @Body()
     body: PresentAcceptRejectDto,
   ) {
-    return this.presentsService.acceptOrRejectOnePresent(
-      userNo,
-      presentNo,
-      body,
+    return new PresentsWithoutDeleteResponseDto(
+      await this.presentsService.acceptOrRejectOnePresent(
+        userNo,
+        presentNo,
+        body,
+      ),
     );
   }
 

@@ -135,26 +135,52 @@ export class PresentsService {
       );
 
       if (existedItem) {
-        // 아 이건 아무리 생각해도 좀 아닌데 여기 로직은 나중에 반드시 생각해볼것.
-        // 유저가 아이템을 이미 갖고있다면 그 값의 반을 포인트로 주는 로직인데 다른 반환값들과는 차별성이 있어야할 필요성이 보임
-        // 프론트와 상의후 바꿀것 ------------------------------------------------
-        const item = await this.itemsRepository.getOneItem(itemNo);
+        // 해당 로직 alarm을 주는것으로 변경
+        let halfPrice: number;
+        let result: Prisma.PromiseReturnType<
+          typeof this.presentsRepository.updateOnePresentStatus
+        >;
 
-        await this.usersRepository.updateUserCurrentPointAccumulationPoint(
-          userNo,
-          item.price / 2,
-        );
-        const processedPresent =
-          await this.presentsRepository.updateOnePresentStatus(
-            presentNo,
-            acceptReject,
-          );
+        try {
+          result = await this.prisma.$transaction(async (tx) => {
+            const item = await this.itemsRepository.getOneItem(itemNo, tx);
 
-        return new PresentsWithoutDeleteResponseDto(processedPresent);
+            halfPrice = item.price / 2;
+
+            await this.usersRepository.updateUserCurrentPointAccumulationPoint(
+              userNo,
+              halfPrice,
+              tx,
+            );
+
+            await this.alarmsRepository.createOneAlarm(
+              userNo,
+              `[${item.name}]는 이미 보유중인 아이템 입니다. 아이템 가격의 50%, [${halfPrice}]포인트로 반환되었습니다.`,
+              "선물",
+              tx,
+            );
+
+            return this.presentsRepository.updateOnePresentStatus(
+              presentNo,
+              acceptReject,
+              tx,
+            );
+          });
+        } catch (err) {
+          this.logger.error(`transaction Error : ${err}`);
+          throw new InternalServerErrorException();
+        }
+
+        this.sseService.sendSse(receiverNo, {
+          title: "선물",
+          content: `이미 보유중인 아이템 입니다. 아이템 가격의 50%, [${halfPrice}]포인트로 반환되었습니다.`,
+        });
+
+        return result;
       }
 
       try {
-        const processedPresent = await this.prisma.$transaction(async (tx) => {
+        return this.prisma.$transaction(async (tx) => {
           await this.legendsRepository.updateOneLegendByUserNo(
             userNo,
             {
@@ -177,21 +203,16 @@ export class PresentsService {
             tx,
           );
         });
-
-        return new PresentsWithoutDeleteResponseDto(processedPresent);
       } catch (err) {
         this.logger.error(`transaction Error : ${err}`);
         throw new InternalServerErrorException();
       }
     }
 
-    const processedPresent =
-      await this.presentsRepository.updateOnePresentStatus(
-        presentNo,
-        acceptReject,
-      );
-
-    return new PresentsWithoutDeleteResponseDto(processedPresent);
+    return this.presentsRepository.updateOnePresentStatus(
+      presentNo,
+      acceptReject,
+    );
   }
 
   async updateOnePresentToDelete(userNo: number, presentNo: number) {
