@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
+const BASE_URL = process.env.S3_BASE_URL;
+
 export async function item(prisma: PrismaClient) {
   await prisma.item.createMany({
     data: [
@@ -8,7 +10,8 @@ export async function item(prisma: PrismaClient) {
         name: "1번 아이템",
         description: "1번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
         theme: "봄 테마",
         type: "1번 타입",
         price: 100,
@@ -17,7 +20,8 @@ export async function item(prisma: PrismaClient) {
         name: "2번 아이템",
         description: "2번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
         theme: "봄 테마",
         type: "2번 타입",
         price: 100,
@@ -26,7 +30,8 @@ export async function item(prisma: PrismaClient) {
         name: "3번 아이템",
         description: "3번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/beardoll.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/beardoll.svg",
         theme: "봄 테마",
         type: "3번 타입",
         price: 100,
@@ -35,7 +40,8 @@ export async function item(prisma: PrismaClient) {
         name: "4번 아이템",
         description: "4번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
         theme: "봄 테마",
         type: "4번 타입",
         price: 100,
@@ -44,7 +50,8 @@ export async function item(prisma: PrismaClient) {
         name: "5번 아이템",
         description: "5번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
         theme: "봄 테마",
         type: "5번 타입",
         price: 100,
@@ -53,7 +60,8 @@ export async function item(prisma: PrismaClient) {
         name: "6번 아이템",
         description: "6번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
         theme: "봄 테마",
         type: "6번 타입",
         price: 100,
@@ -62,7 +70,8 @@ export async function item(prisma: PrismaClient) {
         name: "7번 아이템",
         description: "7번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
         theme: "봄 테마",
         type: "7번 타입",
         price: 100,
@@ -71,7 +80,8 @@ export async function item(prisma: PrismaClient) {
         name: "8번 아이템",
         description: "8번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
         theme: "봄 테마",
         type: "8번 타입",
         price: 100,
@@ -80,7 +90,8 @@ export async function item(prisma: PrismaClient) {
         name: "9번 아이템",
         description: "9번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
         theme: "봄 테마",
         type: "9번 타입",
         price: 100,
@@ -89,7 +100,8 @@ export async function item(prisma: PrismaClient) {
         name: "10번 아이템",
         description: "10번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
         theme: "봄 테마",
         type: "10번 타입",
         price: 100,
@@ -98,7 +110,8 @@ export async function item(prisma: PrismaClient) {
         name: "11번 아이템",
         description: "11번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/beardoll.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/beardoll.svg",
         theme: "봄 테마",
         type: "11번 타입",
         price: 100,
@@ -107,7 +120,8 @@ export async function item(prisma: PrismaClient) {
         name: "12번 아이템",
         description: "12번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
         theme: "봄 테마",
         type: "12번 타입",
         price: 100,
@@ -118,7 +132,8 @@ export async function item(prisma: PrismaClient) {
         name: "13번 아이템",
         description: "13번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
         theme: "여름 테마",
         type: "1번 타입",
         price: 100,
@@ -127,7 +142,8 @@ export async function item(prisma: PrismaClient) {
         name: "14번 아이템",
         description: "14번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
         theme: "여름 테마",
         type: "2번 타입",
         price: 100,
@@ -136,7 +152,8 @@ export async function item(prisma: PrismaClient) {
         name: "15번 아이템",
         description: "15번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
         theme: "여름 테마",
         type: "3번 타입",
         price: 100,
@@ -145,7 +162,8 @@ export async function item(prisma: PrismaClient) {
         name: "16번 아이템",
         description: "16번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
         theme: "여름 테마",
         type: "4번 타입",
         price: 100,
@@ -154,7 +172,8 @@ export async function item(prisma: PrismaClient) {
         name: "17번 아이템",
         description: "17번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
         theme: "여름 테마",
         type: "5번 타입",
         price: 100,
@@ -163,7 +182,8 @@ export async function item(prisma: PrismaClient) {
         name: "18번 아이템",
         description: "18번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
         theme: "여름 테마",
         type: "6번 타입",
         price: 100,
@@ -172,7 +192,8 @@ export async function item(prisma: PrismaClient) {
         name: "19번 아이템",
         description: "19번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
         theme: "여름 테마",
         type: "7번 타입",
         price: 100,
@@ -181,7 +202,8 @@ export async function item(prisma: PrismaClient) {
         name: "20번 아이템",
         description: "20번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
         theme: "여름 테마",
         type: "8번 타입",
         price: 100,
@@ -190,7 +212,8 @@ export async function item(prisma: PrismaClient) {
         name: "21번 아이템",
         description: "21번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
         theme: "여름 테마",
         type: "9번 타입",
         price: 100,
@@ -199,7 +222,8 @@ export async function item(prisma: PrismaClient) {
         name: "22번 아이템",
         description: "22번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
         theme: "여름 테마",
         type: "10번 타입",
         price: 100,
@@ -208,7 +232,8 @@ export async function item(prisma: PrismaClient) {
         name: "23번 아이템",
         description: "23번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
         theme: "여름 테마",
         type: "11번 타입",
         price: 100,
@@ -217,7 +242,8 @@ export async function item(prisma: PrismaClient) {
         name: "24번 아이템",
         description: "24번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
         theme: "여름 테마",
         type: "12번 타입",
         price: 100,
@@ -228,7 +254,8 @@ export async function item(prisma: PrismaClient) {
         name: "25번 아이템",
         description: "25번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
         theme: "가을 테마",
         type: "1번 타입",
         price: 100,
@@ -237,7 +264,8 @@ export async function item(prisma: PrismaClient) {
         name: "26번 아이템",
         description: "26번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
         theme: "가을 테마",
         type: "2번 타입",
         price: 100,
@@ -246,7 +274,8 @@ export async function item(prisma: PrismaClient) {
         name: "27번 아이템",
         description: "27번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
         theme: "가을 테마",
         type: "3번 타입",
         price: 100,
@@ -255,7 +284,8 @@ export async function item(prisma: PrismaClient) {
         name: "28번 아이템",
         description: "28번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
         theme: "가을 테마",
         type: "4번 타입",
         price: 100,
@@ -264,7 +294,8 @@ export async function item(prisma: PrismaClient) {
         name: "29번 아이템",
         description: "29번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
         theme: "가을 테마",
         type: "5번 타입",
         price: 100,
@@ -273,7 +304,8 @@ export async function item(prisma: PrismaClient) {
         name: "30번 아이템",
         description: "30번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
         theme: "가을 테마",
         type: "6번 타입",
         price: 100,
@@ -282,7 +314,8 @@ export async function item(prisma: PrismaClient) {
         name: "31번 아이템",
         description: "31번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
         theme: "가을 테마",
         type: "7번 타입",
         price: 100,
@@ -291,7 +324,8 @@ export async function item(prisma: PrismaClient) {
         name: "32번 아이템",
         description: "32번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
         theme: "가을 테마",
         type: "8번 타입",
         price: 100,
@@ -300,7 +334,8 @@ export async function item(prisma: PrismaClient) {
         name: "33번 아이템",
         description: "33번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
         theme: "가을 테마",
         type: "9번 타입",
         price: 100,
@@ -309,7 +344,8 @@ export async function item(prisma: PrismaClient) {
         name: "34번 아이템",
         description: "34번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
         theme: "가을 테마",
         type: "10번 타입",
         price: 100,
@@ -318,7 +354,8 @@ export async function item(prisma: PrismaClient) {
         name: "35번 아이템",
         description: "35번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
         theme: "가을 테마",
         type: "11번 타입",
         price: 100,
@@ -327,7 +364,8 @@ export async function item(prisma: PrismaClient) {
         name: "36번 아이템",
         description: "36번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
         theme: "가을 테마",
         type: "12번 타입",
         price: 100,
@@ -338,7 +376,8 @@ export async function item(prisma: PrismaClient) {
         name: "37번 아이템",
         description: "37번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
         theme: "겨울 테마",
         type: "1번 타입",
         price: 100,
@@ -347,7 +386,8 @@ export async function item(prisma: PrismaClient) {
         name: "38번 아이템",
         description: "38번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/beardoll.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/beardoll.svg",
         theme: "겨울 테마",
         type: "2번 타입",
         price: 100,
@@ -356,7 +396,8 @@ export async function item(prisma: PrismaClient) {
         name: "39번 아이템",
         description: "39번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
         theme: "겨울 테마",
         type: "3번 타입",
         price: 100,
@@ -365,7 +406,8 @@ export async function item(prisma: PrismaClient) {
         name: "40번 아이템",
         description: "40번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monitor.svg",
         theme: "겨울 테마",
         type: "4번 타입",
         price: 100,
@@ -374,7 +416,8 @@ export async function item(prisma: PrismaClient) {
         name: "41번 아이템",
         description: "41번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/bluerug.svg",
         theme: "겨울 테마",
         type: "5번 타입",
         price: 100,
@@ -383,7 +426,8 @@ export async function item(prisma: PrismaClient) {
         name: "42번 아이템",
         description: "42번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/yellowsofa.svg",
         theme: "겨울 테마",
         type: "6번 타입",
         price: 100,
@@ -392,7 +436,8 @@ export async function item(prisma: PrismaClient) {
         name: "43번 아이템",
         description: "43번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/window.svg",
         theme: "겨울 테마",
         type: "7번 타입",
         price: 100,
@@ -401,7 +446,8 @@ export async function item(prisma: PrismaClient) {
         name: "44번 아이템",
         description: "44번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/pinkrug.svg",
         theme: "겨울 테마",
         type: "8번 타입",
         price: 100,
@@ -410,7 +456,8 @@ export async function item(prisma: PrismaClient) {
         name: "45번 아이템",
         description: "45번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/grandfatherclock.svg",
         theme: "겨울 테마",
         type: "9번 타입",
         price: 100,
@@ -419,7 +466,8 @@ export async function item(prisma: PrismaClient) {
         name: "46번 아이템",
         description: "46번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/monalisa.svg",
         theme: "겨울 테마",
         type: "10번 타입",
         price: 100,
@@ -428,7 +476,8 @@ export async function item(prisma: PrismaClient) {
         name: "47번 아이템",
         description: "47번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/woodchair.svg",
         theme: "겨울 테마",
         type: "11번 타입",
         price: 100,
@@ -437,7 +486,8 @@ export async function item(prisma: PrismaClient) {
         name: "48번 아이템",
         description: "48번 아이템 설명",
         image:
-          "https://wang0514.s3.ap-northeast-2.amazonaws.com/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
+          BASE_URL +
+          "/items/%EC%95%84%EC%9D%B4%ED%85%9C%EB%AA%A8%EC%9D%8C/table.svg",
         theme: "겨울 테마",
         type: "12번 타입",
         price: 100,
