@@ -24,12 +24,7 @@ export class AlarmsService {
     );
     const totalPage = Math.ceil(totalCount / take);
 
-    return new PaginationResponseDto<alarm>(alarms, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return { alarms, page, take, totalCount, totalPage };
   }
 
   async updateAlarmStatusToTrue(alarmNo: number, userNo: number) {
