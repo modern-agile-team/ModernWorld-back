@@ -11,7 +11,6 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateUserNicknameDto } from "./dtos/update-user-nickname.dto";
 import { UpdateUserDescriptionDto } from "./dtos/update-user-description.dto";
 import { Prisma } from "@prisma/client";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { UpdateUserAttendanceDto } from "./dtos/update-user-attendance.dto";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
@@ -157,11 +156,6 @@ export class UsersService {
       where,
     );
 
-    return new PaginationResponseDto(users, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return { users, page, take, totalCount, totalPage };
   }
 }

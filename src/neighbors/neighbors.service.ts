@@ -8,7 +8,6 @@ import {
 } from "@nestjs/common";
 import { NeighborsRepository } from "./neighbors.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
