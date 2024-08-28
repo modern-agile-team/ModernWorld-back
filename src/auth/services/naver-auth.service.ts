@@ -123,12 +123,12 @@ export class NaverAuthService {
       await this.tokenService.setRefreshToken(
         user.no.toString() + "-refreshToken",
         refreshToken,
-        60 * 60 * 24 * 7, // 7일
+        this.configService.get<number>("REDIS_REFRESH_TOKEN_EXPIRATION"),
       );
       await this.tokenService.setAccessToken(
         user.no.toString() + "-accessToken",
         accessToken,
-        60 * 60 * 12, // 12시간
+        this.configService.get<number>("REDIS_ACCESS_TOKEN_EXPIRATION"),
       );
 
       return {

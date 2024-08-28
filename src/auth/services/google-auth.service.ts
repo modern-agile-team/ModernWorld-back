@@ -123,12 +123,12 @@ export class GoogleAuthService {
       await this.tokenService.setRefreshToken(
         user.no.toString() + "-refreshToken",
         refreshToken,
-        60 * 60 * 24 * 7, // 7일
+        this.configService.get<number>("REFRESH_TOKEN_EXPIRATION")
       );
       await this.tokenService.setAccessToken(
         user.no.toString() + "-accessToken",
         accessToken,
-        60 * 60 * 12, // 12시간
+        60 * 60 * 3, // 3시간
       );
 
       return {
