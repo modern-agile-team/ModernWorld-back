@@ -76,8 +76,8 @@ export class RefreshTokenAuthGuard extends AuthGuard("refreshToken") {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    console.log(1 + request.cookies);
-    console.log(2 + request);
+    this.logger.log(request.cookies);
+    this.logger.log(request);
     const authorization = request.cookies["refreshToken"];
     if (!authorization) {
       throw new BadRequestException("jwt must be provided");
