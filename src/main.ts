@@ -12,6 +12,11 @@ async function bootstrap() {
     logger: winstonLogger,
   });
 
+  app.enableCors({
+    origin: "https://localhost:3001",
+    credentials: true,
+  });
+
   app.set("trust proxy", true);
 
   const config = new DocumentBuilder()
