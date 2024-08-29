@@ -41,6 +41,13 @@ export class CommentService {
 
     try {
       comment = await this.prisma.$transaction(async (tx) => {
+        const comment = await this.commentRepository.createOneComment(
+          receiverNo,
+          senderNo,
+          content,
+          tx,
+        );
+
         await this.legendsService.updateOneLegendByUserNo(
           senderNo,
           {
@@ -57,17 +64,12 @@ export class CommentService {
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          content,
+          comment?.commentSender?.nickname,
           "방명록",
           tx,
         );
 
-        return this.commentRepository.createOneComment(
-          receiverNo,
-          senderNo,
-          content,
-          tx,
-        );
+        return comment;
       });
     } catch (err) {
       this.logger.error(err);
