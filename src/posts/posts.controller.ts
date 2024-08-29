@@ -20,6 +20,7 @@ import { ApiGetOnePost } from "./posts-swagger/get-one-post.decorator";
 import { ApiDeleteOnePost } from "./posts-swagger/delete-one-post.decorator";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { GetOnePostResponseDto } from "./dtos/get-one-post-response.dto";
 
 //해당 로직은 Presents와 동일한 부분이 많음. 해당 부분 참고할것
 @Controller()
@@ -42,11 +43,13 @@ export class PostsController {
   @Get("users/my/posts/:postNo")
   @ApiGetOnePost()
   @UseGuards(AccessTokenAuthGuard)
-  getOnePost(
+  async getOnePost(
     @UserNo() userNo: number,
     @Param("postNo", ParsePositiveIntPipe) postNo: number,
   ) {
-    return this.postsService.getOnePostByUserNo(userNo, postNo);
+    return new GetOnePostResponseDto(
+      await this.postsService.getOnePostByUserNo(userNo, postNo),
+    );
   }
 
   @Post("users/:userNo/posts")

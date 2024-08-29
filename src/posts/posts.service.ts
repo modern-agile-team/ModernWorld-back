@@ -9,7 +9,6 @@ import {
 import { PostsRepository } from "./posts.repositroy";
 import { PostContentDto } from "./dtos/post-content.dto";
 import { UsersRepository } from "src/users/users.repository";
-import { GetOnePostResponseDto } from "./dtos/get-one-post-response.dto";
 import { GetPostsDto } from "./dtos/get-posts.dto";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { SseService } from "src/sse/sse.service";
@@ -70,13 +69,10 @@ export class PostsService {
     }
 
     if (receiver?.no === userNo && !post.check) {
-      const processedPost =
-        await this.postsRepository.updateOnePostCheckToTrue(postNo);
-
-      return new GetOnePostResponseDto(processedPost);
+      return this.postsRepository.updateOnePostCheckToTrue(postNo);
     }
 
-    return new GetOnePostResponseDto(post);
+    return post;
   }
 
   async createOnePost(

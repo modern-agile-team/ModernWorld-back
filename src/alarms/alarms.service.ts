@@ -5,8 +5,6 @@ import {
 } from "@nestjs/common";
 import { AlarmsRepository } from "./alarms.repository";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
-import { alarm } from "@prisma/client";
 
 @Injectable()
 export class AlarmsService {
@@ -24,12 +22,7 @@ export class AlarmsService {
     );
     const totalPage = Math.ceil(totalCount / take);
 
-    return new PaginationResponseDto<alarm>(alarms, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return { alarms, page, take, totalCount, totalPage };
   }
 
   async updateAlarmStatusToTrue(alarmNo: number, userNo: number) {

@@ -17,6 +17,7 @@ import { ApiDeleteOneAlarm } from "./alarms-swagger/delete-one-alarm.decorator";
 import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
 @Controller("users/my/alarms")
 @ApiTags("Alarms")
@@ -26,8 +27,13 @@ export class AlarmsController {
   @Get()
   @ApiGetAlarms()
   @UseGuards(AccessTokenAuthGuard)
-  getAlarms(@UserNo() userNo: number, @Query() query: PaginationDto) {
-    return this.alarmsService.getAlarms(userNo, query);
+  async getAlarms(@UserNo() userNo: number, @Query() query: PaginationDto) {
+    const { alarms, ...meta } = await this.alarmsService.getAlarms(
+      userNo,
+      query,
+    );
+
+    return new PaginationResponseDto(alarms, meta);
   }
 
   @Patch(":alarmNo")
