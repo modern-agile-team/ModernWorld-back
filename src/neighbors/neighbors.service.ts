@@ -215,14 +215,14 @@ export class NeighborsService {
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          `${result.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
+          `${result.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
           "이웃",
           tx,
         );
 
         await this.alarmsRepository.createOneAlarm(
           senderNo,
-          `${result.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
+          `${result.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
           "이웃",
           tx,
         );
@@ -236,12 +236,12 @@ export class NeighborsService {
 
     this.sseService.sendSse(receiverNo, {
       title: "이웃",
-      content: `${neighbor.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
+      content: `${neighbor.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
     });
 
     this.sseService.sendSse(senderNo, {
       title: "이웃",
-      content: `${neighbor.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
+      content: `${neighbor.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
     });
 
     return neighbor;
