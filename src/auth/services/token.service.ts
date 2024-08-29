@@ -22,7 +22,7 @@ export class TokenService {
     const payload = { sub: "accessToken", userNo };
 
     return this.jwtService.sign(payload, {
-      expiresIn: "12h",
+      expiresIn: this.configService.get<string>("ACCESS_TOKEN_EXPIRATION"),
       secret: this.configService.get<string>("ACCESS_TOKEN_SECRET"),
     });
   }
@@ -31,14 +31,14 @@ export class TokenService {
     const payload = { sub: "refreshToken", userNo };
 
     return this.jwtService.sign(payload, {
-      expiresIn: "7d",
+      expiresIn: this.configService.get<string>("REFRESH_TOKEN_EXPIRATION"),
       secret: this.configService.get<string>("REFRESH_TOKEN_SECRET"),
     });
   }
 
   async createNewAccessToken(userNo: number) {
     const accessToken = this.createAccessToken(userNo);
-    this.setAccessToken(`${userNo}-accessToken`, accessToken, 60 * 60 * 12);
+    this.setAccessToken(`${userNo}-accessToken`, accessToken, this.configService.get<number>("REDIS_ACCESS_TOKEN_EXPIRATION"));
 
     return { accessToken };
   }

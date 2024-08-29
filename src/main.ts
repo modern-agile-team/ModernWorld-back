@@ -8,8 +8,12 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
     logger: winstonLogger,
+  });
+
+  app.enableCors({
+    origin: true,
+    credentials: true,
   });
 
   app.set("trust proxy", true);
