@@ -2,6 +2,7 @@
 .git
 .gitignore
 .dockerignore
+.github
 
 # Build dependencies
 dist
@@ -21,6 +22,10 @@ README.md
 nodemon.json
 .prettierrc
 
-# Ignore Seeding
+# Prisma
 prisma/seed.ts
 prisma/seeding
+
+# Test files
+test
+*.spec.ts
