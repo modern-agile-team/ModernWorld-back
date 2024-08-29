@@ -24,6 +24,7 @@ import { ParsePositiveIntPipe } from "src/common/pipes/parse-positive-int.pipe";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
 import { UpdateUserAttendanceDto } from "./dtos/update-user-attendance.dto";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
 @Controller("users")
 @ApiTags("Users")
@@ -40,8 +41,10 @@ export class UsersController {
   @Get()
   @ApiGetUsers()
   @UseGuards(AccessTokenAuthGuard)
-  getUsers(@Query() query: GetUsersByAnimalDto) {
-    return this.usersService.getUsers(query);
+  async getUsers(@Query() query: GetUsersByAnimalDto) {
+    const { users, ...meta } = await this.usersService.getUsers(query);
+
+    return new PaginationResponseDto(users, meta);
   }
 
   @Get(":userNo")

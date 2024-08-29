@@ -8,7 +8,6 @@ import {
 } from "@nestjs/common";
 import { NeighborsRepository } from "./neighbors.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
@@ -153,7 +152,7 @@ export class NeighborsService {
       where,
     );
 
-    const fillteredNeighbors = neighbors.map((neighbor) => {
+    const filteredNeighbors = neighbors.map((neighbor) => {
       if (neighbor.neighborSenderNo.no === userNo) {
         {
           const { neighborSenderNo, ...filtered } = neighbor;
@@ -175,12 +174,13 @@ export class NeighborsService {
       }
     });
 
-    return new PaginationResponseDto(fillteredNeighbors, {
+    return {
+      filteredNeighbors,
       page,
       take,
       totalCount,
       totalPage,
-    });
+    };
   }
 
   async deleteNeighbor(neighborNo: number, userNo: number) {

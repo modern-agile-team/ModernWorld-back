@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaTxType } from "src/prisma/prisma.type";
 
 @Injectable()
 export class ItemsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  getOneItem(itemNo: number) {
-    return this.prisma.item.findUnique({
+  getOneItem(itemNo: number, tx?: PrismaTxType) {
+    return (tx ?? this.prisma).item.findUnique({
       where: {
         no: itemNo,
       },

@@ -8,7 +8,6 @@ import {
 import { CommentRepository } from "./comments.repository";
 import { CommentContentDto } from "./dtos/comment-dtos/comment-content.dto";
 import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { CommentsPaginationDto } from "./dtos/comment-dtos/comments-pagination.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { LegendsRepository } from "src/legends/legends.repository";
@@ -42,6 +41,13 @@ export class CommentService {
 
     try {
       comment = await this.prisma.$transaction(async (tx) => {
+        const comment = await this.commentRepository.createOneComment(
+          receiverNo,
+          senderNo,
+          content,
+          tx,
+        );
+
         await this.legendsService.updateOneLegendByUserNo(
           senderNo,
           {
@@ -58,17 +64,12 @@ export class CommentService {
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          content,
+          comment?.commentSender?.nickname,
           "방명록",
           tx,
         );
 
-        return this.commentRepository.createOneComment(
-          receiverNo,
-          senderNo,
-          content,
-          tx,
-        );
+        return comment;
       });
     } catch (err) {
       this.logger.error(err);
@@ -111,12 +112,7 @@ export class CommentService {
       where,
     );
 
-    return new PaginationResponseDto(comments, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return { comments, page, take, totalCount, totalPage };
   }
 
   async updateOneComment(
@@ -210,12 +206,7 @@ export class CommentService {
       where,
     );
 
-    return new PaginationResponseDto(replies, {
-      page,
-      take,
-      totalCount,
-      totalPage,
-    });
+    return { replies, page, take, totalCount, totalPage };
   }
 
   async updateOneReply(

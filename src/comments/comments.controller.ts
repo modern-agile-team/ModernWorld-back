@@ -28,6 +28,7 @@ import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { UserNo } from "src/auth/auth.decorator";
 import { ApiGetOneComment } from "./swagger-decorators/comment-swagger/get-one-comment.dto";
 import { ApiGetOneReply } from "./swagger-decorators/reply-swagger/get-one-reply.decorator";
+import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 
 @Controller()
 @ApiTags("Comments & Replies")
@@ -55,11 +56,16 @@ export class CommentController {
   @Get("users/:userNo/comments")
   @ApiGetComments()
   @UseGuards(AccessTokenAuthGuard)
-  getManyComments(
+  async getManyComments(
     @Param("userNo", ParsePositiveIntPipe) userNo: number,
     @Query() query: CommentsPaginationDto,
   ) {
-    return this.commentService.getManyComments(userNo, query);
+    const { comments, ...meta } = await this.commentService.getManyComments(
+      userNo,
+      query,
+    );
+
+    return new PaginationResponseDto(comments, meta);
   }
 
   @Patch("users/my/comments/:commentNo")
@@ -105,11 +111,16 @@ export class CommentController {
   @Get("comments/:commentNo/replies")
   @ApiGetRelies()
   @UseGuards(AccessTokenAuthGuard)
-  getManyReplies(
+  async getManyReplies(
     @Param("commentNo", ParsePositiveIntPipe) commentNo: number,
     @Query() query: PaginationDto,
   ) {
-    return this.commentService.getManyReplies(commentNo, query);
+    const { replies, ...meta } = await this.commentService.getManyReplies(
+      commentNo,
+      query,
+    );
+
+    return new PaginationResponseDto(replies, meta);
   }
 
   @Patch("comments/:commentNo/replies/:replyNo")

@@ -4,7 +4,6 @@ import { UserAchievementsRepository } from "./user-achievements.repository";
 import { UserAchievementsService } from "./user-achievements.service";
 import { AchievementsModule } from "src/achievements/achievements.module";
 import { LegendsModule } from "src/legends/legends.module";
-import { SseModule } from "src/sse/sse.module";
 import { AlarmsModule } from "src/alarms/alarms.module";
 import { UsersModule } from "src/users/users.module";
 
@@ -12,7 +11,6 @@ import { UsersModule } from "src/users/users.module";
   imports: [
     forwardRef(() => UsersModule),
     AchievementsModule,
-    SseModule,
     AlarmsModule,
     AchievementsModule,
     LegendsModule,
