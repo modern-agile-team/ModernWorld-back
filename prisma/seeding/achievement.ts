@@ -9,6 +9,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "소통해요",
         level: "one",
         point: 1000,
+        category: "소통왕",
       },
       {
         name: "commentCount2",
@@ -16,6 +17,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "소통완료",
         level: "two",
         point: 2000,
+        category: "소통왕",
       },
       {
         name: "commentCount3",
@@ -23,6 +25,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "댓글부대",
         level: "three",
         point: 4000,
+        category: "소통왕",
       },
 
       {
@@ -31,6 +34,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "인싸",
         level: "one",
         point: 1000,
+        category: "인기왕",
       },
       {
         name: "likeCount2",
@@ -38,6 +42,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "인플루언서",
         level: "two",
         point: 2000,
+        category: "인기왕",
       },
       {
         name: "likeCount3",
@@ -45,6 +50,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "연예인",
         level: "three",
         point: 4000,
+        category: "인기왕",
       },
 
       {
@@ -53,6 +59,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "성실",
         level: "one",
         point: 1000,
+        category: "출석왕",
       },
       {
         name: "attendanceCount2",
@@ -60,6 +67,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "꾸준",
         level: "two",
         point: 2000,
+        category: "출석왕",
       },
       {
         name: "attendanceCount3",
@@ -67,6 +75,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "개근",
         level: "three",
         point: 4000,
+        category: "출석왕",
       },
 
       {
@@ -75,6 +84,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "돈있음",
         level: "one",
         point: 10000,
+        category: "수집왕",
       },
       {
         name: "itemCount2",
@@ -82,6 +92,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "돈많음",
         level: "two",
         point: 20000,
+        category: "수집왕",
       },
       {
         name: "itemCount3",
@@ -89,6 +100,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "부자",
         level: "three",
         point: 40000,
+        category: "수집왕",
       },
 
       {
@@ -97,6 +109,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "착함",
         level: "one",
         point: 1000,
+        category: "선물왕",
       },
       {
         name: "presentCount2",
@@ -104,6 +117,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "엄청착함",
         level: "two",
         point: 2000,
+        category: "선물왕",
       },
       {
         name: "presentCount3",
@@ -111,6 +125,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "천사",
         level: "three",
         point: 4000,
+        category: "선물왕",
       },
 
       {
@@ -119,6 +134,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "대단함",
         level: "one",
         point: 1000,
+        category: "게임왕",
       },
       {
         name: "RSPWinCount2",
@@ -126,6 +142,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "멋짐",
         level: "two",
         point: 2000,
+        category: "게임왕",
       },
       {
         name: "RSPWinCount3",
@@ -133,6 +150,7 @@ export async function achievement(prisma: PrismaClient) {
         title: "레전드",
         level: "three",
         point: 4000,
+        category: "게임왕",
       },
     ],
   });
