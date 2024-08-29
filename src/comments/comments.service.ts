@@ -64,7 +64,7 @@ export class CommentService {
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          comment?.commentSender?.nickname,
+          `${comment?.commentSender?.nickname}님이 방명록을 남겼습니다.`,
           "방명록",
           tx,
         );
