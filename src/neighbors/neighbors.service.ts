@@ -8,7 +8,6 @@ import {
 } from "@nestjs/common";
 import { NeighborsRepository } from "./neighbors.repository";
 import { UsersRepository } from "src/users/users.repository";
-import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
 import { NeighborsPaginationDto } from "./dtos/neighbors-pagination.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
@@ -153,7 +152,7 @@ export class NeighborsService {
       where,
     );
 
-    const fillteredNeighbors = neighbors.map((neighbor) => {
+    const filteredNeighbors = neighbors.map((neighbor) => {
       if (neighbor.neighborSenderNo.no === userNo) {
         {
           const { neighborSenderNo, ...filtered } = neighbor;
@@ -175,12 +174,13 @@ export class NeighborsService {
       }
     });
 
-    return new PaginationResponseDto(fillteredNeighbors, {
+    return {
+      filteredNeighbors,
       page,
       take,
       totalCount,
       totalPage,
-    });
+    };
   }
 
   async deleteNeighbor(neighborNo: number, userNo: number) {
@@ -215,14 +215,14 @@ export class NeighborsService {
 
         await this.alarmsRepository.createOneAlarm(
           receiverNo,
-          `${result.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
+          `${result.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
           "이웃",
           tx,
         );
 
         await this.alarmsRepository.createOneAlarm(
           senderNo,
-          `${result.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
+          `${result.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
           "이웃",
           tx,
         );
@@ -236,12 +236,12 @@ export class NeighborsService {
 
     this.sseService.sendSse(receiverNo, {
       title: "이웃",
-      content: `${neighbor.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
+      content: `${neighbor.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
     });
 
     this.sseService.sendSse(senderNo, {
       title: "이웃",
-      content: `${neighbor.neighborSenderNo.nickname}님과 이웃이 되었습니다.`,
+      content: `${neighbor.neighborReceiverNo.nickname}님과 이웃이 되었습니다.`,
     });
 
     return neighbor;

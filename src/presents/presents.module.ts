@@ -7,7 +7,6 @@ import { UsersModule } from "src/users/users.module";
 import { ItemsModule } from "src/items/items.module";
 import { LegendsModule } from "src/legends/legends.module";
 import { AlarmsModule } from "src/alarms/alarms.module";
-import { SseModule } from "src/sse/sse.module";
 import { UserAchievementsModule } from "src/user-achievements/user-achievements.module";
 
 @Module({
@@ -16,7 +15,6 @@ import { UserAchievementsModule } from "src/user-achievements/user-achievements.
     UsersModule,
     ItemsModule,
     LegendsModule,
-    SseModule,
     AlarmsModule,
     UserAchievementsModule,
   ],

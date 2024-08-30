@@ -4,6 +4,8 @@ import { BooleanTransform } from "src/common/decorators/boolean-transform.decora
 
 export class GetUserItemsDto {
   @ApiPropertyOptional({ description: "테마이름" })
+  @IsString()
+  @IsOptional()
   theme?: string;
 
   @ApiPropertyOptional({ description: "사용 여부" })

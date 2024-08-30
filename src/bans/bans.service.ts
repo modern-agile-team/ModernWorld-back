@@ -12,6 +12,7 @@ import { UsersRepository } from "src/users/users.repository";
 import { TokenService } from "src/auth/services/token.service";
 import { TokenRepository } from "src/auth/repositories/token.repository";
 import { PrismaService } from "src/prisma/prisma.service";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class BansService {
@@ -19,6 +20,7 @@ export class BansService {
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
     private readonly bansRepository: BansRepository,
+    private readonly usersSerivce: UsersService,
     private readonly usersRepository: UsersRepository,
     private readonly tokenService: TokenService,
     private readonly tokenRepository: TokenRepository,
@@ -45,9 +47,7 @@ export class BansService {
   async createBan(adminNo: number, body: CreateBanDto) {
     const { userNo, content, expireDays } = body;
 
-    const { admin } = await this.usersRepository.isAdmin(adminNo);
-
-    if (!admin) throw new ForbiddenException("You are not admin.");
+    await this.usersSerivce.checkAdmin(adminNo);
 
     const user = await this.usersRepository.getUserUniqueIndentifier(userNo);
 

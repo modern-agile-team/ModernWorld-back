@@ -86,9 +86,8 @@ export class TasksService {
     }
   }
 
-  // 0 * * * * *
-  // 원래는 정각마다 초기화 해주는게 좋을듯, 아래는 30초마다 초기화해줌 30, 00, 30, 00
-  @Cron("*/30 * * * * *")
+  // 0 * * * * * 정각마다 초기화
+  @Cron("0 * * * * *")
   deleteSseConnection() {
     for (let i = 1; i <= 3; i++) {
       try {

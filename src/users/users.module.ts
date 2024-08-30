@@ -9,6 +9,6 @@ import { UserAchievementsModule } from "src/user-achievements/user-achievements.
   imports: [LegendsModule, forwardRef(() => UserAchievementsModule)],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository],
-  exports: [UsersRepository],
+  exports: [UsersService, UsersRepository],
 })
 export class UsersModule {}

@@ -23,7 +23,7 @@ export class CookieInterceptor implements NestInterceptor {
             httpOnly: true,
             domain: this.configService.get<string>("COOKIE_DOMAIN"),
             secure: true,
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
           });
         }

@@ -191,6 +191,7 @@ export class UsersRepository {
     return this.prisma.user.findUnique({
       select: {
         no: true,
+        socialName: true,
         nickname: true,
         description: true,
         currentPoint: true,
