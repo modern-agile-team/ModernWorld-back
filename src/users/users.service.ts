@@ -4,6 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
 import { GetUsersByAnimalDto } from "./dtos/get-users-by-animal.dto";
@@ -157,5 +158,11 @@ export class UsersService {
     );
 
     return { users, page, take, totalCount, totalPage };
+  }
+
+  async userExists(userNo: number, message: string = "User doesn't exist.") {
+    const user = await this.usersRepository.findUserByUserNo(userNo);
+
+    if (!user) throw new NotFoundException(message);
   }
 }
