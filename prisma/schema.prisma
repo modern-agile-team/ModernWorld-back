@@ -192,7 +192,7 @@ model report {
   senderNo   Int?           @map("sender_no") @db.UnsignedInt
   receiverNo Int?           @map("receiver_no") @db.UnsignedInt
   content    String         @db.VarChar(300)
-  createdAt  DateTime       @map("created_at") @db.DateTime(0)
+  createdAt  DateTime       @default(now()) @map("created_at") @db.DateTime(0)
   category   ReportCategory @default(other)
   sender     user?          @relation("report_sender_ibfk", fields: [senderNo], references: [no], map: "report_sender_ibfk")
   receiver   user?          @relation("report_receiver_ibfk", fields: [receiverNo], references: [no], map: "report_receiver_ibfk")
