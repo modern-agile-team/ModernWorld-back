@@ -25,6 +25,7 @@ import { UserAchievementsModule } from "./user-achievements/user-achievements.mo
 import { NeighborsModule } from "./neighbors/neighbors.module";
 import { GamesModule } from "./games/games.module";
 import { BansModule } from "./bans/bans.module";
+import { ReportsModule } from "./reports/reports.module";
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { BansModule } from "./bans/bans.module";
     UsersModule,
     GamesModule,
     BansModule,
+    ReportsModule,
   ],
   // isGlobal: ConfigModule을 AppModul 이외의 모듈에서 반복 import할 필요 없는 전역 모듈로 설정.
   controllers: [AppController],
