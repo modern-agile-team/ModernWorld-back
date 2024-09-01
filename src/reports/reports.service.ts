@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { CreateOneReportDto } from "./dtos/create-one-report.dto";
 import { ReportsRepository } from "./reports.repository";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
-import { UsersRepository } from "src/users/users.repository";
 import { UsersService } from "src/users/users.service";
+import { ReportsPaginationDto } from "./dtos/reports-pagination.dto";
 
 @Injectable()
 export class ReportsService {
@@ -12,14 +11,16 @@ export class ReportsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async getAllReports(userNo: number, query: PaginationDto) {
+  async getAllReports(userNo: number, query: ReportsPaginationDto) {
     await this.usersService.checkAdmin(userNo);
 
-    const { page, take, orderBy } = query;
+    const { page, take, orderBy, category } = query;
 
     const skip = (page - 1) * take;
 
-    const totalCount = await this.reportsRepository.countReports();
+    const where = { category };
+
+    const totalCount = await this.reportsRepository.countReports(where);
 
     const totalPage = Math.ceil(totalCount / take);
 
@@ -27,17 +28,18 @@ export class ReportsService {
       skip,
       take,
       orderBy,
+      where,
     );
 
     return { reports, page, take, totalCount, totalPage };
   }
 
-  async getUserReports(userNo: number, query: PaginationDto) {
-    const { page, take, orderBy } = query;
+  async getUserReports(userNo: number, query: ReportsPaginationDto) {
+    const { page, take, orderBy, category } = query;
 
     const skip = (page - 1) * take;
 
-    const where = { senderNo: userNo };
+    const where = { senderNo: userNo, category };
 
     const totalCount = await this.reportsRepository.countReports(where);
 

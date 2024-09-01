@@ -4,11 +4,11 @@ import { UserNo } from "src/auth/auth.decorator";
 import { AccessTokenAuthGuard } from "src/auth/jwt/jwt.guard";
 import { CreateOneReportDto } from "./dtos/create-one-report.dto";
 import { ReportsService } from "./reports.service";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
 import { ApiCreateOneReport } from "./swagger-decorators/create-one-report.decorator";
 import { ApiGetAllReports } from "./swagger-decorators/get-all-reports.decorator";
 import { ApiGetUserReports } from "./swagger-decorators/get-user-reports.decorator";
 import { PaginationResponseDto } from "src/common/dtos/pagination-response.dto";
+import { ReportsPaginationDto } from "./dtos/reports-pagination.dto";
 
 @Controller()
 @ApiTags("Reports")
@@ -20,7 +20,7 @@ export class ReportsController {
   @ApiGetUserReports()
   async getUserReports(
     @UserNo() userNo: number,
-    @Query() query: PaginationDto,
+    @Query() query: ReportsPaginationDto,
   ) {
     const { reports, ...meta } = await this.reportsService.getUserReports(
       userNo,
@@ -33,7 +33,10 @@ export class ReportsController {
   @Get("reports")
   @UseGuards(AccessTokenAuthGuard)
   @ApiGetAllReports()
-  async getAllReports(@UserNo() userNo: number, @Query() query: PaginationDto) {
+  async getAllReports(
+    @UserNo() userNo: number,
+    @Query() query: ReportsPaginationDto,
+  ) {
     const { reports, ...meta } = await this.reportsService.getAllReports(
       userNo,
       query,
