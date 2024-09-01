@@ -1,5 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -167,6 +168,26 @@ export function ApiGetAllReports() {
               totalCount: 15,
               totalPage: 2,
             },
+          },
+        },
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description: "query가 조건에 안맞는 경우",
+      content: {
+        JSON: {
+          example: {
+            message: [
+              "category must be one of the following values: spam, harmfulContent, scamImpersonation, copyrightInfringement, explicitContent, abusiveBehavior, misinformation, duplicateContent, hateSpeech, technicalIssue, other",
+              "page must be a positive number",
+              "page must be an integer number",
+              "take must be a positive number",
+              "take must be an integer number",
+              "orderBy must be one of the following values: asc, desc",
+            ],
+            error: "Bad Request",
+            statusCode: 400,
           },
         },
       },
