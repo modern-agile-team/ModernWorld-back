@@ -4,12 +4,13 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOperation,
 } from "@nestjs/swagger";
 
 export function ApiCreateOneReport() {
   return applyDecorators(
-    ApiOperation({ summary: "report 생성" }),
+    ApiOperation({ summary: "신고 생성" }),
 
     ApiCreatedResponse({
       description: "Success",
@@ -47,6 +48,20 @@ export function ApiCreateOneReport() {
             ],
             error: "Bad Request",
             statusCode: 400,
+          },
+        },
+      },
+    }),
+
+    ApiNotFoundResponse({
+      description:
+        "신고한 번호의 유저가 존재하지 않을 때, DB상에서 완전히 삭제되거나 없는 경우에 뜸",
+      content: {
+        JSON: {
+          example: {
+            message: "User doesn't exist.",
+            error: "Not Found",
+            statusCode: 404,
           },
         },
       },

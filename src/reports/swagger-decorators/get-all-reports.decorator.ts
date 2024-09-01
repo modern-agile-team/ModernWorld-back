@@ -1,17 +1,17 @@
 import { applyDecorators } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOperation,
 } from "@nestjs/swagger";
 
-export function ApiGetUserReports() {
+export function ApiGetAllReports() {
   return applyDecorators(
     ApiOperation({
-      summary: "유저 신고내역 조회",
-      description: "유저 본인이 신고한 내역을 조회합니다.",
+      summary: "신고 조회",
+      description: "신고 내역 전부 조회 (Admin만 가능)",
     }),
 
     ApiCreatedResponse({
@@ -77,6 +77,48 @@ export function ApiGetUserReports() {
                 category: "other",
               },
               {
+                no: 14,
+                sender: {
+                  no: 12,
+                  nickname: "12번닉네임",
+                },
+                receiver: {
+                  no: 11,
+                  nickname: "11번닉네임",
+                },
+                content: "string",
+                createdAt: "2024-08-30T12:34:50.000Z",
+                category: "other",
+              },
+              {
+                no: 13,
+                sender: {
+                  no: 11,
+                  nickname: "11번닉네임",
+                },
+                receiver: {
+                  no: 11,
+                  nickname: "11번닉네임",
+                },
+                content: "string",
+                createdAt: "2024-08-30T12:34:50.000Z",
+                category: "other",
+              },
+              {
+                no: 12,
+                sender: {
+                  no: 11,
+                  nickname: "11번닉네임",
+                },
+                receiver: {
+                  no: 11,
+                  nickname: "11번닉네임",
+                },
+                content: "string",
+                createdAt: "2024-08-30T12:34:50.000Z",
+                category: "other",
+              },
+              {
                 no: 11,
                 sender: {
                   no: 31,
@@ -118,41 +160,26 @@ export function ApiGetUserReports() {
                 createdAt: "2024-08-30T12:34:42.000Z",
                 category: "other",
               },
-              {
-                no: 8,
-                sender: {
-                  no: 31,
-                  nickname: "엄준식",
-                },
-                receiver: {
-                  no: 3,
-                  nickname: "3번닉네임",
-                },
-                content: "string",
-                createdAt: "2024-08-30T12:34:42.000Z",
-                category: "other",
-              },
-              {
-                no: 7,
-                sender: {
-                  no: 31,
-                  nickname: "엄준식",
-                },
-                receiver: {
-                  no: 3,
-                  nickname: "3번닉네임",
-                },
-                content: "string",
-                createdAt: "2024-08-30T12:34:42.000Z",
-                category: "other",
-              },
             ],
             meta: {
               page: 1,
               take: 10,
-              totalCount: 9,
-              totalPage: 1,
+              totalCount: 15,
+              totalPage: 2,
             },
+          },
+        },
+      },
+    }),
+
+    ApiForbiddenResponse({
+      description: "유저가 Admin이 아닌 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "You are not admin.",
+            error: "Forbidden",
+            statusCode: 403,
           },
         },
       },

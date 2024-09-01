@@ -10,23 +10,47 @@ export class ReportsService {
   constructor(
     private readonly reportsRepository: ReportsRepository,
     private readonly usersService: UsersService,
-    private readonly usersRepository: UsersRepository,
   ) {}
 
-  getOneReport() {}
-
-  async getReports(userNo: number, query: PaginationDto) {
-    const { admin } = await this.usersRepository.isAdmin(userNo);
+  async getAllReports(userNo: number, query: PaginationDto) {
+    await this.usersService.checkAdmin(userNo);
 
     const { page, take, orderBy } = query;
 
     const skip = (page - 1) * take;
 
-    if (admin) return this.reportsRepository.getReports(skip, take, orderBy);
+    const totalCount = await this.reportsRepository.countReports();
+
+    const totalPage = Math.ceil(totalCount / take);
+
+    const reports = await this.reportsRepository.getReports(
+      skip,
+      take,
+      orderBy,
+    );
+
+    return { reports, page, take, totalCount, totalPage };
+  }
+
+  async getUserReports(userNo: number, query: PaginationDto) {
+    const { page, take, orderBy } = query;
+
+    const skip = (page - 1) * take;
 
     const where = { senderNo: userNo };
 
-    return this.reportsRepository.getReports(skip, take, orderBy, where);
+    const totalCount = await this.reportsRepository.countReports(where);
+
+    const totalPage = Math.ceil(totalCount / take);
+
+    const reports = await this.reportsRepository.getReports(
+      skip,
+      take,
+      orderBy,
+      where,
+    );
+
+    return { reports, page, take, totalCount, totalPage };
   }
 
   async createOneReport(senderNo: number, body: CreateOneReportDto) {
