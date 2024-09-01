@@ -21,10 +21,11 @@ export function ApiUpdateUserAchievementStatus() {
             ex1: {
               summary: "사용",
               value: {
-                no: 6,
-                userNo: 1,
-                achievementNo: 6,
+                no: 31,
+                userNo: 31,
+                achievementNo: 1,
                 status: true,
+                createdAt: "2024-09-01T16:59:29.000Z",
               },
             },
             ex2: {
@@ -34,6 +35,7 @@ export function ApiUpdateUserAchievementStatus() {
                 userNo: 1,
                 achievementNo: 6,
                 status: false,
+                createdAt: "2024-09-01T16:59:29.000Z",
               },
             },
           },
