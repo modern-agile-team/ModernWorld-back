@@ -41,4 +41,8 @@ export class ReportsRepository {
       data,
     });
   }
+
+  countReports(where?: Prisma.reportWhereInput) {
+    return this.prisma.report.count({ where });
+  }
 }
