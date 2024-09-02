@@ -2,10 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 const BASE_URL = process.env.S3_BASE_URL;
 
-export async function character(prisma: PrismaClient) {
-  await prisma.character.createMany({
+export function character(prisma: PrismaClient) {
+  return prisma.character.createMany({
     data: [
       {
+        no: 1,
         name: "김은우검은고양이",
         description: "",
         image:
@@ -16,6 +17,7 @@ export async function character(prisma: PrismaClient) {
       },
 
       {
+        no: 2,
         name: "시작강아지",
         description: "",
         image:
@@ -26,6 +28,7 @@ export async function character(prisma: PrismaClient) {
       },
 
       {
+        no: 3,
         name: "시작고양이",
         description: "",
         image:
@@ -36,6 +39,7 @@ export async function character(prisma: PrismaClient) {
       },
 
       {
+        no: 4,
         name: "안진우똥색강아지",
         description: "",
         image:
@@ -46,6 +50,7 @@ export async function character(prisma: PrismaClient) {
       },
 
       {
+        no: 5,
         name: "안진우회색고양이",
         description: "",
         image:
@@ -56,6 +61,7 @@ export async function character(prisma: PrismaClient) {
       },
 
       {
+        no: 6,
         name: "조영은회색강아지",
         description: "",
         image:
@@ -66,6 +72,7 @@ export async function character(prisma: PrismaClient) {
       },
 
       {
+        no: 7,
         name: "에이리언고양이",
         description: "",
         image:
@@ -76,6 +83,7 @@ export async function character(prisma: PrismaClient) {
       },
 
       {
+        no: 8,
         name: "탄강아지",
         description: "",
         image:
@@ -85,69 +93,148 @@ export async function character(prisma: PrismaClient) {
         price: 1000,
       },
 
-      // {
-      //   name: "고양이",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "cat",
-      //   price: 1000,
-      // },
+      {
+        no: 9,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
 
-      // {
-      //   name: "강아지",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "dog",
-      //   price: 1000,
-      // },
+      {
+        no: 10,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
 
-      // {
-      //   name: "고양이",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "cat",
-      //   price: 1000,
-      // },
+      {
+        no: 11,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
 
-      // {
-      //   name: "강아지",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "dog",
-      //   price: 1000,
-      // },
+      {
+        no: 12,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
 
-      // {
-      //   name: "고양이",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "cat",
-      //   price: 1000,
-      // },
+      {
+        no: 13,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
 
-      // {
-      //   name: "강아지",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "dog",
-      //   price: 1000,
-      // },
+      {
+        no: 14,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
 
-      // {
-      //   name: "고양이",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "cat",
-      //   price: 1000,
-      // },
+      {
+        no: 15,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
 
-      // {
-      //   name: "강아지",
-      //   description: "",
-      //   image: BASE_URL + "/",
-      //   species: "dog",
-      //   price: 1000,
-      // },
+      {
+        no: 16,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
+
+      {
+        no: 17,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
+
+      {
+        no: 18,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
+      {
+        no: 19,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
+
+      {
+        no: 20,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
+
+      {
+        no: 21,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
+
+      {
+        no: 22,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
+
+      {
+        no: 23,
+        name: "고양이",
+        description: "",
+        image: BASE_URL + "/",
+        species: "cat",
+        price: 1000,
+      },
+
+      {
+        no: 24,
+        name: "강아지",
+        description: "",
+        image: BASE_URL + "/",
+        species: "dog",
+        price: 1000,
+      },
     ],
   });
 }

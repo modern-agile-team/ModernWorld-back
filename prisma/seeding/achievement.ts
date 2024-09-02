@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
-export async function achievement(prisma: PrismaClient) {
-  await prisma.achievement.createMany({
+export function achievement(prisma: PrismaClient) {
+  return prisma.achievement.createMany({
     data: [
       {
+        no: 1,
         name: "commentCount1",
         description: "댓글 10개 작성시 달성합니다.",
         title: "소통해요",
@@ -12,6 +13,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "소통왕",
       },
       {
+        no: 2,
         name: "commentCount2",
         description: "댓글 20개 작성시 달성합니다.",
         title: "소통완료",
@@ -20,6 +22,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "소통왕",
       },
       {
+        no: 3,
         name: "commentCount3",
         description: "댓글 40개 작성시 달성합니다.",
         title: "댓글부대",
@@ -29,6 +32,7 @@ export async function achievement(prisma: PrismaClient) {
       },
 
       {
+        no: 4,
         name: "likeCount1",
         description: "좋아요 10개를 받으면 달성합니다.",
         title: "인싸",
@@ -37,6 +41,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "인기왕",
       },
       {
+        no: 5,
         name: "likeCount2",
         description: "좋아요 20개를 받으면 달성합니다.",
         title: "인플루언서",
@@ -45,6 +50,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "인기왕",
       },
       {
+        no: 6,
         name: "likeCount3",
         description: "좋아요 40개를 받으면 달성합니다.",
         title: "연예인",
@@ -54,6 +60,7 @@ export async function achievement(prisma: PrismaClient) {
       },
 
       {
+        no: 7,
         name: "attendanceCount1",
         description: "출석을 10회 하면 달성합니다.",
         title: "성실",
@@ -62,6 +69,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "출석왕",
       },
       {
+        no: 8,
         name: "attendanceCount2",
         description: "출석을 20회 하면 달성합니다.",
         title: "꾸준",
@@ -70,6 +78,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "출석왕",
       },
       {
+        no: 9,
         name: "attendanceCount3",
         description: "출석을 40회 하면 달성합니다.",
         title: "개근",
@@ -79,6 +88,7 @@ export async function achievement(prisma: PrismaClient) {
       },
 
       {
+        no: 10,
         name: "itemCount1",
         description: " 아이템 10개 구매시 달성합니다.",
         title: "돈있음",
@@ -87,6 +97,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "수집왕",
       },
       {
+        no: 11,
         name: "itemCount2",
         description: " 아이템 20개 구매시 달성합니다.",
         title: "돈많음",
@@ -95,6 +106,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "수집왕",
       },
       {
+        no: 12,
         name: "itemCount3",
         description: " 아이템 40개 구매시 달성합니다.",
         title: "부자",
@@ -104,6 +116,7 @@ export async function achievement(prisma: PrismaClient) {
       },
 
       {
+        no: 13,
         name: "presentCount1",
         description: "선물을 10번 보낼 시 달성합니다.",
         title: "착함",
@@ -112,6 +125,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "선물왕",
       },
       {
+        no: 14,
         name: "presentCount2",
         description: "선물을 20번 보낼 시 달성합니다.",
         title: "엄청착함",
@@ -120,6 +134,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "선물왕",
       },
       {
+        no: 15,
         name: "presentCount3",
         description: "선물을 40번 보낼 시 달성합니다.",
         title: "천사",
@@ -129,6 +144,7 @@ export async function achievement(prisma: PrismaClient) {
       },
 
       {
+        no: 16,
         name: "RSPWinCount1",
         description: "가위바위보 게임에서 10번 승리하면 달성합니다.",
         title: "대단함",
@@ -137,6 +153,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "게임왕",
       },
       {
+        no: 17,
         name: "RSPWinCount2",
         description: "가위바위보 게임에서 20번 승리하면 달성합니다.",
         title: "멋짐",
@@ -145,6 +162,7 @@ export async function achievement(prisma: PrismaClient) {
         category: "게임왕",
       },
       {
+        no: 18,
         name: "RSPWinCount3",
         description: "가위바위보 게임에서 40번 승리하면 달성합니다.",
         title: "레전드",
