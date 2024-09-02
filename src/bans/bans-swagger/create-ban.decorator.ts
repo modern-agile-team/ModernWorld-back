@@ -2,6 +2,8 @@ import { applyDecorators } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiConflictResponse,
+  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -11,7 +13,7 @@ export function ApiCreateBan() {
   return applyDecorators(
     ApiOperation({
       summary: "유저 밴하기",
-      description: "너 밴",
+      description: "Admin만 가능",
     }),
 
     ApiOkResponse({
@@ -55,6 +57,32 @@ export function ApiCreateBan() {
                 statusCode: 400,
               },
             },
+          },
+        },
+      },
+    }),
+
+    ApiForbiddenResponse({
+      description: "유저가 Admin이 아닌 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "You are not admin.",
+            error: "Forbidden",
+            statusCode: 403,
+          },
+        },
+      },
+    }),
+
+    ApiConflictResponse({
+      description: "이미 밴되어있는 경우",
+      content: {
+        JSON: {
+          example: {
+            message: "User is already banned.",
+            error: "Conflict",
+            statusCode: 409,
           },
         },
       },

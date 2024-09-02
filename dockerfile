@@ -20,5 +20,4 @@ COPY --from=base /app/dist ./dist
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/package*.json ./
 
-
 CMD ["npm", "run", "start:docker"]

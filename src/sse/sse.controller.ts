@@ -39,25 +39,25 @@ export class SseController {
     );
   }
 
-  @Post(":userNo")
-  @ApiBody({
-    schema: {
-      type: "object",
-      properties: {
-        content: {
-          type: "string",
-          default: "김뿡뿡",
-        },
-      },
-    },
-  })
-  asdf(
-    @Param("userNo", ParsePositiveIntPipe) userNo: number,
-    @Body("content") content: string,
-  ) {
-    return this.sseService.sendSse(userNo, {
-      title: `${userNo}번 김뿡우`,
-      content: content,
-    });
-  }
+  // @Post(":userNo")
+  // @ApiBody({
+  //   schema: {
+  //     type: "object",
+  //     properties: {
+  //       content: {
+  //         type: "string",
+  //         default: "김뿡뿡",
+  //       },
+  //     },
+  //   },
+  // })
+  // asdf(
+  //   @Param("userNo", ParsePositiveIntPipe) userNo: number,
+  //   @Body("content") content: string,
+  // ) {
+  //   return this.sseService.sendSse(userNo, {
+  //     title: `${userNo}번 김뿡우`,
+  //     content: content,
+  //   });
+  // }
 }

@@ -26,6 +26,7 @@ export class UserAchievementsRepository {
         userNo: true,
         achievementNo: true,
         status: true,
+        createdAt: true,
         achievement: {
           select: {
             title: true,
