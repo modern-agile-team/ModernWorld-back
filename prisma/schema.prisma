@@ -187,6 +187,20 @@ model reply {
   @@index([userNo], map: "user_no")
 }
 
+model report {
+  no         Int            @id @default(autoincrement()) @db.UnsignedInt
+  senderNo   Int?           @map("sender_no") @db.UnsignedInt
+  receiverNo Int?           @map("receiver_no") @db.UnsignedInt
+  content    String         @db.VarChar(300)
+  createdAt  DateTime       @default(now()) @map("created_at") @db.DateTime(0)
+  category   ReportCategory @default(other)
+  sender     user?          @relation("report_sender_ibfk", fields: [senderNo], references: [no], map: "report_sender_ibfk")
+  receiver   user?          @relation("report_receiver_ibfk", fields: [receiverNo], references: [no], map: "report_receiver_ibfk")
+
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
+}
+
 model RSPGameRecord {
   no             Int        @id @default(autoincrement()) @db.UnsignedInt
   userNo         Int        @map("user_no") @db.UnsignedInt
@@ -245,6 +259,8 @@ model user {
   userAchievement    userAchievement[]
   alarm              alarm[]
   RSPGameRecord      RSPGameRecord[]
+  reportSender       report[]          @relation("report_sender_ibfk")
+  reportReceiver     report[]          @relation("report_receiver_ibfk")
 }
 
 model userAchievement {
@@ -254,6 +270,7 @@ model userAchievement {
   status        Boolean     @default(false)
   user          user        @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_1")
   achievement   achievement @relation(fields: [achievementNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_2")
+  createdAt     DateTime    @default(now()) @map("created_at") @db.DateTime(0)
 
   @@unique([userNo, achievementNo])
   @@index([achievementNo], map: "achievement_no")
@@ -276,6 +293,22 @@ enum PresentStatus {
   reject @map("reject")
 
   @@map("present_status")
+}
+
+enum ReportCategory {
+  spam                  @map("spam")
+  harmfulContent        @map("harmfulContent")
+  scamImpersonation     @map("scamImpersonation")
+  copyrightInfringement @map("copyrightInfringement")
+  explicitContent       @map("explicitContent")
+  abusiveBehavior       @map("abusiveBehavior")
+  misinformation        @map("misinformation")
+  duplicateContent      @map("duplicateContent")
+  hateSpeech            @map("hateSpeech")
+  technicalIssue        @map("technicalIssue")
+  other                 @map("other")
+
+  @@map("report_category")
 }
 
 enum UserDomain {

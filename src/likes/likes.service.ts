@@ -15,6 +15,7 @@ import { AlarmsRepository } from "src/alarms/alarms.repository";
 import { UserAchievementsService } from "src/user-achievements/user-achievements.service";
 import { Prisma } from "@prisma/client";
 import { GetLikesDto } from "./dtos/get-likes.dto";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class LikesService {
@@ -22,7 +23,7 @@ export class LikesService {
     private readonly logger: Logger,
     private readonly prisma: PrismaService,
     private readonly likesRepository: LikesRepository,
-    private readonly usersRepository: UsersRepository,
+    private readonly usersService: UsersService,
     private readonly legendsRepository: LegendsRepository,
     private readonly sseService: SseService,
     private readonly alarmsRepository: AlarmsRepository,
@@ -49,8 +50,7 @@ export class LikesService {
   }
 
   async createOneLike(senderNo: number, receiverNo: number) {
-    if (!(await this.usersRepository.findUserByUserNo(receiverNo)))
-      throw new NotFoundException("User doesn't exist.");
+    await this.usersService.userExists(receiverNo);
 
     if (senderNo === receiverNo)
       throw new ForbiddenException("Users can't like themselves alone.");

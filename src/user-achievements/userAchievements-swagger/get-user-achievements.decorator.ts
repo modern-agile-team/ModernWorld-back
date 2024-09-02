@@ -23,6 +23,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 1,
               status: false,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "커뮤 초보자",
                 description: "댓글을 적으니 좋습니다.",
@@ -35,6 +36,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 2,
               status: false,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "커뮤 중급자",
                 description: "댓글이 넘쳐납니다!",
@@ -47,6 +49,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 3,
               status: true,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "커뮤 고급자",
                 description: "소통왕이네요.",
@@ -59,6 +62,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 10,
               status: false,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "부자는 아님",
                 description: "은근히 모으셨군요.",
@@ -71,6 +75,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 12,
               status: false,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "부자",
                 description: "진정한 부자이십니다.",
@@ -83,6 +88,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 13,
               status: false,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "선함",
                 description: "이렇게 많이 선물을?",
@@ -95,6 +101,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 14,
               status: false,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "기부왕",
                 description: "천사 이십니까?",
@@ -107,6 +114,7 @@ export function ApiGetUserAchievements() {
               userNo: 31,
               achievementNo: 15,
               status: false,
+              createdAt: "2024-09-01T16:59:29.000Z",
               achievement: {
                 title: "기부천사",
                 description: "착한 자에게는 복을",

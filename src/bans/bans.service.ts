@@ -34,6 +34,7 @@ export class BansService {
       if (!userBanInfo.expiredAt) {
         throw new ForbiddenException("Permanently Banned User");
       }
+
       if (userBanInfo.expiredAt > new Date()) {
         throw new ForbiddenException(
           `Banned User (${userBanInfo.expiredAt.toISOString()})`,
