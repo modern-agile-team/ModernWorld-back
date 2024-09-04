@@ -26,31 +26,32 @@ export function ApiGetOneUser() {
         JSON: {
           example: {
             no: 1,
-            nickname: "1번닉네임",
-            description: "1번소개",
-            currentPoint: 0,
-            accumulationPoint: 0,
-            image: "1번이미지",
+            socialName: "김은우",
+            nickname: "끼무뗭떵이",
+            description: "끼무뗭",
+            currentPoint: 29200,
+            accumulationPoint: 64200,
+            image: "유저소셜이미지",
             legend: {
-              likeCount: 7,
+              likeCount: 1,
             },
             characterLocker: [
               {
                 character: {
-                  no: 1,
-                  image: "1번 dog 이미지",
+                  no: 10,
+                  image: "캐릭터 이미지",
                 },
               },
             ],
             userAchievement: [
               {
                 achievement: {
-                  title: "커뮤 초보자",
-                  level: "one",
+                  title: "레전드",
+                  level: "three",
                 },
               },
             ],
-            chance: 10,
+            chance: 7,
           },
         },
       },

@@ -7,7 +7,6 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { LikesRepository } from "./likes.repository";
-import { UsersRepository } from "src/users/users.repository";
 import { LegendsRepository } from "src/legends/legends.repository";
 import { PrismaService } from "src/prisma/prisma.service";
 import { SseService } from "src/sse/sse.service";
