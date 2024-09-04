@@ -87,7 +87,7 @@ export class TasksService {
   }
 
   // 0 0 * * * * 정각마다 초기화
-  @Cron("0 0 * * * *")
+  @Cron("0,30 * * * * *")
   deleteSseConnection() {
     for (let i = 1; i <= 3; i++) {
       try {
