@@ -17,20 +17,25 @@ import { legend } from "./seeding/legend";
 const prisma = new PrismaClient();
 
 async function main() {
-  await user(prisma);
-  await character(prisma);
-  await item(prisma);
-  await achievement(prisma);
-  await characterLocker(prisma);
-  await present(prisma);
-  await inventory(prisma);
-  await userAchievement(prisma);
-  await post(prisma);
-  await neighbor(prisma);
-  await comment(prisma);
-  await reply(prisma);
-  await like(prisma);
-  await legend(prisma);
+  await prisma.$transaction([
+    // prisma.character.deleteMany(),
+    // prisma.item.deleteMany(),
+    // prisma.achievement.deleteMany(),
+    character(prisma),
+    item(prisma),
+    achievement(prisma),
+  ]);
+  // await user(prisma);
+  // await characterLocker(prisma);
+  // await present(prisma);
+  // await inventory(prisma);
+  // await userAchievement(prisma);
+  // await post(prisma);
+  // await neighbor(prisma);
+  // await comment(prisma);
+  // await reply(prisma);
+  // await like(prisma);
+  // await legend(prisma);
 }
 
 main()
