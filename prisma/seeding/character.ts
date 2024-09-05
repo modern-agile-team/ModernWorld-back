@@ -7,231 +7,193 @@ export function character(prisma: PrismaClient) {
     data: [
       {
         no: 1,
-        name: "김은우검은고양이",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/%EA%B9%80%EC%9D%80%EC%9A%B0%EA%B2%80%EC%9D%80%EA%B3%A0%EC%96%91%EC%9D%B4.svg",
+        name: "샤미",
+        description: "시작은 샤미와 함께해요!",
+        image: BASE_URL + "/items/character/cats/startcat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 2,
-        name: "시작강아지",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/%EC%8B%9C%EC%9E%91%EA%B0%95%EC%95%84%EC%A7%80.svg",
+        name: "꽁돌이",
+        description: "시작은 꽁돌이와 함께해요!",
+        image: BASE_URL + "/items/character/dogs/startdog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 3,
-        name: "시작고양이",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/%EC%8B%9C%EC%9E%91%EA%B3%A0%EC%96%91%EC%9D%B4.svg",
+        name: "그레이",
+        description: "지붕 위에서 데려왔어요.",
+        image: BASE_URL + "/items/character/cats/AJW_cat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 4,
-        name: "안진우똥색강아지",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/%EC%95%88%EC%A7%84%EC%9A%B0%EB%98%A5%EC%83%89%EA%B0%95%EC%95%84%EC%A7%80.svg",
+        name: "낙타",
+        description: "사막에서 온 지붕 위 강아지",
+        image: BASE_URL + "/items/character/dogs/AJW_dog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 5,
-        name: "안진우회색고양이",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/%EC%95%88%EC%A7%84%EC%9A%B0%ED%9A%8C%EC%83%89%EA%B3%A0%EC%96%91%EC%9D%B4.svg",
+        name: "다람이",
+        description: "다람쥐가 되고 싶은 고양이예요.",
+        image: BASE_URL + "/items/character/cats/AlienCat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 6,
-        name: "조영은회색강아지",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/%EC%A1%B0%EC%98%81%EC%9D%80%ED%9A%8C%EC%83%89%EA%B0%95%EC%95%84%EC%A7%80.svg",
+        name: "닥스훈트",
+        description: "허리가 길어요.",
+        image: BASE_URL + "/items/character/dogs/AJW_hotdog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 7,
-        name: "에이리언고양이",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/AlienCat.svg",
+        name: "네코",
+        description: "어둠 속에서 온 검은 고양이예요.",
+        image: BASE_URL + "/items/character/cats/KEW_cat1.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 8,
-        name: "탄강아지",
-        description: "",
-        image:
-          BASE_URL +
-          "/items/%EC%BA%90%EB%A6%AD%ED%84%B0%EB%AA%A8%EC%9D%8C/burnDog.svg",
+        name: "탄개",
+        description: "타버렸어요.",
+        image: BASE_URL + "/items/character/dogs/burnDog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 9,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "고등어",
+        description: "현실에서 놀러왔어요.",
+        image: BASE_URL + "/items/character/cats/JYE_browncat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 10,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "스키",
+        description: "현실에서 놀러왔어요.",
+        image: BASE_URL + "/items/character/dogs/JYE_husky.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 11,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "억울이",
+        description: "현실에서 놀러온 억울이예요.",
+        image: BASE_URL + "/items/character/cats/JYE_evenEyes.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 12,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "뽀메",
+        description: "현실에서 놀러온 포메라니안이에요.",
+        image: BASE_URL + "/items/character/dogs/JYE_whiteDog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 13,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "길쭉이",
+        description: "어딘가 배고파 보여요...",
+        image: BASE_URL + "/items/character/cats/LJJ_cat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 14,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "뇌절이",
+        description: "병아리와 함께 왔어요.",
+        image: BASE_URL + "/items/character/dogs/AJW_whiteDog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 15,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "좀고",
+        description: "좀비가 되고 싶은 고양이예요.",
+        image: BASE_URL + "/items/character/cats/AJW_ghostCat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 16,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "감자",
+        description: "먹으면 안 돼요!",
+        image: BASE_URL + "/items/character/dogs/AJW_ivoryDog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 17,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "데칼코마니",
+        description: "대칭이에요",
+        image: BASE_URL + "/items/character/cats/KJW_cat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 18,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "코기",
+        description: "코가 길어요.",
+        image: BASE_URL + "/items/character/dogs/KJW_dog.svg",
         species: "dog",
         price: 1000,
       },
       {
         no: 19,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "쪼꼬미",
+        description: "귀여워요.",
+        image: BASE_URL + "/items/character/cats/WGO_cat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 20,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "구름이",
+        description: "털 쪘어요.",
+        image: BASE_URL + "/items/character/dogs/KJ_dog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 21,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "호랑이",
+        description: "용맹해요.",
+        image: BASE_URL + "/items/character/cats/KJ_cat.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 22,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "선개",
+        description: "선개 업고 튀어!!",
+        image: BASE_URL + "/items/character/dogs/special_thanks_LJJ_dog.svg",
         species: "dog",
         price: 1000,
       },
-
       {
         no: 23,
-        name: "고양이",
-        description: "",
-        image: BASE_URL + "/",
+        name: "양심이",
+        description: "양심이 없어요..",
+        image: BASE_URL + "/items/character/cats/conscience.svg",
         species: "cat",
         price: 1000,
       },
-
       {
         no: 24,
-        name: "강아지",
-        description: "",
-        image: BASE_URL + "/",
+        name: "장화 신은 강아지",
+        description: "보이는 그대로예요.",
+        image: BASE_URL + "/items/character/dogs/KJW_dog2.svg",
         species: "dog",
         price: 1000,
       },

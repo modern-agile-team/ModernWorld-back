@@ -30,7 +30,6 @@ export function achievement(prisma: PrismaClient) {
         point: 4000,
         category: "소통왕",
       },
-
       {
         no: 4,
         name: "likeCount1",
@@ -58,7 +57,6 @@ export function achievement(prisma: PrismaClient) {
         point: 4000,
         category: "인기왕",
       },
-
       {
         no: 7,
         name: "attendanceCount1",
@@ -86,7 +84,6 @@ export function achievement(prisma: PrismaClient) {
         point: 4000,
         category: "출석왕",
       },
-
       {
         no: 10,
         name: "itemCount1",
@@ -114,7 +111,6 @@ export function achievement(prisma: PrismaClient) {
         point: 40000,
         category: "수집왕",
       },
-
       {
         no: 13,
         name: "presentCount1",
@@ -142,7 +138,6 @@ export function achievement(prisma: PrismaClient) {
         point: 4000,
         category: "선물왕",
       },
-
       {
         no: 16,
         name: "RSPWinCount1",
