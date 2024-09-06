@@ -1,0 +1,328 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model achievement {
+  no              Int               @id @default(autoincrement()) @db.UnsignedInt
+  name            String            @db.VarChar(20)
+  description     String            @db.VarChar(100)
+  title           String            @db.VarChar(20)
+  level           AchievementLevel
+  point           Int               @db.UnsignedInt
+  category        String            @default("기타") @db.VarChar(10)
+  userAchievement userAchievement[]
+}
+
+model alarm {
+  no        Int      @id @default(autoincrement()) @db.UnsignedInt
+  userNo    Int      @map("user_no") @db.UnsignedInt
+  title     String   @default("기타") @db.VarChar(20)
+  content   String   @db.VarChar(500)
+  status    Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  user      user     @relation(fields: [userNo], onDelete: Cascade, references: [no])
+
+  @@index([userNo], map: "user_no")
+}
+
+model ban {
+  no               Int       @id @default(autoincrement()) @db.UnsignedInt
+  uniqueIdentifier String    @unique @map("unique_identifier") @db.VarChar(300)
+  content          String    @db.VarChar(100)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  expiredAt        DateTime? @map("expired_at") @db.DateTime(0)
+}
+
+model character {
+  no              Int               @id @default(autoincrement()) @db.UnsignedInt
+  name            String            @db.VarChar(15)
+  description     String            @db.VarChar(100)
+  image           String            @db.VarChar(400)
+  species         String            @db.VarChar(10)
+  price           Int               @default(0) @db.UnsignedInt
+  characterLocker characterLocker[]
+}
+
+model characterLocker {
+  no          Int       @id @default(autoincrement()) @db.UnsignedInt
+  characterNo Int       @map("character_no") @db.UnsignedInt
+  userNo      Int       @map("user_no") @db.UnsignedInt
+  status      Boolean   @default(false)
+  character   character @relation(fields: [characterNo], references: [no], onDelete: Cascade, map: "character_locker_ibfk_1")
+  user        user      @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "character_locker_ibfk_2")
+
+  @@unique([userNo, characterNo])
+  @@index([characterNo], map: "character_no")
+  @@index([userNo], map: "user_no")
+  @@map("character_locker")
+}
+
+model comment {
+  no              Int       @id @default(autoincrement()) @db.UnsignedInt
+  receiverNo      Int?      @map("receiver_no") @db.UnsignedInt
+  senderNo        Int?      @map("sender_no") @db.UnsignedInt
+  content         String    @db.VarChar(300)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt       DateTime? @map("deleted_at") @db.DateTime(0)
+  commentSender   user?     @relation("comment_sender_noTouser", fields: [senderNo], references: [no], map: "comment_ibfk_1")
+  commentReceiver user?     @relation("comment_receiver_noTouser", fields: [receiverNo], references: [no], map: "comment_ibfk_2")
+  reply           reply[]
+
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
+}
+
+model inventory {
+  no        Int      @id @default(autoincrement()) @db.UnsignedInt
+  userNo    Int      @map("user_no") @db.UnsignedInt
+  itemNo    Int      @map("item_no") @db.UnsignedInt
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  status    Boolean  @default(false)
+  user      user     @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "inventory_ibfk_1")
+  item      item     @relation(fields: [itemNo], references: [no], onDelete: Cascade, map: "inventory_ibfk_2")
+
+  @@unique([userNo, itemNo])
+  @@index([itemNo], map: "item_no")
+  @@index([userNo], map: "user_no")
+}
+
+model item {
+  no          Int         @id @default(autoincrement()) @db.UnsignedInt
+  name        String      @db.VarChar(15)
+  description String      @db.VarChar(150)
+  image       String      @db.VarChar(400)
+  theme       String      @db.VarChar(10)
+  type        String      @db.VarChar(20)
+  price       Int         @default(0) @db.UnsignedInt
+  inventory   inventory[]
+  present     present[]
+}
+
+model legend {
+  userNo          Int  @id @map("user_no") @db.UnsignedInt
+  attendanceCount Int  @default(0) @map("attendance_count") @db.UnsignedInt
+  commentCount    Int  @default(0) @map("comment_count") @db.UnsignedInt
+  itemCount       Int  @default(0) @map("item_count") @db.UnsignedInt
+  presentCount    Int  @default(0) @map("present_count") @db.UnsignedInt
+  likeCount       Int  @default(0) @map("like_count") @db.UnsignedInt
+  RSPWinCount     Int  @default(0) @map("RSP_win_count") @db.UnsignedInt
+  user            user @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "legend_ibfk_1")
+}
+
+model like {
+  no         Int  @id @default(autoincrement()) @db.UnsignedInt
+  receiverNo Int  @map("receiver_no") @db.UnsignedInt
+  senderNo   Int  @map("sender_no") @db.UnsignedInt
+  sender     user @relation("like_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "like_ibfk_1")
+  receiver   user @relation("like_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "like_ibfk_2")
+
+  @@unique([receiverNo, senderNo], map: "receiver_no_sender_no")
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
+}
+
+model neighbor {
+  no                 Int      @id @default(autoincrement()) @db.UnsignedInt
+  senderNo           Int      @map("sender_no") @db.UnsignedInt
+  receiverNo         Int      @map("receiver_no") @db.UnsignedInt
+  status             Boolean  @default(false)
+  createdAt          DateTime @default(dbgenerated("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")) @map("created_at") @db.DateTime(0)
+  neighborSenderNo   user     @relation("neighbor_sender_noTouser", fields: [senderNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_1")
+  neighborReceiverNo user     @relation("neighbor_receiver_noTouser", fields: [receiverNo], references: [no], onDelete: Cascade, map: "neighbor_ibfk_2")
+
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
+}
+
+model post {
+  no                 Int      @id @default(autoincrement()) @db.UnsignedInt
+  senderNo           Int?     @map("sender_no") @db.UnsignedInt
+  receiverNo         Int?     @map("receiver_no") @db.UnsignedInt
+  content            String   @db.VarChar(150)
+  createdAt          DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  check              Boolean  @default(false)
+  senderDelete       Boolean  @default(false) @map("sender_delete")
+  receiverDelete     Boolean  @default(false) @map("receiver_delete")
+  userPostSenderNo   user?    @relation("post_sender_noTouser", fields: [senderNo], references: [no], map: "post_ibfk_1")
+  userPostReceiverNo user?    @relation("post_receiver_noTouser", fields: [receiverNo], references: [no], map: "post_ibfk_2")
+
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
+}
+
+model present {
+  no                    Int           @id @default(autoincrement()) @db.UnsignedInt
+  itemNo                Int           @map("item_no") @db.UnsignedInt
+  senderNo              Int?          @map("sender_no") @db.UnsignedInt
+  receiverNo            Int?          @map("receiver_no") @db.UnsignedInt
+  createdAt             DateTime      @default(now()) @map("created_at") @db.DateTime(0)
+  status                PresentStatus @default(unread)
+  senderDelete          Boolean       @default(false) @map("sender_delete")
+  receiverDelete        Boolean       @default(false) @map("receiver_delete")
+  item                  item          @relation(fields: [itemNo], references: [no], onDelete: NoAction, onUpdate: NoAction, map: "present_ibfk_1")
+  userPresentSenderNo   user?         @relation("present_sender_noTouser", fields: [senderNo], references: [no], map: "present_ibfk_2")
+  userPresentReceiverNo user?         @relation("present_receiver_noTouser", fields: [receiverNo], references: [no], map: "present_ibfk_3")
+
+  @@index([itemNo], map: "item_no")
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
+}
+
+model reply {
+  no        Int       @id @default(autoincrement()) @db.UnsignedInt
+  commentNo Int       @map("comment_no") @db.UnsignedInt
+  userNo    Int?      @map("user_no") @db.UnsignedInt
+  content   String    @db.VarChar(300)
+  createdAt DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt DateTime? @map("deleted_at") @db.DateTime(0)
+  user      user?     @relation(fields: [userNo], references: [no], map: "reply_ibfk_1")
+  comment   comment   @relation(fields: [commentNo], references: [no], onDelete: Cascade, map: "reply_ibfk_2")
+
+  @@index([commentNo], map: "comment_no")
+  @@index([userNo], map: "user_no")
+}
+
+model report {
+  no         Int            @id @default(autoincrement()) @db.UnsignedInt
+  senderNo   Int?           @map("sender_no") @db.UnsignedInt
+  receiverNo Int?           @map("receiver_no") @db.UnsignedInt
+  content    String         @db.VarChar(300)
+  createdAt  DateTime       @default(now()) @map("created_at") @db.DateTime(0)
+  category   ReportCategory @default(other)
+  sender     user?          @relation("report_sender_ibfk", fields: [senderNo], references: [no], map: "report_sender_ibfk")
+  receiver   user?          @relation("report_receiver_ibfk", fields: [receiverNo], references: [no], map: "report_receiver_ibfk")
+
+  @@index([receiverNo], map: "receiver_no")
+  @@index([senderNo], map: "sender_no")
+}
+
+model RSPGameRecord {
+  no             Int        @id @default(autoincrement()) @db.UnsignedInt
+  userNo         Int        @map("user_no") @db.UnsignedInt
+  userChoice     String     @map("user_choice") @db.VarChar(10)
+  computerChoice String     @map("computer_choice") @db.VarChar(10)
+  result         GameResult
+  createdAt      DateTime   @default(now()) @map("created_at") @db.DateTime(0)
+  user           user       @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "RSP_game_record_ibfk_1")
+
+  @@index([userNo], map: "user_no")
+  @@map("RSP_game_record")
+}
+
+model token {
+  no            Int     @id @default(autoincrement()) @db.UnsignedInt
+  userNo        Int     @unique @map("user_no") @db.UnsignedInt
+  socialAccess  String? @map("social_access") @db.VarChar(300)
+  socialRefresh String? @map("social_refresh") @db.VarChar(300)
+  user          user    @relation(fields: [userNo], references: [no], onDelete: Cascade)
+
+  @@index([userNo], map: "user_no")
+}
+
+model user {
+  no                Int        @id @default(autoincrement()) @db.UnsignedInt
+  nickname          String?    @unique(map: "nickname") @db.VarChar(10)
+  currentPoint      Int        @default(0) @map("current_point") @db.UnsignedInt
+  accumulationPoint Int        @default(0) @map("accumulation_point") @db.UnsignedInt
+  description       String?    @db.VarChar(150)
+  attendance        Json?
+  status            Boolean    @default(false)
+  createdAt         DateTime   @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt         DateTime?  @map("deleted_at") @db.DateTime(0)
+  admin             Boolean    @default(false)
+  uniqueIdentifier  String     @unique(map: "unique_identifier") @map("unique_identifier") @db.VarChar(300)
+  socialName        String     @map("social_name") @db.VarChar(200)
+  image             String?    @default("https://wang0514.s3.ap-northeast-2.amazonaws.com/page/BaseProfileImage/pngwing.com.png") @db.VarChar(300)
+  domain            UserDomain
+  chance            Int        @default(10) @db.UnsignedInt
+
+  characterLocker    characterLocker[]
+  commentSenderNo    comment[]         @relation("comment_sender_noTouser")
+  commentReceiverNo  comment[]         @relation("comment_receiver_noTouser")
+  inventory          inventory[]
+  legend             legend?
+  likeSenderNo       like[]            @relation("like_sender_noTouser")
+  likeReceiverNo     like[]            @relation("like_receiver_noTouser")
+  neighborSenderNo   neighbor[]        @relation("neighbor_sender_noTouser")
+  neighborReceiverNo neighbor[]        @relation("neighbor_receiver_noTouser")
+  postSenderNo       post[]            @relation("post_sender_noTouser")
+  postReceiverNo     post[]            @relation("post_receiver_noTouser")
+  presentSenderNo    present[]         @relation("present_sender_noTouser")
+  presentReceiverNo  present[]         @relation("present_receiver_noTouser")
+  reply              reply[]
+  token              token[]
+  userAchievement    userAchievement[]
+  alarm              alarm[]
+  RSPGameRecord      RSPGameRecord[]
+  reportSender       report[]          @relation("report_sender_ibfk")
+  reportReceiver     report[]          @relation("report_receiver_ibfk")
+}
+
+model userAchievement {
+  no            Int         @id @default(autoincrement()) @db.UnsignedInt
+  userNo        Int         @map("user_no") @db.UnsignedInt
+  achievementNo Int         @map("achievement_no") @db.UnsignedInt
+  status        Boolean     @default(false)
+  user          user        @relation(fields: [userNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_1")
+  achievement   achievement @relation(fields: [achievementNo], references: [no], onDelete: Cascade, map: "user_achievement_ibfk_2")
+  createdAt     DateTime    @default(now()) @map("created_at") @db.DateTime(0)
+
+  @@unique([userNo, achievementNo])
+  @@index([achievementNo], map: "achievement_no")
+  @@index([userNo], map: "user_no")
+  @@map("user_achievement")
+}
+
+enum AchievementLevel {
+  one   @map("one")
+  two   @map("two")
+  three @map("three")
+
+  @@map("achievement_level")
+}
+
+enum PresentStatus {
+  unread @map("unread")
+  read   @map("read")
+  accept @map("accept")
+  reject @map("reject")
+
+  @@map("present_status")
+}
+
+enum ReportCategory {
+  spam                  @map("spam")
+  harmfulContent        @map("harmfulContent")
+  scamImpersonation     @map("scamImpersonation")
+  copyrightInfringement @map("copyrightInfringement")
+  explicitContent       @map("explicitContent")
+  abusiveBehavior       @map("abusiveBehavior")
+  misinformation        @map("misinformation")
+  duplicateContent      @map("duplicateContent")
+  hateSpeech            @map("hateSpeech")
+  technicalIssue        @map("technicalIssue")
+  other                 @map("other")
+
+  @@map("report_category")
+}
+
+enum UserDomain {
+  naver  @map("naver")
+  kakao  @map("kakao")
+  google @map("google")
+
+  @@map("user_domain")
+}
+
+enum GameResult {
+  win  @map("win")
+  lose @map("lose")
+  draw @map("draw")
+
+  @@map("game_result")
+}
